@@ -3,7 +3,7 @@
 lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation=0.75,weights=NULL,method="ls",...) {
 #	Fit linear model
 #	Gordon Smyth
-#	30 June 2003.  Last modified 25 June 2004.
+#	30 June 2003.  Last modified 8 October 2004.
 
 	M <- NULL
 #	Method intended for MAList objects but allow unclassed lists as well
@@ -20,22 +20,25 @@ lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation=0.
 		M <- object@maM
 		if(missing(weights) && length(object@maW)) weights <- object@maW
 	} else {
+	if(is(object,"PLMset")) {
+#		don't use accessor function so don't have to require affyPLM
+		M <- object@chip.coefs
+		if(length(M)==0) stop("chip.coefs has length zero")
+		if(missing(weights) && length(object@se.chip.coefs)) weights <- 1/pmax(object@se.chip.coefs,1e-5)^2
+	} else {
 	if(is(object,"exprSet")) {
 #		don't use accessor function so don't have to require Biobase
 		M <- object@exprs
 #		don't use weights until this is more thoroughly tested
 #		if(missing(weights) && length(object@se.exprs)) weights <- 1/pmax(object@se.exprs,1e-5)^2
-	} else {
-	if(is(object,"PLMset")) {
-#		don't use accessor function so don't have to require affyPLM
-		M <- object@chip.coefs
-		if(missing(weights) && length(object@se.chip.coefs)) weights <- 1/pmax(object@se.chip.coefs,1e-5)^2
 	}}}}
 #	Default method
 	if(is.null(M)) M <- as.matrix(object)
 
 	if(is.null(design)) design <- matrix(1,ncol(M),1)
 	design <- as.matrix(design)
+	ne <- nonEstimable(design)
+	if(!is.null(ne)) cat("Coefficients not estimable:",paste(ne,collapse=" "),"\n")
 	method <- match.arg(method,c("ls","robust"))
 	if(method=="robust")
 		fit <- rlm.series(M,design=design,ndups=ndups,spacing=spacing,weights=weights,...)
@@ -58,9 +61,9 @@ lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation=0.
 		if(length(object@maA)) fit$Amean <- rowMeans(unwrapdups(object@maA,ndups=ndups,spacing=spacing),na.rm=TRUE)
 	}
 	if(is(object,"exprSet")) {
-		ProbeSetID <- rownames(object@exprs)
+		ProbeSetID <- rownames(M)
 		if(!is.null(ProbeSetID)) fit$genes <- uniquegenelist(data.frame(ID=I(ProbeSetID)),ndups=ndups,spacing=spacing)
-		fit$Amean <- rowMeans(object@exprs,na.rm=TRUE)
+		fit$Amean <- rowMeans(M,na.rm=TRUE)
 	}
 	new("MArrayLM",fit)
 }
@@ -146,7 +149,18 @@ lm.series <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL)
 	list(coefficients=drop(beta),stdev.unscaled=drop(stdev.unscaled),sigma=sigma,df.residual=df.residual,cov.coefficients=cov.coef,pivot=QR$pivot)
 }
 
-rlm.series <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL,...)
+rlm.series <- function(x,...)
+#	Gordon Smyth
+#	Deprecated 1 Sep 2004
+{
+	.Deprecated("mrlm")
+	m <- match.call()
+	m[[1]] <- as.name("mrlm")
+	names(m)[2] <- "M"
+	eval(m)
+}
+
+mrlm <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL,...)
 {
 #	Robustly fit linear model for each gene to a series of arrays
 #	Gordon Smyth
@@ -279,7 +293,7 @@ gls.series <- function(M,design=NULL,ndups=2,spacing=1,block=NULL,correlation=NU
 contrasts.fit <- function(fit,contrasts) {
 #	Convert coefficients and std deviations in fit object to reflect contrasts of interest
 #	Gordon Smyth
-#	13 Oct 2002.  Last modified 26 June 2004.
+#	13 Oct 2002.  Last modified 25 Sep 2004.
 
 	ncoef <- NCOL(fit$coefficients)
 	if(NROW(contrasts)!=ncoef) stop("Number of rows of contrast matrix must match number of coefficients")
@@ -295,9 +309,11 @@ contrasts.fit <- function(fit,contrasts) {
 	if(r < ncoef) {
 		if(is.null(fit$pivot)) stop("cor.coef not full rank but pivot column not found in fit")
 		est <- fit$pivot[1:r]
-		contrasts <- contrasts[est,]
-		fit$coefficients <- fit$coefficients[,est]
-		fit$stdev.unscaled <- fit$stdev.unscaled[,est]
+		if(any(contrasts[-est,])) stop("trying to take contrast of non-estimable coefficient")
+		contrasts <- contrasts[est,,drop=FALSE]
+		fit$coefficients <- fit$coefficients[,est,drop=FALSE]
+		fit$stdev.unscaled <- fit$stdev.unscaled[,est,drop=FALSE]
+		ncoef <- r
 	}
 	fit$coefficients <- fit$coefficients %*% contrasts
 
@@ -374,3 +390,33 @@ contrasts.fit <- function(fit,contrasts) {
 #	fit
 #}
 
+is.fullrank <- function(x)
+#	Check whether a numeric matrix has full column rank
+#	Gordon Smyth
+#	18 August 2003.  Last modified 9 March 2004.
+{
+	x <- as.matrix(x)
+	e <- eigen(crossprod(x),symmetric=TRUE,only.values=TRUE)$values
+	e[1] > 0 && abs(e[length(e)]/e[1]) > 1e-13
+}
+
+nonEstimable <- function(x)
+#	Check whether a numeric matrix has full column rank
+#	If not, return names of redundant columns
+#	Gordon Smyth
+#	10 August 2004
+{
+	x <- as.matrix(x)
+	p <- ncol(x)
+	QR <- qr(x)
+	if(QR$rank < p) {
+		n <- colnames(x)
+		if(is.null(n)) n <- as.character(1:p)
+		notest <- n[QR$pivot[(QR$rank+1):p]]
+		blank <- notest==""
+		if(any(blank)) notest[blank] <- as.character(((QR$rank+1):p)[blank])
+		return(notest)
+	} else {
+		return(NULL)
+	}
+}

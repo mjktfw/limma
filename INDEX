@@ -1,4 +1,4 @@
-[.RGList                Subset RGList or MAList Objects
+[.RGList                Subset RGList, MAList or MArrayLM Objects
 1.Introduction          Introduction to the LIMMA Package
 2.Classes               Classes Defined by this Package
 3.ReadingData           Reading Microarray Data from Files
@@ -16,11 +16,13 @@ blockDiag               Block Diagonal Matrix
 bwss                    Between and within sums of squares
 bwss.matrix             Between and within sums of squares for matrix
 cbind.RGList            Combine RGList or MAList Objects
+changeLog               Limma Change Log
 classifyTests           Treat Simultaneous T-Tests as Classification
                         Problem
 contrasts.fit           Compute Contrasts from Linear Model Fit
 controlStatus           Set Status of each Spot from List of Spot
                         Types
+decideTests             Compute Matrix of Hypothesis Test Results
 designI2M               Convert Individual Channel Design Matrix to
                         M-A Format
 designMatrix            Construct Design Matrix
@@ -37,6 +39,7 @@ fit.normexp             Fit Normal+Exp Convolution Model to Observed
 fitFDist                Moment Estimation of Scaled F-Distribution
 FStat                   Treat Simultaneous T-Tests as Classification
                         Problem
+geneSetTest             Gene Set Test
 getLayout               Extract the Print Layout of an Array from the
                         GAL File
 getSpacing              Get Numerical Spacing
@@ -105,7 +108,7 @@ readSpotTypes           Read Spot Types File
 readTargets             Read RNA Targets File
 removeExt               Remove Common Extension from File Names
 rg.genepix              Extract RGList from data.frames Containing
-                        Genepix Data
+                        GenePix Data
 rg.quantarray           Extract RGList from data.frames Containing
                         Quantarray Data
 rg.series.spot          Read RGList from SPOT Image Analysis Output

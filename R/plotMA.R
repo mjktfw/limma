@@ -3,7 +3,7 @@
 plotMA <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
 #	MA-plot with color coding for controls
 #	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.
-#	Last modified 3 July 2004.
+#	Last modified 8 July 2004.
 {
 	switch(class(MA),
 	"RGList" = {
@@ -26,7 +26,7 @@ plotMA <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xl
 	},
 	"MArrayLM" = {
 		x <- MA$Amean
-		y <- MA$coefficients[,array]
+		y <- as.matrix(MA$coefficients)[,array]
 		if(is.null(MA$weights)) w <- NULL else w <- as.matrix(MA$weights)[,array]
 	},
 	"matrix" = {
@@ -113,9 +113,9 @@ plotMA <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xl
 	invisible()
 }
 
-plotMA3by2 <- function(MA, prefix="MA", zero.weights=FALSE, common.lim=TRUE, ...)
+plotMA3by2 <- function(MA, prefix="MA", main=colnames(MA), zero.weights=FALSE, common.lim=TRUE, ...)
 #	Make files of MA-plots, six to a page
-#	Gordon Smyth  27 May 2004.
+#	Gordon Smyth  27 May 2004.  Last modified 12 Aug 2004.
 {
 	if(is(MA,"RGList")) MA <- MA.RG
 	narrays <- ncol(MA)
@@ -133,7 +133,7 @@ plotMA3by2 <- function(MA, prefix="MA", zero.weights=FALSE, common.lim=TRUE, ...
 		png(filename=paste(prefix,i1,"-",i2,".png",sep=""),width=6.5*140,height=10*140)
 		par(mfrow=c(3,2))
 		for (i in i1:i2) {
-			plotMA(MA,array=i,xlim=xlim,ylim=ylim,legend=(i%%6==1),zero.weights=TRUE,...)
+			plotMA(MA,array=i,xlim=xlim,ylim=ylim,legend=(i%%6==1),zero.weights=TRUE,main=main[i],...)
 		}
 		dev.off()
 	}

@@ -13,13 +13,15 @@ This method produces a single ANOVA Table rather than one for each gene and is n
 \section{Arguments}{
 \describe{
   \item{\code{object}}{object of class \code{MAList}. Missing values in the M-values are not allowed.}
-  \item{\code{design}}{numeric matrix containing the design matrix for linear model. The number of rows should agree with the number of columns of M. The number of columns will determine the number of coefficients estimated for each gene.}
+  \item{\code{design}}{numeric vector or single-column matrix containing the design matrix for linear model. The length of the vector or the number of rows of the matrix should agree with the number of columns of M.}
   \item{\code{ndups}}{number of duplicate spots. Each gene is printed ndups times in adjacent spots on each array.}
   \item{\code{...}}{other arguments are not used}
 }
 }
 \section{Details}{
 This function aids in quality assessment of microarray data and in the comparison of normalization methodologies.
+It applies only to replicated two-color experiments in which all the arrays are hybridized with the same RNA targets, possibly with dye-swaps, so the design matrix should have only one column.
+The function has not been heavily used and is somewhat experimental.
 }
 \section{Value}{
   An object of class \code{anova} containing rows for between genes, between arrays, gene x array interaction, and between duplicate with array sums of squares.

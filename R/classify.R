@@ -9,9 +9,55 @@ setMethod("show","TestResults",function(object) {
 	printHead(object@.Data)
 })
 
-classifyTests <- function(object,cor.matrix=NULL,design=NULL,contrasts=diag(ncol(design)),df=Inf,p.value=0.01,fstat.only=FALSE)
+decideTests <- function(object,method="separate",adjust.method="fdr",p.value=0.05)
+#	Accept or reject hypothesis tests across genes and contrasts
 #	Gordon Smyth
-#	Last modified 5 May 2004.
+#	17 Aug 2004. Last modified 6 Sep 2004.
+{
+	if(!is(object,"MArrayLM")) stop("Need MArrayLM object")
+	method <- match.arg(method,c("separate","global","heirarchical","nestedF"))
+	adjust.method <- match.arg(adjust.method,c("none","bonferroni","holm","fdr"))
+	switch(method,separate={
+		p <- as.matrix(object$p.value)
+		tstat <- as.matrix(object$t)
+		for (j in 1:ncol(p)) p[,j] <- p.adjust(p[,j],method=adjust.method)
+		results <- new("TestResults",sign(tstat)*(p<p.value))
+	},global={
+		p <- as.matrix(object$p.value)
+		tstat <- as.matrix(object$t)
+		p <- p.adjust(p,method=adjust.method)
+		results <- new("TestResults",sign(tstat)*(p<p.value))
+	},heirarchical={
+		sel <- p.adjust(object$F.p.value,method=adjust.method) < p.value
+		i <- sum(sel,na.rm=TRUE)
+		n <- sum(!is.na(sel))
+		a <- switch(adjust.method,
+			none=1,
+			bonferroni=1/n,
+			holm=1/(n-i+1),
+			fdr=i/n
+		)
+		results <- new("TestResults",array(0,dim(object$t)))
+		colnames(results) <- colnames(object$t)
+		if(any(sel)) results[sel,] <- classifyTestsP(object[sel,],p.value=p.value*a)
+	},nestedF={
+		sel <- p.adjust(object$F.p.value,method=adjust.method) < p.value
+		i <- sum(sel,na.rm=TRUE)
+		n <- sum(!is.na(sel))
+		a <- switch(adjust.method,
+			none=1,
+			bonferroni=1/n,
+			holm=1/(n-i+1),
+			fdr=i/n
+		)
+		results <- new("TestResults",array(0,dim(object$t)))
+		colnames(results) <- colnames(object$t)
+		if(any(sel)) results[sel,] <- classifyTestsF(object[sel,],p.value=p.value*a)
+	})
+	results
+}
+
+classifyTests <- function (object,cor.matrix=NULL,design=NULL,contrasts=diag(ncol(design)),df=Inf,p.value=0.01,fstat.only=FALSE) 
 {
 	.Deprecated("classifyTestsF")
 	m <- match.call()
@@ -174,10 +220,10 @@ classifyTestsF <- function(object,cor.matrix=NULL,df=Inf,p.value=0.01,fstat.only
 #	new("TestResults",result)
 #}
 
-FStat <- function(object,cor.matrix=NULL,design=NULL,contrasts=diag(ncol(design)))
+FStat <- function(object,cor.matrix=NULL)
 #	Compute overall F-tests given a matrix of t-statistics
 #	Gordon Smyth
-#	24 February 2004.  Last modified 5 May 2004.
+#	24 February 2004.  Last modified 21 July 2004.
 {
 	m <- as.list(match.call())
 	m[[1]] <- as.name("classifyTestsF")

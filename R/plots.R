@@ -3,14 +3,14 @@
 imageplot <- function(z, layout, low=NULL, high=NULL, ncolors=123, zerocenter=NULL, zlim=NULL, mar=c(2,1,1,1), legend=TRUE, ...) {
 #  Image plot of spotted microarray data
 #  Gordon Smyth
-#  20 Nov 2001.  Last revised 3 July 2004.
+#  20 Nov 2001.  Last revised 18 Sep 2004.
 
 #  Check input
 	gr <- layout$ngrid.r
 	gc <- layout$ngrid.c
 	sr <- layout$nspot.r
 	sc <- layout$nspot.c
-	if(is.null(gr)||is.null(gc)||is.null(sr)||is.null(sc)) stop("Layout needs to contain components ngrid.r, ngrid.c, nspot.r and spot.c")
+	if(is.null(gr)||is.null(gc)||is.null(sr)||is.null(sc)) stop("Layout needs to contain components ngrid.r, ngrid.c, nspot.r and nspot.c")
 	if(length(z) != gr*gc*sr*sc) stop("Number of image spots does not agree with layout dimensions")
 
 #  Check colours
@@ -28,6 +28,7 @@ imageplot <- function(z, layout, low=NULL, high=NULL, ncolors=123, zerocenter=NU
 
 #  Plot differential expression from "green" to "red" or plot one variable from "white" to "blue"?
 	zr <- range(z,na.rm=TRUE)
+	if(!all(is.finite(zr))) stop("Infinite values found: consider using finite zlim value")
 	zmax <- max(abs(zr))
 	zmin <- zr[1]
 	if(is.null(zerocenter)) zerocenter <- (zmin < 0)

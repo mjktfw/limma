@@ -4,9 +4,10 @@ assign("[.RGList",
 function(object, i, j, ...) {
 #  Subsetting for RGList objects
 #  Gordon Smyth
-#  29 June 2003.  Last modified 5 July 2003.
+#  29 June 2003.  Last modified 10 Oct 2004.
 
 	if(nargs() != 3) stop("Two subscripts required",call.=FALSE)
+	oc <- names(object$other)
 	if(missing(i))
 		if(missing(j))
 			return(object)
@@ -17,6 +18,8 @@ function(object, i, j, ...) {
 			object$Gb <- object$Gb[,j,drop=FALSE]
 			object$weights <- object$weights[,j,drop=FALSE]
 			object$targets <- object$targets[j,,drop=FALSE]
+			object$targets <- object$targets[j,,drop=FALSE]
+			if(!is.null(oc)) for(k in oc) object$other[[k]] <- object$other[[k]][,j,drop=FALSE]
 		}
 	else
 		if(missing(j)) {
@@ -26,6 +29,7 @@ function(object, i, j, ...) {
 			object$Gb <- object$Gb[i,,drop=FALSE]
 			object$weights <- object$weights[i,,drop=FALSE]
 			object$genes <- object$genes[i,,drop=FALSE]
+			if(!is.null(oc)) for(k in oc) object$other[[k]] <- object$other[[k]][i,,drop=FALSE]
 		} else {
 			object$R <- object$R[i,j,drop=FALSE]
 			object$G <- object$G[i,j,drop=FALSE]
@@ -34,6 +38,7 @@ function(object, i, j, ...) {
 			object$weights <- object$weights[i,j,drop=FALSE]
 			object$genes <- object$genes[i,,drop=FALSE]
 			object$targets <- object$targets[j,,drop=FALSE]
+			if(!is.null(oc)) for(k in oc) object$other[[k]] <- object$other[[k]][i,j,drop=FALSE]
 		}
 	object
 })
@@ -78,15 +83,65 @@ function(object, i, j, ...) {
 	object
 })
 
-is.fullrank <- function(x) {
-#	Check whether a numeric matrix has full column rank
-#	Gordon Smyth
-#	18 August 2003.  Last modified 9 March 2004.
+assign("[.MArrayLM",
+function(object, i, j, ...) {
+#  Subsetting for MArrayLM objects
+#  Gordon Smyth
+#  16 Aug 2004.
 
-	x <- as.matrix(x)
-	e <- eigen(crossprod(x),symmetric=TRUE,only.values=TRUE)$values
-	e[1] > 0 && abs(e[length(e)]/e[1]) > 1e-13
-}
+	if(nargs() != 3) stop("Two subscripts required",call.=FALSE)
+	if(missing(i)) {
+		if(missing(j))
+			return(object)
+		else {
+			object$coefficients <- object$coefficients[,j,drop=FALSE]
+			object$stdev.unscaled <- object$stdev.unscaled[,j,drop=FALSE]
+			object$t <- object$t[,j,drop=FALSE]
+			object$weights <- object$weights[,j,drop=FALSE]
+			object$p.value <- object$p.value[,j,drop=FALSE]
+			object$lods <- object$lods[,j,drop=FALSE]
+			object$targets <- object$targets[j,,drop=FALSE]
+			object$cov.coefficients <- object$cov.coefficients[j,j,drop=FALSE]
+			if(!is.null(object$design)) {
+				object$design <- as.matrix(object$design)[j,,drop=FALSE]
+				if(!is.fullrank(object$design)) warning("design matrix is singular",call.=FALSE)
+			}
+			object$var.prior <- object$var.prior[j]
+		}
+	} else {
+		if(missing(j)) {
+			object$coefficients <- object$coefficients[i,,drop=FALSE]
+			object$stdev.unscaled <- object$stdev.unscaled[i,,drop=FALSE]
+			object$t <- object$t[i,,drop=FALSE]
+			object$weights <- object$weights[i,,drop=FALSE]
+			object$p.value <- object$p.value[i,,drop=FALSE]
+			object$lods <- object$lods[i,,drop=FALSE]
+			object$genes <- object$genes[i,,drop=FALSE]
+		} else {
+			object$coefficients <- object$coefficients[i,j,drop=FALSE]
+			object$stdev.unscaled <- object$stdev.unscaled[i,j,drop=FALSE]
+			object$t <- object$t[i,j,drop=FALSE]
+			object$weights <- object$weights[i,j,drop=FALSE]
+			object$p.value <- object$p.value[i,j,drop=FALSE]
+			object$lods <- object$lods[i,j,drop=FALSE]
+			object$genes <- object$genes[i,,drop=FALSE]
+			object$targets <- object$targets[j,,drop=FALSE]
+			object$cov.coefficients <- object$cov.coefficients[j,j,drop=FALSE]
+			if(!is.null(object$design)) {
+				object$design <- as.matrix(object$design)[j,,drop=FALSE]
+				if(!is.fullrank(object$design)) warning("design matrix is singular",call.=FALSE)
+			}
+			object$var.prior <- object$var.prior[j]
+		}
+		object$df.residual <- object$df.residual[i]
+		object$sigma <- object$sigma[i]
+		object$s2.post <- object$s2.post[i]
+		object$Amean <- object$Amean[i]
+		object$F <- object$F[i]
+		object$F.p.value <- object$F.p.value[i]
+	}
+	object
+})
 
 cbind.RGList <- function(..., deparse.level=1) {
 #  Combine RGList objects assuming same genelists

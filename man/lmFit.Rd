@@ -22,11 +22,30 @@ Object of class \code{\link[limma:marraylm]{MArrayLM}}
 }
 
 \details{
-A linear model is fitted for each gene by calling one of the lower-level functions \code{lm.series}, \code{gls.series} or \code{rlm.series}.
-The arguments \code{design}, \code{ndups}, \code{spacing} and \code{weights} will be extracted from the data \code{object} if available and do not normally need to set explicitly in the call; if any of these are set in the call then they will over-ride the slots or components in the data \code{object}.
+This function accepts data from a experiment involving a series of microarrays with the same set of probes.
+A linear model is fitted to the expression data for each probe.
+The expression data should be log-ratios for two-color array platforms or log-expression values for one-channel platforms.
+(To fit linear models to the individual channels of two-color array data, see \code{\link{lmscFit}}.)
+The coefficients of the fitted models describe the differences between the RNA sources hybridized to the arrays.
+The genewise fitted model results are stored in a compact form suitable for further processing by other functions in the limma package.
 
-If \code{object} is an \code{PLMset}, then expression values will be taken from the slot \code{chip.coefs} and weights will be computed from \code{se.chip.coefs}.
-If \code{object} is an \code{exprSet}, then expression values will be taken from the \code{exprs} slot, but weights will not be computed.
+If \code{object} is a matrix then it should contain log-ratios or log-expression data with rows corresponding to probes and columns to arrays.
+(A numeric vector is treated the same as a matrix with one column.)
+For objects of other classes, a matrix of expression values is taken from the appropriate component or slot of the object.
+If \code{object} is of class \code{MAList} or \code{marrayNorm}, then the matrix of log-ratios (M-values) is extracted.
+If \code{object} is of class \code{exprSet} then the \code{exprs} slot is extracted.
+(This may contain log-expression or log-ratio values, depending on the platform.)
+If \code{object} is of class \code{PLMset} then the matrix of chip coefficients \code{chip.coefs} is extracted.
+
+The arguments \code{design}, \code{ndups}, \code{spacing} and \code{weights} will be extracted from the data \code{object} if available and do not normally need to set explicitly in the call.
+On the other hand, if any of these are set in the function call then they will over-ride the slots or components in the data \code{object}.
+If \code{object} is an \code{PLMset}, then weights are computed as \code{1/pmax(object@se.chip.coefs, 1e-05)^2}.
+If \code{object} is an \code{exprSet} object, then weights are not computed.
+
+The actual linear model computations are done by passing the data to one the lower-level functions \code{lm.series}, \code{gls.series} or \code{rlm.series}.
+The function \code{rlm.series} is used if \code{method="robust"}.
+If \code{method="ls"}, then \code{gls.series} is used if a correlation structure has been specified, i.e., if \code{ndups>1} or \code{block} is non-null and \code{correlation} is different from zero.
+If \code{method="ls"} and there is no correlation structure, \code{lm.series} is used.
 }
 
 \seealso{

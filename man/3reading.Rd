@@ -22,11 +22,11 @@ An \code{RGList} object can be extracted from the data frames at a later stage u
 
 Another function, \code{\link{rg.series.spot}} is very similar to \code{\link{read.maimages}} with \code{source="spot"}.
 This function will be removed in future versions of LIMMA.
-}
 
-\code{\link{read.maimages}} uses utility functions \code{\link{removeExt}}, \code{\link{read.matrix}}, \code{\link{read.imagene}} and \code{\link{readImageneHeaders}}.
+\code{\link{read.maimages}} uses utility functions \code{\link{removeExt}}, \code{\link{read.matrix}}, \code{\link{read.imagene}} and \code{\link{readImaGeneHeader}}.
 
 The function \link{as.MAList} can be used to convert a \code{marrayNorm} object to an \code{MAList} object if the data was read and normalized using the marrayInput and marrayNorm packages.
+}
 
 \section{Reading the Gene List}{
 

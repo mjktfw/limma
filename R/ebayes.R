@@ -224,11 +224,12 @@ qqt <- function(y,df=Inf,ylim=range(y),main="Student's t Q-Q Plot",xlab="Theoret
     invisible(list(x=x,y=y))
 }
 
-topTable <- function(fit,coef=1,number=10,genelist=NULL,adjust.method="holm",sort.by="B",resort.by=NULL) {
+topTable <- function(fit,coef=1,number=10,genelist=NULL,adjust.method="holm",sort.by="B",resort.by=NULL)
 #	Summary table of top genes, object-orientated version
 #	Gordon Smyth
-#	4 August 2003.  Last modified 16 Feb 2004.
-
+#	4 August 2003.  Last modified 1 Sep 2004.
+{
+	fit <- unclass(fit)
 	if(!missing(genelist)) fit$genes <- genelist
 	toptable(fit=fit[c("coefficients","stdev.unscaled")],
 		coef=coef,
@@ -241,11 +242,11 @@ topTable <- function(fit,coef=1,number=10,genelist=NULL,adjust.method="holm",sor
 		resort.by=resort.by)
 }
 
-toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.method="holm",sort.by="B",resort.by=NULL,...) {
+toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.method="holm",sort.by="B",resort.by=NULL,...)
 #	Summary table of top genes
 #	Gordon Smyth
 #	21 Nov 2002. Last revised 26 June 2004.
-
+{
 	if(is.null(eb)) {
 		fit$coefficients <- as.matrix(fit$coefficients)[,coef]
 		fit$stdev.unscaled <- as.matrix(fit$stdev.unscaled)[,coef]
@@ -261,7 +262,7 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 		if(NCOL(A)>1) A <- rowMeans(A,na.rm=TRUE)
 	}
 	tstat <- as.matrix(eb$t)[,coef]
-	P.Value <- as.matrix(eb$p)[,coef]
+	P.Value <- as.matrix(eb$p.value)[,coef]
 	B <- as.matrix(eb$lods)[,coef]
 	sort.by <- match.arg(sort.by,c("M","A","P","p","T","t","B"))
 	ord <- switch(sort.by,

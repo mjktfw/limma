@@ -8,16 +8,14 @@
 Classify a series of related t-statistics as up, down or not significant.
 }
 \usage{
-classifyTestsF(object, cor.matrix=NULL, design=NULL, contrasts=diag(ncol(design)), df=Inf, p.value=0.01, fstat.only=FALSE)
+classifyTestsF(object, cor.matrix=NULL, df=Inf, p.value=0.01, fstat.only=FALSE)
 classifyTestsT(object, t1=4, t2=3)
 classifyTestsP(object, df=Inf, p.value=0.05, method="holm")
-FStat(object, cor.matrix=NULL, design=NULL, contrasts=diag(ncol(design)))
+FStat(object, cor.matrix=NULL)
 }
 \arguments{
   \item{object}{numeric matrix of t-statistics or an \code{MArrayLM} object from which the t-statistics may be extracted.}
   \item{cor.matrix}{covariance matrix of each row of t-statistics.  Defaults to the identity matrix.}
-  \item{design}{full rank numeric design matrix.  Not used if \code{cor.matrix} is specified.}
-  \item{contrasts}{numeric matrix with columns specifying contrasts of the coefficients of interest.  Not used if \code{cor.matrix} is specified.}
   \item{df}{numeric vector giving the degrees of freedom for the t-statistics.
   May have length 1 or length equal to the number of rows of \code{tstat}.}
   \item{p.value}{numeric value between 0 and 1 giving the desired size of the test}

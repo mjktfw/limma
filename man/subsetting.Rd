@@ -1,15 +1,16 @@
 \name{subsetting}
 \alias{[.RGList}
 \alias{[.MAList}
-\title{Subset RGList or MAList Objects}
+\alias{[.MArrayLM}
+\title{Subset RGList, MAList or MArrayLM Objects}
 \description{
-Extract a subset of an \code{RGList} or \code{MAList} objects.
+Extract a subset of an \code{RGList}, \code{MAList} or \code{MArrayLM} object.
 }
 \usage{
 object[i, j]
 }
 \arguments{
-  \item{object}{object of class \code{RGList} or \code{MAList}}
+  \item{object}{object of class \code{RGList}, \code{MAList} or \code{MArrayLM}}
   \item{i,j}{elements to extract. \code{i} subsets the genes or spots while \code{j} subsets the arrays}
 }
 \details{
@@ -17,7 +18,7 @@ object[i, j]
 See the \link[base]{Extract} help entry for more details on subsetting matrices.
 }
 \value{
-An \code{\link[limma:rglist]{RGList}} or \code{\link[limma:malist]{MAList}} object holding data from the specified subset of genes and arrays.
+An object of the same class as \code{object} holding data from the specified subset of genes and arrays.
 }
 \author{Gordon Smyth}
 \seealso{

@@ -132,10 +132,10 @@ getLayout2 <- function(galfile)
 readTargets <- function(file="Targets.txt",path=NULL,sep="\t",row.names="FileName")
 #	Data frame of target information
 #	Gordon Smyth
-#	19 Oct 2003.  Last modified 15 March 2004.
+#	19 Oct 2003.  Last modified 8 July 2004.
 {
 	if(!is.null(path)) file <- file.path(path,file)
-	tab <- read.table(file,header=TRUE,as.is=TRUE,sep=sep,quote="\"")
+	tab <- read.table(file,header=TRUE,as.is=TRUE,sep=sep,quote="\"",fill=TRUE)
 #	if(!all(c("Cy3","Cy5") %in% names(tab))) warning("File should contain columns: Cy3 and Cy5")
 	if(row.names %in% names(tab)) row.names(tab) <- removeExt(tab[,row.names])
 	tab
@@ -252,10 +252,10 @@ read.matrix <- function(file,nrows=0,skip=0,...) {
 	x
 }
 
-read.maimages <- function(files,source="spot",path=NULL,ext=NULL,names=NULL,columns=NULL,annotation=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote="\"",...) {
+read.maimages <- function(files,source="spot",path=NULL,ext=NULL,names=NULL,columns=NULL,other.columns=NULL,annotation=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote="\"",...) {
 #	Extracts an RG list from a series of image analysis output files
 #	Gordon Smyth
-#	1 Nov 2002.  Last revised 8 June 2004.
+#	1 Nov 2002.  Last revised 10 Oct 2004.
 
 	if(missing(files)) {
 		if(missing(ext))
@@ -344,6 +344,28 @@ read.maimages <- function(files,source="spot",path=NULL,ext=NULL,names=NULL,colu
 		if(any(j>0)) RG$genes <- data.frame(obj[,j,drop=FALSE])
 	}
 
+#	Set printer layout
+	if(source=="agilent") {
+		if(!is.null(RG$genes$Row) && !is.null(RG$genes$Col)) {
+			nr <- length(unique(RG$genes$Row))
+			nc <- length(unique(RG$genes$Col))
+			if(nspots==nr*nc) RG$printer <- lists(ngrid.r=1,ngrid.c=1,nspot.r=nr,nspot.c=nc)
+		}
+	}
+
+#	Other columns
+	if(!is.null(other.columns)) {
+		other.columns <- as.character(other.columns)
+		j <- match(other.columns,colnames(obj),0)
+		if(any(j>0)) {
+			other.columns <- colnames(obj)[j]
+			RG$other <- list()
+			for (j in other.columns) RG$other[[j]] <- Y 
+		} else {
+			other.columns <- NULL
+		}
+	}
+
 #	Now read remainder of files
 	for (i in 1:nslides) {
 		if(i > 1) {
@@ -357,6 +379,9 @@ read.maimages <- function(files,source="spot",path=NULL,ext=NULL,names=NULL,colu
 		RG$Rb[,i] <- obj[,columns$Rb]
 		RG$Gb[,i] <- obj[,columns$Gb]
 		if(!is.null(wt.fun)) RG$weights[,i] <- wt.fun(obj)
+		if(!is.null(other.columns)) for (j in other.columns) {
+			RG$other[[j]][,i] <- obj[,j] 
+		}
 		if(verbose) cat(paste("Read",fullname,"\n"))
 	}
 	new("RGList",RG)

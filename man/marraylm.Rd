@@ -13,7 +13,7 @@ Objects are normally created by \code{\link{lmFit}}.
   \describe{
     \item{\code{coefficients}:}{\code{matrix} containing fitted coefficients or contrasts}
     \item{\code{stdev.unscaled}:}{\code{matrix} containing unscaled standard deviations of the coefficients or contrasts}
-    \item{\code{sigma}:}{\code{numeric} vector containing residual variances for each gene}
+    \item{\code{sigma}:}{\code{numeric} vector containing residual standard deviations for each gene}
     \item{\code{df.residual}:}{\code{numeric} vector containing residual degrees of freedom for each gene}
   }
   Objects may also contain the following optional components:

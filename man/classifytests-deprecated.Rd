@@ -1,4 +1,4 @@
-\name{classifyTests}
+\name{classifyTests-deprecated}
 \alias{classifyTests}
 \title{Treat Simultaneous T-Tests as Classification Problem}
 \description{

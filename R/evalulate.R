@@ -53,10 +53,14 @@ anova.MAList <- function(object,design=NULL,ndups=2,...) {
 #	Analysis of variance, gene x array, for series of replicate arrays
 #	Useful for comparing between to within gene variability
 #	Gordon Smyth
-#	16 March 2002.  Last modified 21 April 2003.
+#	16 March 2002.  Last modified 17 Aug 2004.
 
 	M <- object$M
-	if(!is.null(design)) M <- matvec(M,design)
+	if(!is.null(design)) {
+		d <- dim(design)
+		if(!is.null(d)) if(d[2]>1) stop("Design matrix should have only one column")
+		M <- matvec(M,design)
+	}
 	bwss.array <- bwss.matrix(M)
 	nspots <- dim(M)[1]
 	narrays <- dim(M)[2]

@@ -6,20 +6,23 @@
 Reads an RGList from a series of microarray image analysis output files
 }
 \usage{
-read.maimages(files,source="spot",path=NULL,ext=NULL,names=NULL,columns=NULL,annotation=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote="\"",\dots)
+read.maimages(files,source="spot",path=NULL,ext=NULL,names=NULL,columns=NULL,other.columns=NULL,annotation=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote="\"",\dots)
 read.imagene(files,path=NULL,ext=NULL,names=NULL,columns=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote="\"",...)
 }
 \arguments{
   \item{files}{character vector giving the names of the files containing image analysis output or, for Imagene data, a character matrix of names of files.
-  If omitted, then all files with extension \code{ext} will be read.}
+  If omitted, then all files with extension \code{ext} in the specified directory will be read in alphabetical order.}
   \item{source}{character string specifing the image analysis program which produced the output files.  Choices are \code{"agilent"}, \code{"arrayvision"}, \code{"genepix"}, \code{"imagene"}, \code{"quantarray"}, \code{"smd.old"}, \code{"smd"}, \code{"spot"} or \code{"spot.close.open"}.}
-  \item{path}{character string giving the directory containing the files. Can be omitted if the files are in the current working directory.}
+  \item{path}{character string giving the directory containing the files.
+  If \code{NULL}, the current working directory is assumed.}
   \item{ext}{character string giving optional extension to be added to each file name}
-  \item{names}{character vector of names to be associated with each array as column name}
+  \item{names}{character vector of names to be associated with each array as column name.
+  If \code{NULL}, the filenames minus any common extension will be used.}
   \item{columns}{list with fields \code{Rf}, \code{Gf}, \code{Rb} and \code{Gb} giving the column names to be used for red and green foreground and background or, in the case of Imagene data, a list with fields \code{f} and \code{b}.  This argument is not usually specified by the user but, if it is, it over-rides \code{source}.}
+  \item{other.columns}{character vector of names of other columns to be read containing spot-specific information}
   \item{annotation}{character vector of names of columns containing annotation information about the probes}
-  \item{wt.fun}{function to calculate quality weights}
-  \item{verbose}{logical, \code{TRUE} to report each time a file is read in}
+  \item{wt.fun}{function to calculate spot quality weights}
+  \item{verbose}{logical, \code{TRUE} to report each time a file is read}
   \item{sep}{the field separator character}
   \item{quote}{character string of characters to be treated as quote marks}
   \item{\dots}{any other arguments are passed to \code{read.table}}
@@ -48,12 +51,14 @@ The first column should contain the names of the files containing green channel 
 If \code{source="imagene"} and \code{files} is a vector of even length instead of a matrix, then each consecutive pair of file names is assumed to correspond to the same array.
 The function \code{read.imagene} is called by \code{read.maimages} when \code{source="imagene"}.
 It does not need to be called directly by users.
+
+The argument \code{other.columns} allows arbitrary columns of the image analysis output files to be preserved in the data object.
 }
 
 \section{Warnings}{
-All image analysis files being read are assumed to contain data for the same number and layout of spots and in the same order.
+All image analysis files being read are assumed to contain data for the same genelist in the same order.
 No checking is done to confirm that this is true.
-Annotation information, when it is available, is set from the first image output file only.
+Annotation information, when it is available, is set from the first file only.
 }
 
 \value{
@@ -65,6 +70,8 @@ An \code{\link[limma:rglist]{RGList}} object containing the components
   \item{weights}{spot quality weights, if \code{wt.fun} is given}
   \item{printer}{list of class \code{\link[limma:printlayout]{PrintLayout}}, currently set only if \code{source="imagene"}}
   \item{genes}{data frame containing annotation information about the probes, for example gene names and IDs and spatial positions on the array, currently set only if \code{source} is \code{"agilent"}, \code{"genepix"} or \code{source="imagene"} or if the \code{annotation} argument is set}
+  \item{targets}{data frame with column \code{FileName} giving the names of the files read}
+  \item{other}{list containing matrices corresponding to \code{other.columns} if given}
 }
 \author{Gordon Smyth}
 \references{

@@ -22,6 +22,8 @@ eBayes(fit,proportion=0.01,stdev.coef.lim=c(0.1,4))
   \item{s2.post}{vector giving the posterior values for \code{sigma^2}}
   \item{lods}{numeric vector or matrix giving the log-odds of differential expression}
   \item{var.prior}{estimated prior value for the variance of the log2-fold-change for differentially expressed gene}
+  \item{F}{numeric vector of F-statistics for testing all contrasts simultaneously equal to zero}
+  \item{F.p.value}{numeric vector giving p-values corresponding to \code{F}}
 }
 \details{These functions is used to rank genes in order of evidence for differential expression.
 It uses an empirical Bayes method to shrink the gene-wise sample variances towards a common values and, in so doing, augmenting the degrees of freedom for the individual variances.
