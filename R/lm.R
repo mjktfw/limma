@@ -1,6 +1,6 @@
 #  LINEAR MODELS
 
-lmFit <- function(object,design=NULL,contrasts=NULL,ndups=1,spacing=1,correlation=0.75,weights=NULL,method="ls",...) {
+lmFit <- function(object,design=NULL,ndups=1,spacing=1,correlation=0.75,weights=NULL,method="ls",...) {
 #	Fit linear model
 #	Gordon Smyth
 #	30 June 2003.  Last modified 2 July 2003.
@@ -21,7 +21,6 @@ lmFit <- function(object,design=NULL,contrasts=NULL,ndups=1,spacing=1,correlatio
 	if(is.list(object)) {
 		M <- object$M
 		if(missing(design) && !is.null(object$design)) design <- object$design
-		if(missing(contrasts) && !is.null(object$contrasts)) design <- object$contrasts
 		if(missing(ndups) && !is.null(object$printer$ndups)) ndups <- object$printer$ndups
 		if(missing(spacing) && !is.null(object$printer$spacing)) spacing <- object$printer$spacing
 		if(missing(correlation) && !is.null(object$correlation)) correlation <- object$correlation
@@ -344,6 +343,38 @@ dupcor.series <- function(M,design=rep(1,ncol(M)),ndups=2,spacing=1,initial=0.8,
 }
 
 contrasts.fit <- function(fit,contrasts) {
+#	Convert coefficients and std deviations in fit object to reflect contrasts of interest
+#	Gordon Smyth
+#	13 Oct 2002.  Last modified 4 September 2003.
+
+	ncoef <- NCOL(fit$coefficients)
+	if(nrow(contrasts)!=ncoef) stop("Number of rows of contrast matrix must match number of coefficients")
+	fit$coefficients <- fit$coefficients %*% contrasts
+	design <- fit$design
+	if(!is.null(design) && ncoef > 1) {
+		A <- crossprod( abs(design) > 1e-14 )
+		orthog <- all(A[lower.tri(A)]==0) 
+	}
+	if(is.null(design) || ncoef==1 || orthog)
+		fit$stdev.unscaled <- sqrt(fit$stdev.unscaled^2 %*% contrasts^2)
+	else {
+		A <- La.chol2inv(La.chol(crossprod(design)))
+		s <- sqrt(diag(A))
+		R <- La.chol(t(A/s)/s)
+		ngenes <- NROW(fit$stdev.unscaled)
+		ncont <- NCOL(contrasts)
+		U <- matrix(1,ngenes,ncont,dimnames=list(rownames(fit$stdev.unscaled),colnames(contrasts)))
+		for (i in 1:ngenes) {
+			RUC <- R %*% t(t(contrasts)*fit$stdev.unscaled[i,])
+			U[i,] <- sqrt(array(1,c(1,ncoef)) %*% RUC^2)
+		}
+		fit$stdev.unscaled <- U
+	}
+	fit$contrasts <- contrasts
+	fit
+}
+
+contrasts.fit0 <- function(fit,contrasts) {
 #	Extract contrast information from oneway linear model fit
 #	Gordon Smyth
 #	13 Oct 2002.  Last modified 1 July 2003.
@@ -353,3 +384,4 @@ contrasts.fit <- function(fit,contrasts) {
 	fit$contrasts <- contrasts
 	fit
 }
+

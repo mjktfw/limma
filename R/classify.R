@@ -3,7 +3,7 @@
 classifyTests <- function(tstat,cor.matrix=NULL,design=NULL,contrasts=diag(ncol(design)),df=Inf,p.value=0.01) {
 #	Use F-tests to classify vectors of t-test statistics into outcomes
 #	Gordon Smyth
-#	20 Mar 2003.  Last revised 25 August 2003.
+#	20 Mar 2003.  Last revised 3 August 2003.
 
 #	Method intended for MAList objects but accept unclassed lists as well
 	if(is.list(tstat)) {

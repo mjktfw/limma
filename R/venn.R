@@ -1,11 +1,16 @@
 #  VENN DIAGRAM COUNTS AND PLOTS
 
-vennCounts <- function(classification) {
+vennCounts <- function(classification,include="both") {
 #	Venn diagram counts
 #	Gordon Smyth
-#	4 July 2003
+#	4 July 2003.  Last modified 4 September 2003.
 
-	classification <- as.matrix(classification > 0.5)
+	include <- match.arg(include,c("both","up","down"))
+	classification <- switch(include,
+		both = as.matrix(abs(classification) > 0.5),
+		up = as.matrix(classification > 0.5),
+		down = as.matrix(classification < -0.5)
+	)
 	ngenes <- nrow(classification)
 	ncontrasts <- ncol(classification)
 	names <- colnames(classification)
@@ -22,12 +27,12 @@ vennCounts <- function(classification) {
 	structure(cbind(outcomes,Counts=counts),class="VennCounts")
 }
 
-vennDiagram <- function(object,names,...) {
+vennDiagram <- function(object,include="both",names,...) {
 #	Plot Venn diagram
 #	Gordon Smyth and James Wettenhall
-#	4 July 2003
+#	4 July 2003.  Last modified 4 September 2003.
 
-	if(class(object) != "VennCounts") object <- vennCounts(object)
+	if(class(object) != "VennCounts") object <- vennCounts(object,include=include)
 	nsets <- ncol(object)-1
 	if(nsets > 3) stop("Can't plot Venn diagram for more than 3 sets")
 	if(missing(names)) names <- colnames(object)[1:nsets]
@@ -69,3 +74,4 @@ vennDiagram <- function(object,names,...) {
 	)
 	invisible()
 }
+

@@ -6,13 +6,15 @@
 Compute classification counts or plot classification counts in a Venn diagram.
 }
 \usage{
-vennCounts(classification)
-vennDiagram(object, names, \dots)
+vennCounts(classification, include="both")
+vennDiagram(object, include="both", names, \dots)
 }
 \arguments{
   \item{classification}{classification matrix of 0's and 1's indicating significance of a test.
   Usually created by \code{\link{classifyTests}}.}
   \item{object}{either a classification matrix or a \code{VennCounts} object produced by \code{vennCounts}.}
+  \item{include}{character string specifying whether to counts genes up-regulated, down-regulated or both.
+  Choices are \code{"both"}, \code{"up"} or \code{"down"}.}
   \item{names}{optional character vector giving names for the sets or contrasts}
   \item{\dots}{any other arguments are passed to \code{plot}}
 }

@@ -3,12 +3,10 @@
 \title{Linear Model for Series of Arrays}
 \description{Fit linear model for each gene given a series of arrays}
 \usage{
-lmFit(object,design=NULL,contrasts=NULL,ndups=1,spacing=1,correlation=0.75,weights=NULL,method="ls",...) 
+lmFit(object,design=NULL,ndups=1,spacing=1,correlation=0.75,weights=NULL,method="ls",...) 
 }
 \arguments{
   \item{object}{object of class \code{numeric}, \code{matrix}, \code{MAList}, \code{marrayNorm} or \code{exprSet} containing log-ratios or log-values of expression for a series of microarrays}
-  \item{contrasts}{numeric matrix with columns specifying contrasts of the coefficients of interest.
-  Use of \code{contrasts} is currently reliable only for designs using a common reference.}
   \item{design}{the design matrix of the microarray experiment, with rows corresponding to arrays and columns to coefficients to be estimated.  Defaults to the unit vector meaning that the arrays are treated as replicates.} 
   \item{ndups}{a positive integer giving the number of times each gene is printed on an array}
   \item{spacing}{the spacing between duplicate spots, \code{spacing=1} for consecutive spots}
