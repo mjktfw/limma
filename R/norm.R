@@ -366,10 +366,10 @@ plotPrintorder <- function(object,layout,start="topleft",slide=1,method="loess",
 
 #  BETWEEN ARRAY NORMALIZATION
 
-normalizeBetweenArrays <- function(object, method="scale", ties=TRUE, targets=NULL, vsn.arg=NULL) {
+normalizeBetweenArrays <- function(object, method="scale", targets=NULL, ...) {
 #	Normalize between arrays
 #	Gordon Smyth
-#	12 Apri 2003.  Last revised 10 May 2004.
+#	12 Apri 2003.  Last revised 11 May 2004.
 
 	choices <- c("none","scale","quantile","Aquantile","Gquantile","Rquantile","Tquantile","vsn")
 	method <- match.arg(method,choices)
@@ -379,11 +379,8 @@ normalizeBetweenArrays <- function(object, method="scale", ties=TRUE, targets=NU
 		return(switch(method,
 			none = object,
 			scale = normalizeMedianDeviations(object),
-			quantile = normalizeQuantiles(object, ties=ties),
-			vsn = {
-				vcall <- as.call(c(list(as.name("vsn"),intensities=as.name("object")),vsn.arg))
-				eval(vcall)@exprs/log(2)
-			}
+			quantile = normalizeQuantiles(object, ...),
+			vsn = vsn(intensities=object,...)@exprs/log(2)
 		))
 	}
 	if(method=="vsn") {
@@ -394,8 +391,7 @@ normalizeBetweenArrays <- function(object, method="scale", ties=TRUE, targets=NU
 		}
 		if(!is.null(object$M) && !is.null(object$A)) y <- 2^cbind(object$A-object$M/2,object$A+object$M/2)
 		if(is.null(y)) stop("object doesn't appear to be RGList or MAList")
-		vcall <- as.call(c(list(as.name("vsn"),intensities=as.name("y")),vsn.arg))
-		y <- eval(vcall)
+		y <- vsn(intensities=y,...)
 		n2 <- ncol(y@exprs)/2
 		G <- y@exprs[,1:n2]/log(2)
 		R <- y@exprs[,n2+(1:n2)]/log(2)
@@ -414,24 +410,24 @@ normalizeBetweenArrays <- function(object, method="scale", ties=TRUE, targets=NU
 		},
 		quantile = {
 			narrays <- NCOL(object$M)
-			Z <- normalizeQuantiles(cbind(object$A-object$M/2,object$A+object$M/2),ties=ties)
+			Z <- normalizeQuantiles(cbind(object$A-object$M/2,object$A+object$M/2),...)
 			G <- Z[,1:narrays]
 			R <- Z[,narrays+(1:narrays)]
 			object$M <- R-G
 			object$A <- (R+G)/2
 		},
 		Aquantile = {
-			object$A <- normalizeQuantiles(object$A,ties=ties)
+			object$A <- normalizeQuantiles(object$A,...)
 		},
 		Gquantile = {
 			G <- object$A-object$M/2
-			E <- normalizeQuantiles(G,ties=ties) - G
+			E <- normalizeQuantiles(G,...) - G
 			object$M <- object$M - E
 			object$A <- object$A + E/2
 		},
 		Rquantile = {
 			R <- object$A+object$M/2
-			E <- normalizeQuantiles(R,ties=ties) - R
+			E <- normalizeQuantiles(R,...) - R
 			object$M <- object$M - E
 			object$A <- object$A + E/2
 		},
@@ -442,7 +438,7 @@ normalizeBetweenArrays <- function(object, method="scale", ties=TRUE, targets=NU
 			Z <- cbind(object$A-object$M/2,object$A+object$M/2)
 			for (u in unique(targets)) {
 				j <- targets==u
-				Z[,j] <- normalizeQuantiles(Z[,j],ties=ties)
+				Z[,j] <- normalizeQuantiles(Z[,j],...)
 			}
 			G <- Z[,1:narrays]
 			R <- Z[,narrays+(1:narrays)]
@@ -452,7 +448,7 @@ normalizeBetweenArrays <- function(object, method="scale", ties=TRUE, targets=NU
 	object
 }
 
-normalizeQuantiles <- function(A, ties=FALSE) {
+normalizeQuantiles <- function(A, ties=TRUE) {
 #	Normalize columns of a matrix to have the same quantiles, allowing for missing values.
 #	Gordon Smyth
 #	25 June 2002.  Last revised 5 June 2003.

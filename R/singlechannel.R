@@ -96,9 +96,10 @@ array2channel <- function(targets,channels=c(1,2),channelwise.columns=list(Targe
 #	Convert data.frame with one row for each two-color array,
 #	into data.frame with one row for each channel
 #	Gordon Smyth
-#	16 March 2004.
+#	16 March 2004.  Last modified 13 May 2004.
 {
 	targets <- as.data.frame(targets)
+	if(!min(dim(targets))) return(targets)
 	lcc <- length(channelwise.columns)
 	if(lcc) {
 		out <- channelwise.columns

@@ -113,9 +113,9 @@ function(object) {
 	}
 })
 
-dim.RGList <- function(x) dim(x$R)
-dim.MAList <- function(x) dim(x$M)
-dim.MArrayLM <- function(x) dim(x$coefficients)
+dim.RGList <- function(x) if(is.null(x$R)) c(0,0) else dim(x$R)
+dim.MAList <- function(x) if(is.null(x$M)) c(0,0) else dim(x$M)
+dim.MArrayLM <- function(x) if(is.null(x$coefficients)) c(0,0) else dim(x$coefficients)
 length.RGList <- length.MAList <- length.MArrayLM <- function(x) prod(dim(x))
 
 dimnames.RGList <- function(x) dimnames(x$R)

@@ -6,7 +6,7 @@ Normalize the columns of a matrix to have the same quantiles, allowing for missi
 Users do not normally need to call this function directly - use \code{\link{normalizeBetweenArrays}} instead.
 }
 \usage{
-normalizeQuantiles(A, ties=FALSE)
+normalizeQuantiles(A, ties=TRUE)
 }
 \arguments{
   \item{A}{numeric matrix. Missing values are allowed.}

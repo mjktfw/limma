@@ -7,7 +7,7 @@ Normalizes expression intensities so that the intensities or log-ratios have sim
 }
 
 \usage{
-normalizeBetweenArrays(object, method, ties=TRUE, targets=NULL, vsn.arg=NULL)
+normalizeBetweenArrays(object, method, targets=NULL, ...)
 }
 
 \arguments{
@@ -15,9 +15,8 @@ normalizeBetweenArrays(object, method, ties=TRUE, targets=NULL, vsn.arg=NULL)
   \item{method}{character string specifying the normalization method to be used.
   Choices are \code{"none"}, \code{"scale"}, \code{"quantile"}, \code{"Aquantile"}, \code{"Gquantile"}, \code{"Rquantile"}, \code{"Tquantile"} or \code{"vsn"}.
   A partial string sufficient to uniquely identify the choice is permitted.}
-  \item{ties}{logical, if \code{TRUE} then ties are treated in a careful way during quantile normalization.  This takes longer but is more accurate.}
   \item{targets}{vector, factor or matrix of length twice the number of arrays, used to indicate target groups if \code{method="Tquantile"}}
-  \item{vsn.arg}{a list of arguments to be passed to \code{vsn} if \code{method="vsn"}, for example \code{vsn.arg=list(verbose=FALSE,niter=4)}}
+  \item{...}{other arguments are passed to \code{normalizeQuantiles} if one of the quantile methods are used or to \code{vsn} if \code{method="vsn"}}
 }
 
 \details{
@@ -41,14 +40,15 @@ These two methods are called "q" and "Aq" respectively in Yang and Thorne (2003)
 \code{method="Rquantile"} ensures that the red (second) channel has the same empirical distribution across arrays, leaving the M-values (log-ratios) unchanged.
 
 \code{method="vsn"} uses the \code{\link[vsn]{vsn}} function from the vsn package.
+The normalized intensities are converted to the log-2 scale.
 
-If \code{object} is a \code{matrix} then the scale or quantile normlization will be applied to the columns.
+If \code{object} is a \code{matrix} then the scale, quantile or vsn normalization will be applied to the columns.
 Applying \code{method="Aquantile"} when \code{object} is a \code{matrix} will produce an error.
 }
 
 \value{
 If \code{object} is a matrix then \code{normalizeBetweenArrays} produces a matrix of the same size.
-Otherwise, \code{normalizeBetweenArrays} produces an \code{\link[limma:malist]{MAList}} object.
+Otherwise, \code{normalizeBetweenArrays} produces an \code{\link[limma:malist]{MAList}} object with M and A-values on the log-2 scale.
 }
 
 \author{Gordon Smyth}
@@ -69,7 +69,7 @@ In: D. R. Goldstein (ed.), \emph{Science and Statistics: A Festschrift for Terry
 \seealso{
   An overview of LIMMA functions for normalization is given in \link{4.Normalization}.
 
-  See also \code{\link[marrayNorm]{maNormScale}} in the marrayNorm package and \code{\link[affy:normalize-methods]{normalize}} in the affy package.
+  See also \code{\link[marrayNorm]{maNormScale}} in the marrayNorm package, \code{\link[affy:normalize-methods]{normalize}} in the affy package and \code{\link[vsn]{vsn}} in the vsn package.
 }
 
 \examples{
