@@ -12,7 +12,7 @@ This package defines the following data classes.
 
 \item{ \code{\link[limma:malist]{MAList}} }{
 	Intensities converted to M-values and A-values, i.e., to contrasts on the log-scale.
-	Usually created from an \code{RGList} using \code{MA.RG} or \code{normalizeBetweenArrays}.}
+	Usually created from an \code{RGList} using \code{MA.RG} or \code{normalizeWithinArrays}.}
 
 \item{ \code{\link[limma:marraylm]{MArrayLM}} }{
 	Store the result of fitting gene-wise linear models to the normalized intensities or log-ratios.

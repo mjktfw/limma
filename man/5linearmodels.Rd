@@ -85,6 +85,8 @@ After the above steps the results may be displayed or further processed using:
 
 \item{ \code{\link{vennDiagram}} }{
 	Accepts output from \code{classifyTests} or \code{vennCounts} and produces a Venn diagram plot.}
+\item{ \code{\link{write.fit}} }{
+	Writes an \code{MarrayLM} object to a file.}
 }
 }
 

@@ -15,7 +15,7 @@ If one is planning analysis of single-channel information from the microarrays r
 Single channel normalization uses further options of the \code{\link{normalizeBetweenArrays}} function.
 For more details see the \emph{\link[limma:../doc/usersguide]{LIMMA User's Guide}} which includes a section on single-channel normalization.
 
-\code{normalizeWithinArrays} uses utility functions \code{\link{loessFit}} and \code{\link{normalizeRobustSpline}}.
+\code{normalizeWithinArrays} uses utility functions \code{\link{MA.RG}}, \code{\link{loessFit}} and \code{\link{normalizeRobustSpline}}.
 \code{normalizeBetweenArrays} uses utility functions \code{\link{normalizeMedians}}, \code{\link{normalizeMedianDeviations}} and \code{\link{normalizeQuantiles}}, none of which need to be called directly by users.
 }
 
