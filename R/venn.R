@@ -27,10 +27,10 @@ vennCounts <- function(x,include="both") {
 	structure(cbind(outcomes,Counts=counts),class="VennCounts")
 }
 
-vennDiagram <- function(object,include="both",names,...) {
+vennDiagram <- function(object,include="both",names,mar=rep(1,4),...) {
 #	Plot Venn diagram
 #	Gordon Smyth and James Wettenhall
-#	4 July 2003.  Last modified 25 February 2004.
+#	4 July 2003.  Last modified 8 March 2004.
 
 	if(!is(object,"VennCounts")) object <- vennCounts(object,include=include)
 	nsets <- ncol(object)-1
@@ -44,6 +44,8 @@ vennDiagram <- function(object,include="both",names,...) {
 	xtext <- list(-1.2,c(-1.2,1.2),c(-1.2,1.2,0))[[nsets]]
 	ytext <- list(1.8,c(1.8,1.8),c(2.4,2.4,-3))[[nsets]]
 	cex <- 1.5
+	old.par <- par(mar=mar)
+	on.exit(par(old.par))
 	plot(x=0,y=0,type="n",xlim=c(-4,4),ylim=c(-4,4),xlab="",ylab="",axes=FALSE,...)
 	for(circle in 1:nsets) {
 #		lines() better than symbols() to make circles follow aspect ratio of plot

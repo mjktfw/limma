@@ -6,7 +6,7 @@
 Reads an RGList from a series of microarray image analysis output files
 }
 \usage{
-read.maimages(files,source="spot",path=NULL,ext=NULL,names=NULL,columns=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote="\"",\dots)
+read.maimages(files,source="spot",path=NULL,ext=NULL,names=NULL,columns=NULL,annotation=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote="\"",\dots)
 read.imagene(files,path=NULL,ext=NULL,names=NULL,columns=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote="\"",...)
 }
 \arguments{
@@ -17,6 +17,7 @@ read.imagene(files,path=NULL,ext=NULL,names=NULL,columns=NULL,wt.fun=NULL,verbos
   \item{ext}{character string giving optional extension to be added to each file name}
   \item{names}{character vector of names to be associated with each array as column name}
   \item{columns}{list with fields \code{Rf}, \code{Gf}, \code{Rb} and \code{Gb} giving the column names to be used for red and green foreground and background or, in the case of Imagene data, a list with fields \code{f} and \code{b}.  This argument is not usually specified by the user but, if it is, it over-rides \code{source}.}
+  \item{annotation}{character vector of names of columns containing annotation information about the probes}
   \item{wt.fun}{function to calculate quality weights}
   \item{verbose}{logical, \code{TRUE} to report each time a file is read in}
   \item{sep}{the field separator character}
@@ -26,7 +27,7 @@ read.imagene(files,path=NULL,ext=NULL,names=NULL,columns=NULL,wt.fun=NULL,verbos
 \details{
 This is the main data input function for the LIMMA package.
 It extracts the foreground and background intensities from a series of files, produced by an image analysis program, and assembles them into the components of one list.
-The image analysis programs Agilent Feature Extration, ArrayVision, GenePix, Imagene, QuantArray, Stanford Microarray Database (SMD) and SPOT are supported explicitly.
+The image analysis programs Agilent Feature Extraction, ArrayVision, GenePix, Imagene, QuantArray, Stanford Microarray Database (SMD) and SPOT are supported explicitly.
 Data from some other image analysis programs can be read if the appropriate column names containing the foreground and background intensities are specified using the \code{columns} argument.
 (This will work if the column names are unique and if there are no rows in the file after the last line of data.
 Header lines are ok.)
@@ -44,6 +45,13 @@ If \code{source="imagene"} and \code{files} is a vector of even length instead o
 The function \code{read.imagene} is called by \code{read.maimages} when \code{source="imagene"}.
 It does not need to be called directly by users.
 }
+
+\section{Warnings}{
+All image analysis files being read are assumed to contain data for the same number and layout of spots and in the same order.
+No checking is done to confirm that this is true.
+Annotation information, when it is available, is set from the first image output file only.
+}
+
 \value{
 An \code{\link[limma:rglist]{RGList}} object containing the components
   \item{R}{matrix containing the red channel foreground intensities for each spot for each array.}
@@ -52,7 +60,7 @@ An \code{\link[limma:rglist]{RGList}} object containing the components
   \item{Gb}{matrix containing the green channel background intensities for each spot for each array.}
   \item{weights}{spot quality weights, if \code{wt.fun} is given}
   \item{printer}{list of class \code{\link[limma:printlayout]{PrintLayout}}, currently set only if \code{source="imagene"}}
-  \item{genes}{data frame containing gene names and IDs and spatial positions on the array, currently set only if \code{source="genepix"} or \code{source="imagene"}}
+  \item{genes}{data frame containing annotation information about the probes, for example gene names and IDs and spatial positions on the array, currently set only if \code{source} is \code{"agilent"}, \code{"genepix"} or \code{source="imagene"} or if the \code{annotation} argument is set}
 }
 \author{Gordon Smyth}
 \references{

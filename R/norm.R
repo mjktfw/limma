@@ -44,7 +44,7 @@ loessFit <- function(y, x, weights=NULL, span=0.3, bin=0.01/(2-is.null(weights))
 .vsimpleLoess <- function (y, x, weights, span=0.75, degree=2, cell=0.2, iterations=1)
 #	Cut-down version of simpleLoess from modreg package
 #	Gordon Smyth
-#	28 June 2003
+#	28 June 2003.  Last modified 7 March 2004.
 {
 	statistics <- "none"
 	surface <- "interpolate"
@@ -61,6 +61,10 @@ loessFit <- function(y, x, weights=NULL, span=0.3, bin=0.01/(2-is.null(weights))
 	nonparametric <- 1
 	order.parametric <- 1
 	order.drop.sqr <- 2
+	if(as.numeric(version$year)>2003)
+		loess.package <- "stats"
+	else
+		loess.package <- "modreg"
 	if (iterations) 
 		for (j in 1:iterations) {
 			robust <- weights * robust
@@ -74,14 +78,12 @@ loessFit <- function(y, x, weights=NULL, span=0.3, bin=0.01/(2-is.null(weights))
 				xi = double(max.kd), vert = double(2 * D), vval = double((D + 
 				1) * max.kd), diagonal = double(N), trL = double(1), 
 				delta1 = double(1), delta2 = double(1), as.integer(surf.stat == 
-#				"interpolate/exact"), PACKAGE = "modreg")
-				"interpolate/exact"))
+				"interpolate/exact"), PACKAGE = loess.package)
 			fitted.residuals <- y - z$fitted.values
 			if (j < iterations) 
 				robust <- .Fortran("lowesw", as.double(fitted.residuals), 
-				as.integer(N), robust = double(N), double(N))$robust 
-#				as.integer(N), robust = double(N), double(N), 
-#				PACKAGE = "modreg")$robust
+				as.integer(N), robust = double(N), double(N), 
+				PACKAGE = loess.package)$robust
 		}
 	list(fitted = z$fitted.values, residuals = fitted.residuals)
 }
@@ -170,6 +172,7 @@ normalizeWithinArrays <- function(object,layout=object$printer,method="printtipl
 		},
 		composite = {
 			if(is.null(layout)) stop("Layout argument not specified")
+			if(is.null(controlspots)) stop("controlspots argument not specified")
 			ntips <- layout$ngrid.r * layout$ngrid.c
 			nspots <- layout$nspot.r * layout$nspot.c
 			for (j in 1:narrays) {

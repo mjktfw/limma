@@ -212,10 +212,10 @@ read.matrix <- function(file,nrows=0,skip=0,...) {
 	x
 }
 
-read.maimages <- function(files,source="spot",path=NULL,ext=NULL,names=NULL,columns=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote="\"",...) {
+read.maimages <- function(files,source="spot",path=NULL,ext=NULL,names=NULL,columns=NULL,annotation=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote="\"",...) {
 #	Extracts an RG list from a series of image analysis output files
 #	Gordon Smyth
-#	1 Nov 2002.  Last revised 27 Feb 2004.
+#	1 Nov 2002.  Last revised 5 March 2004.
 
 	if(missing(files)) {
 		if(missing(ext))
@@ -272,25 +272,26 @@ read.maimages <- function(files,source="spot",path=NULL,ext=NULL,names=NULL,colu
 		nspots <- nrow(obj)
 	}
 
-#	Set probe annotation information
+#	Initialize RG list object
 	Y <- matrix(0,nspots,nslides)
 	colnames(Y) <- names
 	RG <- list(R=Y,G=Y,Rb=Y,Gb=Y)
-	if(source=="agilent") {
-		AnnoNames <- c("Row","Col","Start","Sequence","SwissProt","GenBank","Primate","GenPept","ProbeUID","ControlType","ProbeName","GeneName","SystematicName","Description")
-		j <- match(AnnoNames,colnames(obj),0)
-		if(any(j>0)) RG$genes <- data.frame(obj[,j,drop=FALSE])
-	}
-	if(source=="smd") {
-		anncol <- grep(columns$Gf,colnames(obj))-1
-		if(anncol>0) RG$genes <- data.frame(obj[,1:anncol,drop=FALSE])
-	}
-	if(source=="genepix") {
-		RG$genes <- data.frame(obj[,c("Block","Row","Column","ID","Name")])
-	}
 	if(!is.null(wt.fun)) RG$weights <- Y
 
-#	Now read rest
+#	Set annotation information
+	if(is.null(annotation)) annotation <- switch(source,
+		agilent = c("Row","Col","Start","Sequence","SwissProt","GenBank","Primate","GenPept","ProbeUID","ControlType","ProbeName","GeneName","SystematicName","Description"),
+		genepix = c("Block","Row","Column","ID","Name"),
+		smd = {anncol <- grep(columns$Gf,colnames(obj))-1
+			ifelse(anncol>0, colnames(obj)[1:anncol], NULL)},
+		NULL
+	)
+	if(!is.null(annotation)) {
+		j <- match(annotation,colnames(obj),0)
+		if(any(j>0)) RG$genes <- data.frame(obj[,j,drop=FALSE])
+	}
+
+#	Now read remainder of files
 	for (i in 1:nslides) {
 		if(i > 1) {
 			fullname <- slides[i]
