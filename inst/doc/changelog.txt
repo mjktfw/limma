@@ -1,14 +1,19 @@
+13 Jan 2005: limma 1.8.18
+
+- Bug fixes to lmFit with NoWts and df.residual equal to 0 or 1
+- new section "Several Groups" in user's guide
+
 10 Jan 2005: limma 1.8.17
 
 - uniquegenelist() now preserves data.frame or matrix class. This fixes a bug when fitting a model to an exprSet object with duplicate probes.
 
 9 Jan 2004: limma 1.8.16
 
-- bug fix for lmFit() when no weights or NAs but non-estimable coefficients
+- bug fix for lmFit() when no weights or NAs (NoWts) but non-estimable coefficients
 
 8 Jan 2004: limma 1.8.15
 
-- lm.series() and lmFit() now treat linear model with no weights or NAs as a special case, with great increase in speed for typical Affymetrix analysis
+- lm.series() and lmFit() now treat linear model with no weights or NAs (NoWts) as a special case, with great increase in speed for typical Affymetrix analysis
 - lmFit() better recognises when an marrayNorm object has a non-empty list of gene names
 - new User's Guide section of Adjusting for Multiple Testing
 

@@ -103,7 +103,7 @@ lm.series <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL)
 {
 #	Fit linear model for each gene to a series of arrays
 #	Gordon Smyth
-#	18 Apr 2002. Revised 9 January 2005.
+#	18 Apr 2002. Revised 13 January 2005.
 
 	M <- as.matrix(M)
 	narrays <- ncol(M)
@@ -128,7 +128,10 @@ lm.series <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL)
 	NoWts <- !any(is.na(M)) && is.null(weights)
 	if(NoWts) {
 		fit <- lm.fit(design, t(M))
-		fit$sigma <- sqrt(colSums(fit$effects[(fit$rank + 1):narrays,]^2)/fit$df.residual)
+		if(fit$df.residual>0)
+			fit$sigma <- sqrt(colMeans(fit$effects[(fit$rank + 1):narrays,,drop=FALSE]^2))
+		else
+			fit$sigma <- rep(NA,ngenes)
 		fit$fitted.values <- fit$residuals <- fit$effects <- NULL
 		fit$coefficients <- t(fit$coefficients)
 		fit$cov.coefficients <- chol2inv(fit$qr$qr,size=fit$qr$rank)
