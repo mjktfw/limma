@@ -7,7 +7,7 @@ Compute classification counts or plot classification counts in a Venn diagram.
 }
 \usage{
 vennCounts(x, include="both")
-vennDiagram(object, include="both", names, mar=rep(1,4), \dots)
+vennDiagram(object, include="both", names, mar=rep(1,4), cex=1.5, \dots)
 }
 \arguments{
   \item{x}{numeric matrix of 0's and 1's indicating significance of a test.
@@ -17,6 +17,7 @@ vennDiagram(object, include="both", names, mar=rep(1,4), \dots)
   Choices are \code{"both"}, \code{"up"} or \code{"down"}.}
   \item{names}{optional character vector giving names for the sets or contrasts}
   \item{mar}{numeric vector of length 4 specifying the width of the margins around the plot. This argument is passed to \code{par}.}
+  \item{cex}{numerical value giving the amount by which the contrast names should be scaled on the plot relative to the default.plotting text. See \code{par}.}
   \item{\dots}{any other arguments are passed to \code{plot}}
 }
 \value{

@@ -33,28 +33,55 @@ setAs("RGList", "exprSet2", function(from, to) {
 	y
 })
 
-printHead <- function(x) {
-	what <- "other"
-	if(is.vector(x)) what <- "vector"
-	if(is.matrix(x) || is.data.frame(x)) what <- "TwoD"
-	switch(what,
-		vector={
-			n <- length(x)
-			if(n > 20) {
-				print(x[1:5])
-				cat(n-5,"more elements ...\n")
-			} else
-				print(x)
-		},
-		TwoD={
-			n <- nrow(x)
-			if(n > 10) {
-				print(x[1:5,])
-				cat(n-5,"more rows ...\n")
-			} else
-				print(x)
-		},
-		other=print(x)
+printHead <- function(x)
+#  Print leading 5 elements or rows of atomic object
+#  Gordon Smyth
+#  May 2003.  Last modified 7 April 2004.
+{
+	if(is.atomic(x)) {
+		d <- dim(x)
+		if(length(d)<2) which <- "OneD"
+		if(length(d)==2) which <- "TwoD"
+		if(length(d)>2) which <- "Array"
+	} else {
+		if(inherits(x,"data.frame")) {
+			d <- dim(x)
+			which <- "TwoD"
+		} else
+			which <- "Recursive"
+	}
+	switch(which,
+	OneD={
+		n <- length(x)
+		if(n > 20) {
+			print(x[1:5])
+			cat(n-5,"more elements ...\n")
+		} else
+			print(x)
+	},
+	TwoD={
+		n <- d[1]
+		if(n > 10) {
+			print(x[1:5,])
+			cat(n-5,"more rows ...\n")
+		} else
+			print(x)
+	},
+	Array={
+		n <- d[1]
+		if(n > 10) {
+			dn <- dimnames(x)
+			dim(x) <- c(d[1],prod(d[-1]))
+			x <- x[1:5,]
+			dim(x) <- c(5,d[-1])
+			if(!is.null(dn[[1]])) dn[[1]] <- dn[[1]][1:5]
+			dimnames(x) <- dn
+			print(x)
+			cat(n-5,"more rows ...\n")
+		} else
+			print(x)
+	},
+	Recursive=print(x)
 	)
 }
 

@@ -27,10 +27,10 @@ vennCounts <- function(x,include="both") {
 	structure(cbind(outcomes,Counts=counts),class="VennCounts")
 }
 
-vennDiagram <- function(object,include="both",names,mar=rep(1,4),...) {
+vennDiagram <- function(object,include="both",names,mar=rep(1,4),cex=1.5,...) {
 #	Plot Venn diagram
 #	Gordon Smyth and James Wettenhall
-#	4 July 2003.  Last modified 8 March 2004.
+#	4 July 2003.  Last modified 7 April 2004.
 
 	if(!is(object,"VennCounts")) object <- vennCounts(object,include=include)
 	nsets <- ncol(object)-1
@@ -43,7 +43,6 @@ vennDiagram <- function(object,include="both",names,mar=rep(1,4),...) {
 	r <- c(1.5,1.5,1.5)[nsets]
 	xtext <- list(-1.2,c(-1.2,1.2),c(-1.2,1.2,0))[[nsets]]
 	ytext <- list(1.8,c(1.8,1.8),c(2.4,2.4,-3))[[nsets]]
-	cex <- 1.5
 	old.par <- par(mar=mar)
 	on.exit(par(old.par))
 	plot(x=0,y=0,type="n",xlim=c(-4,4),ylim=c(-4,4),xlab="",ylab="",axes=FALSE,...)
