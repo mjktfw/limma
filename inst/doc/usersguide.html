@@ -14,7 +14,7 @@
 <p align="center">Gordon Smyth<br>
 The
 Walter and Eliza Hall Institute of Medical Research<br>
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->28 August 2003<!--webbot bot="Timestamp" i-checksum="31350" endspan --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->01 September 2003<!--webbot bot="Timestamp" i-checksum="39490" endspan --></p>
 
 <h2>Table of Contents</h2>
 
@@ -133,7 +133,11 @@ can be read using</p>
 <pre>  files &lt;- dir(pattern=&quot;*\\.gpr&quot;)
   RG &lt;- read.maimages(files, source=&quot;genepix&quot;)</pre>
 <p>Consult the help entry for <code>read.maimages</code> to see which other 
-image analysis programs are supported.</p>
+image analysis programs are supported. Files are assumed by default to be 
+tab-delimited. If the files use a different separator this may be specified 
+using the <code>sep=</code> argument. For example if the Genepix files were 
+comma-separated (csv) then the read command would be</p>
+<pre>  RG &lt;- read.maimages(files, source=&quot;genepix&quot;, sep=&quot;,&quot;)</pre>
 <p>What should you do if your image analysis program is not currently supported 
 by limma? 
 If your output files are of a standard format, you can supply the column names 
@@ -150,12 +154,12 @@ correctly. Type</p>
 <pre>  summary(RG$R)</pre>
 <p>to see a five-number summary of the red intensities for each array, and so 
 on.</p>
-<p>It is possible to read data sets in several steps. If <code>RG1</code> and
+<p>It is possible to read the data in several steps. If <code>RG1</code> and
 <code>RG2</code> are two data sets corresponding to different sets of arrays 
 then</p>
 <pre>  RG &lt;- cbind(RG1, RG2)</pre>
 <p>will combine them into one large data set. Data sets can also be subsetted. 
-For example <code>RG[,1]</code> is the data for the first array only while <code>
+For example <code>RG[,1]</code> is the data for the first array while <code>
 RG[1:100,]</code> is the data on the first 100 genes. </p>
 <h2>4. Reading in Gene List Data</h2>
 <p>If the arrays have been scanned with an Axon scanner, then the gene names 
@@ -195,6 +199,15 @@ indicates in effect which RNA samples have been applied to each array. The
 second is the <i>contrast matrix</i> which specifies which comparisons you would 
 like to make between the RNA samples. For very simple experiments, you may not 
 need to specify the contrast matrix.</p>
+<p>If you have data from Affymetrix experiments, from single-channel spotted 
+microarrays or from spotted microarrays using a common reference, then linear 
+modeling is the same a ordinary analysis of variance or multiple regression 
+except that a model is fitted for every gene. With data of this type you can 
+create design matrices as one would do for ordinary modeling with univariate 
+data. If you have have data from spotted microarrays using a direct design, 
+i.e., a connected design with no common reference, then the linear modeling 
+approach is very powerful but the creation of the design matrix may require more 
+statistical knowledge.</p>
 <h2>7. Quick Start</h2>
 <p>For those who want to see very quickly what a limma analysis might look like 
 for cDNA data, here is a quick analysis of four replicate arrays (including two 
@@ -208,8 +221,8 @@ Data example below.</p>
 &gt; RG$genes &lt;- readGAL()                     # Read in GAL file containing gene names
 &gt; RG$printer &lt;- getLayout(RG$genes)         # Set printer layout information
 &gt; MA &lt;- normalizeWithinArrays(RG)           # Print-tip group loess normalization
-&gt; MA &lt;- normalizeBetweenArrays(RG)          # Scale normalization between arrays, optional
-&gt; fit &lt;- lmFit(MA, design=c(1,-1,1,-1))     # Estimate all the fold changes by fitting a linear model.
+&gt; MA &lt;- normalizeBetweenArrays(MA)          # Scale normalization between arrays, optional
+&gt; fit &lt;- lmFit(MA, design=c(-1,1,-1,1))     # Estimate all the fold changes by fitting a linear model.
                                             # The design matrix indicates which arrays are dye-swaps
 &gt; fit &lt;- eBayes(fit)                        # Apply Bayesian smoothing to the standard errors (very important!)
 &gt; options(digits=3)
