@@ -1,0 +1,40 @@
+\name{splitName}
+\alias{splitName}
+
+\title{Split a Composite Gene Names}
+\description{
+Split a composite gene names into short names and gene annotation strings.}
+
+\usage{
+splitName(x, split=";", extended=TRUE)
+}
+
+\arguments{
+\item{x}{character vector}
+\item{split}{character to split each element of vector on, see \code{strsplit}}
+\item{extended}{logical.  If \code{TRUE}, extended regular expression matching is used, see \code{strsplit}.}
+}
+
+\value{
+A list containing components
+\item{Name}{character vector of the same length as \code{x} contain first splits of each element}
+\item{Annotation}{character vector of the same length as \code{x} contain second splits of each element}
+}
+
+\seealso{
+\code{\link[base]{strsplit}}.
+
+An overview of LIMMA functions for reading data is given in \link{3.ReadingData}.
+}
+
+\examples{
+x <- c("AA196000;actinin, alpha 3",
+"AA196000;actinin, alpha 3",
+"AA464163;acyl-Coenzyme A dehydrogenase, very long chain",
+"AA464163;acyl-Coenzyme A dehydrogenase, very long chain")
+splitName(x)
+}
+
+\author{Gordon Smyth}
+
+\keyword{character}
