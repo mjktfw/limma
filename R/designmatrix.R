@@ -1,25 +1,41 @@
-designMatrix <- function(targets, ref) {
+#  DESIGNMATRIX.R
+
+designMatrix <- function(targets, parameters=NULL, ref=NULL, verbose=TRUE) {
 #	Design matrix for two-color experiments
 #	'targets' is matrix or data.frame with columns Cy3 and Cy5
+#	'parameters' specifies desired coefficients corresponding to columns of design matrix
+#	'ref' is common reference if such exists
 #	Gordon Smyth
-#	25 June 2003.  Last modified 29 June 2003.
+#	25 June 2003. Last modified 1 Dec 2003.
 
-	tar <- targets[,c("Cy3","Cy5")]
-	tar <- as.vector(t(as.matrix(tar)))
-	lev <- unique(tar)
-	treatments <- setdiff(lev,ref)
-	lev <- c(ref,treatments)
-	tar <- factor(tar,levels=lev)
-	n <- length(tar)
-	col <- factor(rep(c(1,2),length=n))
-	contrasts(col) <- matrix(c(-1,1),2,1)
-	X <- model.matrix(~-1+tar*col)
-	keeprows <- X[,1]==0
-	keepcols <- attr(X,"assign")==3
-	design <- X[keeprows,keepcols,drop=FALSE]
-	rownames(design) <- rownames(targets)
-	colnames(design) <- treatments
-	design
+	targets <- as.matrix(targets)
+	if(missing(targets)) stop("targets is required argument")
+	if(!all(c("Cy3","Cy5") %in% colnames(targets))) stop("targets should contain columns: Cy3 and Cy5")
+	if(missing(parameters)==missing(ref)) stop("exactly one of the arguments parameters and ref should be specified")
+
+	target.names <- unique(as.vector(t(as.matrix(targets[,c("Cy3","Cy5")]))))
+	if(verbose) cat("Found unique target names:",target.names,"\n")
+	if(missing(parameters)) {
+		if(any((targets[,"Cy3"]==ref) == (targets[,"Cy5"]==ref))) stop("ref needs to occur in exactly one channel on each array")
+		other.names <- setdiff(target.names,ref)
+		ntargets <- length(target.names)
+		parameters <- rbind(-1,diag(ntargets-1))
+		rownames(parameters) <- c(ref,other.names)
+		colnames(parameters) <- other.names
+	} else {
+		parameters <- as.matrix(parameters)
+		if(length(target.names) != nrow(parameters)) stop("rows of parameters don't match unique target names")
+		if(any(sort(target.names)!=sort(rownames(parameters)))) stop("rownames of parameters don't match unique target names")
+		targets.names <- rownames(parameters)
+		ntargets <- nrow(parameters)
+		if(ncol(parameters) != ntargets-1) warning("number of parameters should be one less than number of targets")
+	}
+	narrays <- nrow(targets)
+	J <- matrix(rep(target.names,narrays),ntargets,narrays)
+	J <- t((t(J) == targets[,"Cy5"]) - (t(J) == targets[,"Cy3"]))
+	rownames(J) <- target.names
+	colnames(J) <- rownames(targets)
+	t(solve(crossprod(parameters),crossprod(parameters,J)))
 }
 
 makeContrasts <- function(..., levels) {
@@ -51,3 +67,4 @@ makeContrasts <- function(..., levels) {
 	}
 	cm
 }
+

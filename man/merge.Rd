@@ -2,7 +2,7 @@
 \alias{merge.RGList}
 \title{Merge RGList Data Objects}
 \description{
-Merge two microarray data sets represented by RGLists.
+Merge two microarray data sets represented by RGLists in possibly irregular order.
 }
 \usage{
 \method{merge}{RGList}(x,y,\dots)
@@ -19,6 +19,8 @@ Unlike when using \code{\link{cbind}}, row names are not required to be in the s
 In the case of repeated row names, the order of the rows with repeated names in preserved.
 This means that the first occurrence of each name in \code{x$R} is matched with the first occurrence of the same name in \code{y$R}, the second with the second, and so on.
 The final vector of row names is the same as in \code{x}.
+
+Note: if the \code{RGList} objects contain the same number of genes in the same order then the appropriate function to combine them is \code{\link[limma:cbind]{cbind}} rather than \code{merge}.
 }
 \value{
 An \code{RGList} with the same components as \code{x}.

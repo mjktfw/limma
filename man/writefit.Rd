@@ -1,14 +1,14 @@
 \name{write.fit}
 \alias{write.fit}
 
-\title{Write MArrayLM Pbject to a File}
+\title{Write MArrayLM Object to a File}
 
 \description{
 Write a microarray linear model fit a file.
 }
 
 \usage{
-write.fit(fit, clas=NULL, file, digits=2)
+write.fit(fit, clas=NULL, file, digits=2, adjust="holm")
 }
 
 \arguments{
@@ -16,10 +16,11 @@ write.fit(fit, clas=NULL, file, digits=2)
 \item{clas}{object of class \code{classification}}
 \item{file}{character string giving name of file}
 \item{digits}{integer indicating precision to be used}
+\item{adjust}{character string specifying method to use to adjust the P-values for multiple testing, e.g., "holm" or "fdr". See \code{\link[ctest]{p.adjust}} for the available options. If \code{NULL} or \code{"none"} then the P-values are not adjusted.}
 }
 
 \value{
-No value is produced but a file is written.
+No value is produced but a file is written to the current working directory.
 }
 
 \details{
