@@ -27,9 +27,9 @@ Objects are normally created by \code{\link{lmFit}}.
 }
 
 \section{Methods}{
-\code{MAList} objects inherit a \code{show} method from the virtual class \code{LargeDataObject}.
+\code{MAArrayLM} objects inherit a \code{show} method from the virtual class \code{LargeDataObject}.
 
-Although not a formal method, the function \code{\link{classifyTests}} accepts \code{MAList} objects.
+Although not a formal method, the function \code{\link{classifyTests}} accepts \code{MAArrayLM} objects.
 }
 
 \author{Gordon Smyth}

@@ -1,6 +1,6 @@
 Package: limma
-Version: 1.1.3
-Date: 2003/06/23
+Version: 1.1.4
+Date: 2003/06/28
 Title: Linear Models for Microarray Data
 Author: Gordon Smyth <smyth@wehi.edu.au>, Matt Ritchie <mritchie@wehi.edu.au>
 Maintainer: Gordon Smyth <smyth@wehi.edu.au>

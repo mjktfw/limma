@@ -1,3 +1,89 @@
+#	LOESS FUNCTIONS
+
+loessFit <- function(y, x, weights=NULL, span=0.3, cell=0.2, iterations=4) {
+#	Fast loess fit for simple x and y
+#	Gordon Smyth
+#	28 June 2003
+
+	n <- length(y)
+	if(is.null(weights)) {
+		obs <- is.finite(y) & is.finite(x)
+		xobs <- x[obs]
+		yobs <- y[obs]
+		nobs <- length(yobs)
+		if(nobs==0) stop("no observed points")
+		o <- order(xobs)
+		oo <- order(o)
+		iter <- iterations-1
+		delta = 0.01 * diff(range(xobs)) 
+		smoothy <- .C("lowess", x = as.double(xobs[o]), as.double(yobs[o]), 
+			nobs, as.double(span), as.integer(iter), as.double(delta), 
+			y = double(nobs), double(nobs), double(nobs), PACKAGE = "base")$y
+		out <- list(fitted=rep(NA,n),residuals=rep(NA,n))
+		out$fitted[obs] <- smoothy[oo]
+		out$residuals[obs] <- yobs-out$fitted
+	} else {
+		obs <- is.finite(y) & is.finite(x) & is.finite(weights)
+		xobs <- x[obs]
+		yobs <- y[obs]
+		wobs <- weights[obs]
+		nobs <- length(yobs)
+		if(nobs==0) stop("no observed points")
+#		Suppress warning "k-d tree limited by memory"
+		oldopt <- options(warning.expression=expression())
+		on.exit(options(oldopt))
+		fit <- .vsimpleLoess(y=yobs, x=xobs, weights=wobs, span=span, degree=1,
+			cell=cell, iterations=iterations)
+		out <- list(fitted=rep(NA,n),residuals=rep(NA,n))
+		out$fitted[obs] <- fit$fitted
+		out$residuals[obs] <- fit$residuals
+	}
+	out
+}
+
+.vsimpleLoess <- function (y, x, weights, span=0.75, degree=2, cell=0.2, iterations=1)
+#	Cut-down version of simpleLoess from modreg package
+#	Gordon Smyth
+#	28 June 2003
+{
+	statistics <- "none"
+	surface <- "interpolate"
+	surf.stat <- paste(surface, statistics, sep = "/")
+	D <- 1
+	N <- NROW(x)
+	if (!N || !D) stop("invalid `x'")
+	if (!length(y)) stop("invalid `y'")
+	x <- as.matrix(x)
+	max.kd <- max(N, 200)
+	robust <- rep(1, N)
+	sum.drop.sqr <- 0
+	sum.parametric <- 0
+	nonparametric <- 1
+	order.parametric <- 1
+	order.drop.sqr <- 2
+	if (iterations) 
+		for (j in 1:iterations) {
+			robust <- weights * robust
+			z <- .C("loess_raw", as.double(y), as.double(x), 
+				as.double(weights), as.double(robust), as.integer(D), 
+				as.integer(N), as.double(span), as.integer(degree), 
+				as.integer(nonparametric), as.integer(order.drop.sqr), 
+				as.integer(sum.drop.sqr), as.double(span * cell), 
+				as.character(surf.stat), fitted.values = double(N), 
+				parameter = integer(7), a = integer(max.kd), 
+				xi = double(max.kd), vert = double(2 * D), vval = double((D + 
+				1) * max.kd), diagonal = double(N), trL = double(1), 
+				delta1 = double(1), delta2 = double(1), as.integer(surf.stat == 
+				"interpolate/exact"), PACKAGE = "modreg")
+			fitted.residuals <- y - z$fitted.values
+			if (j < iterations) 
+				robust <- .Fortran("lowesw", as.double(fitted.residuals), 
+				as.integer(N), robust = double(N), double(N), 
+				PACKAGE = "modreg")$robust
+		}
+	list(fitted = z$fitted.values, residuals = fitted.residuals)
+}
+
 #  WITHIN ARRAY NORMALIZATION
 
 MA.RG <- function(object) {
@@ -25,47 +111,50 @@ MA.RG <- function(object) {
 	new("MAList",unclass(object))
 }
 
-normalizeWithinArrays <- function(object,layout,method="printtiploess",weights=object$weights,span=0.4,iterations=4,controlspots=NULL,df=5,robust="M") {
-#	Sub-array loess normalization
+normalizeWithinArrays <- function(object,layout,method="printtiploess",weights=object$weights,span=0.3,iterations=4,controlspots=NULL,df=5,robust="M") {
+#	Within array normalization
 #	Gordon Smyth
-#	2 March 2003.  Last revised 15 June 2003.
+#	2 March 2003.  Last revised 28 June 2003.
 
 	if(!is(object,"MAList")) object <- MA.RG(object)
 	choices <- c("none","median","loess","printtiploess","composite","robustspline")
-	method <- choices[pmatch(method,choices)]
-	if(is.na(method)) warning("normalization method not recognized, defaulting to \"none\"")
-	if(is.na(method) || method=="none") return(object)
+	method <- match.arg(method,choices)
+	if(method=="none") return(object)
+	if(method=="median") {
+		for (j in 1:narrays) object$M[,j] <- object$M[,j] - median(object$M[,j],na.rm=TRUE)
+		return(object)
+	}
+#	All remaining methods use regression of M-values on A-values
 	ngenes <- nrow(object$M)
 	narrays <- ncol(object$M)
 	switch(method,
-		median = {
-			for (j in 1:narrays) object$M[,j] <- object$M[,j] - median(object$M[,j],na.rm=TRUE)
-		},
 		loess = {
 			for (j in 1:narrays) {
 				y <- object$M[,j]
 				x <- object$A[,j]
 				w <- weights[,j]
-				object$M[,j] <- residuals(loess(y~x,weights=w,span=0.75*span,na.action=na.exclude,degree=1,family="symmetric",trace.hat="approximate",iterations=iterations,surface="direct"))
+				object$M[,j] <- loessFit(y,x,w,span=span,iterations=iterations)$residuals
 			}
 		},
 		printtiploess = {
+			ngr <- layout$ngrid.r
+			ngc <- layout$ngrid.c
+			nspots <- layout$nspot.r * layout$nspot.c
 			for (j in 1:narrays) {
-				ngr <- layout$ngrid.r
-				ngc <- layout$ngrid.c
-				nspots <- layout$nspot.r * layout$nspot.c
 				spots <- 1:nspots
 				for (gridr in 1:ngr)
 				for (gridc in 1:ngc) {
 					y <- object$M[spots,j]
 					x <- object$A[spots,j]
 					w <- weights[spots,j]
-					object$M[spots,j] <- residuals(loess(y~x,weights=w,span=span,na.action=na.exclude,degree=1,family="symmetric",trace.hat="approximate",iterations=iterations,surface="direct"))
+					object$M[spots,j] <- loessFit(y,x,w,span=span,iterations=iterations)$residuals
 					spots <- spots + nspots
 				}
 			}
 		},
 		composite = {
+			ntips <- layout$ngrid.r * layout$ngrid.c
+			nspots <- layout$nspot.r * layout$nspot.c
 			for (j in 1:narrays) {
 				y <- object$M[,j]
 				x <- object$A[,j]
@@ -73,14 +162,12 @@ normalizeWithinArrays <- function(object,layout,method="printtiploess",weights=o
 				fit <- loess(y~x,weights=w,span=span,subset=controlspots,na.action=na.exclude,degree=0,surface="direct",family="symmetric",trace.hat="approximate",iterations=iterations)
 				global <- predict(fit,newdata=x)
 				alpha <- (rank(x)-1) / sum(!is.na(x))
-				ntips <- layout$ngrid.r * layout$ngrid.c
-				nspots <- layout$nspot.r * layout$nspot.c
 				spots <- 1:nspots
 				for (tip in 1:ntips) {
 					y <- object$M[spots,j]
 					x <- object$A[spots,j]
 					w <- weights[spots,j]
-					local <- fitted(loess(y~x,weights=w,span=span,na.action=na.exclude,degree=1,family="symmetric",trace.hat="approximate",iterations=iterations,surface="direct"))
+					local <- loessFit(y,x,w,span=span,iterations=iterations)$fitted
 					object$M[spots,j] <- object$M[spots,j] - alpha[spots]*global[spots]-(1-alpha[spots])*local
 					spots <- spots + nspots
 				}
@@ -103,7 +190,7 @@ normalizeRobustSpline <- function(M,A,layout,df=5,method="M") {
 	require(splines)
 	ngrids <- layout$ngrid.r * layout$ngrid.c
 	nspots <- layout$nspot.r * layout$nspot.c
-	col <- rainbow(ngrids,end=(ngrids-2)/ngrids)
+#	col <- rainbow(ngrids,end=(ngrids-2)/ngrids)
 
 #	Global splines
 	O <- is.finite(M) & is.finite(A)

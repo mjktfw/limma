@@ -1,33 +1,5 @@
 #  PLOTS
 
-#if(!isGeneric("image")) setGeneric("image",function(object,...) standardGeneric("image"))
-#
-#setMethod("image", "missing",
-#function(...) {
-#	UseMethod("image")
-#})
-
-setMethod("merge",c("RGList","RGList"), definition=
-function(x,y,...) {
-#  Merge RGList y into x aligning by row names
-#  Gordon Smyth
-#  11 April 2003
-
-	genes1 <- rownames(x$R)
-	if(is.null(genes1)) genes1 <- rownames(x$G)
-	genes2 <- rownames(y$R)
-	if(is.null(genes2)) genes2 <- rownames(y$G)
-	if(is.null(genes1) || is.null(genes2)) stop("Need row names to align on") 
-
-	fields1 <- names(x)
-	fields2 <- names(y)
-	if(!identical(fields1,fields2)) stop("The two RGLists have different elements")
-
-	ord2 <- match(makeUnique(genes1), makeUnique(genes2))
-	for (i in fields1) x[[i]] <- cbind(x[[i]],y[[i]][ord2,])
-	x
-})	
-
 imageplot <- function(z, layout=list(ngrid.r=12,ngrid.c=4,nspot.r=26,nspot.c=26), low=NULL, high=NULL, ncolors=123, zerocenter=NULL, zlim=NULL,...) {
 #  Image plot of spotted microarray data
 #  Gordon Smyth
@@ -86,20 +58,23 @@ plotMA <- function(MA,array=1,pch=16,status=NULL,
              values=c("gene","blank","buffer","utility","negative","calibration","ratio"),
              col=c("black","yellow","orange","pink","brown","blue","red"),
              cex=c(0.1,0.6,0.6,0.6,0.6,0.6,0.6)) {
-#  MA-plot
+#  MA-plot with color coding for controls
 #  Gordon Smyth
-#  7 April 2003.
+#  7 April 2003.  Last modified 27 June 2003.
 
 	x <- MA$A[,array]
 	y <- MA$M[,array]
 	plot(x,y,xlab="A",ylab="M",main=colnames(MA$M)[array],type="n")
 	if(is.null(status))
-		points(x,y,pch=pch,cex=cex[1])
+		points(x,y,pch=pch[1],cex=cex[1])
 	else {
 		nvalues <- length(values)
+		pch <- rep(pch,length=nvalues)
+		col <- rep(col,length=nvalues)
+		cex <- rep(cex,length=nvalues)
 		for (i in 1:nvalues) {
 			sel <- status==values[i]
-			points(x[sel],y[sel],pch=pch,cex=cex[i],col=col[i])
+			points(x[sel],y[sel],pch=pch[i],cex=cex[i],col=col[i])
 		}
 		legend(min(x,na.rm=TRUE),max(y,na.rm=TRUE),legend=values,pch=pch,col=col,cex=0.9)
 	}
