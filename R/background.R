@@ -3,7 +3,7 @@
 backgroundCorrect <- function(RG, method="subtract") {
 #	Apply background correction to microarray data
 #	Gordon Smyth
-#	12 April 2003.  Last modified 1 October 2003.
+#	12 April 2003.  Last modified 2 October 2003.
 
 	method <- match.arg(method, c("none","subtract", "half", "minimum", "edwards"))
 	switch(method,
@@ -20,12 +20,12 @@ backgroundCorrect <- function(RG, method="subtract") {
 		RG$G <- as.matrix(RG$G - RG$Gb)
 		for (slide in 1:ncol(RG$R)) {
 			i <- RG$R[,slide] < 1e-18
-			if(any(i)) {
+			if(any(i,na.rm=TRUE)) {
 				m <- min(RG$R[!i,slide],na.rm=TRUE)
 				RG$R[i,slide] <- m/2
 			}
 			i <- RG$G[,slide] < 1e-18
-			if(any(i)) {
+			if(any(i,na.rm=TRUE)) {
 				m <- min(RG$G[!i,slide],na.rm=TRUE)
 				RG$G[i,slide] <- m/2
 			}
@@ -37,7 +37,7 @@ backgroundCorrect <- function(RG, method="subtract") {
 #		spots with (0 <= R-Rb < delta) is 100f=10% of the number spots,
 #		with (R-Rb < 0) for each channel and array.
 		nspots <- NROW(RG$R)
-		del <- function(d,f=0.1) quantile(d,sum(d<0)*(1+f)/length(d))
+		del <- function(d,f=0.1) quantile(d,sum(d<0)*(1+f)/length(d),na.rm=TRUE)
 		sub <- as.matrix(RG$R-RG$Rb)
 		delta <- apply(sub, 2, del)
 		RG$R <- ifelse(sub > rep(1,nspots)%o%delta, sub, delta*exp(1-(RG$Rb+delta)/RG$R))
