@@ -8,3 +8,5 @@ Depends: R (>= 1.7.1), MASS, splines, statmod (>= 1.0.6), sma
 Description:  Data analysis, linear models and differential expression for microarray data.
 License: LGPL
 URL: http://bioinf.wehi.edu.au/limma/
+ReleaseLevel: devel
+
