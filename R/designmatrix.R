@@ -4,23 +4,32 @@ uniqueTargets <- function(targets) {
 	sort(unique(as.vector(as.matrix(targets[,c("Cy3","Cy5")]))))
 }
 
-designMatrix <- function(targets, parameters=NULL, ref=NULL, verbose=TRUE) {
+designMatrix <- function(targets, parameters=NULL, ref=NULL, verbose=TRUE)
+#	Renamed as modelMatrix 15 March 2004
+{
+	.Deprecated("modelMatrix")
+	a <- match.call()
+	a[[1]] <- as.name("modelMatrix")
+	eval(a)
+}
+
+modelMatrix <- function(targets, parameters=NULL, ref=NULL, verbose=TRUE)
 #	Design matrix for two-color experiments
 #	'targets' is matrix or data.frame with columns Cy3 and Cy5
 #	'parameters' specifies desired coefficients corresponding to columns of design matrix
 #	'ref' is common reference if such exists
 #	Gordon Smyth
-#	25 June 2003. Last modified 30 Dec 2003.
-
+#	25 June 2003. Last modified 15 March 2004.
+{
 	targets <- as.matrix(targets)
 	if(missing(targets)) stop("targets is required argument")
 	if(!all(c("Cy3","Cy5") %in% colnames(targets))) stop("targets should contain columns: Cy3 and Cy5")
 	if(missing(parameters)==missing(ref)) stop("exactly one of the arguments parameters and ref should be specified")
 
-	target.names <- unique(as.vector(t(as.matrix(targets[,c("Cy3","Cy5")]))))
+	target.names <- sort(unique(as.vector(t(as.matrix(targets[,c("Cy3","Cy5")])))))
 	if(verbose) cat("Found unique target names:\n",target.names,"\n")
 	if(missing(parameters)) {
-		if(any((targets[,"Cy3"]==ref) == (targets[,"Cy5"]==ref))) stop("ref needs to occur in exactly one channel on each array")
+#		if(any((targets[,"Cy3"]==ref) == (targets[,"Cy5"]==ref))) stop("ref needs to occur in exactly one channel on each array")
 		other.names <- setdiff(target.names,ref)
 		target.names <- c(ref,other.names)
 		ntargets <- length(target.names)
@@ -46,7 +55,7 @@ designMatrix <- function(targets, parameters=NULL, ref=NULL, verbose=TRUE) {
 makeContrasts <- function(..., levels) {
 #	Construct matrix of custom contrasts
 #	Gordon Smyth
-#	30 June 2003.
+#	30 June 2003.  Last modified 16 March 2004.
 
 	if(is.factor(levels)) levels <- levels(levels)
 	if(is.matrix(levels)) levels <- colnames(levels)
@@ -64,7 +73,13 @@ makeContrasts <- function(..., levels) {
 	cm <- matrix(0,n,ne-1)
 	rownames(cm) <- levels
 	if(ne < 2) return(cm)
-	colnames(cm) <- as.character(e)[2:ne]
+	enames <- names(e)[2:ne]
+	easchar <- as.character(e)[2:ne]
+	if(is.null(enames))
+		colnames(cm) <- easchar
+	else {
+		colnames(cm) <- ifelse(enames=="",easchar,enames)
+	}
 	for (j in 1:(ne-1)) {
 		ej <- e[[j+1]]
 		if(is.character(ej)) ej <- parse(text=ej)

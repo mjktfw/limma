@@ -90,14 +90,15 @@ getLayout <- function(gal,guessdups=FALSE) {
 	structure(printer,class="PrintLayout")
 }
 
-readTargets <- function(file="Targets.txt",path=NULL,sep="\t")
+readTargets <- function(file="Targets.txt",path=NULL,sep="\t",row.names="FileName")
 #	Data frame of target information
 #	Gordon Smyth
-#	19 Oct 2003.  Last modified 16 Feb 2004.
+#	19 Oct 2003.  Last modified 15 March 2004.
 {
 	if(!is.null(path)) file <- file.path(path,file)
 	tab <- read.table(file,header=TRUE,as.is=TRUE,sep=sep,quote="\"")
-	if(!all(c("Cy3","Cy5") %in% names(tab))) warning("File should contain columns: Cy3 and Cy5")
+#	if(!all(c("Cy3","Cy5") %in% names(tab))) warning("File should contain columns: Cy3 and Cy5")
+	if(row.names %in% names(tab)) row.names(tab) <- removeExt(tab[,row.names])
 	tab
 }
 

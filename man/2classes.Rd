@@ -20,6 +20,11 @@ This package defines the following data classes.
 	Store the result of fitting gene-wise linear models to the normalized intensities or log-ratios.
 	Usually created by \code{lmFit}.
 	Objects of this class normally contain only one row for each unique probe.}
+
+\item{ \code{\link[limma:TestResults]{TestResults}} }{
+	Store the results of testing a set of contrasts equal to zero for each probe.
+	Usually created by \code{classifyTests}, \code{classifyTestsP} or \code{classifyTestsT}.
+	Objects of this class normally contain one row for each unique probe.}
 }
 
 All these data classes obey many analogies with matrices.
@@ -29,7 +34,7 @@ The functions \code{dim}, \code{length}, \code{ncol}, \code{nrow}, \code{dimname
 Objects of any of these classes may be \link[limma:subsetting]{subsetted}.
 Multiple data objects may be \link[limma:cbind]{combined} by rows (to add extra probes) or by columns (to add extra arrays).
 
-All of these classes belong to the virtual class \code{\link[limma:LargeDataObject]{LargeDataObject}}.
+The first three classes belong to the virtual class \code{\link[limma:LargeDataObject]{LargeDataObject}}.
 A \code{show} method is defined for \code{LargeDataOject}s which uses the utility function \code{\link{printHead}}.
 }
 

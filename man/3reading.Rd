@@ -26,6 +26,8 @@ This function will be removed in future versions of LIMMA.
 
 \code{\link{read.maimages}} uses utility functions \code{\link{removeExt}}, \code{\link{read.matrix}}, \code{\link{read.imagene}} and \code{\link{readImageneHeaders}}.
 
+The function \link{as.MAList} can be used to convert a \code{marrayNorm} object to an \code{MAList} object if the data was read and normalized using the marrayInput and marrayNorm packages.
+
 \section{Reading the Gene List}{
 
 Many image analysis program provide gene IDs as columns in the image analysis output files, for example ArrayVision, Imagene and the Stanford Microarray Database.
@@ -39,6 +41,7 @@ The functions \code{\link{readSpotTypes}} and \code{\link{controlStatus}} assist
 The function \code{\link{getLayout}} extracts from the gal-file data frame the print layout information for a spotted array.
 The functions \code{\link{gridr}}, \code{\link{gridc}}, \code{\link{spotr}} and \code{\link{spotc}} use the extracted layout to compute grid positions and spot positions within each grid for each spot.
 The function \code{\link{printorder}} calculates the printorder, plate number and plate row and column position for each spot given information about the printing process.
+The utility function \code{\link{getSpacing}} converts character strings specifying spacings of duplicate spots to numeric values.
 
 If each gene is printed more than once of the arrays, then \code{\link{uniquegenelist}} will remove duplicate names from the gal-file or gene list.
 
