@@ -12,10 +12,11 @@ ebayes(fit,proportion=0.01,std.coef=NULL)
 }
 \value{
   A list with components
-  \item{t}{numeric vector or matrix of penalized t-statistics.}
-  \item{s2.prior}{estimated prior value for \code{sigma^2}.}
-  \item{df.prior}{degrees of freedom associated with \code{s2.prior}.}
-  \item{s2.post}{vector giving the posterior values for \code{sigma^2}.}
+  \item{t}{numeric vector or matrix of penalized t-statistics}
+  \item{p.value}{numeric vector of p-values corresponding to the t-statistics}
+  \item{s2.prior}{estimated prior value for \code{sigma^2}}
+  \item{df.prior}{degrees of freedom associated with \code{s2.prior}}
+  \item{s2.post}{vector giving the posterior values for \code{sigma^2}}
   \item{lods}{numeric vector or matrix giving the log-odds of differential expression}
   \item{var.prior}{estimated prior value for the variance of the log2-fold-change for differentially expressed gene}
 }

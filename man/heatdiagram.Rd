@@ -1,4 +1,4 @@
-\title{Heat Diagram of Expression Profiles}
+\title{Pruned Stem Heat Diagram}
 \name{heatdiagram}
 \alias{heatdiagram}
 \description{

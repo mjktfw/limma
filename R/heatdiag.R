@@ -1,11 +1,89 @@
 #  PRESENTATION PLOTS
 
-heatdiagram <- function(stat,coef,primary=1,names=NULL,treatments=colnames(stat),critical.primary=4,critical.other=3,limit=NULL,orientation="landscape",cex=1,low="green",high="red",ncolors=123,...) {
+heatDiagram <- function(object,primary=1,...) {
+#	Objected-orientated version of heat diagram function
+#	Gordon Smyth
+#	6 July 2003
+
+	if(!is(object,"MArrayLM")) stop("object should be an MArrayLM object")
+	heatdiagram(stat=object$t,coef=object$coefficients,...)
+}
+
+heatdiagram <- function(classification,coef,primary=1,names=NULL,treatments=colnames(coef),limit=NULL,orientation="landscape",cex=1,low="green",high="red",ncolors=123,...) {
+#	Heat diagram to display fold changes of genes under different conditions
+#	Gordon Smyth
+#	27 Oct 2002. Last revised 6 July 2003.
+
+#	Check input
+	classification <- as.matrix(classification)
+	classification[is.na(classification)] <- 0
+	coef <- as.matrix(coef)
+	if(!identical(dim(classification),dim(coef))) stop("classification and coef must be the same size")
+	nt <- ncol(classification)
+	if(is.null(names)) names <- as.character(1:nrow(coef))
+	names <- substring(names,1,15)
+	if(is.null(treatments)) treatments <- as.character(1:nt)
+
+#	Sort coefficients
+	DE <- (abs(classification[,primary]) > 0.5)
+	ng <- sum(DE)
+	if(ng == 0) {
+		warning("Nothing significant to plot")
+		return(invisible())
+	}
+	classification <- classification[DE,,drop=FALSE]
+	coef <- coef[DE,,drop=FALSE]
+	coef[abs(classification) < 0.5] <- NA
+	names <- names[DE]
+	ord <- order(coef[,primary],decreasing=TRUE)
+
+#	Check colours
+	if(is.character(low)) low <- col2rgb(low)/255
+	if(is.character(high)) high <- col2rgb(high)/255
+	col <- rgb( seq(low[1],high[1],len=ncolors), seq(low[2],high[2],len=ncolors), seq(low[3],high[3],len=ncolors) )
+
+#	Truncate coefficients if limit is preset
+	if(!is.null(limit))
+		if(limit > 0) {
+			coef[coef < -limit] <- -limit
+			coef[coef > limit] <- limit
+		} else
+			warning("limit ignored because not positive")
+
+#	Heat plot
+	coef <- coef[ord,,drop=FALSE]
+	names <- names[ord]
+	out <- data.frame(Name=names,coef)
+	if(orientation=="portrait") {
+		coef <- t(coef)
+		coef <- coef[,ng:1,drop=FALSE]
+	}
+	old.par <- par(no.readonly = TRUE)
+	on.exit(par(old.par))
+	if(orientation=="portrait") {
+		par(mar=cex*c(1,1,4,3))
+		image(coef,col=col,xaxt="n",yaxt="n",...)
+		cext <- cex*min(1,8/nt)
+		mtext(paste(" ",treatments,sep=""),side=3,las=2,at=(cext-1)*0.005+(0:(nt-1))/(nt-1),cex=cext)
+		cex <- cex*min(1,40/ng)
+		mtext(paste(" ",names,sep=""),side=4,las=2,at=(1-cex)*0.005+((ng-1):0)/(ng-1),cex=cex)
+	} else {
+		par(mar=cex*c(5,6,1,1))
+		image(coef,col=col,xaxt="n",yaxt="n",...)
+		cext <- cex*min(1,12/nt)
+		mtext(paste(treatments," ",sep=""),side=2,las=1,at=(1-cext)*0.005+(0:(nt-1))/(nt-1),cex=cext)
+		cex <- cex*min(1,60/ng)
+		mtext(paste(names," ",sep=""),side=1,las=2,at=(cex-1)*0.005+(0:(ng-1))/(ng-1),cex=cex)
+	}
+	invisible(out)
+}
+
+heatdiagram0 <- function(stat,coef,primary=1,names=NULL,treatments=colnames(stat),critical.primary=4,critical.other=3,limit=NULL,orientation="landscape",cex=1,low="green",high="red",ncolors=123,...) {
 #	Heat diagram to display fold changes of genes under different conditions
 #	Gordon Smyth
 #	27 Oct 2002. Last revised 6 Feb 2003.
 
-#  Check input
+#	Check input
 	stat <- as.matrix(stat)
 	coef <- as.matrix(coef)
 	if(any(dim(stat) != dim(coef))) stop("stat and coef must be the same size")
@@ -71,3 +149,4 @@ heatdiagram <- function(stat,coef,primary=1,names=NULL,treatments=colnames(stat)
 	}
 	invisible(out)
 }
+

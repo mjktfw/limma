@@ -75,3 +75,20 @@ classifyTests43 <- function(tstat,t1=4,t2=3) {
 	if(is.null(dim(tstat))) dim(tstat) <- c(1,length(tstat))
 	apply(tstat,1,function(x) any(abs(x)>t1,na.rm=TRUE)) * sign(tstat)*(abs(tstat)>t2)
 }
+
+classifyTestsPValue <- function(tstat,df=Inf,p.value=0.05,method="holm") {
+#	Simple classification of vectors of t-test statistics using adjusted p-values
+#	Gordon Smyth
+#	12 July 2003.
+
+	if(is.list(tstat)) tstat <- tstat$t
+	if(is.null(dim(tstat))) dim(tstat) <- c(1,length(tstat))
+	ngenes <- nrow(tstat)
+	P <- 2*pt(-abs(tstat),df=df)
+	result <- array(0,dim(P))
+	for (i in 1:ngenes) {
+		P[i,] <- p.adjust(P[i,],method=method)
+		result[i,] <- sign(tstat[i,])*(P[i,]<p.value)
+	}
+	result
+}

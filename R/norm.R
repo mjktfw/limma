@@ -114,19 +114,19 @@ MA.RG <- function(object) {
 normalizeWithinArrays <- function(object,layout=object$printer,method="printtiploess",weights=object$weights,span=0.3,iterations=4,controlspots=NULL,df=5,robust="M") {
 #	Within array normalization
 #	Gordon Smyth
-#	2 March 2003.  Last revised 2 July 2003.
+#	2 March 2003.  Last revised 27 July 2003.
 
 	if(!is(object,"MAList")) object <- MA.RG(object)
 	choices <- c("none","median","loess","printtiploess","composite","robustspline")
 	method <- match.arg(method,choices)
 	if(method=="none") return(object)
+	narrays <- ncol(object$M)
+	ngenes <- nrow(object$M)
 	if(method=="median") {
 		for (j in 1:narrays) object$M[,j] <- object$M[,j] - median(object$M[,j],na.rm=TRUE)
 		return(object)
 	}
 #	All remaining methods use regression of M-values on A-values
-	ngenes <- nrow(object$M)
-	narrays <- ncol(object$M)
 	switch(method,
 		loess = {
 			for (j in 1:narrays) {
@@ -137,6 +137,7 @@ normalizeWithinArrays <- function(object,layout=object$printer,method="printtipl
 			}
 		},
 		printtiploess = {
+			if(is.null(layout)) stop("Layout argument not specified")
 			ngr <- layout$ngrid.r
 			ngc <- layout$ngrid.c
 			nspots <- layout$nspot.r * layout$nspot.c
@@ -153,6 +154,7 @@ normalizeWithinArrays <- function(object,layout=object$printer,method="printtipl
 			}
 		},
 		composite = {
+			if(is.null(layout)) stop("Layout argument not specified")
 			ntips <- layout$ngrid.r * layout$ngrid.c
 			nspots <- layout$nspot.r * layout$nspot.c
 			for (j in 1:narrays) {
@@ -174,6 +176,7 @@ normalizeWithinArrays <- function(object,layout=object$printer,method="printtipl
 			}
 		},
 		robustspline = {
+			if(is.null(layout)) stop("Layout argument not specified")
 			for (j in 1:narrays)
 				object$M[,j] <- normalizeRobustSpline(object$M[,j],object$A[,j],layout,df=df,method=robust)
 		}
@@ -397,7 +400,7 @@ function(object, method="scale") {
 })
 
 normalizeQuantiles <- function(A, ties=FALSE) {
-#	Make all the columns of a matrix have the same quantiles, allowing for missing values.
+#	Normalize columns of a matrix to have the same quantiles, allowing for missing values.
 #	Gordon Smyth
 #	25 June 2002.  Last revised 5 June 2003.
 
@@ -457,7 +460,7 @@ normalizeMedianDeviations <- function(x)
 
 normalizeMedians <- function(x) 
 {
-#	Normalization columns of a matrix to have the same median value
+#	Normalize columns of a matrix to have the same median value
 #	Gordon Smyth
 #	12 April 2003
 
@@ -467,3 +470,4 @@ normalizeMedians <- function(x)
 	a.med <- a.med / (prod(a.med))^(1/narrays)
 	t(t(x)/a.med)
 }
+
