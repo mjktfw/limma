@@ -36,7 +36,7 @@ A list with components
 \author{Gordon Smyth}
 
 \references{
-Welch, B. L. (1938). The significance of the difference between two means when the population variances are equal.
+Welch, B. L. (1938). The significance of the difference between two means when the population variances are unequal.
 \emph{Biometrika} \bold{29}, 350-362.
 
 Satterthwaite, F. E. (1946). An approximate distribution of estimates of variance components.

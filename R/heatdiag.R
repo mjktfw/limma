@@ -1,30 +1,31 @@
 #  PRESENTATION PLOTS
 
-heatDiagram <- function(classification,coef,primary=1,names=NULL,treatments=colnames(coef),limit=NULL,orientation="landscape",cex=1,low="green",high="red",ncolors=123,...) {
+heatDiagram <- function(results,coef,primary=1,names=NULL,treatments=colnames(coef),limit=NULL,orientation="landscape",cex=1,low="green",high="red",ncolors=123,...) {
 #	Heat diagram to display fold changes of genes under different conditions
 #	Gordon Smyth
-#	27 Oct 2002. Last revised 6 July 2003.
+#	27 Oct 2002. Last revised 25 Feb 2004.
 
 #	Check input
-	classification <- as.matrix(classification)
-	classification[is.na(classification)] <- 0
+	results <- as.matrix(results)
+	results[is.na(results)] <- 0
 	coef <- as.matrix(coef)
-	if(!identical(dim(classification),dim(coef))) stop("classification and coef must be the same size")
-	nt <- ncol(classification)
+	if(!identical(dim(results),dim(coef))) stop("results and coef must be the same size")
+	nt <- ncol(results)
 	if(is.null(names)) names <- as.character(1:nrow(coef))
 	names <- substring(names,1,15)
 	if(is.null(treatments)) treatments <- as.character(1:nt)
+	orientation <- match.arg(orientation,c("landscape","portrait"))
 
 #	Sort coefficients
-	DE <- (abs(classification[,primary]) > 0.5)
+	DE <- (abs(results[,primary]) > 0.5)
 	ng <- sum(DE)
 	if(ng == 0) {
 		warning("Nothing significant to plot")
 		return(invisible())
 	}
-	classification <- classification[DE,,drop=FALSE]
+	results <- results[DE,,drop=FALSE]
 	coef <- coef[DE,,drop=FALSE]
-	coef[abs(classification) < 0.5] <- NA
+	coef[abs(results) < 0.5] <- NA
 	names <- names[DE]
 	ord <- order(coef[,primary],decreasing=TRUE)
 
@@ -49,17 +50,16 @@ heatDiagram <- function(classification,coef,primary=1,names=NULL,treatments=coln
 		coef <- t(coef)
 		coef <- coef[,ng:1,drop=FALSE]
 	}
-	old.par <- par(no.readonly = TRUE)
 	on.exit(par(old.par))
 	if(orientation=="portrait") {
-		par(mar=cex*c(1,1,4,3))
+		old.par <- par(mar=cex*c(1,1,4,3))
 		image(coef,col=col,xaxt="n",yaxt="n",...)
 		cext <- cex*min(1,8/nt)
 		mtext(paste(" ",treatments,sep=""),side=3,las=2,at=(cext-1)*0.005+(0:(nt-1))/(nt-1),cex=cext)
 		cex <- cex*min(1,40/ng)
 		mtext(paste(" ",names,sep=""),side=4,las=2,at=(1-cex)*0.005+((ng-1):0)/(ng-1),cex=cex)
 	} else {
-		par(mar=cex*c(5,6,1,1))
+		old.par <- par(mar=cex*c(5,6,1,1))
 		image(coef,col=col,xaxt="n",yaxt="n",...)
 		cext <- cex*min(1,12/nt)
 		mtext(paste(treatments," ",sep=""),side=2,las=1,at=(1-cext)*0.005+(0:(nt-1))/(nt-1),cex=cext)
@@ -71,8 +71,10 @@ heatDiagram <- function(classification,coef,primary=1,names=NULL,treatments=coln
 
 heatdiagram <- function(stat,coef,primary=1,names=NULL,treatments=colnames(stat),critical.primary=4,critical.other=3,limit=NULL,orientation="landscape",cex=1,low="green",high="red",ncolors=123,...) {
 #	Heat diagram to display fold changes of genes under different conditions
+#	Similar to heatDiagram with classifyTestsT(stat,t1=critical.primary,t2=critical.other)
+#	except that heatdiagram() requires primary column to be significant at the first step-down level
 #	Gordon Smyth
-#	27 Oct 2002. Last revised 6 Feb 2003.
+#	27 Oct 2002. Last revised 25 Feb 2003.
 
 #	Check input
 	stat <- as.matrix(stat)
@@ -121,17 +123,16 @@ heatdiagram <- function(stat,coef,primary=1,names=NULL,treatments=colnames(stat)
 		coef <- t(coef)
 		coef <- coef[,ng:1,drop=FALSE]
 	}
-	old.par <- par(no.readonly = TRUE)
 	on.exit(par(old.par))
 	if(orientation=="portrait") {
-		par(mar=cex*c(1,1,4,3))
+		old.par <- par(mar=cex*c(1,1,4,3))
 		image(coef,col=col,xaxt="n",yaxt="n",...)
 		cext <- cex*min(1,8/nt)
 		mtext(paste(" ",treatments,sep=""),side=3,las=2,at=(cext-1)*0.005+(0:(nt-1))/(nt-1),cex=cext)
 		cex <- cex*min(1,40/ng)
 		mtext(paste(" ",names,sep=""),side=4,las=2,at=(1-cex)*0.005+((ng-1):0)/(ng-1),cex=cex)
 	} else {
-		par(mar=cex*c(5,6,1,1))
+		old.par <- par(mar=cex*c(5,6,1,1))
 		image(coef,col=col,xaxt="n",yaxt="n",...)
 		cext <- cex*min(1,12/nt)
 		mtext(paste(treatments," ",sep=""),side=2,las=1,at=(1-cext)*0.005+(0:(nt-1))/(nt-1),cex=cext)

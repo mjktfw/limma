@@ -12,7 +12,7 @@ read.imagene(files,path=NULL,ext=NULL,names=NULL,columns=NULL,wt.fun=NULL,verbos
 \arguments{
   \item{files}{character vector giving the names of the files containing image analysis output or, for Imagene data, a character matrix of names of files.
   If omitted, then all files with extension \code{ext} will be read.}
-  \item{source}{character string specifing the image analysis program which produced the output files.  Choices are \code{arrayvision}, \code{"genepix"}, \code{"imagene"}, \code{"quantarray"}, \code{"smd"}, \code{"spot"} or \code{"spot.close.open"}.}
+  \item{source}{character string specifing the image analysis program which produced the output files.  Choices are \code{"agilent"}, \code{"arrayvision"}, \code{"genepix"}, \code{"imagene"}, \code{"quantarray"}, \code{"smd"}, \code{"spot"} or \code{"spot.close.open"}.}
   \item{path}{character string giving the directory containing the files. Can be omitted if the files are in the current working directory.}
   \item{ext}{character string giving optional extension to be added to each file name}
   \item{names}{character vector of names to be associated with each array as column name}
@@ -26,7 +26,7 @@ read.imagene(files,path=NULL,ext=NULL,names=NULL,columns=NULL,wt.fun=NULL,verbos
 \details{
 This is the main data input function for the LIMMA package.
 It extracts the foreground and background intensities from a series of files, produced by an image analysis program, and assembles them into the components of one list.
-The image analysis programs ArrayVision, GenePix, Imagene, QuantArray, Stanford Microarray Database (SMD) and SPOT are supported explicitly.
+The image analysis programs Agilent Feature Extration, ArrayVision, GenePix, Imagene, QuantArray, Stanford Microarray Database (SMD) and SPOT are supported explicitly.
 Data from some other image analysis programs can be read if the appropriate column names containing the foreground and background intensities are specified using the \code{columns} argument.
 (This will work if the column names are unique and if there are no rows in the file after the last line of data.
 Header lines are ok.)

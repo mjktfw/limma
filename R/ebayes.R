@@ -299,3 +299,31 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 	tab
 }
 
+smoothVar <- function(var, df)
+#	Empirical Bayes posterior variances
+#	Gordon Smyth
+#	2 March 2004
+{
+	n <- length(var)
+	if(n == 0) stop("var is empty")
+	if(n == 1) return(list(var.post=var,var.prior=var,df.prior=0))
+	if(length(df)==1) { 
+		df <- rep.int(df,n)
+	} else {
+		if(length(df) != n) stop("lengths differ")
+	}
+	out <- fitFDist(var, df1=df)
+	if(is.null(out$df2) || is.na(out$df2)) stop("Could not estimate prior df")
+	out$var.prior <- out$scale
+	out$df.prior <- out$df2
+	out$df2 <- out$scale <- NULL
+	df.total <- df + out$df.prior
+	if(out$df.prior == Inf)
+		out$var.post <- rep.int(out$var.prior,n)
+	else {
+		var[df==0] <- 0 # guard against missing or infinite values
+		out$var.post <- (df*var + out$df.prior*out$var.prior) / df.total
+	}
+	out
+}
+

@@ -215,7 +215,7 @@ read.matrix <- function(file,nrows=0,skip=0,...) {
 read.maimages <- function(files,source="spot",path=NULL,ext=NULL,names=NULL,columns=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote="\"",...) {
 #	Extracts an RG list from a series of image analysis output files
 #	Gordon Smyth
-#	1 Nov 2002.  Last revised 26 Dec 2003.
+#	1 Nov 2002.  Last revised 27 Feb 2004.
 
 	if(missing(files)) {
 		if(missing(ext))
@@ -227,7 +227,7 @@ read.maimages <- function(files,source="spot",path=NULL,ext=NULL,names=NULL,colu
 		}
 	}
 	if(!missing(source) && !missing(columns)) stop("Cannot specify both source and columns")
-	source <- match.arg(source,c("arrayvision","genepix","imagene","quantarray","smd","spot","spot.close.open"))
+	source <- match.arg(source,c("agilent","arrayvision","genepix","imagene","quantarray","smd","spot","spot.close.open"))
 	if(source=="imagene") return(read.imagene(files=files,path=path,ext=ext,names=names,columns=columns,wt.fun=wt.fun,verbose=verbose,sep=sep,quote=quote,...))
 	slides <- as.vector(as.character(files))
 	if(!is.null(ext)) slides <- paste(slides,ext,sep=".")
@@ -235,6 +235,7 @@ read.maimages <- function(files,source="spot",path=NULL,ext=NULL,names=NULL,colu
 	if(is.null(names)) names <- removeExt(files)
 
 	if(is.null(columns)) columns <- switch(source,
+		agilent = list(Gf="gMeanSignal",Gb="gBGMedianSignal",Rf="rMeanSignal",Rb="rBGMedianSignal"),
 		smd = list(Gf="CH1I_MEAN",Gb="CH1B_MEDIAN",Rf="CH2I_MEAN",Rb="CH2B_MEDIAN"),
 		spot = list(Rf="Rmean",Gf="Gmean",Rb="morphR",Gb="morphG"),
 		spot.close.open = list(Rf="Rmean",Gf="Gmean",Rb="morphR.close.open",Gb="morphG.close.open"),
@@ -271,18 +272,25 @@ read.maimages <- function(files,source="spot",path=NULL,ext=NULL,names=NULL,colu
 		nspots <- nrow(obj)
 	}
 
-#	Now read rest
+#	Set probe annotation information
 	Y <- matrix(0,nspots,nslides)
 	colnames(Y) <- names
 	RG <- list(R=Y,G=Y,Rb=Y,Gb=Y)
+	if(source=="agilent") {
+		AnnoNames <- c("Row","Col","Start","Sequence","SwissProt","GenBank","Primate","GenPept","ProbeUID","ControlType","ProbeName","GeneName","SystematicName","Description")
+		j <- match(AnnoNames,colnames(obj),0)
+		if(any(j>0)) RG$genes <- data.frame(obj[,j,drop=FALSE])
+	}
 	if(source=="smd") {
 		anncol <- grep(columns$Gf,colnames(obj))-1
-		if(anncol>0) RG$genes <- data.frame(obj[,1:anncol])
+		if(anncol>0) RG$genes <- data.frame(obj[,1:anncol,drop=FALSE])
 	}
 	if(source=="genepix") {
 		RG$genes <- data.frame(obj[,c("Block","Row","Column","ID","Name")])
 	}
 	if(!is.null(wt.fun)) RG$weights <- Y
+
+#	Now read rest
 	for (i in 1:nslides) {
 		if(i > 1) {
 			fullname <- slides[i]

@@ -6,11 +6,11 @@
 Creates a heat diagram showing the co-regulation of genes under one condition with a range of other conditions.
 }
 \usage{
+heatDiagram(results,coef,primary=1,names=NULL,treatments=colnames(coef),limit=NULL,orientation="landscape",cex=1,low="green",high="red",ncolors=123,...)
 heatdiagram(stat,coef,primary=1,names=NULL,treatments=colnames(stat),critical.primary=4,critical.other=3,limit=NULL,orientation="landscape",cex=1,low="green",high="red",ncolors=123,...)
-heatDiagram(classification,coef,primary=1,names=NULL,treatments=colnames(coef),limit=NULL,orientation="landscape",cex=1,low="green",high="red",ncolors=123,...)
 }
 \arguments{
-  \item{classification}{classification matrix, containing elements -1, 0 or 1, from \code{\link{classifyTests}}}
+  \item{results}{\code{TestResults} matrix, containing elements -1, 0 or 1, from \code{\link{classifyTests}}}
   \item{stat}{numeric matrix of test statistics. Rows correspond to genes and columns to treatments or contrasts between treatments.}
   \item{coef}{numeric matrix of the same size as \code{stat}. Holds the coefficients to be displayed in the plot.}
   \item{primary}{number or name of the column to be compared to the others. Genes are included in the diagram according to this column of \code{stat} and are sorted according to this column of \code{coef}. If \code{primary} is a name, then \code{stat} and \code{coef} must have the same column names.}
@@ -27,6 +27,8 @@ heatDiagram(classification,coef,primary=1,names=NULL,treatments=colnames(coef),l
   \item{...}{any other arguments will be passed to the \code{image} function}
 }
 \details{
+Users are encouraged to use \code{heatDiagram} rather than \code{heatdiagram} as the later function may be removed in future versions of limma.
+
 This function plots an image of gene expression profiles in which rows (or columns for portrait orientation) correspond to treatment conditions and columns (or rows) correspond to genes.
 Only genes which are significantly differentially expressed in the primary condition are included.
 Genes are sorted by differential expression under the primary condition.

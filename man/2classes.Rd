@@ -12,7 +12,9 @@ This package defines the following data classes.
 
 \item{ \code{\link[limma:malist]{MAList}} }{
 	Intensities converted to M-values and A-values, i.e., to with-spot and whole-spot contrasts on the log-scale.
-	Usually created from an \code{RGList} using \code{MA.RG} or \code{normalizeWithinArrays}.}
+	Usually created from an \code{RGList} using \code{MA.RG} or \code{normalizeWithinArrays}.
+	Objects of this class contain one row for each spot.
+	There may be more than one spot and therefore more than one row for each probe.}
 
 \item{ \code{\link[limma:marraylm]{MArrayLM}} }{
 	Store the result of fitting gene-wise linear models to the normalized intensities or log-ratios.
@@ -23,7 +25,7 @@ This package defines the following data classes.
 All these data classes obey many analogies with matrices.
 In the case of \code{RGList} and \code{MAList}, rows correspond to spots and columns to arrays.
 In the case of \code{MarrayLM}, rows correspond to unique probes and the columns to parameters or contrasts.
-The functions \code{dim}, \code{length}, \code{ncol}, \code{nrow} have methods for these classes.
+The functions \code{dim}, \code{length}, \code{ncol}, \code{nrow}, \code{dimnames}, \code{rownames}, \code{colnames} have methods for these classes.
 Objects of any of these classes may be \link[limma:subsetting]{subsetted}.
 Multiple data objects may be \link[limma:cbind]{combined} by rows (to add extra probes) or by columns (to add extra arrays).
 
