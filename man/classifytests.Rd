@@ -24,7 +24,7 @@ FStat(object, cor.matrix=NULL, design=NULL, contrasts=diag(ncol(design)))
   \item{fstat.only}{logical, if \code{TRUE} then return the overall F-statistic as for \code{FStat} instead of classifying the test results}
   \item{t1}{first critical value for absolute t-statistics}
   \item{t2}{second critical value for absolute t-statistics}
-  \item{method}{character string specifying p-value adjustment method.  See \code{\link[base]{p.adjust}} for possible values.}
+  \item{method}{character string specifying p-value adjustment method.  See \code{\link[stats]{p.adjust}} for possible values.}
 }
 \value{
 An object of class \code{TestResults}.
@@ -33,18 +33,22 @@ This is essentially a numeric matrix with elements \code{-1}, \code{0} or \code{
 \code{FStat} produces a numeric vector of F-statistics with attributes \code{df1} and \code{df2} giving the corresponding degrees of freedom.
 }
 \details{
-\code{FStat} computes the F-statistic for testing all the contrasts equal to zero.
+These functions implement multiple testing procedures for determining whether each statistic in a matrix of t-statistics should be considered significantly different from zero.
+Rows of \code{tstat} correspond to genes and columns to coefficients or contrasts.
+The adjustment for multiple testing is across the contrasts rather than the more usual control across genes.
+
+\code{FStat} computes the gene-wise F-statistics for testing all the contrasts equal to zero.
 It is equivalent to \code{classifyTestsF} with \code{fstat.only=TRUE}.
 
-\code{classifyTestsF} classifies using a nested F-test approach giving particular attention to correctly classifying genes which have two or more significant t-statistics, i.e., are differential expressed under two or more conditions.
-The overall F-statistic used is computed by \code{FStat}.
+\code{classifyTestsF} uses a nested F-test approach giving particular attention to correctly classifying genes which have two or more significant t-statistics, i.e., are differential expressed under two or more conditions.
+For each row of \code{tstat}, the overall F-statistics is constructed from the t-statistics as for \code{FStat}.
 At least one constrast will be classified as significant if and only if the overall F-statistic is significant.
-\code{classifyTestsT} and \code{classifyTestsP} implement simpler classification schemes based on threshold or critical values for the individual t-statistics in the case of \code{classifyTestsT} or p-values obtained from the t-statistics in the case of \code{classifyTestsP}.
-
-Rows of \code{tstat} correspond to genes and columns to coefficients or contrasts.
-For each row of \code{tstat}, F-statistics are constructed from the t-statistics.
 If the overall F-statistic is significant, then the function makes a best choice as to which t-statistics contributed to this result.
 The methodology is based on the principle that any t-statistic should be called significant if the F-test is still significant for that row when all the larger t-statistics are set to the same absolute size as the t-statistic in question.
+
+\code{classifyTestsT} and \code{classifyTestsP} implement simpler classification schemes based on threshold or critical values for the individual t-statistics in the case of \code{classifyTestsT} or p-values obtained from the t-statistics in the case of \code{classifyTestsP}.
+For \code{classifyTestsT}, classifies any t-statistic with absolute greater than \code{t2} as significant provided that at least one t-statistic for that gene is at least \code{t1} in absolute value.
+\code{classifyTestsP} applied p-value adjustment from \code{p.adjust} to the p-values for each gene.
 
 If \code{tstat} is an \code{MArrayLM} object, then all arguments except for \code{p.value} are extracted from it.
 

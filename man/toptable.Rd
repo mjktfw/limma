@@ -41,7 +41,7 @@ For example, \code{topTable(fit, sort.by="B", resort.by="M")} selects the top ge
 \code{topTable(fit, sort.by="M", resort.by="M")} would select the genes by absolute log-ratio and then sort then by signed log-ratio from must positive to most negative.
 }
 \seealso{
-\code{\link{ebayes}}, \code{\link[base]{p.adjust}}, \code{\link{lm.series}}, \code{\link{gls.series}}, \code{\link{rlm.series}}.
+\code{\link{ebayes}}, \code{\link[stats]{p.adjust}}, \code{\link{lm.series}}, \code{\link{gls.series}}, \code{\link{rlm.series}}.
 }
 \author{Gordon Smyth}
 \examples{

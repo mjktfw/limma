@@ -1,11 +1,13 @@
+#  BACKGROUND.R
+
 #  BACKGROUND CORRECTION
 
-backgroundCorrect <- function(RG, method="subtract", printer=RG$printer) {
+backgroundCorrect <- function(RG, method="subtract", offset=0, printer=RG$printer, verbose=TRUE) {
 #	Apply background correction to microarray data
 #	Gordon Smyth
-#	12 April 2003.  Last modified 29 March 2004.
+#	12 April 2003.  Last modified 15 June 2004.
 
-	method <- match.arg(method, c("none","subtract", "half", "minimum", "movingmin", "edwards"))
+	method <- match.arg(method, c("none","subtract", "half", "minimum", "movingmin", "edwards", "normexp"))
 	switch(method,
 	subtract={
 		RG$R <- RG$R-RG$Rb
@@ -51,9 +53,22 @@ backgroundCorrect <- function(RG, method="subtract", printer=RG$printer) {
 		sub <- as.matrix(RG$G-RG$Gb)
 		delta <- one %*% apply(sub, 2, delta.vec)
 		RG$G <- ifelse(sub < delta, delta*exp(1-(RG$Gb+delta)/RG$G), sub)
+	},
+	normexp={
+	for (j in 1:ncol(RG$R)) {
+		out <- fit.normexp(foreground=RG$G[,j],background=RG$Gb[,j])
+		RG$G[,j] <- signal.normexp(mu=out$beta+RG$Gb[,j],out$sigma,out$alpha,foreground=RG$G[,j])
+		out <- fit.normexp(foreground=RG$R[,j],background=RG$Rb[,j])
+		RG$R[,j] <- signal.normexp(mu=out$beta+RG$Rb[,j],out$sigma,out$alpha,foreground=RG$R[,j])
+		if(verbose) cat("Corrected array",j,"\n")
+	}
 	})
 	RG$Rb <- NULL
 	RG$Gb <- NULL
+	if(offset) {
+		RG$R <- RG$R+offset
+		RG$G <- RG$G+offset
+	}
 	new("RGList",unclass(RG))
 }
 
@@ -109,4 +124,71 @@ ma3x3.spottedarray <- function(x,printer,FUN=mean,na.rm=TRUE,...)
 	x <- aperm(x, perm = c(3, 1, 4, 2, 5))
 	dim(x) <- c(sc*sr*gc*gr, narrays)
 	x
+}
+
+#  NORMAL + EXPONENTIAL ADAPTIVE MODEL
+
+fit.normexp <- function(foreground,background=NULL,background.matrix=NULL,trace=0,beta.start=NULL) {
+#	Fit background=normal + signal=exponential model.
+#	Gordon Smyth
+#	24 Aug 2002.
+
+	f <- foreground
+
+#	Starting values
+	mu <- quantile(f,0.03,na.rm=TRUE,names=FALSE)
+	if(is.null(background) && is.null(background.matrix)) {
+		nbeta <- 1
+		beta <- mu
+	} else {
+		if(!is.null(background)) {
+			nbeta <- 1
+			beta <- mu - mean(background,na.rm=TRUE)
+		} else {
+			nbeta <- ncol(background.matrix)
+			beta <- rep(0,nbeta)
+			beta[1] <- mu
+			if(!is.null(beta.start)) beta <- beta.start
+		}
+	}
+	sigma <- sqrt(mean((f[f<mu]-mu)^2,na.rm=TRUE))
+	if(!is.infinite(sigma) || sigma < 1) sigma <- 1
+	alpha <- mean(f,na.rm=TRUE) - mu
+	theta <- c(beta,log(sigma),log(alpha))
+	
+#	Nelder-Mead optimization
+	out <- optim(theta,m2loglik.normexp,control=list(trace=trace),foreground=f,background=background,background.matrix=background.matrix)
+	list(beta=out$par[1:nbeta],sigma=exp(out$par[nbeta+1]),alpha=exp(out$par[nbeta+2]),m2loglik=out$value,convergence=out$convergence)
+}
+
+m2loglik.normexp <- function(theta,foreground,background=NULL,background.matrix=NULL) {
+#	Marginal log-likelihood of foreground values for normal + exponential model.
+#	Gordon Smyth
+#	24 Aug 2002.
+
+	if(is.null(background) && is.null(background.matrix)) {
+		nbeta <- 1
+		mu <- theta[1]
+	} else {
+		if(!is.null(background)) {
+			nbeta <- 1
+			mu <- theta[1]+background
+		} else {
+			nbeta <- ncol(background.matrix)
+			mu <- background.matrix %*% theta[1:nbeta]
+		}
+	}
+	sigma <- exp(theta[nbeta+1])
+	alpha <- exp(theta[nbeta+2])
+	mu.sf <- foreground-mu-sigma^2/alpha
+	-2*sum(-log(alpha) - (foreground-mu)/alpha + sigma^2/alpha^2/2 + pnorm(0,mean=mu.sf,sd=sigma,lower.tail=FALSE,log.p=TRUE))
+}
+
+signal.normexp <- function(mu,sigma,alpha,foreground) {
+#	Expected value of signal given foreground in normal + exponential model
+#	Gordon Smyth
+#	24 Aug 2002.
+
+	mu.sf <- foreground-mu-sigma^2/alpha
+	mu.sf + sigma^2 * dnorm(0,mean=mu.sf,sd=sigma) / pnorm(0,mean=mu.sf,sd=sigma,lower.tail=FALSE)
 }

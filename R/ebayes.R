@@ -4,7 +4,7 @@ eBayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4)) {
 #	Empirical Bayes statistics to select differentially expressed genes
 #	Object orientated version
 #	Gordon Smyth
-#	4 August 2003.  Last modified 12 Dec 2003.
+#	4 August 2003.  Last modified 17 June 2004.
 
 	eb <- ebayes(fit=fit,proportion=proportion,stdev.coef.lim=stdev.coef.lim)
 	fit$df.prior <- eb$df.prior
@@ -15,13 +15,18 @@ eBayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4)) {
 	fit$t <- eb$t
 	fit$p.value <- eb$p.value
 	fit$lods <- eb$lods
+	if(!is.null(fit$design) && is.fullrank(fit$design)) {
+		F.stat <- classifyTestsF(fit,fstat.only=TRUE)
+		fit$F <- as.vector(F.stat)
+		fit$F.p.value <- pf(F.stat,df1=attr(F.stat,"df1"),df2=attr(F.stat,"df2"),lower.tail=FALSE)
+	}
 	fit
 }
 
 ebayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4)) {
 #	Empirical Bayes statistics to select differentially expressed genes
 #	Gordon Smyth
-#	8 Sept 2002.  Last revised 13 Dec 2003.
+#	8 Sept 2002.  Last revised 29 May 2004.
 
 	coefficients <- fit$coefficients
 	stdev.unscaled <- fit$stdev.unscaled
@@ -32,16 +37,11 @@ ebayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4)) {
 	if(all(!is.finite(sigma))) stop("No finite residual standard deviations")
 
 #	Moderated t-statistic
-	out <- fitFDist(sigma^2,df1=df.residual)
-	out$s2.prior <- out$scale
-	out$df.prior <- out$df2
-	out$df2 <- out$scale <- NULL
+	out <- squeezeVar(sigma^2, df.residual)
+	out$s2.prior <- out$var.prior
+	out$s2.post <- out$var.post
+	out$var.prior <- out$var.post <- NULL
 	df.total <- df.residual + out$df.prior
-	if(is.null(out$df.prior) || is.na(out$df.prior)) stop("Could not estimate prior df")
-	if(out$df.prior == Inf)
-		out$s2.post <- rep(out$s2.prior,length(sigma))
-	else
-		out$s2.post <- (ifelse(df.residual==0, 0, df.residual*sigma^2) + out$df.prior*out$s2.prior) / df.total
 	out$t <- coefficients / stdev.unscaled / sqrt(out$s2.post)
 	out$p.value <- 2*pt(-abs(out$t),df=df.total)
 
@@ -244,15 +244,17 @@ topTable <- function(fit,coef=1,number=10,genelist=NULL,adjust.method="holm",sor
 toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.method="holm",sort.by="B",resort.by=NULL,...) {
 #	Summary table of top genes
 #	Gordon Smyth
-#	21 Nov 2002. Last revised 16 Feb 2004.
+#	21 Nov 2002. Last revised 26 June 2004.
 
 	if(is.null(eb)) {
-		fit$coefficients <- as.matrix(fit$coef)[,coef]
-		fit$stdev.unscaled <- as.matrix(fit$stdev)[,coef]
+		fit$coefficients <- as.matrix(fit$coefficients)[,coef]
+		fit$stdev.unscaled <- as.matrix(fit$stdev.unscaled)[,coef]
 		eb <- ebayes(fit,...)
 		coef <- 1
 	}
-	M <- as.matrix(fit$coef)[,coef]
+	M <- as.matrix(fit$coefficients)[,coef]
+	if(length(M) < number) number <- length(M)
+	if(number < 1) return(data.frame())
 	if(is.null(A)) {
 		if(sort.by=="A") stop("Cannot sort by A-values as these have not been given")
 	} else {

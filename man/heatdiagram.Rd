@@ -39,7 +39,7 @@ It should not be confused with "heatmaps" often used to display results from clu
 \value{An image is created on the current graphics device.
 A dataframe containing the coefficients used in the plot is also invisibly returned.}
 \author{Gordon Smyth}
-\seealso{\code{\link[base]{image}}.}
+\seealso{\code{\link[graphics]{image}}.}
 \examples{
 library(sma)
 data(MouseArray)

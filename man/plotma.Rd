@@ -5,10 +5,10 @@
 Creates an MA-plot with color coding for control spots.
 }
 \usage{
-plotMA(MA, array=1, xlab="A", ylab="M", main=colnames(MA$M)[array], xlim, ylim, status, values, pch, col, cex, legend=TRUE, ...)
+plotMA(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
 }
 \arguments{
-  \item{MA}{an \code{MAList} or \code{RGList} object, or any list with components \code{M} containing log-ratios and \code{A} containing average intensities}
+  \item{MA}{an \code{RGList}, \code{MAList} or \code{MArrayLM} object, or any list with components \code{M} containing log-ratios and \code{A} containing average intensities}
   \item{array}{integer giving the array to be plotted. Corresponds to columns of \code{M} and \code{A}.}
   \item{xlab}{character string giving label for x-axis}
   \item{ylab}{character string giving label for y-axis}
@@ -27,10 +27,14 @@ plotMA(MA, array=1, xlab="A", ylab="M", main=colnames(MA$M)[array], xlim, ylim, 
   Defaults to 0.2 for the most common status value and 1 for the others.
   Ignored if there is no \code{status} vector.}
   \item{legend}{logical, should a legend of plotting symbols and colors be included. Ignored if there is no \code{status} vector.}
+  \item{zero.weights}{logical, should spots with zero or negative weights be plotted?}
   \item{...}{any other arguments are passed to \code{plot}}
 }
 
 \details{
+This function produces an ordinary MA-plot if \code{MA} is an \code{RGList} or \code{MAList}.
+If \code{MA} is an \code{MArrayLM} object, then the plot is an fitted model MA-plot in which the estimated coefficient is on the y-axis and average A-value is on the x-axis.
+
 The \code{status} vector is intended to specify the control status of each spot, for example "gene", "ratio control", "house keeping gene", "buffer" and so on.
 The vector is usually computed using the function \code{\link{controlStatus}} and a spot-types file.
 However the function may be used to highlight any subset of spots.
@@ -38,7 +42,7 @@ However the function may be used to highlight any subset of spots.
 The \code{status} can be included as the component \code{MA$genes$Status} instead of being passed as an argument to \code{plotMA}.
 The arguments \code{values}, \code{pch}, \code{col} and \code{cex} can be included as attributes to \code{status} instead of being passed as arguments to \code{plotMA}.
 
-See \code{\link[base]{points}} for possible values for \code{pch}, \code{col} and \code{cex}.
+See \code{\link[graphics]{points}} for possible values for \code{pch}, \code{col} and \code{cex}.
 }
 
 \value{A plot is created on the current graphics device.}

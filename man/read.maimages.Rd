@@ -12,7 +12,7 @@ read.imagene(files,path=NULL,ext=NULL,names=NULL,columns=NULL,wt.fun=NULL,verbos
 \arguments{
   \item{files}{character vector giving the names of the files containing image analysis output or, for Imagene data, a character matrix of names of files.
   If omitted, then all files with extension \code{ext} will be read.}
-  \item{source}{character string specifing the image analysis program which produced the output files.  Choices are \code{"agilent"}, \code{"arrayvision"}, \code{"genepix"}, \code{"imagene"}, \code{"quantarray"}, \code{"smd"}, \code{"spot"} or \code{"spot.close.open"}.}
+  \item{source}{character string specifing the image analysis program which produced the output files.  Choices are \code{"agilent"}, \code{"arrayvision"}, \code{"genepix"}, \code{"imagene"}, \code{"quantarray"}, \code{"smd.old"}, \code{"smd"}, \code{"spot"} or \code{"spot.close.open"}.}
   \item{path}{character string giving the directory containing the files. Can be omitted if the files are in the current working directory.}
   \item{ext}{character string giving optional extension to be added to each file name}
   \item{names}{character vector of names to be associated with each array as column name}
@@ -31,6 +31,10 @@ The image analysis programs Agilent Feature Extraction, ArrayVision, GenePix, Im
 Data from some other image analysis programs can be read if the appropriate column names containing the foreground and background intensities are specified using the \code{columns} argument.
 (This will work if the column names are unique and if there are no rows in the file after the last line of data.
 Header lines are ok.)
+
+SMD data should consist of raw data files from the database, in tab-delimited text form.
+There are two possible sets of column names depending on whether the data was entered into the database before or after September 2003.
+\code{source="smd.old"} indicates that column headings in use prior to September 2003 should be used.
 In the case of SPOT, two possible background estimators are supported:
 if \code{source="spot.close.open"} then background intensities are estimated from \code{morph.close.open} rather than \code{morph}.
 

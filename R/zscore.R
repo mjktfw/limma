@@ -28,3 +28,15 @@ zscoreT <- function(x, df)
 	z
 }
 
+tZscore <- function(x, df)
+#  t-statistics equivalents for z-scores deviates
+#  Gordon Smyth
+#  1 June 2004
+{
+	z <- x
+	df <- rep(df,length.out=length(x))
+	pos <- x>0
+	if(any(pos)) z[pos] <- qt(pnorm(x[pos],lower.tail=FALSE,log.p=TRUE),df=df[pos],lower.tail=FALSE,log.p=TRUE) 
+	if(any(!pos)) z[!pos] <- qt(pnorm(x[!pos],lower.tail=TRUE,log.p=TRUE),df=df[!pos],lower.tail=TRUE,log.p=TRUE)
+	z
+}

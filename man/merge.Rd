@@ -9,7 +9,7 @@ Merge two microarray data sets represented by RGLists in possibly irregular orde
 \method{merge}{RGList}(x,y,\dots)
 }
 \arguments{
-  \item{x}{\code{\link{RGList-class}} or \code{link{MAList-class}} object}
+  \item{x}{\code{\link{RGList-class}} or \code{\link{MAList-class}} object}
   \item{y}{\code{RGList} object, corresponding to the same genes as for \code{x}, possibly in a different order, but with different arrays.}
   \item{\dots}{other arguments are accepted but not used at present}
 }
@@ -24,7 +24,7 @@ The final vector of row names is the same as in \code{x}.
 Note: if the \code{RGList} objects contain the same number of genes in the same order then the appropriate function to combine them is \code{\link[limma:cbind]{cbind}} rather than \code{merge}.
 }
 \value{
-An \code{RGList} with the same components as \code{x}.
+An merged object of the same class as \code{x} and \code{y} with the same components as \code{x}.
 Component matrices have the same rows names as in \code{x} but columns from \code{y} as well as \code{x}.
 }
 \author{Gordon Smyth}

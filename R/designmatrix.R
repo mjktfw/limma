@@ -19,16 +19,16 @@ modelMatrix <- function(targets, parameters=NULL, ref=NULL, verbose=TRUE)
 #	'parameters' specifies desired coefficients corresponding to columns of design matrix
 #	'ref' is common reference if such exists
 #	Gordon Smyth
-#	25 June 2003. Last modified 15 March 2004.
+#	25 June 2003. Last modified 26 March 2004.
 {
 	targets <- as.matrix(targets)
 	if(missing(targets)) stop("targets is required argument")
 	if(!all(c("Cy3","Cy5") %in% colnames(targets))) stop("targets should contain columns: Cy3 and Cy5")
-	if(missing(parameters)==missing(ref)) stop("exactly one of the arguments parameters and ref should be specified")
+	if(is.null(parameters)==is.null(ref)) stop("exactly one of the arguments parameters and ref should be specified")
 
 	target.names <- sort(unique(as.vector(t(as.matrix(targets[,c("Cy3","Cy5")])))))
 	if(verbose) cat("Found unique target names:\n",target.names,"\n")
-	if(missing(parameters)) {
+	if(is.null(parameters)) {
 #		if(any((targets[,"Cy3"]==ref) == (targets[,"Cy5"]==ref))) stop("ref needs to occur in exactly one channel on each array")
 		other.names <- setdiff(target.names,ref)
 		target.names <- c(ref,other.names)

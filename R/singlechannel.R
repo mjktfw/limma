@@ -4,7 +4,7 @@ lmscFit <- function(object,design,correlation)
 #	Fit single channel linear model for each gene to a series of microarrays
 #	allowing for known correlation between the channels on each spot.
 #	Gordon Smyth
-#	14 March 2004.  Last modified 19 April 2004.
+#	14 March 2004.  Last modified 26 June 2004.
 {
 #	Check input
 	M <- as.matrix(object$M)
@@ -35,11 +35,10 @@ lmscFit <- function(object,design,correlation)
 	designA <- (diag(narrays) %x% matrix(c(0.5,0.5),1,2)) %*% design
 	X <- rbind(designM/sdM, designA/sdA)
 
-#	In general it may be necessary to allow for quality weights, this call does not
+#	In future it may be necessary to allow for quality weights, this call does not
 	fit <- lm.fit(X,y)
 	fit$sigma <- sqrt(colSums(fit$effects[(fit$rank+1):ny,]^2) / fit$df.residual)
 	fit$fitted.values <- fit$residuals <- fit$effects <- NULL
-#	if(variance.smooth) fit$s2 <- squeezeVar(fit$s2, fit$df.residual)
 	fit$coefficients <- t(fit$coefficients)
 	stdev.unscaled <- sqrt(diag(chol2inv(fit$qr$qr)))
 	fit$stdev.unscaled <- matrix(stdev.unscaled,ngenes,nbeta,byrow=TRUE)
@@ -49,6 +48,8 @@ lmscFit <- function(object,design,correlation)
 	fit$correlation <- correlation
 	fit$genes <- object$genes
 	fit$Amean <- rowMeans(A,na.rm=TRUE)
+	fit$cov.coefficients <- chol2inv(fit$qr$qr,size=fit$qr$rank)
+	fit$pivot <- fit$qr$pivot
 	new("MArrayLM",fit)
 }
 
@@ -92,11 +93,11 @@ intraspotCorrelation <- function(object,design,trim=0.15)
 	list(consensus.correlation=tanh(mean(arho-arhobias,trim=trim)), all.correlations=arho, df=degfre)
 }
 
-array2channel <- function(targets,channel.codes=c(1,2),channel.columns=list(Target=c("Cy3","Cy5")),grep=FALSE)
-#	Convert data.frame with one row for each two-color array,
+targetsA2C <- function(targets,channel.codes=c(1,2),channel.columns=list(Target=c("Cy3","Cy5")),grep=FALSE)
+#	Convert data.frame with one row for each two-color array
 #	into data.frame with one row for each channel
 #	Gordon Smyth
-#	16 March 2004.  Last modified 15 May 2004.
+#	16 March 2004.  Last modified 25 May 2004.
 {
 	targets <- as.data.frame(targets)
 	narrays <- nrow(targets)
@@ -120,17 +121,49 @@ array2channel <- function(targets,channel.codes=c(1,2),channel.columns=list(Targ
 				targets[[ aheaders[1] ]] <- NULL
 				targets[[ aheaders[2] ]] <- NULL
 				nchannelcol <- nchannelcol+1
-				nothercol <- nothercol-1
+				nothercol <- nothercol-2
 			} else {
 				hyb[[ cheaders[i] ]] <- NULL
 			}
 		}
 	}
-	channel.col <- rep(channel.codes,c(narrays,narrays))
-	out <- cbind(Channel=channel.col,rbind(targets,targets))
+	channel.col <- rep(channel.codes,each=narrays)
+	out <- data.frame(channel.col=I(channel.col),row.names=paste(row.names(targets),channel.col,sep="."))
+	if(nothercol) out <- cbind(out,rbind(targets,targets))
 	if(nchannelcol) out <- cbind(out,hyb)
-	row.names(out) <- paste(row.names(targets),channel.col,sep=".")
 	o <- as.vector(t(matrix(1:(2*narrays),narrays,2)))
 	out[o,]
+}
+
+array2channel <- function(targets,channel.codes=c(1,2),channel.columns=list(Target=c("Cy3","Cy5")),grep=FALSE)
+#	Convert data.frame with one row for each two-color array
+#	into data.frame with one row for each channel
+#	Gordon Smyth
+#	16 March 2004.  Last modified 25 May 2004.
+{
+	.Deprecated("targetsA2C")
+	m <- match.call()
+	m[[1]] <- as.name("targetsA2C")
+	eval(m)
+}
+
+designI2M <- function(design)
+#  Convert individual channel design matrix to design matrix for log-ratios
+#  Gordon Smyth
+#  22 June 2004
+{
+	design <- as.matrix(design)
+	narrays <- nrow(design)/2
+	(diag(narrays) %x% matrix(c(-1,1),1,2)) %*% design
+}
+
+designI2A <- function(design)
+#  Convert individual channel design matrix to design matrix for A-values
+#  Gordon Smyth
+#  22 June 2004
+{
+	design <- as.matrix(design)
+	narrays <- nrow(design)/2
+	(diag(narrays) %x% matrix(c(0.5,0.5),1,2)) %*% design
 }
 

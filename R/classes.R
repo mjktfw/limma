@@ -122,6 +122,8 @@ dimnames.RGList <- function(x) dimnames(x$R)
 dimnames.MAList <- function(x) dimnames(x$M)
 dimnames.MArrayLM <- function(x) dimnames(x$coefficients)
 
+summary.MArrayLM <- summary.MAList <- summary.RGList <- function(object,...) summary(unclass(object))
+
 as.MAList <- function(object) {
 #	Convert marrayNorm object to MAList
 #	Gordon Smyth

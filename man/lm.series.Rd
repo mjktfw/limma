@@ -4,7 +4,7 @@
 \description{Fit linear model for each gene given a series of arrays}
 \usage{lm.series(M,design=NULL,ndups=1,spacing=1,weights=NULL)}
 \arguments{
-  \item{M}{a numeric matrix containing log-ratios (M-values) for each spot on each array. Rows correspond to spots and columns to arrays.}
+  \item{M}{numeric matrix containing log-ratio or log-expression values for a series of microarrays, rows correspond to genes and columns to arrays}
   \item{design}{a numeric matrix containing the design matrix for linear model. The number of rows should agree with the number of columns of M. The number of columns will determine the number of coefficients estimated for each gene.}
   \item{ndups}{number of duplicate spots. Each gene is printed ndups times in adjacent spots on each array.}
   \item{spacing}{the spacing between the rows of \code{M} corresponding to duplicate spots, \code{spacing=1} for consecutive spots}
@@ -16,6 +16,7 @@
   \item{stdev.unscaled}{numeric matrix conformal with \code{coef} containing the unscaled standard deviations for the coefficient estimators. The standard errors are given by \code{stdev.unscaled * sigma}.}
   \item{sigma}{numeric vector containing the residual standard deviation for each gene.}
   \item{df.residual}{numeric vector giving the degrees of freedom corresponding to \code{sigma}.}
+  \item{qr}{QR-decomposition of \code{design}}
 }
 \details{
 The linear model is fit for each gene by calling the function \code{lm.fit} or \code{lm.wfit} from the base library.

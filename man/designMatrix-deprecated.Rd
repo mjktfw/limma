@@ -27,7 +27,7 @@ This function is intended to produce a design matrix for use in functions \code{
 }
 
 \seealso{
-\code{\link[base]{model.matrix}} in the base package.
+\code{\link[stats]{model.matrix}} in the base package.
 
 An overview of linear model functions in limma is given by \link{5.LinearModels}.
 }

@@ -38,10 +38,11 @@ Similarly for the background, \code{bg="mean"} uses columns \code{B635.Mean} and
 }
 
 \value{
-A list containing the components
+An \code{RGList} containing the components
 \item{R}{matrix containing the background adjusted intensities for
 the red channel for each spot for each array}
 \item{G}{matrix containing the background adjusted intensities for the green channel for each spot for each array}
+\item{printer}{list containing printer layout, as input in \code{layout}}
 }
 
 \author{Matthew Ritchie}
@@ -61,11 +62,11 @@ Improved background correction for spotted DNA microarrays.
 #  given GenePix Results (gpr) files in the working directory (data not
 #  provided).
 \dontrun{
-genepixFiles <- dir(pattern="\\\\.gpr") # get the names of the GenePix image analysis output files in the current directory
-read.series(genepixFiles, suffix=NULL, skip=26, sep="\t") # read in GenePix files
-layout <- list(ngrid.r=12, ngrid.c=4, nspot.r=26, nspot.c=26) # specify array layout
+genepixFiles <- dir(pattern="*\\\\.gpr$") # get the names of the GenePix image analysis output files in the current directory
+read.series(genepixFiles, suffix=NULL, skip=26, sep="\t") # read the files into data.frames, assuming headers of 26 lines
+layout <- getLayout(get(genepixFiles[1]))
 RGmodel <- kooperberg(genepixFiles, layout=layout) # model-based background correction
-MA <- normalizeWithinArrays(RGModel, layout) # normalize the data
+MA <- normalizeWithinArrays(RGModel) # normalize the data
 }
 }
 

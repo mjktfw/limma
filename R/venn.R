@@ -3,7 +3,7 @@
 vennCounts <- function(x,include="both") {
 #	Venn diagram counts
 #	Gordon Smyth
-#	4 July 2003.  Last modified 25 February 2004.
+#	4 July 2003.  Last modified 30 May 2004.
 
 	x <- as.matrix(x)
 	include <- match.arg(include,c("both","up","down"))
@@ -22,7 +22,7 @@ vennCounts <- function(x,include="both") {
 	for (j in 1:ncontrasts)
 		outcomes[,j] <- rep(0:1,times=2^(j-1),each=2^(ncontrasts-j))
 	xlist <- list()
-	for (i in 1:ncontrasts) xlist[[i]] <- x[,ncontrasts-i+1]
+	for (i in 1:ncontrasts) xlist[[i]] <- factor(x[,ncontrasts-i+1],levels=c(0,1))
 	counts <- as.vector(table(xlist))
 	structure(cbind(outcomes,Counts=counts),class="VennCounts")
 }

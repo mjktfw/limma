@@ -4,26 +4,22 @@
 
 \description{
 This page gives an overview of the LIMMA functions available to fit linear models and to interpret the results.
+This page covers models for two color arrays in terms of log-ratios or for single-channel arrays in terms of log-intensities.
+If you wish to fit models to the individual channel log-intensities from two colour arrays, see \link{6.SingleChannel}.
 
 The core of this package is the fitting of gene-wise linear models to microarray data.
 The basic idea is to estimate log-ratios between two or more target RNA samples simultaneously.
 See the \emph{\link[limma:../doc/usersguide]{LIMMA User's Guide}} for several case studies.
 }
 
-\section{Forming the Design Matrix}{
-The function \code{\link{modelMatrix}} is provided to assist with creation of an appropriate design matrix for two-color microarray experiments using a common reference.
-Design matrices for Affymetrix or single-color arrays can be easily created using the function \code{\link[base]{model.matrix}} which is part of the R base package.
-For the direct two-color designs the design matrix often needs to be created by hand.
-}
-
 \section{Fitting Models}{
 
-There are four main functions in the package which fit linear models:
+The main function for model fitting is \code{\link{lmFit}}.
+This is recommended interface for most users.
+\code{lmFit} produces a fitted model object of class \code{\link[limma:marraylm]{MArrayLM}} containing coefficients, standard errors and residual standard errors for each gene.
+\code{lmFit} calls one of the following three functions to do the actual computations:
 
 \describe{
-\item{ \code{\link{lmFit}} }{
-	This is a high level function which accepts objects and provides an entry point to the following three functions.}
-
 \item{ \code{\link{lm.series}} }{
 	Straightforward least squares fitting of a linear model for each gene.}
 
@@ -31,21 +27,22 @@ There are four main functions in the package which fit linear models:
 	An alternative to \code{lm.series} using robust regression as implemented by the \code{rlm} function in the MASS package.}
 
 \item{ \code{\link{gls.series}} }{
-	Generalized least squares taking into account correlations between duplicate spots (i.e., replicate spots on the same array) or between technical replicates.
-	The function \code{\link{duplicateCorrelation}} is used to estimate the inter-duplicate correlation before using \code{gls.series}.}
+	Generalized least squares taking into account correlations between duplicate spots (i.e., replicate spots on the same array) or related arrays.
+	The function \code{\link{duplicateCorrelation}} is used to estimate the inter-duplicate or inter-block correlation before using \code{gls.series}.}
 }
-Each of these functions accepts essentially the same argument list and produces a fitted model object of the same form.
-The first function \code{lmFit} formally produces an object of class \code{\link[limma:marraylm]{MArrayLM}}.
-The other three functions are lower level functions which produce similar output but in unclassed lists.
-
-The main argument is the \bold{design matrix} which specifies which target RNA samples were applied to each channel on each array.
-There is considerable freedom to choose the design matrix - there is always more than one choice which is correct provided it is interpreted correctly.
-The fitted model object consists of coefficients, standard errors and residual standard errors for each gene.
 
 All the functions which fit linear models use \code{\link{unwrapdups}} which provides an unified method for handling duplicate spots.
+}
 
-All the above linear modeling functions accept two-color data in terms of log-ratios.
-See \link{6.SingleChannel} for the modeling of two-color data in terms of the individual log-intensities.
+\section{Forming the Design Matrix}{
+
+\code{lmFit} has two main arguments, the expression data and the design matrix.
+The design matrix is essentially an indicator matrix which specifies which target RNA samples were applied to each channel on each array.
+There is considerable freedom in choosing the design matrix - there is always more than one choice which is correct provided it is interpreted correctly.
+
+Design matrices for Affymetrix or single-color arrays can be created using the function \code{\link[stats]{model.matrix}} which is part of the R base package.
+The function \code{\link{modelMatrix}} is provided to assist with creation of an appropriate design matrix for two-color microarray experiments.
+For direct two-color designs, without a common reference, the design matrix often needs to be created by hand.
 }
 
 \section{Making Comparisons of Interest}{

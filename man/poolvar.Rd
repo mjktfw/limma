@@ -3,7 +3,7 @@
 
 \title{Pool Sample Variances with Unequal Variances}
 \description{
-Compute the Satherthewaite (1946) approximation to the distribution of a weighted sum of sample variances.
+Compute the Satterthwaite (1946) approximation to the distribution of a weighted sum of sample variances.
 }
 
 \usage{
@@ -21,9 +21,9 @@ poolVar(var, df=n-1, multiplier=1/n, n)
 The sample variances \code{var} are assumed to follow scaled chi-square distributions.
 A scaled chi-square approximation is found for the distribution of \code{sum(multiplier * var)} by equating first and second moments.
 On output the sum to be approximated is equal to \code{multiplier * var} which follows approximately a scaled chisquare distribution on \code{df} degrees of freedom.
-The approximation was proposed by Satterthewaite (1946).
+The approximation was proposed by Satterthwaite (1946).
 
-If there are two groups and the degrees of freedom are one less than the sample sizes then this gives the denominator of Welch's t-test for unequal variances.
+If there are only two groups and the degrees of freedom are one less than the sample sizes then this gives the denominator of Welch's t-test for unequal variances.
 }
 
 \value{

@@ -9,7 +9,9 @@ intraspotCorrelation(object, design, trim=0.15)
 }
 \arguments{
   \item{object}{an \code{\link[limma:malist]{MAList}} object or a list from which \code{M} and \code{A} values may be extracted}
-  \item{design}{a numeric matrix containing the design matrix for linear model. The number of rows should agree with the number of columns of M. The number of columns will determine the number of coefficients estimated for each gene.}
+  \item{design}{a numeric matrix containing the design matrix for linear model in terms of the individual channels.
+  The number of rows should be twice the number of arrays.
+  The number of columns will determine the number of coefficients estimated for each gene.}
   \item{trim}{the fraction of observations to be trimmed from each end of the atanh-correlations when computing the consensus correlation. See \code{\link{mean}}.}
 }
 \value{
@@ -22,7 +24,7 @@ intraspotCorrelation(object, design, trim=0.15)
 This function estimates the correlation between two channels observed on each spot.
 The correlation is estimated by fitting a heteroscedastic regression model to the M and A-values of each gene.
 The function also returns a consensus correlation, which is a robust average of the individual correlations, which can be used as input for 
-functions \code{lmsc.series}.
+functions \code{lmscFit}.
 
 The function may take long time to execute.
 }
@@ -32,7 +34,7 @@ This function uses \code{\link[statmod]{remlscore}} from the statmod package.
 An overview of methods for single channel analysis in limma is given by \link{6.SingleChannel}.
 }
 \examples{
-#  See lmsc.series
+#  See lmscFit
 }
 \author{Gordon Smyth}
 \keyword{multivariate}

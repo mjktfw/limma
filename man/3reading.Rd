@@ -3,7 +3,7 @@
 \title{Reading Microarray Data from Files}
 
 \description{
-This help page gives an overview of LIMMA functions used to read data into R from files.
+This help page gives an overview of LIMMA functions used to read data from files.
 }
 
 \section{Reading Target Information}{
@@ -17,7 +17,7 @@ This is done using the function \code{\link{read.maimages}}.
 \code{\link{read.maimages}} optionally constructs quality weights for each spot using quality functions listed in \link{QualityWeights}.
 
 \code{read.maimages} produces an \code{RGList} object and stores only the information required from each image analysis output file.
-If you wish to read all the image analysis output files into R as individual data frames containing all the original columns, you may use \code{\link{read.series}}.
+If you wish to read all the image analysis output files into R as individual data frames preserving all the original columns found in the files, you may use \code{\link{read.series}}.
 An \code{RGList} object can be extracted from the data frames at a later stage using the functions \code{\link{rg.spot}}, \code{\link{rg.genepix}} or \code{\link{rg.quantarray}}.
 
 Another function, \code{\link{rg.series.spot}} is very similar to \code{\link{read.maimages}} with \code{source="spot"}.
@@ -31,22 +31,26 @@ The function \link{as.MAList} can be used to convert a \code{marrayNorm} object 
 \section{Reading the Gene List}{
 
 Many image analysis program provide gene IDs as columns in the image analysis output files, for example ArrayVision, Imagene and the Stanford Microarray Database.
-In other cases you may have gene name and annoation information in a separate file.
-The function \code{\link{readGAL}} reads information from a GenePix Allocation List (gal) file.
+In other cases you may have the probe ID and annotation information in a separate file.
+The function \code{\link{readGAL}} reads information from a GenePix Allocation List (GAL) file.
 It produces a data frame with known column names.
-If the gene names consist of a short name followed by annotation information, then \code{\link{splitName}} may be used to separate the name and annotation information into separate vectors.
+If the probe IDs or names consist of multiple strings separated by a delimiter, then \code{\link{splitName}} may be used to separate the name and annotation information into separate vectors.
 
 The functions \code{\link{readSpotTypes}} and \code{\link{controlStatus}} assist with separating control spots from ordinary genes in the analysis and data exploration.
 
-The function \code{\link{getLayout}} extracts from the gal-file data frame the print layout information for a spotted array.
+The function \code{\link{getLayout}} extracts from the GAL-file data frame the print layout information for a spotted array.
 The functions \code{\link{gridr}}, \code{\link{gridc}}, \code{\link{spotr}} and \code{\link{spotc}} use the extracted layout to compute grid positions and spot positions within each grid for each spot.
 The function \code{\link{printorder}} calculates the printorder, plate number and plate row and column position for each spot given information about the printing process.
 The utility function \code{\link{getSpacing}} converts character strings specifying spacings of duplicate spots to numeric values.
 
-If each gene is printed more than once of the arrays, then \code{\link{uniquegenelist}} will remove duplicate names from the gal-file or gene list.
+If each probe is printed more than once of the arrays, then \code{\link{uniquegenelist}} will remove duplicate names from the gal-file or gene list.
+}
 
-\code{\link[limma:cbind]{cbind}} allows different \code{RGList} or \code{MAList} objects to be combined assuming the layout of the arrays to be the same.
-\code{\link[limma:merge]{merge}} can combine data even when the order of the genes on the arrays has changed.
+\section{Manipulating Data Objects}{
+
+\code{\link[limma:cbind]{cbind}}, \code{\link[limma:cbind]{rbind}}, \code{\link[limma:merge]{merge}} allow different \code{RGList} or \code{MAList} objects to be combined.
+\code{cbind} combines data from different arrays assuming the layout of the arrays to be the same.
+\code{merge} can combine data even when the order of the probes on the arrays has changed.
 \code{merge} uses utility function \code{\link{makeUnique}}.
 }
 

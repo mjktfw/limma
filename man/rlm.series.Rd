@@ -4,11 +4,11 @@
 \description{Fit linear models for each gene to a series of microarrays. Fit is by robust M-estimation.}
 \usage{rlm.series(M,design=NULL,ndups=1,spacing=1,weights=NULL,...)}
 \arguments{
-  \item{M}{a numeric matrix. Usually the log-ratios of expression for a series of cDNA microarrrays with rows corresponding to genes and columns to arrays.}
+  \item{M}{numeric matrix containing log-ratio or log-expression values for a series of microarrays, rows correspond to genes and columns to arrays.}
   \item{design}{the design matrix of the microarray experiment, with rows corresponding to arrays and columns to comparisons to be estimated. The number of rows must match the number of columns of \code{M}. Defaults to the unit vector meaning that the arrays are treated as replicates.} 
   \item{ndups}{a positive integer giving the number of times each gene is printed on an array. \code{nrow(M)} must be divisible by \code{ndups}.}
-  \item{spacing}{the spacing between the rows of \code{M} corresponding to duplicate spots, \code{spacing=1} for consecutive spots}
-  \item{weights}{an optional numeric matrix of the same dimension as \code{M} containing weights for each spot. If it is of different dimension to \code{M}, it will be filled out to the same size.}
+  \item{spacing}{the spacing between the rows of \code{M} corresponding to duplicate spots, \code{spacing=1} for consecutive spots.}
+  \item{weights}{numeric matrix of the same dimension as \code{M} containing weights. If it is of different dimension to \code{M}, it will be filled out to the same size. \code{NULL} is equivalent to equal weights.}
   \item{...}{any other arguments are passed to \code{rlm.default}.}
 }
 \value{
@@ -17,12 +17,13 @@
   \item{stdev.unscaled}{numeric matrix conformal with \code{coef} containing the unscaled standard deviations for the coefficient estimators. The standard errors are given by \code{stdev.unscaled * sigma}.}
   \item{sigma}{numeric vector containing the residual standard deviation for each gene.}
   \item{df.residual}{numeric vector giving the degrees of freedom corresponding to \code{sigma}.}
+  \item{qr}{QR decomposition of \code{design}.}
 }
 \details{
 The linear model is fit for each gene by calling the function \code{rlm} from the MASS library.
 
 Warning: don't use weights with this function unless you understand how \code{rlm} treats weights.
-The treatment of weights is different from that of \code{lm.series} and \code{gls.series}.
+The treatment of weights is somewhat different from that of \code{lm.series} and \code{gls.series}.
 }
 \seealso{
 \code{\link[MASS]{rlm}}.

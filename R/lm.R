@@ -3,7 +3,7 @@
 lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation=0.75,weights=NULL,method="ls",...) {
 #	Fit linear model
 #	Gordon Smyth
-#	30 June 2003.  Last modified 5 April 2004.
+#	30 June 2003.  Last modified 25 June 2004.
 
 	M <- NULL
 #	Method intended for MAList objects but allow unclassed lists as well
@@ -25,7 +25,12 @@ lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation=0.
 		M <- object@exprs
 #		don't use weights until this is more thoroughly tested
 #		if(missing(weights) && length(object@se.exprs)) weights <- 1/pmax(object@se.exprs,1e-5)^2
-	}}}
+	} else {
+	if(is(object,"PLMset")) {
+#		don't use accessor function so don't have to require affyPLM
+		M <- object@chip.coefs
+		if(missing(weights) && length(object@se.chip.coefs)) weights <- 1/pmax(object@se.chip.coefs,1e-5)^2
+	}}}}
 #	Default method
 	if(is.null(M)) M <- as.matrix(object)
 
@@ -91,7 +96,7 @@ lm.series <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL)
 {
 #	Fit linear model for each gene to a series of arrays
 #	Gordon Smyth
-#	18 Apr 2002. Revised 30 June 2003.
+#	18 Apr 2002. Revised 25 June 2004.
 
 	M <- as.matrix(M)
 	narrays <- ncol(M)
@@ -136,7 +141,9 @@ lm.series <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL)
 					sigma[i] <- sqrt(sum(w*out$residuals^2)/out$df.residual)
 		}
 	}
-	list(coefficients=drop(beta),stdev.unscaled=drop(stdev.unscaled),sigma=sigma,df.residual=df.residual)
+	QR <- qr(design)
+	cov.coef <- chol2inv(QR$qr,size=QR$rank)
+	list(coefficients=drop(beta),stdev.unscaled=drop(stdev.unscaled),sigma=sigma,df.residual=df.residual,cov.coefficients=cov.coef,pivot=QR$pivot)
 }
 
 rlm.series <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL,...)
@@ -183,7 +190,9 @@ rlm.series <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL,...)
 			if(df.residual[i] > 0) sigma[i] <- out$s
 		}
 	}
-	list(coefficients=drop(beta),stdev.unscaled=drop(stdev.unscaled),sigma=sigma,df.residual=df.residual)
+	QR <- qr(design)
+	cov.coef <- chol2inv(QR$qr,size=QR$rank)
+	list(coefficients=drop(beta),stdev.unscaled=drop(stdev.unscaled),sigma=sigma,df.residual=df.residual,cov.coefficients=cov.coef,pivot=QR$pivot)
 }
 
 gls.series <- function(M,design=NULL,ndups=2,spacing=1,block=NULL,correlation=NULL,weights=NULL,...)
@@ -191,7 +200,7 @@ gls.series <- function(M,design=NULL,ndups=2,spacing=1,block=NULL,correlation=NU
 #	Fit linear model for each gene to a series of microarrays.
 #	Fit is by generalized least squares allowing for correlation between duplicate spots.
 #	Gordon Smyth
-#	11 May 2002.  Last revised 5 April 2004.
+#	11 May 2002.  Last revised 25 June 2004.
 
 	M <- as.matrix(M)
 	narrays <- ncol(M)
@@ -261,28 +270,53 @@ gls.series <- function(M,design=NULL,ndups=2,spacing=1,block=NULL,correlation=NU
 			}
 		}
 	}
-	list(coefficients=drop(beta),stdev.unscaled=drop(stdev.unscaled),sigma=sigma,df.residual=df.residual,correlation=correlation)
+	cholV <- chol(cormatrix)
+	QR <- qr(backsolve(cholV,design,transpose=TRUE))
+	cov.coef <- chol2inv(QR$qr,size=QR$rank)
+	list(coefficients=drop(beta),stdev.unscaled=drop(stdev.unscaled),sigma=sigma,df.residual=df.residual,ndups=ndups,spacing=spacing,block=block,correlation=correlation,cov.coefficients=cov.coef,pivot=QR$pivot)
 }
 
 contrasts.fit <- function(fit,contrasts) {
 #	Convert coefficients and std deviations in fit object to reflect contrasts of interest
 #	Gordon Smyth
-#	13 Oct 2002.  Last modified 20 May 2004.
+#	13 Oct 2002.  Last modified 26 June 2004.
 
 	ncoef <- NCOL(fit$coefficients)
-	if(nrow(contrasts)!=ncoef) stop("Number of rows of contrast matrix must match number of coefficients")
-	fit$coefficients <- fit$coefficients %*% contrasts
-	design <- fit$design
-	if(!is.null(design) && ncoef > 1) {
-		A <- crossprod( abs(design) > 1e-14 )
-		orthog <- all(A[lower.tri(A)]==0) 
+	if(NROW(contrasts)!=ncoef) stop("Number of rows of contrast matrix must match number of coefficients")
+	fit$contrasts <- contrasts
+	cormatrix <- cov2cor(fit$cov.coefficients)
+	if(is.null(cormatrix)) {
+		warning("no coef correlation matrix found in fit - assuming orthogonal")
+		cormatrix <- diag(ncoef)
 	}
-	if(is.null(design) || ncoef==1 || orthog)
+
+#	If design matrix was singular, reduce to estimable coefficients
+	r <- nrow(cormatrix)
+	if(r < ncoef) {
+		if(is.null(fit$pivot)) stop("cor.coef not full rank but pivot column not found in fit")
+		est <- fit$pivot[1:r]
+		contrasts <- contrasts[est,]
+		fit$coefficients <- fit$coefficients[,est]
+		fit$stdev.unscaled <- fit$stdev.unscaled[,est]
+	}
+	fit$coefficients <- fit$coefficients %*% contrasts
+
+#	Test whether design was orthogonal
+	if(length(cormatrix) < 2) {
+		orthog <- TRUE
+	} else {
+		orthog <- all(abs(cormatrix[lower.tri(cormatrix)]) < 1e-14)
+	}
+
+#	Contrast correlation matrix
+	R <- La.chol(fit$cov.coefficients)
+	fit$cov.coefficients <- crossprod(R %*% contrasts)
+	fit$pivot <- NULL
+
+	if(orthog)
 		fit$stdev.unscaled <- sqrt(fit$stdev.unscaled^2 %*% contrasts^2)
 	else {
-		A <- La.chol2inv(La.chol(crossprod(design)))
-		s <- sqrt(diag(A))
-		R <- La.chol(t(A/s)/s)
+		R <- La.chol(cormatrix)
 		ngenes <- NROW(fit$stdev.unscaled)
 		ncont <- NCOL(contrasts)
 		U <- matrix(1,ngenes,ncont,dimnames=list(rownames(fit$stdev.unscaled),colnames(contrasts)))
@@ -293,11 +327,43 @@ contrasts.fit <- function(fit,contrasts) {
 		}
 		fit$stdev.unscaled <- U
 	}
-	fit$contrasts <- contrasts
 	fit
 }
 
-#contrasts.fit0 <- function(fit,contrasts) {
+#contrasts.fit0 <- function(fit,contrasts,design=NULL) {
+##	Convert coefficients and std deviations in fit object to reflect contrasts of interest
+##	Gordon Smyth
+##	13 Oct 2002.  Last modified 20 May 2004.
+#
+#	ncoef <- NCOL(fit$coefficients)
+#	if(nrow(contrasts)!=ncoef) stop("Number of rows of contrast matrix must match number of coefficients")
+#	fit$coefficients <- fit$coefficients %*% contrasts
+#	if(is.null(design)) design <- fit$design
+#	if(!is.null(design) && ncoef > 1) {
+#		A <- crossprod( abs(design) > 1e-14 )
+#		orthog <- all(A[lower.tri(A)]==0) 
+#	}
+#	if(is.null(design) || ncoef==1 || orthog)
+#		fit$stdev.unscaled <- sqrt(fit$stdev.unscaled^2 %*% contrasts^2)
+#	else {
+#		A <- La.chol2inv(La.chol(crossprod(design)))
+#		s <- sqrt(diag(A))
+#		R <- La.chol(t(A/s)/s)
+#		ngenes <- NROW(fit$stdev.unscaled)
+#		ncont <- NCOL(contrasts)
+#		U <- matrix(1,ngenes,ncont,dimnames=list(rownames(fit$stdev.unscaled),colnames(contrasts)))
+#		o <- array(1,c(1,ncoef))
+#		for (i in 1:ngenes) {
+#			RUC <- R %*% vecmat(fit$stdev.unscaled[i,],contrasts)
+#			U[i,] <- sqrt(o %*% RUC^2)
+#		}
+#		fit$stdev.unscaled <- U
+#	}
+#	fit$contrasts <- contrasts
+#	fit
+#}
+
+#contrasts.fit <- function(fit,contrasts) {
 ##	Extract contrast information from oneway linear model fit
 ##	Gordon Smyth
 ##	13 Oct 2002.  Last modified 1 July 2003.

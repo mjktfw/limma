@@ -14,7 +14,7 @@
 <p align="center">Gordon Smyth, Natalie Thorne and James Wettenhall<br>
 The
 Walter and Eliza Hall Institute of Medical Research<br>
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->14 May 2004<!--webbot bot="Timestamp" i-checksum="15121" endspan --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->27 June 2004<!--webbot bot="Timestamp" i-checksum="17586" endspan --></p>
 
 <h2>Table of Contents</h2>
 
@@ -77,26 +77,28 @@ online help system. To access the online help, type <code>help(package=limma)</c
 at the R prompt or else start the html help system using <code>help.start()</code> 
 or the Windows drop-down help menu.</p>
 
-<p>The Bioconductor packages marrayClasses, marrayInput and marrayNorm provide 
-alternative functions for reading and normalizing spotted microarray data. If 
-you are using limma in conjunction with these packages, see Section 10. The 
+<p>The Bioconductor package marray provides 
+alternative functions for reading and normalizing spotted microarray data. The 
+marray package provides flexible location and scale normalization routines for 
+log-ratios from two-color arrays. The limma package overlaps with marray in 
+functionality but is based on a more general separation between within-array and 
+between-array normalization.&nbsp; If 
+you are using limma in conjunction with the marray package, see Section 10. The 
 Bioconductor package affy provides functions for reading and normalizing Affymetrix 
-microarray data. If you are using the affy package, see Sections 7.2 and 11.</p>
+microarray data. If you are using the affy package, see Section 7.2 and the 
+relevant case studies.</p>
 
 <p>This tutorial was prepared using R Version 1.9.0 for Windows and limma version 1.6.5.
-The latest version of limma is always available from
-<a href="http://bioinf.wehi.edu.au/limma/">http://bioinf.wehi.edu.au/limma/</a>. 
-The latest version of limma, built for the development version of R, is always available from
-<a href="http://www.bioconductor.org">http://www.bioconductor.org</a> under 
-&quot;Developmental Packages&quot;.
-If you are using R on a system with a suitable internet connection and with 
-installation privileges on your computer, you should be able to install
-limma for the current version of R using</p>
+The latest version of limma, built for the current version of R, is always available from
+<a href="http://bioinf.wehi.edu.au/limma/">http://bioinf.wehi.edu.au/limma/</a>. If you are using R on a system with a suitable internet connection and with 
+installation privileges on your computer, you should be able to install limma for the current version of R using</p>
 
 <pre> install.packages(&quot;limma&quot;,contriburl=&quot;http://bioinf.wehi.edu.au/limma&quot;)</pre>
-<p>at the R prompt. Limma is updated frequently, often a couple of times a week.
-
-<p>If you 
+<p>at the R prompt. The latest version of limma, built for the development version of R, is always available from
+<a href="http://www.bioconductor.org">http://www.bioconductor.org</a> under 
+&quot;Developmental Packages&quot;. Limma is updated frequently, often a couple of times a week. 
+The change-log is at <a href="http://bioinf.wehi.edu.au/limma/changelog.txt">
+http://bioinf.wehi.edu.au/limma/changelog.txt</a>.<p>If you 
 are using Windows, you can install the last official Bioconductor release of limma from the  drop-down menu 
 in R, simply 
 select <code>Packages</code> then <code>Install package(s) from Bioconductor...</code>. 
@@ -109,13 +111,12 @@ http://bioinf.wehi.edu.au/marray/genstat2002/</a>. Help with limma is available
 by sending questions or problems to <a href="mailto:bioconductor@stat.math.ethz.ch">
 bioconductor@stat.math.ethz.ch</a>.</p>
 
-<p>This guide describes limma as a command-driven package. A menu-driven 
-interface called limmaGUI is also available to most commonly used functions in 
-limma. LimmaGUI is available from <a href="http://bioinf.wehi.edu.au/limmaGUI">
-http://bioinf.wehi.edu.au/limmaGUI</a>. Although using limmaGUI is easy, 
-installing limmaGUI is at the time of writing a job for an IT professional or 
-for an experienced computer user because it depends on tck/tk extensions 
-which are not part of standard R.</p>
+<p>This guide describes limma as a command-driven package. Packages limmaGUI and 
+affylmGUI are also available which provides graphical user interfaces to the most commonly used functions in limma 
+(Wettenhall and Smyth, 2004). Both packages are available from Bioconductor or 
+from <a href="http://bioinf.wehi.edu.au/limmaGUI">
+http://bioinf.wehi.edu.au/limmaGUI</a>. The package limmaGUI is for use with 
+two-color data while afflmGUI is for Affymetrix data.</p>
 
 <h2><a name="RPreliminaries">2. A Few Preliminaries on R</a></h2>
 
@@ -163,8 +164,9 @@ Allocation List (GAL) file, and then the intensities have been captured from the
 images using SPOT software. The GAL file and the image analysis files are in the 
 current working directory of R. For more detail about the data see the Swirl 
 Data example below.</p>
-<pre>&gt; files &lt;- dir(pattern=&quot;*.spot&quot;)            # Get the names of the files containing the intensity data
-&gt; RG &lt;- read.maimages(files, source=&quot;spot&quot;) # Read in the data
+<pre>&gt; targets &lt;- readTargets(&quot;SwirlSample.txt&quot;) # Read file containing info about the hybridizations,
+                                            # including names of files containing the intensity data
+&gt; RG &lt;- read.maimages(targets$FileName, source=&quot;spot&quot;) # Read in the data
 &gt; RG$genes &lt;- readGAL()                     # Read in GAL file containing gene names
 &gt; RG$printer &lt;- getLayout(RG$genes)         # Set printer layout information
 &gt; MA &lt;- normalizeWithinArrays(RG)           # Print-tip group loess normalization
@@ -207,6 +209,13 @@ Data example below.</p>
 157      1   7     13 fb38a01   6-I1 -1.82 10.8 -10.2 0.004242 3.75</pre>
 
 <h2><a name="ReadingInData">4. Reading Data into Limma</a></h2>
+
+<p>This chapter is for two-color arrays. If you are using Affymetrix arrays, you 
+should use the affy or affyPLM packages to read and normalize the data. If you 
+have single channel arrays others than Affymetrix, you will need to the read the 
+intensity data into your R session yourself using the basic R read functions 
+such as <code>read.table</code>. You will need to create a matrix containing the 
+log-intensities with rows for probes and columns are arrays.</p>
 
 <h3><a name="RecommendedFiles">4.1 Recommended Files</a></h3>
 
@@ -423,7 +432,7 @@ examples.</p>
 <p align="center"><img border="0" src="other/maplotwst.png" width="796" height="722"></p>
 <h2><a name="Normalization">6. Normalization and Background Correction</a></h2>
 <p>Limma implements a range of normalization methods for spotted microarrays. 
-Smyth and Speed (2003) describe of the mostly commonly used methods. Most of the 
+Smyth and Speed (2003) describe some of the mostly commonly used methods. Most of the 
 examples given in this manual use print-tip loess normalization as the major 
 method. Print-tip loess normalization is performed by</p>
 <pre>&gt; MA &lt;- normalizeWithinArrays(RG)</pre>
@@ -440,7 +449,7 @@ when <code>normalizeWithinArrays</code> is used subsequently to normalize the
 intensities.</p>
 <p>Limma contains some more sophisticated normalization methods. Normalization 
 of absolute expression levels as well as just log-ratios is covered in Section 
-11 at the end of this guide.</p>
+11 of this guide.</p>
 <h2><a name="DifferentialExpression">7. Differential Expression</a></h2>
 <h3><a name="LinearModels">7.1 Linear Models</a></h3>
 <p>The package limma uses an approach called <i>linear models</i> to analyse 
@@ -509,7 +518,7 @@ obtained from</p>
 <p>Now consider two-color microarray experiments in which a common reference has 
 been used on all the arrays. Such experiments can be analysed very similarly to 
 Affymetrix experiments except that allowance must be made for dye-swaps. The 
-simplest method is to setup the design matrix using the <code>designMatrix()</code> 
+simplest method is to setup the design matrix using the <code>modelMatrix()</code> 
 function and the targets file. As an example, we consider part of an experiment 
 conducted by Jöelle Michaud, Catherine Carmichael and Dr Hamish Scott at the 
 Walter and Eliza Hall Institute to compare the effects of transcription factors 
@@ -536,7 +545,7 @@ reference. An adenovirus system was used to transport various transcription
 factors into the nuclei of HeLa cells. Here we consider the transcription 
 factors AML1, CBFbeta or both. A simple design matrix was formed and a linear 
 model fit:</p>
-<pre>&gt; design &lt;- designMatrix(targets,ref=&quot;EGFP&quot;)
+<pre>&gt; design &lt;- modelMatrix(targets,ref=&quot;EGFP&quot;)
 &gt; design
    AML1 AML1.CBFb CBFb
 1     1         0    0
@@ -1055,7 +1064,7 @@ to be differentially expressed in the knockout versus the control line.</p>
 &gt; text(fit$coef[top8,2],fit$lods[top8,2],labels=substring(genelist[top8,&quot;NAME&quot;],1,5),cex=0.8,col=&quot;blue&quot;)</pre>
 <p align="center">
 <img border="0" src="apoai/bayes.png" width="693" height="743"></p>
-<h3>8.3 Ecoli Lrp Data: Affymetrix Data with Two Targets</h3><a name="ecoli"></a>
+<h3><a name="ecoli">8.3 Ecoli Lrp Data: Affymetrix Data with Two Targets</a></h3>
 <p>The data are from experiments reported in Hung et al (2002) and are available 
 from the www site </p>
 <p>&nbsp; <a href="http://visitor.ics.uci.edu/genex/cybert/tutorial/index.html">http://visitor.ics.uci.edu/genex/cybert/tutorial/index.html</a></p>
@@ -1166,12 +1175,15 @@ i.e., the log-fold change induced by lrp.</p>
 954                   cydB_b0734_st -0.76 11.0  -5.0 1.8e-01 -0.272
 1186                  fimI_b4315_st  1.15  8.3   5.0 1.8e-01 -0.298
 4013     IG_58_107475_107629_fwd_st -0.49 10.4  -4.9 2.0e-01 -0.407</pre>
+<p>The column M gives the log2-fold change while the column A gives the average 
+log2-intensity for the probe-set. Positive M-values mean that the gene is 
+up-regulated in lrp+, negative 
+values mean that it is repressed.</p>
 <p>It is interesting to compare this table with Tables III and IV in Hung et al 
 (2002). Note that the top-ranked gene is an intergenic region (IG) tRNA gene. The 
 knock-out gene itself is in position four. Many of the genes in the above table, 
 including the ser, glt, liv, opp, lys, ilv and fim families, are known targets 
-of lrp. Positive M-values mean that the gene is up-regulated in lrp+, negative 
-values mean that it is repressed.</p>
+of lrp. </p>
 <h3><a name="Estrogen">8.4 Estrogen Data: A 2x2 Factorial Experiment with Affymetrix Arrays</a></h3>
 <p>This data is from the estrogen package on Bioconductor. A subset of the data 
 is also analysed in the factDesign package vignette. To repeat this case study 
@@ -1234,79 +1246,84 @@ matrix which picks these two coefficients out:</p>
 <pre>&gt; cont.matrix &lt;- cbind(E10=c(0,0,1,0),E48=c(0,0,0,1))
 &gt; fit2 &lt;- contrasts.fit(fit, cont.matrix)
 &gt; fit2 &lt;- eBayes(fit2)</pre>
-<p>We can examine which genes respond to estrogen at either time by computing 
-moderated F-statistics on 2 degrees of freedom:</p>
-<pre>&gt; F.stat &lt;- FStat(fit2)
-&gt; p.value &lt;- pf(F.stat,df1=attr(F.stat,&quot;df1&quot;),df2=attr(F.stat,&quot;df2&quot;),lower.tail=FALSE)</pre>
-<p>What p-value cutoff should be used? One guide is to examine control 
-probe-clusters which are known not to be differentially expressed. We find that 
-the smallest p-value amongst these is about 0.00007. A cutoff p-value of 
-0.00001, say, would be conservatively below this.</p>
+<p>We can examine which genes respond to estrogen at either time using the 
+moderated F-statistics on 2 degrees of freedom. The moderated F p-value is 
+stored in the component <code>fit2$F.p.value</code>. What p-value cutoff should be used? One guide is to examine 
+the control and spike-in probe-clusters which theoretically should not be differentially expressed. We find that 
+the smallest p-value amongst these is about 0.00014. So a cutoff p-value of 
+0.0001, say, would be below any of these.</p>
 <pre>&gt; i &lt;- grep(&quot;AFFX&quot;,geneNames(eset))
-&gt; summary(p.value[i])
+&gt; summary(fit2$F.p.value[i])
      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
-0.0000695 0.1023000 0.2374000 0.3480000 0.5655000 0.9888000 </pre>
+0.0001391 0.1727000 0.3562000 0.4206000 0.6825000 0.9925000 </pre>
 <p>Now we consider those genes with moderated F-statistics with p-values below 
-0.00001, and classify these according to whether they are significantly up or 
+0.0001, and classify these according to whether they are significantly up or 
 down regulated at the early or late times:</p>
-<pre>&gt; results &lt;- classifyTestsF(fit2, p.value=0.00001)
-&gt; vennDiagram(results)</pre>
-<p align="center">
-<img border="0" src="estrogen/venndiag.png" width="550" height="483"></p>
-<pre>&gt; table(E10=results[,1],E48=results[,2])
+<pre>&gt; results &lt;- classifyTestsF(fit2, p.value=0.0001)
+&gt; table(E10=results[,1],E48=results[,2])
     E48
 E10  -1    0     1    
-  -1    19    17     0
-  0     11 12450    17
-  1      0    53    58</pre>
-<p>We see that 111 genes were up regulated at 10 hours, 58 of these still up at 
-48 hours. Also, 38 genes were down-regulated at 10 hours, 19 of these still down 
-at 48 hours.</p>
-<p><code>topTable</code> gives a detailed look at individual genes:</p>
-<pre>&gt; topTable(fit2,coef=&quot;E10&quot;,n=20)
-             ID         M         A         t      P.Value         B
-9735   39642_at  2.939426  7.876575  33.53605 3.263133e-06 12.882267
-12472    910_at  3.113819  9.660238  33.36231 3.408787e-06 12.857926
-1814   31798_at  2.800171 12.115770  23.17554 7.259227e-05 10.851057
-11509  41400_at  2.380968 10.041576  22.94090 7.903170e-05 10.787022
-10214  40117_at  2.555276  9.676543  22.17506 1.049435e-04 10.570530
-953     1854_at  2.507612  8.532131  21.43709 1.391853e-04 10.350484
-9848   39755_at  1.679301 12.131838  21.30103 1.467649e-04 10.308626
-922   1824_s_at  1.914703  9.238878  21.04113 1.625698e-04 10.227520
-140   1126_s_at  1.782902  6.880018  19.55894 2.986124e-04  9.734305
-580     1536_at  2.662459  5.937141  18.75855 4.224811e-04  9.444440
-12542    981_at  1.818656  7.781324  18.50787 4.723375e-04  9.349974
-3283   33252_at  1.740210  8.000383  17.80210 6.518589e-04  9.074028
-546     1505_at  2.395901  8.764730  17.64897 7.001317e-04  9.012134
-4405   34363_at -1.747992  5.553825 -17.24692 8.470921e-04  8.846054
-985   1884_s_at  2.799342  9.034811  17.04239 9.347963e-04  8.759523
-6194   36134_at  2.491428  8.275763  16.66637 1.123814e-03  8.596722
-7557   37485_at  1.607645  6.672829  16.10218 1.492706e-03  8.343041
-1244     239_at  1.569561 11.249179  14.71210 3.133528e-03  7.665514
-8195   38116_at  2.318462  9.513126  14.70398 3.147486e-03  7.661319
-10634  40533_at  1.256442  8.466023  14.64962 3.244150e-03  7.633173
+  -1    29    11     0
+  0     47 12370    52
+  1      0    29    87
+&gt; vennDiagram(results,include=&quot;up&quot;)</pre>
+<p align="center">
+<img border="0" src="estrogen/vennup.png" width="635" height="532"></p>
+<pre>&gt; vennDiagram(results,include=&quot;down&quot;)</pre>
+<p align="center">
+<img border="0" src="estrogen/venndown.png" width="635" height="532"></p>
+<p>We see that 87 genes were up regulated at both 10 and 48 hours, 29 only at 10 
+hours and 52 only at 48 hours.. Also, 29 genes were down-regulated throughout, 11 
+only at 10 hours and 47 only at 48 hours. No genes were up at one time and down 
+at the other.</p>
+<p><code>topTable</code> gives a detailed look at individual genes. The leading 
+genes are clearly significant, even using the default p-value adjustment method, 
+which is the highly conservative Holm's method.</p>
+<pre>&gt; options(digits=3)
+&gt; topTable(fit2,coef=&quot;E10&quot;,n=20)
+             ID     M     A     t  P.Value    B
+9735   39642_at  2.94  7.88  23.7 5.99e-05 9.97
+12472    910_at  3.11  9.66  23.6 6.26e-05 9.94
+1814   31798_at  2.80 12.12  16.4 1.29e-03 7.98
+11509  41400_at  2.38 10.04  16.2 1.41e-03 7.92
+10214  40117_at  2.56  9.68  15.7 1.86e-03 7.70
+953     1854_at  2.51  8.53  15.2 2.46e-03 7.49
+9848   39755_at  1.68 12.13  15.1 2.59e-03 7.45
+922   1824_s_at  1.91  9.24  14.9 2.86e-03 7.37
+140   1126_s_at  1.78  6.88  13.8 5.20e-03 6.89
+580     1536_at  2.66  5.94  13.3 7.30e-03 6.61
+12542    981_at  1.82  7.78  13.1 8.14e-03 6.52
+3283   33252_at  1.74  8.00  12.6 1.12e-02 6.25
+546     1505_at  2.40  8.76  12.5 1.20e-02 6.19
+4405   34363_at -1.75  5.55 -12.2 1.44e-02 6.03
+985   1884_s_at  2.80  9.03  12.1 1.59e-02 5.95
+6194   36134_at  2.49  8.28  11.8 1.90e-02 5.79
+7557   37485_at  1.61  6.67  11.4 2.50e-02 5.55
+1244     239_at  1.57 11.25  10.4 5.14e-02 4.90
+8195   38116_at  2.32  9.51  10.4 5.16e-02 4.90
+10634  40533_at  1.26  8.47  10.4 5.31e-02 4.87
 &gt; topTable(fit2,coef=&quot;E48&quot;,n=20)
-             ID         M         A         t      P.Value         B
-12472    910_at  3.855057  9.660238  29.20644 1.044142e-05 11.605898
-1814   31798_at  3.597260 12.115770  21.05243 1.619209e-04  9.891525
-953     1854_at  3.340938  8.532131  20.19570 2.288594e-04  9.641554
-8195   38116_at  3.758902  9.513126  16.85702 1.024068e-03  8.480462
-8143   38065_at  2.993559  9.097207  16.20839 1.415357e-03  8.213990
-9848   39755_at  1.765238 12.131838  15.83289 1.716547e-03  8.052632
-642     1592_at  2.296473  8.311364  15.78691 1.757989e-03  8.032497
-11509  41400_at  2.243529 10.041576  15.28528 2.292179e-03  7.807410
-3766   33730_at -2.041424  8.573493 -15.14238 2.475711e-03  7.741406
-732     1651_at  2.968250 10.504291  14.78105 3.017689e-03  7.570639
-8495   38414_at  2.016952  9.461199  14.58945 3.357736e-03  7.477774
-1049    1943_at  2.190196  7.596590  14.00517 4.689295e-03  7.184233
-10214  40117_at  2.276227  9.676543  13.96779 4.792311e-03  7.164906
-10634  40533_at  1.640311  8.466023  13.52368 6.235641e-03  6.930002
-9735   39642_at  1.614613  7.876575  13.02575 8.457864e-03  6.654591
-4898   34851_at  1.957261  9.961115  12.84558 9.468549e-03  6.551650
-922   1824_s_at  1.641325  9.238878  12.75402 1.003273e-02  6.498648
-6053   35995_at  2.755543  8.871992  12.68295 1.049631e-02  6.457180
-12455    893_at  1.540632 10.954033  12.66353 1.062647e-02  6.445800
-10175  40079_at -2.414135  8.230565 -12.62725 1.087526e-02  6.424480</pre>
+             ID     M     A     t  P.Value     B
+12472    910_at  3.86  9.66  29.2 1.04e-05 11.61
+1814   31798_at  3.60 12.12  21.1 1.62e-04  9.89
+953     1854_at  3.34  8.53  20.2 2.29e-04  9.64
+8195   38116_at  3.76  9.51  16.9 1.02e-03  8.48
+8143   38065_at  2.99  9.10  16.2 1.42e-03  8.21
+9848   39755_at  1.77 12.13  15.8 1.72e-03  8.05
+642     1592_at  2.30  8.31  15.8 1.76e-03  8.03
+11509  41400_at  2.24 10.04  15.3 2.29e-03  7.81
+3766   33730_at -2.04  8.57 -15.1 2.48e-03  7.74
+732     1651_at  2.97 10.50  14.8 3.02e-03  7.57
+8495   38414_at  2.02  9.46  14.6 3.36e-03  7.48
+1049    1943_at  2.19  7.60  14.0 4.69e-03  7.18
+10214  40117_at  2.28  9.68  14.0 4.79e-03  7.16
+10634  40533_at  1.64  8.47  13.5 6.24e-03  6.93
+9735   39642_at  1.61  7.88  13.0 8.46e-03  6.65
+4898   34851_at  1.96  9.96  12.8 9.47e-03  6.55
+922   1824_s_at  1.64  9.24  12.8 1.00e-02  6.50
+6053   35995_at  2.76  8.87  12.7 1.05e-02  6.46
+12455    893_at  1.54 10.95  12.7 1.06e-02  6.45
+10175  40079_at -2.41  8.23 -12.6 1.09e-02  6.42</pre>
 <h3><a name="Weaver">8.5 Weaver Mutant Data: A 2x2 Factorial Experiment with 
 Two-Color Data</a></h3>
 <p>This case study considers a more involved analysis in which the sources of 
@@ -1564,9 +1581,10 @@ hour for a series of arrays.</p>
 <p align="center">
 <img border="0" src="bob/volcano.png" width="890" height="590"></p>
 <h2><a name="marray">10. Using limma with the marray Packages</a></h2>
-<p>The packages marrayClasses, marrayInput, marrayNorm and marrayTools are 
-designed to read and normalize cDNA data. The marrayNorm package provides some 
-normalization methods which are not provided by limma. Data input using the 
+<p>The package marray is 
+designed to read and normalize cDNA data. The marray package concentrates on location and scale normalization
+of M-values and provides some 
+normalization methods which are not in limma. Data input using the 
 marray packages produces a data object of class <code>marrayRaw</code>. Normalization using marrayNorm will produce a 
 data object 
 of class <code>marrayNorm</code>. Suppose that you have an <code>marrayNorm</code> 
@@ -1782,6 +1800,9 @@ protein. <i>Journal of Biological Chemistry</i> 277(43):40309-23.</li>
   and A. B. Khodursky 
   (eds.), Methods in Molecular Biology Volume 224, Humana 
   Press, Totowa, NJ, pages 111-136. (<a href="http://www.statsci.org/smyth/pubs/mareview.pdf">PDF</a>)</li>
+  <li> Wettenhall, J. M., and Smyth, G. K. (2004). limmaGUI: a graphical user 
+  interface for linear modeling of microarray data. <i>Bioinformatics</i>. To 
+  appear.</li>
   <li> Yang, Y. H., and Speed, T. P. (2002). Design and analysis of comparative microarray 
   experiments. In T. P. Speed (ed.), <i>Statistical Analysis of Gene Expression 
   Microarray Data</i>. CRC Press.</li>

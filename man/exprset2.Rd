@@ -7,7 +7,8 @@
 A class for storing intensity values from microarray experiments.
 This class is similar to \code{\link[Biobase:exprSet-class]{exprSet}}.
 
-This class is not yet used in the limma package but is intended to unify single-channel and log-ratio analyses of spotted microarray data in the future.
+This class is not currently used in the limma package.
+It is an experimental class to investigate the possibility of a unified data class structure for single-channel and log-ratio analyses of spotted microarray data.
 }
 
 \section{Slots}{

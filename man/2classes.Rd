@@ -30,7 +30,7 @@ This package defines the following data classes.
 All these data classes obey many analogies with matrices.
 In the case of \code{RGList} and \code{MAList}, rows correspond to spots and columns to arrays.
 In the case of \code{MarrayLM}, rows correspond to unique probes and the columns to parameters or contrasts.
-The functions \code{dim}, \code{length}, \code{ncol}, \code{nrow}, \code{dimnames}, \code{rownames}, \code{colnames} have methods for these classes.
+The functions \code{summary}, \code{dim}, \code{length}, \code{ncol}, \code{nrow}, \code{dimnames}, \code{rownames}, \code{colnames} have methods for these classes.
 Objects of any of these classes may be \link[limma:subsetting]{subsetted}.
 Multiple data objects may be \link[limma:cbind]{combined} by rows (to add extra probes) or by columns (to add extra arrays).
 

@@ -40,7 +40,7 @@ A list with components
 \seealso{
 An overview of LIMMA functions for normalization is given in \link{4.Normalization}.
 
-See also \code{\link[base]{lowess}} in the base library and \code{\link[modreg]{loess}} in the modreg package.
+See also \code{\link[stats]{lowess}} and \code{\link[stats]{loess}} in the stats package.
 }
 
 \examples{

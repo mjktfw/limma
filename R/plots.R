@@ -1,9 +1,9 @@
 #  PLOTS
 
-imageplot <- function(z, layout=list(ngrid.r=12,ngrid.c=4,nspot.r=26,nspot.c=26), low=NULL, high=NULL, ncolors=123, zerocenter=NULL, zlim=NULL, mar=rep(1,4), ...) {
+imageplot <- function(z, layout, low=NULL, high=NULL, ncolors=123, zerocenter=NULL, zlim=NULL, mar=c(2,1,1,1), legend=TRUE, ...) {
 #  Image plot of spotted microarray data
 #  Gordon Smyth
-#  20 Nov 2001.  Last revised 8 Feb 2004.
+#  20 Nov 2001.  Last revised 14 June 2004.
 
 #  Check input
 	gr <- layout$ngrid.r
@@ -20,6 +20,7 @@ imageplot <- function(z, layout=list(ngrid.r=12,ngrid.c=4,nspot.r=26,nspot.c=26)
 	if(is.null(low) && !is.null(high)) low <- c(1,1,1) - high
 
 #  Is zlim preset?
+	zr0 <- range(z,na.rm=TRUE)
 	if(!is.null(zlim)) {
 		z <- pmax(zlim[1],z)
 		z <- pmin(zlim[2],z)
@@ -47,9 +48,31 @@ imageplot <- function(z, layout=list(ngrid.r=12,ngrid.c=4,nspot.r=26,nspot.c=26)
 	dim(z) <- c(gr*sr,gc*sc)
 	old.par <- par(mar=mar)
 	on.exit(par(old.par))
-	image(0:(gr*sr),0:(gc*sc),z,zlim=zlim,col=col,axes=FALSE,...)
+	image(0:(gr*sr),0:(gc*sc),z,zlim=zlim,col=col,xaxt="n",yaxt="n",...)
 	for (igrid in 0:gc) lines( c(0,gr*sr), rep(igrid*sc,2) )
 	for (igrid in 0:gr) lines( rep(igrid*sr,2), c(0,gc*sc) )
+	if(legend) mtext(paste("z-range ",zr0[1]," to ",zr0[2]," (saturation ",zlim[1],", ",zlim[2],")",sep=""),side=1,cex=0.6)
+	invisible()
+}
+
+imageplot3by2 <- function(RG, z="Gb", prefix="image", zlim=NULL, common.lim=TRUE, ...)
+#	Make files of image plots, six to a page
+#	Gordon Smyth  10 June 2004.
+{
+	narrays <- ncol(RG)
+	npages <- ceiling(narrays/6)
+	cnames <- colnames(RG)
+	if(is.null(zlim) && common.lim) zlim <- quantile(RG[[z]],c(0.05,0.95),na.rm=TRUE)
+	for (ipage in 1:npages) {
+		i1 <- ipage*6-5
+		i2 <- min(ipage*6,narrays)
+		png(filename=paste(prefix,i1,"-",i2,".png",sep=""),width=6.5*140,height=10*140)
+		par(mfrow=c(3,2))
+		for (i in i1:i2) {
+			imageplot(RG[[z]][,i],RG$printer,zlim=zlim,mar=c(2,2,4,2),main=cnames[i],...)
+		}
+		dev.off()
+	}
 	invisible()
 }
 

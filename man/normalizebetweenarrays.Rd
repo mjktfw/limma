@@ -11,7 +11,7 @@ normalizeBetweenArrays(object, method, targets=NULL, ...)
 }
 
 \arguments{
-  \item{object}{an \code{matrix} or \code{\link[limma:malist]{MAList}} object containing expression ratios for a series of arrays}
+  \item{object}{a \code{matrix}, \code{\link[limma:rglist]{RGList}} or \code{\link[limma:malist]{MAList}} object containing expression ratios for a series of arrays}
   \item{method}{character string specifying the normalization method to be used.
   Choices are \code{"none"}, \code{"scale"}, \code{"quantile"}, \code{"Aquantile"}, \code{"Gquantile"}, \code{"Rquantile"}, \code{"Tquantile"} or \code{"vsn"}.
   A partial string sufficient to uniquely identify the choice is permitted.}
@@ -22,6 +22,8 @@ normalizeBetweenArrays(object, method, targets=NULL, ...)
 \details{
 \code{normalizeWithinArrays} normalizes expression values to make intensities consistent within each array.
 \code{normalizeBetweenArrays} normalizes expression values to achieve consistency between arrays.
+Normalization between arrays is usually, but not necessarily, applied after normalization within arrays.
+An exception is \code{method="vsn"}, see below.
 
 The scale normalization method was proposed by Yang et al (2001, 2002) and is further explained by Smyth and Speed (2003).
 The idea is simply to scale the log-ratios to have the same median-abolute-deviation (MAD) across arrays.
@@ -39,12 +41,12 @@ These two methods are called "q" and "Aq" respectively in Yang and Thorne (2003)
 \code{method="Gquantile"} ensures that the green (first) channel has the same empirical distribution across arrays, leaving the M-values (log-ratios) unchanged.
 \code{method="Rquantile"} ensures that the red (second) channel has the same empirical distribution across arrays, leaving the M-values (log-ratios) unchanged.
 
-\code{method="vsn"} uses the \code{\link[vsn]{vsn}} function from the vsn package.
-The normalized intensities are converted to the log-2 scale.
-
 If \code{object} is a \code{matrix} then the scale, quantile or vsn normalization will be applied to the columns.
 Applying \code{method="Aquantile"} when \code{object} is a \code{matrix} will produce an error.
-}
+
+\code{method="vsn"} uses the \code{\link[vsn]{vsn}} function from the vsn package.
+For this option the input \code{object} should contain raw intensities, i.e., prior to background correction, log-transformation or any normalization.
+Note that the normalized intensities are on the log-2 scale, not the log-e scale output by the \code{vsn} function in the vsn package.}
 
 \value{
 If \code{object} is a matrix then \code{normalizeBetweenArrays} produces a matrix of the same size.

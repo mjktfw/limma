@@ -1,4 +1,4 @@
-#	INPUT.R
+#	READ.R
 
 #	GAL FILES
 
@@ -57,15 +57,20 @@ splitName <- function(x, split=";", extended=TRUE) {
 	list(Name=unlist(lapply(s,function1)), Annotation=unlist(lapply(s,function2)))
 }
 
-getLayout <- function(gal,guessdups=FALSE) {
-#	Guess print layout from a GenePix Allocation List (GAL)
-#	In principle this information would be better read from the GPR file
+getLayout <- function(gal,guessdups=FALSE)
+#	Guess print layout from a gene list including Block, Row and Column indices
+#	as for a GenePix Allocation List (GAL)
 #	Gordon Smyth
-#	7 Apr 2003.  Last revised 28 Dec 2003.
-
-	ngrid.c <- 4  # An assumption!
-	ngrid.r <- max(gal$Block,na.rm=TRUE)/ngrid.c
-	if(abs(ngrid.r-as.integer(ngrid.r)) > 1e-14) stop("number of grid columns is not 4")
+#	7 Apr 2003.  Last revised 4 June 2004.
+{
+	if( !all(c("Block","Row","Column") %in% names(gal)) ) stop("gal needs to have columns Block, Row and Column")
+	ngrid.r <- max(gal$Block,na.rm=TRUE)
+	if(ngrid.r %% 4 == 0) {
+		ngrid.c <- 4
+		ngrid.r <- ngrid.r/4
+	} else {
+		ngrid.c <- 1
+	}
 	nspot.r <- max(gal$Row,na.rm=TRUE)
 	nspot.c <- max(gal$Column,na.rm=TRUE)
 	printer <- list(
@@ -88,6 +93,40 @@ getLayout <- function(gal,guessdups=FALSE) {
 		printer$spacing <- spacing
 	}
 	structure(printer,class="PrintLayout")
+}
+
+getLayout2 <- function(galfile)
+#	Guess print layout from header of GenePix Allocation List (GAL) file
+#	using block position and dimension information
+#	James Wettenhall
+#	4 June 2004
+{
+	if(missing(galfile))
+		galfile <- dir(pattern="\\.gal$")[1]
+	if(is.na(galfile) || length(galfile)==0 || !is.character(galfile) || nchar(galfile)==0)
+		stop("Please specify a gal file name.")
+	galHeader <- readLines(galfile,n=100)
+	blockLines <- galHeader[grep("Block[0-9]",galHeader)]
+	if(length(blockLines))
+		stop("Invalid or missing header in GAL file.")
+	blockLines <- gsub("[ \t]*$","",blockLines) # Removing trailing whitespace (e.g. tabs)
+	numBlocks <- length(blockLines)
+	if(length(grep(",",blockLines)))
+		delimiter <- ","
+	else
+		delimiter <- "\t" 
+	blockCoordinates <- 
+		t(matrix(as.numeric(unlist(strsplit(
+		gsub("[ \t]*$","",gsub("\\\"","",gsub("Block[0-9]+=[ \t]*","",
+		galHeader[grep("Block[0-9]",galHeader)]))),delimiter,fixed=TRUE))),
+		ncol=numBlocks))
+	ngrid.r	<- length(table(blockCoordinates[,2]))
+	ngrid.c <- as.numeric(table(blockCoordinates[,2])[1])
+	nspot.r <- blockCoordinates[1,6]
+	nspot.c <- blockCoordinates[1,4]
+
+	printer <- list(ngrid.r=ngrid.r,ngrid.c=ngrid.c,nspot.r=nspot.r,nspot.c=nspot.c)
+	structure(printer, class = "PrintLayout")
 }
 
 readTargets <- function(file="Targets.txt",path=NULL,sep="\t",row.names="FileName")
@@ -216,7 +255,7 @@ read.matrix <- function(file,nrows=0,skip=0,...) {
 read.maimages <- function(files,source="spot",path=NULL,ext=NULL,names=NULL,columns=NULL,annotation=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote="\"",...) {
 #	Extracts an RG list from a series of image analysis output files
 #	Gordon Smyth
-#	1 Nov 2002.  Last revised 22 March 2004.
+#	1 Nov 2002.  Last revised 8 June 2004.
 
 	if(missing(files)) {
 		if(missing(ext))
@@ -227,7 +266,7 @@ read.maimages <- function(files,source="spot",path=NULL,ext=NULL,names=NULL,colu
 			files <- sub(extregex,"",files)
 		}
 	}
-	source <- match.arg(source,c("agilent","arrayvision","genepix","imagene","quantarray","smd","spot","spot.close.open"))
+	source <- match.arg(source,c("agilent","arrayvision","genepix","imagene","quantarray","smd.old","smd","spot","spot.close.open"))
 	if(source=="imagene") return(read.imagene(files=files,path=path,ext=ext,names=names,columns=columns,wt.fun=wt.fun,verbose=verbose,sep=sep,quote=quote,...))
 	slides <- as.vector(as.character(files))
 	if(!is.null(ext)) slides <- paste(slides,ext,sep=".")
@@ -236,7 +275,8 @@ read.maimages <- function(files,source="spot",path=NULL,ext=NULL,names=NULL,colu
 
 	if(is.null(columns)) columns <- switch(source,
 		agilent = list(Gf="gMeanSignal",Gb="gBGMedianSignal",Rf="rMeanSignal",Rb="rBGMedianSignal"),
-		smd = list(Gf="CH1I_MEAN",Gb="CH1B_MEDIAN",Rf="CH2I_MEAN",Rb="CH2B_MEDIAN"),
+		smd.old = list(Gf="CH1I_MEAN",Gb="CH1B_MEDIAN",Rf="CH2I_MEAN",Rb="CH2B_MEDIAN"),
+		smd = list(Gf="Ch1 Intensity (Mean)",Gb="Ch1 Background (Median)",Rf="Ch2 Intensity (Mean)",Rb="Ch2 Background (Median)"),
 		spot = list(Rf="Rmean",Gf="Gmean",Rb="morphR",Gb="morphG"),
 		spot.close.open = list(Rf="Rmean",Gf="Gmean",Rb="morphR.close.open",Gb="morphG.close.open"),
 		genepix = list(Rf="F635 Mean",Gf="F532 Mean",Rb="B635 Median",Gb="B532 Median"),
@@ -246,44 +286,57 @@ read.maimages <- function(files,source="spot",path=NULL,ext=NULL,names=NULL,colu
 #	Read first file to get nspots
 	fullname <- slides[1]
 	if(!is.null(path)) fullname <- file.path(path,fullname)
-	if(source=="quantarray") {
+	switch(source, "quantarray" = {
 		firstfield <- scan(fullname,what="",sep="\t",flush=TRUE,quiet=TRUE,blank.lines.skip=FALSE,multi.line=FALSE)
 		skip <- grep("Begin Data",firstfield)
 		if(length(skip)==0) stop("Cannot find \"Begin Data\" in image output file")
 		nspots <- grep("End Data",firstfield) - skip -2
 		obj <- read.table(fullname,skip=skip,header=TRUE,sep=sep,quote=quote,as.is=TRUE,check.names=FALSE,comment.char="",nrows=nspots,...)
-	} else if(source=="arrayvision") {
+	}, "arrayvision" = {
 		skip <- 1
 		cn <- scan(fullname,what="",sep=sep,quote=quote,skip=1,nlines=1,quiet=TRUE)
-		fg <- grep("^Median Dens - RFU",cn)
+		fg <- grep(" Dens - ",cn)
 		if(length(fg) != 2) stop(paste("Cannot find foreground columns in",fullname))
 		bg <- grep("Bkgd",cn)
 		if(length(fg) != 2) stop(paste("Cannot find background columns in",fullname))
 		columns <- list(Rf=fg[1],Rb=bg[1],Gf=fg[2],Gb=bg[2])
 		obj <- read.table(fullname,skip=skip,header=TRUE,sep=sep,quote=quote,as.is=TRUE,check.names=FALSE,comment.char="",...)
 		nspots <- nrow(obj)
-	} else {
-		skip <- grep(columns$Rf,readLines(fullname,n=80)) - 1
+	}, "genepix" = {
+		skip <- readGPRHeader(fullname)$NHeaderRecords
+		obj <- read.table(fullname,skip=skip,header=TRUE,sep=sep,quote=quote,as.is=TRUE,check.names=FALSE,comment.char="",fill=TRUE,...)
+		nspots <- nrow(obj)
+	}, "smd.old" = {
+		skip <- readSMDHeader(fullname)$NHeaderRecords
+		obj <- read.table(fullname,skip=skip,header=TRUE,sep=sep,quote=quote,as.is=TRUE,check.names=FALSE,comment.char="",fill=TRUE,...)
+		nspots <- nrow(obj)
+	}, "smd" = {
+		skip <- readSMDHeader(fullname)$NHeaderRecords
+		obj <- read.table(fullname,skip=skip,header=TRUE,sep=sep,quote=quote,as.is=TRUE,check.names=FALSE,comment.char="",fill=TRUE,...)
+		nspots <- nrow(obj)
+	}, {
+		skip <- grep(protectMetachar(columns$Rf),readLines(fullname,n=80)) - 1
 		if(length(skip)==0)
 			stop("Cannot find column heading in image output file")
 		else
 			skip <- skip[1]
-		obj <- read.table(fullname,skip=skip,header=TRUE,sep=sep,quote=quote,as.is=TRUE,check.names=FALSE,comment.char="",...)
+		obj <- read.table(fullname,skip=skip,header=TRUE,sep=sep,quote=quote,as.is=TRUE,check.names=FALSE,comment.char="",fill=TRUE,...)
 		nspots <- nrow(obj)
-	}
+	})
 
 #	Initialize RG list object
 	Y <- matrix(0,nspots,nslides)
 	colnames(Y) <- names
 	RG <- list(R=Y,G=Y,Rb=Y,Gb=Y)
 	if(!is.null(wt.fun)) RG$weights <- Y
+	RG$targets <- data.frame(FileName=I(files),row.names=names)
 
 #	Set annotation information
 	if(is.null(annotation)) annotation <- switch(source,
 		agilent = c("Row","Col","Start","Sequence","SwissProt","GenBank","Primate","GenPept","ProbeUID","ControlType","ProbeName","GeneName","SystematicName","Description"),
 		genepix = c("Block","Row","Column","ID","Name"),
-		smd = {anncol <- grep(columns$Gf,colnames(obj))-1
-			ifelse(anncol>0, colnames(obj)[1:anncol], NULL)},
+		smd = c("Spot","Clone ID","Gene Symbol","Gene Name","Cluster ID","Accession","Preferred name","Locuslink ID","Name","Sequence Type","X Grid Coordinate (within sector)","Y Grid Coordinate (within sector)","Sector","Failed","Plate Number","Plate Row","Plate Column","Clone Source","Is Verified","Is Contaminated","Luid"),
+		smd.old = c("SPOT","NAME","Clone ID","Gene Symbol","Gene Name","Cluster ID","Accession","Preferred name","SUID"),
 		NULL
 	)
 	if(!is.null(annotation)) {
@@ -296,7 +349,8 @@ read.maimages <- function(files,source="spot",path=NULL,ext=NULL,names=NULL,colu
 		if(i > 1) {
 			fullname <- slides[i]
 			if(!is.null(path)) fullname <- file.path(path,fullname)
-			obj <- read.table(fullname,skip=skip,header=TRUE,sep=sep,as.is=TRUE,quote=quote,check.names=FALSE,comment.char="",nrows=nspots,...)
+			if(source=="genepix") skip <- readGPRHeader(fullname)$NHeaderRecords
+			obj <- read.table(fullname,skip=skip,header=TRUE,sep=sep,as.is=TRUE,quote=quote,check.names=FALSE,comment.char="",fill=TRUE,nrows=nspots,...)
 		}
 		RG$R[,i] <- obj[,columns$Rf]
 		RG$G[,i] <- obj[,columns$Gf]
@@ -333,7 +387,7 @@ read.imagene <- function(files,path=NULL,ext=NULL,names=NULL,columns=NULL,wt.fun
 #	Read header information from first file to get nspots
 	fullname <- files[1,1]
 	if(!is.null(path)) fullname <- file.path(path,fullname)
-	headers <- readImageneHeaders(fullname)
+	headers <- readImaGeneHeader(fullname)
 	if(verbose) cat("Read header information\n")
 	skip <- headers$Begin.Raw.Data
 	printer <- headers$Field.Dimensions[c("Metarows","Metacols","Rows","Cols")]
@@ -350,19 +404,19 @@ read.imagene <- function(files,path=NULL,ext=NULL,names=NULL,columns=NULL,wt.fun
 		fullname <- files[i,1]
 		if(!is.null(path)) fullname <- file.path(path,fullname)
 		if(i > 1) {
-			headers <- readImageneHeaders(fullname)
+			headers <- readImaGeneHeader(fullname)
 			if(any(unlist(printer) != unlist(headers$Field.Dimensions[c("Metarows","Metacols","Rows","Cols")])))
 				stop(paste("Field dimensions of array",i,"not same as those of first array"))
 			skip <- headers$Begin.Raw.Data
 		}
-		obj<- read.table(fullname,skip=skip,header=TRUE,sep=sep,quote=quote,check.names=FALSE,comment.char="",nrows=nspots,...)
+		obj<- read.table(fullname,skip=skip,header=TRUE,sep=sep,quote=quote,check.names=FALSE,comment.char="",fill=TRUE,nrows=nspots,...)
 		if(verbose) cat(paste("Read",fullname,"\n"))
 		if(i==1) RG$genes <- obj[,c("Field","Meta Row","Meta Column","Row","Column","Gene ID")]
 		RG$G[,i] <- obj[,columns$f]
 		RG$Gb[,i] <- obj[,columns$b]
 		fullname <- files[i,2]
 		if(!is.null(path)) fullname <- file.path(path,fullname)
-		obj<- read.table(fullname,skip=skip,header=TRUE,sep=sep,quote=quote,check.names=FALSE,comment.char="",nrows=nspots,...)
+		obj<- read.table(fullname,skip=skip,header=TRUE,sep=sep,quote=quote,check.names=FALSE,comment.char="",fill=TRUE,nrows=nspots,...)
 		if(verbose) cat(paste("Read",fullname,"\n"))
 		RG$R[,i] <- obj[,columns$f]
 		RG$Rb[,i] <- obj[,columns$b]
@@ -371,10 +425,10 @@ read.imagene <- function(files,path=NULL,ext=NULL,names=NULL,columns=NULL,wt.fun
 	new("RGList",RG)
 }
 
-readGPRHeaders <- function(file) {
+readGPRHeader <- function(file) {
 #	Extracts header information from a GenePix Results (GPR) file
 #	Gordon Smyth
-#	4 October 2003.  Last modified 23 Jan 2004.
+#	4 October 2003.  Last modified 25 June 2004.
 
 	con <- file(file, "r")	
  	on.exit(close(con))
@@ -386,40 +440,63 @@ readGPRHeaders <- function(file) {
 		out[[i]] <- txt[2]
 		names(out)[i] <- txt[1]
 	}
-	out$Wavelengths <- strsplit(out$Wavelengths,split="\t")[[1]]
-	out$ImageFiles <- strsplit(out$ImageFiles,split="\t")[[1]]
-	out$NHeaderRecords <- nfields[1]
+	out$NHeaderRecords <- nfields[1]+2
 	out$NDataFields <- nfields[2]
 	out
 }
 
-readImageneHeaders <- function(file) {
+readImaGeneHeader <- function(file) {
 #	Extracts header information from an Imagene analysis output file
 #	Gordon Smyth
-#	14 Aug 2003.
+#	14 Aug 2003.  Last modified 8 June 2004.
 
 	firstfield <- scan(file,what="",sep="\t",quote="\"",nlines=60,flush=TRUE,quiet=TRUE,blank.lines.skip=FALSE,multi.line=FALSE)
-	beginrawdata <- grep("Begin Raw Data",firstfield)
-	txt <- scan(file,what="",sep="\t",quote="\"",nlines=beginrawdata-1,quiet=TRUE)
-	out <- list(Begin.Raw.Data=beginrawdata)
+	NHeaderRecords <- grep("Begin Raw Data",firstfield)
+	txt <- scan(file,what="",sep="\t",quote="\"",nlines=NHeaderRecords-1,quiet=TRUE)
+	out <- list(NHeaderRecords=NHeaderRecords)
 	out$Version <- txt[grep("^version$",txt)+1]
 	out$Date <- txt[grep("^Date$",txt)+1]
-	out$Image.File <- txt[grep("^Image File$",txt)+1]
+	out$ImageFile <- txt[grep("^Image File$",txt)+1]
 	out$Inverted <- as.logical(txt[grep("^Inverted$",txt)+1])
-	out$Field.Dimensions <- list()
-	out$Field.Dimensions$Field <- txt[grep("^Field$",txt)+7]
-	out$Field.Dimensions$Metarows <- as.integer(txt[grep("^Metarows$",txt)+7])
-	out$Field.Dimensions$Metacols <- as.integer(txt[grep("^Metacols$",txt)+7])
-	out$Field.Dimensions$Rows <- as.integer(txt[grep("^Rows$",txt)+7])
-	out$Field.Dimensions$Cols <- as.integer(txt[grep("^Cols$",txt)+7])
-	out$Measurement.Parameters <- list()
-	out$Measurement.Parameters$Signal.Low <- txt[grep("^Signal Low$",txt)+1]
-	out$Measurement.Parameters$Signal.High <- txt[grep("^Signal High$",txt)+1]
-	out$Measurement.Parameters$Background.Low <- txt[grep("^Background Low$",txt)+1]
-	out$Measurement.Parameters$Background.High <- txt[grep("^Background High$",txt)+1]
-	out$Measurement.Parameters$Background.Buffer <- txt[grep("^Background Buffer$",txt)+1]
-	out$Measurement.Parameters$Background.Width <- txt[grep("^Background Width$",txt)+1]
+	out$FieldDimensions <- list()
+	out$FieldDimensions$Field <- txt[grep("^Field$",txt)+7]
+	out$FieldDimensions$Metarows <- as.integer(txt[grep("^Metarows$",txt)+7])
+	out$FieldDimensions$Metacols <- as.integer(txt[grep("^Metacols$",txt)+7])
+	out$FieldDimensions$Rows <- as.integer(txt[grep("^Rows$",txt)+7])
+	out$FieldDimensions$Cols <- as.integer(txt[grep("^Cols$",txt)+7])
+	out$MeasurementParameters <- list()
+	out$MeasurementParameters$SignalLow <- txt[grep("^Signal Low$",txt)+1]
+	out$MeasurementParameters$SignalHigh <- txt[grep("^Signal High$",txt)+1]
+	out$MeasurementParameters$BackgroundLow <- txt[grep("^Background Low$",txt)+1]
+	out$MeasurementParameters$BackgroundHigh <- txt[grep("^Background High$",txt)+1]
+	out$MeasurementParameters$BackgroundBuffer <- txt[grep("^Background Buffer$",txt)+1]
+	out$MeasurementParameters$BackgroundWidth <- txt[grep("^Background Width$",txt)+1]
 	out
+}
+
+readSMDHeader <- function(file) {
+#	Read header information from a Stanford Microarray Database (SMD) raw data file
+#	Gordon Smyth
+#	3 June 2004
+
+	con <- file(file, "r")	
+ 	on.exit(close(con))
+ 	out <- list()
+ 	i <- 0
+ 	repeat {
+ 		txt <- readLines(con,n=1)
+ 		if(txt=="") stop("Not SMD data file: input stopped at blank line")
+ 		if(substr(txt,1,1)=="!") {
+ 	 		i <- i+1
+ 	 		txtsplit <- strsplit(substr(txt,2,500),split="=")[[1]]
+			out[[i]] <- txtsplit[2]
+			names(out)[i] <- txtsplit[1]
+ 		} else {
+ 			break
+ 		}
+ 	}
+ 	out$NHeaderRecords <- i
+ 	out
 }
 
 rg.series.spot <- function(slides,path=NULL,names.slides=names(slides),suffix="spot",wt.fun=NULL,verbose=TRUE,...) {
@@ -580,6 +657,34 @@ removeExt <- function(x) {
 		return(sub("(.*)\\.(.*)$","\\1",x))
 	else
 		return(x)
+}
+
+trimWhiteSpace <- function(x)
+#	Trim white space from start and end of character strings
+#	Tim Beissbarth and Gordon Smyth
+#	7 June 2004
+{
+	sub("[ \t\n\r]*$", "", sub("^[ \t\n\r]*", "", x))
+}
+
+protectMetachar <- function(x)
+#	Insert backslashs before an metacharacters (to allow them to be included in search strings)
+#	Note that backslashs themselves not handled
+#	Gordon Smyth
+#	9 June 2004
+{
+	x <- gsub("\\.", "\\\\\.", x)
+	x <- gsub("\\|", "\\\\\|", x)
+	x <- gsub("\\(", "\\\\\(", x)
+	x <- gsub("\\)", "\\\\\)", x)
+	x <- gsub("\\[", "\\\\\[", x)
+	x <- gsub("\\{", "\\\\\{", x)
+	x <- gsub("\\^", "\\\\\^", x)
+	x <- gsub("\\$", "\\\\\$", x)
+	x <- gsub("\\*", "\\\\\*", x)
+	x <- gsub("\\+", "\\\\\+", x)
+	x <- gsub("\\?", "\\\\\?", x)
+	x
 }
 
 #	LAYOUT FUNCTIONS

@@ -24,7 +24,7 @@ This function is analogous to \code{qqnorm} for normal probability plots.
 In fact \code{qqt(y,df=Inf)} is identical to \code{qqnorm(y)} in all respects except the default title on the plot.
 }
 \author{Gordon Smyth}
-\seealso{\code{\link[base]{qqnorm}}}
+\seealso{\code{\link[stats]{qqnorm}}}
 \examples{
 y <- rt(50,df=4)
 qqt(y,df=4)
