@@ -3,7 +3,7 @@
 loessFit <- function(y, x, weights=NULL, span=0.3, cell=0.2, iterations=4) {
 #	Fast loess fit for simple x and y
 #	Gordon Smyth
-#	28 June 2003
+#	28 June 2003.  Last revised 4 August 2003.
 
 	n <- length(y)
 	if(is.null(weights)) {
@@ -18,10 +18,10 @@ loessFit <- function(y, x, weights=NULL, span=0.3, cell=0.2, iterations=4) {
 		delta = 0.01 * diff(range(xobs)) 
 		smoothy <- .C("lowess", x = as.double(xobs[o]), as.double(yobs[o]), 
 			nobs, as.double(span), as.integer(iter), as.double(delta), 
-			y = double(nobs), double(nobs), double(nobs), PACKAGE = "base")$y
+			y = double(nobs), double(nobs), double(nobs), PACKAGE = "base")$y[oo]
 		out <- list(fitted=rep(NA,n),residuals=rep(NA,n))
-		out$fitted[obs] <- smoothy[oo]
-		out$residuals[obs] <- yobs-out$fitted
+		out$fitted[obs] <- smoothy
+		out$residuals[obs] <- yobs-smoothy
 	} else {
 		obs <- is.finite(y) & is.finite(x) & is.finite(weights)
 		xobs <- x[obs]

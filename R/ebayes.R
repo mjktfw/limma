@@ -1,5 +1,23 @@
 #  DIFFERENTIAL EXPRESSION
 
+eBayes <- function(fit,proportion=0.01,std.coef=NULL) {
+#	Empirical Bayes statistics to select differentially expressed genes
+#	Object orientated version
+#	Gordon Smyth
+#	4 August 2003.
+
+	eb <- ebayes(fit=fit,proportion=proportion,std.coef=std.coef)
+	fit$df.prior <- eb$df.prior
+	fit$s2.prior <- eb$s2.prior
+	fit$var.prior <- eb$var.prior
+	fit$proportion <- proportion
+	fit$s2.post <- eb$s2.post
+	fit$t <- eb$t
+	fit$p.value <- eb$p.value
+	fit$lods <- eb$lods
+	fit
+}
+
 ebayes <- function(fit,proportion=0.01,std.coef=NULL) {
 #	Empirical Bayes statistics to select differentially expressed genes
 #	Gordon Smyth
@@ -189,6 +207,22 @@ qqt <- function(y,df=Inf,ylim=range(y),main="Student's t Q-Q Plot",xlab="Theoret
     x <- qt(ppoints(n),df=df)[order(order(y))]
     if (plot.it) plot(x,y,main=main,xlab=xlab,ylab=ylab,ylim=ylim,...)
     invisible(list(x=x,y=y))
+}
+
+topTable <- function(fit,coef=1,number=10,genelist=NULL,adjust.method="holm",sort.by="B") {
+#	Summary table of top genes, Object-orientated version
+#	Gordon Smyth
+#	4 August 2003
+
+	if(!missing(genelist)) fit$genes <- genelist
+	toptable(fit=fit[c("coefficients","stdev.unscaled")],
+		coef=coef,
+		number=number,
+		genelist=fit$genes,
+		A=fit$Amean,
+		eb=fit[c("t","p.value","lods")],
+		adjust.method=adjust.method,
+		sort.by=sort.by)
 }
 
 toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.method="holm",sort.by="B",...) {

@@ -40,8 +40,9 @@ lmFit <- function(object,design=NULL,contrasts=NULL,ndups=1,spacing=1,correlatio
 			fit <- lm.series(M,design=design,ndups=ndups,spacing=spacing,weights=weights)
 		else
 			fit <- gls.series(M,design=design,ndups=ndups,spacing=spacing,correlation=correlation,weights=weights,...)
+	fit$method <- method
 	fit$design <- design
-	fit$correlation <- correlation
+	if(ndups > 1) fit$correlation <- correlation
 	if(is(object,"MAList")) {
 		if(!is.null(object$genes)) fit$genes <- uniquegenelist(object$genes,ndups=ndups,spacing=spacing) 
 		if(!is.null(object$A)) fit$Amean <- rowMeans(unwrapdups(as.matrix(object$A),ndups=ndups,spacing=spacing),na.rm=TRUE)
