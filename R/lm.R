@@ -267,7 +267,7 @@ gls.series <- function(M,design=NULL,ndups=2,spacing=1,block=NULL,correlation=NU
 contrasts.fit <- function(fit,contrasts) {
 #	Convert coefficients and std deviations in fit object to reflect contrasts of interest
 #	Gordon Smyth
-#	13 Oct 2002.  Last modified 4 September 2003.
+#	13 Oct 2002.  Last modified 20 May 2004.
 
 	ncoef <- NCOL(fit$coefficients)
 	if(nrow(contrasts)!=ncoef) stop("Number of rows of contrast matrix must match number of coefficients")
@@ -286,9 +286,10 @@ contrasts.fit <- function(fit,contrasts) {
 		ngenes <- NROW(fit$stdev.unscaled)
 		ncont <- NCOL(contrasts)
 		U <- matrix(1,ngenes,ncont,dimnames=list(rownames(fit$stdev.unscaled),colnames(contrasts)))
+		o <- array(1,c(1,ncoef))
 		for (i in 1:ngenes) {
-			RUC <- R %*% t(t(contrasts)*fit$stdev.unscaled[i,])
-			U[i,] <- sqrt(array(1,c(1,ncoef)) %*% RUC^2)
+			RUC <- R %*% vecmat(fit$stdev.unscaled[i,],contrasts)
+			U[i,] <- sqrt(o %*% RUC^2)
 		}
 		fit$stdev.unscaled <- U
 	}
