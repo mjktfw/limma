@@ -92,32 +92,43 @@ intraspotCorrelation <- function(object,design,trim=0.15)
 	list(consensus.correlation=tanh(mean(arho-arhobias,trim=trim)), all.correlations=arho, df=degfre)
 }
 
-array2channel <- function(targets,channels=c(1,2),channelwise.columns=list(Target=c("Cy3","Cy5")))
+array2channel <- function(targets,channel.codes=c(1,2),channel.columns=list(Target=c("Cy3","Cy5")),grep=FALSE)
 #	Convert data.frame with one row for each two-color array,
 #	into data.frame with one row for each channel
 #	Gordon Smyth
-#	16 March 2004.  Last modified 13 May 2004.
+#	16 March 2004.  Last modified 15 May 2004.
 {
 	targets <- as.data.frame(targets)
-	if(!min(dim(targets))) return(targets)
-	lcc <- length(channelwise.columns)
+	narrays <- nrow(targets)
+	nchannelcol <- 0
+	nothercol <- ncol(targets)
+	if(narrays==0 || nothercol==0) return(targets)
+	lcc <- length(channel.columns)
 	if(lcc) {
-		out <- channelwise.columns
-		cheaders <- names(channelwise.columns)
+		hyb <- channel.columns
+		cheaders <- names(channel.columns)
 		for (i in 1:lcc) {
-			aheaders <- channelwise.columns[[i]]
+			aheaders <- channel.columns[[i]]
+			if(grep) {
+				k <- grep(tolower(aheaders[1]),tolower(names(targets)))
+				if(length(k)==1) aheaders[1] <- names(targets)[k]
+				k <- grep(tolower(aheaders[2]),tolower(names(targets)))
+				if(length(k)==1) aheaders[2] <- names(targets)[k]
+			}
 			if(all(aheaders %in% names(targets))) {
-				out[[i]] <- as.vector(as.matrix((targets[,aheaders])))
+				hyb[[i]] <- as.vector(as.matrix((targets[,aheaders])))
 				targets[[ aheaders[1] ]] <- NULL
 				targets[[ aheaders[2] ]] <- NULL
+				nchannelcol <- nchannelcol+1
+				nothercol <- nothercol-1
 			} else {
-				out[[ cheaders[i] ]] <- NULL
+				hyb[[ cheaders[i] ]] <- NULL
 			}
 		}
 	}
-	narrays <- nrow(targets)
-	channel.col <- rep(channels,c(narrays,narrays))
-	out <- cbind(Channel=channel.col,rbind(targets,targets),out)
+	channel.col <- rep(channel.codes,c(narrays,narrays))
+	out <- cbind(Channel=channel.col,rbind(targets,targets))
+	if(nchannelcol) out <- cbind(out,hyb)
 	row.names(out) <- paste(row.names(targets),channel.col,sep=".")
 	o <- as.vector(t(matrix(1:(2*narrays),narrays,2)))
 	out[o,]
