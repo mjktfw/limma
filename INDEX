@@ -66,6 +66,7 @@ rg.series.spot          Extract RG list from Spot image analysis files
 rg.spot                 Extract RG list from Spot output files
 RGList-class            Red, Green Intensity List - class
 rlm.series              Robust Linear Model for Series of Microarrays
+splitName               Split a Composite Gene Names
 tmixture                Estimate Scale Factor in Mixture of
                         t-Distributions
 toptable                Table of Top Genes from Linear Model Fit

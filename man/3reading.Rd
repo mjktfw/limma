@@ -27,6 +27,7 @@ This function will be removed in future versions of LIMMA.
 
 The function \code{\link{readGAL}} reads information from a GenePix Allocation List (gal) file.
 It produces a data frame with known column names.
+If the gene names consist of a short name followed by annotation information, then \code{\link{splitName}} may be used to separate the name and annotation information into separate vectors.
 
 The function \code{\link{getLayout}} extracts from the gal-file data frame the print layout information for a spotted array.
 The functions \code{\link{gridr}}, \code{\link{gridc}}, \code{\link{spotr}} and \code{\link{spotc}} use the extracted layout to compute grid positions and spot positions within each grid for each spot.

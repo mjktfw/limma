@@ -12,8 +12,9 @@
 <h1>User's Guide</h1>
 
 <p align="center">Gordon Smyth<br>
+The
 Walter and Eliza Hall Institute of Medical Research<br>
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->03 May 2003<!--webbot bot="Timestamp" i-checksum="15114" endspan --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->10 May 2003<!--webbot bot="Timestamp" i-checksum="15109" endspan --></p>
 
 <h2>Table of Contents</h2>
 
@@ -34,10 +35,12 @@ Walter and Eliza Hall Institute of Medical Research<br>
 
 <p>This tutorial was prepared using R Version 1.7.0 for Windows and limma 
 Version 0.9.7. The latest version of limma is always available from
-<a href="http://bioinf.wehi.edu.au/limma/">http://bioinf.wehi.edu.au/limma/</a>.</p>
-
-<p>Sections 1 to 5 of this tutorial deal with two-colour spotted microarrays.  Section 6 
-deals with Affymetrix and other single-color arrays.</p>
+<a href="http://www.bioconductor.org">http://www.bioconductor.org</a>. Easy 
+download of limma as also available from
+<a href="http://bioinf.wehi.edu.au/limma/">http://bioinf.wehi.edu.au/limma/</a>. 
+The data sets used in the examples can be downloaded from
+<a href="http://bioinf.wehi.edu.au/marray/genstat2002/">
+http://bioinf.wehi.edu.au/marray/genstat2002/</a>.</p>
 
 <h2>2. Reading in Intensity Data</h2>
 
@@ -61,7 +64,7 @@ be read using</p>
 <pre>&gt; files &lt;- dir(pattern=&quot;*\\.spot&quot;)
 &gt; RG &lt;- read.maimages(files,source=&quot;spot&quot;)</pre>
 <p>If they are GenePix output files and have extension &quot;gpr&quot; then they 
-can be read</p>
+can be read using</p>
 <pre>&gt; files &lt;- dir(pattern=&quot;*\\.gpr&quot;)
 &gt; RG &lt;- read.maimages(files,source=&quot;genepix&quot;)</pre>
 <p>Consult the help entry for <code>read.maimages</code> to see which other 
@@ -96,9 +99,16 @@ help entry <code>QualityWeights</code> to see what quality weight functions are
 available.</p>
 <h2>5. One-Sample Experiments</h2>
 
+<p>In this section we consider a case study in which two RNA sources are 
+compared directly on a set of replicate or dye-swap arrays. The case study 
+includes reading in the data, data display and exploration, as well as 
+normalization and differential expression analysis. The analysis of differential 
+expression is analogous to a classical one-sample test of location for each 
+gene.</p>
+
 <h3>Example. Swirl Zebrafish Data</h3>
 
-<p>In this example we assume that the data is provided as a GAL file and raw SPOT 
+<p>In this example we assume that the data is provided as a GAL file called &quot;fish.gal&quot; and raw SPOT 
 output files.</p>
 
 <p><b>Background</b>. The 
@@ -351,6 +361,9 @@ assumes independent statistics which we do not have here (see <code>help(p.adjus
 <p align="center">
 <img border="0" src="swirl/avemaplot.png" width="795" height="706"></p>
 <h2>6. Two-Sample Experiments</h2>
+<p>In this section we consider a case study where two RNA sources are compared 
+through a common reference RNA. The analysis of the log-ratios involves a 
+two-sample comparison of means for each gene.</p>
 <h3>Example. ApoAI Knockout Data </h3>
 <p>In this example we assume that the data is available as an RG list in the 
 data file ApoAI.RData.</p>
@@ -482,6 +495,8 @@ to be differentially expressed in the knockout versus the control line.</p>
 <p align="center">
 <img border="0" src="apoai/bayes.png" width="693" height="743"></p>
 <h2>7. Factorial Experiments</h2>
+<p>This case study considers a more involved analysis in which the sources of 
+RNA have a factorial structure.</p>
 <h3>Example. Weaver Mutant Data</h3>
 <p>In this example we assume that data is available as an RG list.</p>
 <p><b>Background</b>. This is a case study examining the development of certain 
@@ -500,7 +515,7 @@ days postnatal and P21 = 21 days postnatal) cerebella were isolated from two
 wild-type and two mutant littermates and pooled for RNA isolation. RNA was then 
 divided into aliquotes and labelled before hybridizing to the arrays. (This 
 means that different hybridizations are biologically related through using RNA 
-from the same mice, although we will ignore this in our analysis today. See Yang 
+from the same mice, although we will ignore this here. See Yang 
 and Speed (2002) for a detailed discussion of this issue in the context of this 
 experiment.)</p>
 <p><b>Hybridizations</b>. We have just four arrays each comparing two out of the 
@@ -535,7 +550,7 @@ and genotype.</p>
 <pre>&gt; fitIA &lt;- lm.series(MA$M,designIA)
 &gt; ebIA &lt;- ebayes(fitIA)
 &gt; options(digits=3)
-&gt; toptable(&quot;I/A&quot;,10,gal,fitIA,ebIA,adjust=&quot;fdr&quot;)
+&gt; toptable(coef=&quot;I/A&quot;,n=10,genelist=gal,fit=fitIA,eb=ebIA,adjust=&quot;fdr&quot;)
            ID            Name    M     t P.Value     B
 7737    RIKEN           Z6801 6.49 12.95   0.886 -4.03
 780     RIKEN            Z636 6.57 12.67   0.886 -4.03
@@ -592,7 +607,7 @@ whether they are differentially expressed in the mutant at the two times.<br>
 [4,]    0.866    0.866  0.866  0.866   1
 [5,]    0.866    0.866  0.866  0.866   1
 &gt; eb &lt;- ebayes(fit)
-&gt; heatdiagram(abs(eb$t),fit$coef,&quot;Mutant21&quot;,names=GeneNames)</pre>
+&gt; heatdiagram(abs(eb$t),fit$coef,&quot;Mutant21&quot;,names=gal$Name)</pre>
 <p><img border="0" src="weaver/heat.png" width="1038" height="304"></p>
 <p>This heat diagram shows the expression profiles for all genes judged to be 
 differentially expressed (|t| &gt; 4) with respect to Mutant21. The genes are 
@@ -604,6 +619,12 @@ which are down-regulated (green) in the mutant are those which increase over
 time in the wild-type. The mutant is not participating in normal development 
 between 11 and 21 days in respect of these genes.</p>
 <h2>8. Microarrays with Multiple Prints of Each Gene</h2>
+<p>In this section we consider a case study in which all genes (ESTs and 
+controls) are printed more than once on the array. This means that there is both 
+within-array and between-array replication for each gene. The structure of the 
+experiment is therefore essentially a randomized block experiment for each gene. 
+The approach taken here is to estimate a common correlation for all the genes 
+for between within-array duplicates.</p>
 <h3>Example. Bob Mutant Data</h3>
 <p>In this example we assume that the data is available as an RG list.</p>
 <p><b>Background</b>. This data is from a study of transcription factors 
@@ -684,7 +705,7 @@ to conduct the usual analysis of the arrays using generalized least squares.</p>
 for each gene, and then take a trimmed mean on the atanh scale to estimate the 
 overall correlation. This command takes a lot of time, perhaps as much as an 
 hour for a series of arrays.</p>
-<pre>&gt; cor &lt;- dupcor.series(MA$M,design,ndups=2) # This is a slow computation!
+<pre>&gt; cor &lt;- dupcor.series(MA$M,design,ndups=2) # This is a very slow computation!
 &gt; cor$cor
 [1] 0.571377
 &gt; boxplot(cor$cor.genes)</pre>

@@ -2,7 +2,7 @@
 \alias{getLayout}
 \title{Extract the Print Layout of an Array from the GAL File}
 \description{
-From the Block, Row and Column information in the GAL file, determine the number of tip rows and columns on the array and the number of spot rows and columns within each tip group.
+From the Block, Row and Column information in the GAL file, determine the number of grid rows and columns on the array and the number of spot rows and columns within each grid.
 }
 \usage{
 getLayout(gal)
@@ -17,10 +17,10 @@ The number of tip columns is not determinable from the GAL but is assumed to be 
 }
 \value{
 A list with components
-  \item{ngrid.r}{number of tip rows on the print head}
-  \item{ngrid.c}{number of tip columns on the print head}
-  \item{nspot.r}{number of rows of spots printed with each tip}
-  \item{nspot.c}{number of columns of spots printed with each tip}
+  \item{ngrid.r}{integer, number of grid rows on the arrays}
+  \item{ngrid.c}{integer, number of grid columns on the arrays}
+  \item{nspot.r}{integer, number of rows of spots in each grid}
+  \item{nspot.c}{integer, number of columns of spots in each grid}
 }
 \author{Gordon Smyth}
 \seealso{
