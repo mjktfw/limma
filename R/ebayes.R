@@ -250,12 +250,12 @@ classifyTests <- function(tstat,cor.matrix,df.residual,p.value) {
 classifyTests.vector <- function(tstat,cor.matrix,df.residual,p.value) {
 #	Classify a vector of t-test statistics into a vector outcome
 #	Gordon Smyth
-#	20 Mar 2003
+#	20 Mar 2003.  Last modified 19 May 2003.
 
 	p <- length(tstat)
 	pF <- p*qf(1-p.value,p,df.residual)
 	result <- rep(0,p)
-	R <- La.chol(cor.matrix)
+	R <- chol(cor.matrix,pivot=TRUE)
 	if( crossprod(R %*% tstat) > pF ) {
 		ord <- order(abs(tstat),decreasing=TRUE)
 		result[ord[1]] <- sign(tstat[ord[1]])

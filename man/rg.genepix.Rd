@@ -5,7 +5,7 @@
 Extracts an RG list from a series of Genepix output files
 }
 \usage{
-rg.quantarray(slides,names.slides=names(slides),suffix="gpr")
+rg.genepix(slides,names.slides=names(slides),suffix="gpr")
 }
 \arguments{
   \item{slides}{Character vector giving the names of the data frames containing the Spot output.}
