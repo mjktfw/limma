@@ -25,7 +25,7 @@ function(gpr) {
 wtIgnore.Filter <- function(qta) {
 #	Quality weights based on Ignore Filter from QuantArray output
 #	Gordon Smyth
-#	23 May 2003.
+#	23 May 2003.  Last modified 27 Sep 2003.
 
-	qta$Ignore.Filter
+	qta[,"Ignore Filter"]
 }

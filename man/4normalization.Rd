@@ -6,24 +6,29 @@
 This page gives an overview of the LIMMA functions available to normalize data from spotted two-colour microarrays.
 Smyth and Speed (2003) give an overview of the normalization techniques implemented in the functions.
 
-Virtually all data from spotted microarrays will be normalized using \code{\link{normalizeWithinArrays}} with \code{method="printtiploess"}.
+Usually data from spotted microarrays will be normalized using \code{\link{normalizeWithinArrays}}.
 A minority of data will also be normalized using \code{\link{normalizeBetweenArrays}} if diagnostic plots suggest a difference in scale between the arrays.
 
 In rare circumstances, data might be normalized using \code{\link{normalizeForPrintorder}} before using \code{\link{normalizeWithinArrays}}.
 
 If one is planning analysis of single-channel information from the microarrays rather than analysis of differential expression based on log-ratios, then the data should be normalized using a single channel-normalization technique.
 Single channel normalization uses further options of the \code{\link{normalizeBetweenArrays}} function.
+For more details see the \emph{\link[limma:../doc/usersguide]{LIMMA User's Guide}} which includes a section on single-channel normalization.
 
 \code{normalizeWithinArrays} uses utility functions \code{\link{loessFit}} and \code{\link{normalizeRobustSpline}}.
 \code{normalizeBetweenArrays} uses utility functions \code{\link{normalizeMedians}}, \code{\link{normalizeMedianDeviations}} and \code{\link{normalizeQuantiles}}, none of which need to be called directly by users.
 }
 
 \section{Backgound Correction}{
-\code{\link{normalizeWithinArrays}} calls \code{\link{MA.RG}} to do simple background correction and to convert \code{RGList} objects into \code{MAList} objects.
-At this time, the explicit background correction function \code{\link{backgroundCorrect}} is not used by LIMMA, but the function will become relevant as more sophisticated background correct methods are implemented.
+Usually one doesn't need to explicitly ask for background correction of the intensities because this is done by default by code{\link{normalizeWithinArrays}},
+which subtract the background from the foreground intensities before applying the normalization method.
+This default background correction method can be over-ridden by using \code{\link{backgroundCorrect}} which offers a number of alternative
+background correct methods to simple subtraction.
+Simply use \code{backgroundCorrect} to correct the \code{RGList} before applying \code{normalizeWithinArrays}.
 
 \code{\link{kooperberg}} is a Bayesian background correction tool designed specifically for GenePix data.
 \code{kooperberg} is not currently used as the default method for GenePix data because it is computationally intensive.
+It requires several columns of the Genepix data files which are not read in my read.maimages, so you will need to use \code{read.series} instead of \code{read.maimages} if you wish to use \code{kooperberg}.
 }
 
 \author{Gordon Smyth}

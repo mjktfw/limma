@@ -359,10 +359,10 @@ plotPrintorder <- function(object,layout,start="topleft",slide=1,method="loess",
 
 #  BETWEEN ARRAY NORMALIZATION
 
-normalizeBetweenArrays <- function(object, method="scale") {
+normalizeBetweenArrays <- function(object, method="scale", ties=FALSE) {
 #	Normalize between arrays
 #	Gordon Smyth
-#	12 Apri 2003.  Last revised 20 September 2003.
+#	12 Apri 2003.  Last revised 26 September 2003.
 
 	choices <- c("none","scale","quantile","Aquantile")
 	method <- match.arg(method,choices)
@@ -371,7 +371,7 @@ normalizeBetweenArrays <- function(object, method="scale") {
 		return(switch(method,
 			none = object,
 			scale = normalizeMedianDeviations(object),
-			quantile = normalizeQuantiles(object)
+			quantile = normalizeQuantiles(object, ties=ties)
 		))
 	}
 	if(is.null(object$M) || is.null(object$A)) stop("object must be a list with M and A components")
@@ -382,14 +382,14 @@ normalizeBetweenArrays <- function(object, method="scale") {
 		},
 		quantile = {
 			narrays <- NCOL(object$M)
-			Z <- normalizeQuantiles(cbind(object$A+object$M/2,object$A-object$M/2))
+			Z <- normalizeQuantiles(cbind(object$A+object$M/2,object$A-object$M/2),ties=ties)
 			R <- Z[,1:narrays]
 			G <- Z[,narrays+(1:narrays)]
 			object$M <- R-G
 			object$A <- (R+G)/2
 		},
 		Aquantile = {
-			object$A <- normalizeQuantiles(object$A)
+			object$A <- normalizeQuantiles(object$A,ties=ties)
 		})
 	object
 }

@@ -10,7 +10,8 @@ read.maimages(files,source="spot",path=NULL,ext=NULL,names=files,columns=NULL,wt
 read.imagene(files,path=NULL,ext=NULL,names=NULL,columns=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote="\"",...)
 }
 \arguments{
-  \item{files}{character vector giving the names of the files containing image analysis output or, for Imagene data, a character matrix of names of files}
+  \item{files}{character vector giving the names of the files containing image analysis output or, for Imagene data, a character matrix of names of files.
+  If omitted, then all files with extension \code{ext} will be read.}
   \item{source}{character string specifing the image analysis program which produced the output files.  Choices are \code{arrayvision}, \code{"genepix"}, \code{"imagene"}, \code{"quantarray"}, \code{"smd"}, \code{"spot"} or \code{"spot.close.open"}.}
   \item{path}{character string giving the directory containing the files. Can be omitted if the files are in the current working directory.}
   \item{ext}{character string giving optional extension to be added to each file name}
@@ -52,6 +53,9 @@ An \code{\link[limma:rglist]{RGList}} object containing the components
   \item{genes}{data frame containing gene names and IDs and spatial positions on the array, currently set only if \code{source="imagene"}}
 }
 \author{Gordon Smyth}
+\references{
+Web pages for the image analysis software packages mentioned here are listed at \url{http://www.statsci.org/micrarra/image.html}
+}
 \seealso{
 \code{read.maimages} is based on \code{\link[base]{read.table}} in the base package.
 \code{\link[marrayInput]{read.marrayRaw}} is the corresponding function in the marrayInput package.

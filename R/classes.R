@@ -56,6 +56,9 @@ setIs("MArrayLM","LargeDataObject")
 setIs("exprSet2","LargeDataObject")
 
 setMethod("show","LargeDataObject",
+#  Print and show method large data objects
+#  Gordon Smyth
+#  May 2003
 function(object) {
 	cat("An object of class \"",class(object),"\"\n",sep="")
 	for (what in names(object)) {
@@ -77,4 +80,34 @@ function(object) {
 dim.RGList <- function(x) dim(x$R)
 dim.MAList <- function(x) dim(x$M)
 dim.MArrayLM <- function(x) dim(x$coefficients)
+
+as.MAList <- function(object) {
+#	Convert marrayNorm object to MAList
+#	Gordon Smyth
+#	20 Sep 2003
+
+	MA <- new("MAList")
+	ifposlen <- function(x) if(length(x) && x!="") return(x) else return(NULL)
+	MA$A <- ifposlen(object@maA)
+	MA$M <- ifposlen(object@maM)
+	MA$weights <- ifposlen(object@maW)
+	MA$printer$ngrid.r <- ifposlen(object@maLayout@maNgr)
+	MA$printer$ngrid.c <- ifposlen(object@maLayout@maNgc)
+	MA$printer$nspot.r <- ifposlen(object@maLayout@maNsr)
+	MA$printer$nspot.c <- ifposlen(object@maLayout@maNsc)
+	MA$printer$ngrid.r <- ifposlen(object@maLayout@maNgr)
+	MA$printer$ngrid.r <- ifposlen(object@maLayout@maNgr)
+	MA$printer$notes <- ifposlen(object@maLayout@maNotes)
+	MA$genes <- ifposlen(object@maGnames@maInfo)
+	MA$genes$Labels <- ifposlen(object@maGnames@maLabels)
+	attr(MA$genes,"notes") <- ifposlen(object@maGnames@maNotes)
+	MA$genes$Sub <- ifposlen(object@maLayout@maSub)
+	MA$genes$Plate <- ifposlen(object@maLayout@maPlate)
+	MA$genes$Controls <- ifposlen(object@maLayout@maControls)
+	MA$targets <- ifposlen(object@maTargets@maInfo)
+	MA$targets$Labels <- ifposlen(object@maTargets@maLabels)
+	MA$notes <- ifposlen(object@maNotes)
+	MA$maNormCall <- ifposlen(object@maNormCall)
+	MA
+} 
 

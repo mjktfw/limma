@@ -7,7 +7,7 @@ Normalizes expression intensities so that the intensities or log-ratios have sim
 }
 
 \usage{
-normalizeBetweenArrays(object, method)
+normalizeBetweenArrays(object, method, ties=FALSE)
 }
 
 \arguments{
@@ -15,6 +15,7 @@ normalizeBetweenArrays(object, method)
   \item{method}{character string specifying the normalization method to be used.
   Choices are \code{"none"}, \code{"scale"}, \code{"quantile"} or \code{"Aquantile"}.
   A partial string sufficient to uniquely identify the choice is permitted.}
+  \item{ties}{logical, if \code{TRUE} then ties are treated in a careful way when \code{method="quantile"} or \code{method="Aquantile"}}
 }
 
 \details{
