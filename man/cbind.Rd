@@ -2,6 +2,7 @@
 \alias{cbind.RGList}
 \alias{cbind.MAList}
 \alias{rbind.RGList}
+\alias{rbind.MAList}
 \title{Combine RGList or MAList Objects}
 \description{
 Combine a series of \code{RGList} objects or combine a series of \code{MAList} objects.
@@ -24,7 +25,7 @@ The combined data object will preserve any additional components or attributes f
 For \code{rbind}, the matrices of expression data are rbinded while the target information, in any, is unchanged.
 }
 \value{
-An \code{\link[limma:rglist]{RGList}} or \code{\link[limma:malist]{MAList}} object holding data from all the arrays from the individual objects.
+An \code{\link[limma:rglist]{RGList}} or \code{\link[limma:malist]{MAList}} object holding data from all the arrays and all genes from the individual objects.
 }
 \author{Gordon Smyth}
 \seealso{

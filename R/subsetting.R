@@ -89,7 +89,7 @@ is.fullrank <- function(x) {
 }
 
 cbind.RGList <- function(..., deparse.level=1) {
-#  Combine MAList objects assuming same genelists
+#  Combine RGList objects assuming same genelists
 #  Gordon Smyth
 #  27 June 2003
 
@@ -127,7 +127,7 @@ cbind.MAList <- function(..., deparse.level=1) {
 }
 
 rbind.RGList <- function(..., deparse.level=1) {
-#  Combine MAList objects assuming same array lists
+#  Combine RGList objects assuming same array lists
 #  Gordon Smyth
 #  6 Dec 2003
 
@@ -141,6 +141,25 @@ rbind.RGList <- function(..., deparse.level=1) {
 		out$Rb <- rbind(out$Rb,objects[[i]]$Rb)
 		out$Gb <- rbind(out$Gb,objects[[i]]$Gb)
 		out$weights <- rbind(out$weights,objects[[i]]$weights)
+		out$genes <- rbind(out$genes,objects[[i]]$genes)
+	}
+	out
+}
+
+rbind.MAList <- function(..., deparse.level=1) {
+#  Combine MAList objects assuming same array lists
+#  Gordon Smyth
+#  7 Dec 2003
+
+	objects <- list(...)
+	nobjects <- length(objects)
+	out <- objects[[1]]
+	if(nobjects > 1)
+	for (i in 2:nobjects) {
+		out$M <- rbind(out$M,objects[[i]]$M)
+		out$A <- rbind(out$A,objects[[i]]$A)
+		out$weights <- rbind(out$weights,objects[[i]]$weights)
+		out$genes <- rbind(out$genes,objects[[i]]$genes)
 	}
 	out
 }
