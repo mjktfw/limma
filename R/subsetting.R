@@ -145,14 +145,12 @@ makeUnique <- function(x) {
 	x
 }
 
-if(!isGeneric("merge")) setGeneric("merge")
-
-setMethod("merge", c("RGList","RGList"), definition=
-function(x,y,z,...) {
+merge.RGList <- function(x,y,...) {
 #  Merge RGList y into x aligning by row names
 #  Gordon Smyth
 #  11 April 2003
 
+	if(!is(y,"RGList")) stop("both x and y must be RGList objects")
 	genes1 <- rownames(x$R)
 	if(is.null(genes1)) genes1 <- rownames(x$G)
 	genes2 <- rownames(y$R)
@@ -166,4 +164,4 @@ function(x,y,z,...) {
 	ord2 <- match(makeUnique(genes1), makeUnique(genes2))
 	for (i in fields1) x[[i]] <- cbind(x[[i]],y[[i]][ord2,])
 	x
-})
+}

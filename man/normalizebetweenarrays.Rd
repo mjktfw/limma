@@ -1,6 +1,6 @@
-\name{normalizeBetweenArrays-generic}
+\name{normalizeBetweenArrays}
 \alias{normalizeBetweenArrays}
-\title{Normalize Between Arrays - generic}
+\title{Normalize Between Arrays}
 
 \description{
 Normalizes expression intensities so that the intensities or log-ratios have similar distributions across a series of arrays.
@@ -11,7 +11,7 @@ normalizeBetweenArrays(object, method)
 }
 
 \arguments{
-  \item{object}{an object, usually an \code{\link[limma:malist]{MAList}}, containing expression ratios for a series of arrays}
+  \item{object}{an \code{matrix} or \code{\link[limma:malist]{MAList}} object containing expression ratios for a series of arrays}
   \item{method}{character string specifying the normalization method to be used.
   Choices are \code{"none"}, \code{"scale"}, \code{"quantile"} or \code{"Aquantile"}.
   A partial string sufficient to uniquely identify the choice is permitted.}
@@ -30,24 +30,9 @@ Quantile normalization was proposed by Bolstad et al (2003) for Affymetrix-style
 \code{method="quantile"} ensures that the intensities have the same empirical distribution across arrays and across channels.
 \code{method="Aquantile"} ensures that the A-values (average intensities) have the same empirical distribution across arrays leaving the M-values (log-ratios) unchanged.
 These two methods are called "q" and "Aq" respectively in Yang and Thorne (2003).
-}
 
-\section{Methods}{
-\item{\code{object=MAList, method=="scale"}}{
-M-values are scaled to have the same median-absolute values across arrays, A-values are scaled to have the same medians across arrays
-}
-\item{\code{object=MAList, method=="quantile"}}{
-M- and A-values are normalized so that the single channel intensities R and G have the same empirical distribution across channels and across arrays
-}
-\item{\code{object=list}}{
-\code{object} is converted into an \code{MAList} if not one already
-}
-\item{\code{object=matrix, method=="scale"}}{
-If \code{object} is a plain matrix, then its columns are normalized to have equal median-absolute-values.
-}
-\item{\code{object=matrix, method=="quantile"}}{
-If \code{object} is a plain matrix, then its columns are normalized to have equal empirical distributions.
-}
+If \code{object} is a \code{matrix} then the scale or quantile normlization will be applied to the columns.
+Applying \code{method="Aquantile"} when \code{object} is a \code{matrix} will produce an error.
 }
 
 \value{

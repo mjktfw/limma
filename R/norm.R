@@ -359,41 +359,22 @@ plotPrintorder <- function(object,layout,start="topleft",slide=1,method="loess",
 
 #  BETWEEN ARRAY NORMALIZATION
 
-setGeneric("normalizeBetweenArrays", function(object,method="scale") standardGeneric("normalizeBetweenArrays")) 
-
-setMethod("normalizeBetweenArrays", "matrix", definition=
-function(object, method="scale") {
-#	Normalize between arrays - method for matrix
+normalizeBetweenArrays <- function(object, method="scale") {
+#	Normalize between arrays
 #	Gordon Smyth
-#	12 Apri 2003.  Last revised 18 Aug 2003.
-
-	choices <- c("none","scale","quantile")
-	method <- match.arg(method,choices)
-	switch(method,
-		none = object,
-		scale = normalizeMedianDeviations(object),
-		quantile = normalizeQuantiles(object)
-	)
-})
-
-setMethod("normalizeBetweenArrays", "list", definition=
-function(object, method="scale") {
-#	Normalize between arrays - method for list
-#	Gordon Smyth
-#	23 Apri 2003
-
-#	Try to convert list to MAList
-	normalizeBetweenArrays(new("MAList",unclass(object)), method=method)
-})
-
-setMethod("normalizeBetweenArrays", "MAList", definition=
-function(object, method="scale") {
-#	Normalize between arrays - method for MAList
-#	Gordon Smyth
-#	12 Apri 2003.  Last revised 18 Aug 2003.
+#	12 Apri 2003.  Last revised 20 September 2003.
 
 	choices <- c("none","scale","quantile","Aquantile")
 	method <- match.arg(method,choices)
+	if(is(object,"matrix")) {
+		if(method=="Aquantile") stop("Aquantile normalization not applicable to matrix object")
+		return(switch(method,
+			none = object,
+			scale = normalizeMedianDeviations(object),
+			quantile = normalizeQuantiles(object)
+		))
+	}
+	if(is.null(object$M) || is.null(object$A)) stop("object must be a list with M and A components")
 	switch(method,
 		scale = {
 			object$M <- normalizeMedianDeviations(object$M)
@@ -411,7 +392,7 @@ function(object, method="scale") {
 			object$A <- normalizeQuantiles(object$A)
 		})
 	object
-})
+}
 
 normalizeQuantiles <- function(A, ties=FALSE) {
 #	Normalize columns of a matrix to have the same quantiles, allowing for missing values.

@@ -139,7 +139,7 @@ rlm.series <- function(M,design=NULL,ndups=1,spacing=spacing,weights=NULL,...)
 {
 #	Robustly fit linear model for each gene to a series of arrays
 #	Gordon Smyth
-#	20 Mar 2002.  Last revised 30 June 2003.
+#	20 Mar 2002.  Last revised 19 Sept 2003.
 
 	require(MASS) # need rlm.default
 	M <- as.matrix(M)
@@ -172,7 +172,7 @@ rlm.series <- function(M,design=NULL,ndups=1,spacing=spacing,weights=NULL,...)
 		else
 			w <- as.vector(weights[i,obs])
 		if(length(y) > nbeta) {
-			out <- rlm.default(x=X,y=y,weights=w,...)
+			out <- rlm(x=X,y=y,weights=w,...)
 			beta[i,] <- coef(out)
 			stdev.unscaled[i,] <- sqrt(diag(chol2inv(out$qr$qr)))
 			df.residual[i] <- length(y) - out$rank

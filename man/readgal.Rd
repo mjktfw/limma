@@ -5,11 +5,11 @@
 Read a GenePix Allocation List (GAL) file into a dataframe.
 }
 \usage{
-readGAL(galfile=NULL,path=".",header=TRUE,sep="\t",quote="\"",skip=NULL,as.is=TRUE,...)
+readGAL(galfile=NULL,path=NULL,header=TRUE,sep="\t",quote="\"",skip=NULL,as.is=TRUE,...)
 }
 \arguments{
   \item{galfile}{character string giving the name of the GAL file.  If \code{NULL} then a file with extension \code{.gal} is found in the directory specified by \code{path}.}
-  \item{path}{character string giving the directory containing the files}
+  \item{path}{character string giving the directory containing the files.  If \code{NULL} then assumed to be the current working directory.}
   \item{header}{logical variable, if \code{TRUE} then the first line after \code{skip} is assumed to contain column headings.  If \code{FALSE} then a value should specified for \code{skip}.}
   \item{sep}{the field separator character}
   \item{quote}{the set of quoting characters}
@@ -33,6 +33,9 @@ A data frame with columns
 \author{Gordon Smyth}
 \seealso{
 An overview of LIMMA functions for reading data is given in \link{3.ReadingData}.
+}
+\references{
+\url{http://www.axon.com/gn_GenePix_File_Formats.html}
 }
 \examples{
 # readGAL()

@@ -37,7 +37,7 @@ The function \code{\link{printorder}} calculates the printorder, plate number an
 If each gene is printed more than once of the arrays, then \code{\link{uniquegenelist}} will remove duplicate names from the gal-file or gene list.
 
 \code{\link[limma:cbind]{cbind}} allows different \code{RGList} or \code{MAList} objects to be combined assuming the layout of the arrays to be the same.
-\code{\link{merge}} can combine data even when the order of the genes on the arrays has changed.
+\code{\link[limma:merge]{merge}} can combine data even when the order of the genes on the arrays has changed.
 \code{merge} uses utility function \code{\link{makeUnique}}.
 }
 

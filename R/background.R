@@ -3,11 +3,13 @@
 backgroundCorrect <- function(RG, method="subtract") {
 #	Apply background correction to microarray data
 #	Gordon Smyth
-#	12 April 2003.  Last modified 6 September 2003.
+#	12 April 2003.  Last modified 20 September 2003.
 
-	method <- match.arg(method, c("subtract", "half", "minimum"))
-	RG$R <- RG$R - RG$Rb
-	RG$G <- RG$G - RG$Gb
+	method <- match.arg(method, c("none","subtract", "half", "minimum"))
+	if(method != "none") {
+		RG$R <- RG$R - RG$Rb
+		RG$G <- RG$G - RG$Gb
+	}
 	if(method=="half") {
 		RG$R <- pmax(RG$R, 0.5)
 		RG$G <- pmax(RG$G, 0.5)

@@ -9,14 +9,16 @@ backgroundCorrect(RG, method="subtract")
 }
 \arguments{
   \item{RG}{an \code{\link[limma:rglist]{RGList}} object or a unclassed list containing the same components as an \code{RGList}}
-  \item{method}{character string specifying correction method.  Possible values are \code{"subtract"} for simple subtraction of background from foreground, \code{"half"} to set negative corrected intensities to 0.5 or \code{"minimum"} to set negative or zero corrected intensities to the minimum of the positive intensities.}
+  \item{method}{character string specifying correction method.  Possible values are \code{"none"}, \code{"subtract"}, \code{"half"} or \code{"minimum"}.}
 }
 \details{
+If \code{method="none"} then the corrected intensities are equal to the foreground intensities, i.e., the background intensities are treated as zero.
 If \code{method="subtract"} then this function simply subtracts the background intensities from the foreground intensities which is the usual background correction method.
 If \code{method="half"} then any intensity which is less than 0.5 after background subtraction is reset to be equal to 0.5.
-If \code{method="minimum"} then any intensity which is zero or negative after background subtraction is set equal to the minimum of the positive corrected intensities for that array.
+If \code{method="minimum"} then any intensity which is zero or negative after background subtraction is set equal to half the minimum of the positive corrected intensities for that array.
 
-Background correction is also performed by the \code{\link[limma:normalizeWithinArrays-methods]{normalizeWithinArrays}} method for \code{RGList} objects, so at this time it is not necessary to call \code{backgroundCorrect} directly unless one wants to use a method other than simple subtraction.
+Background correction (background subtraction) is also performed by the \code{\link{normalizeWithinArrays}} method for \code{RGList} objects, so it is not necessary to call \code{backgroundCorrect} directly unless one wants to use a method other than simple subtraction.
+Calling \code{backgroundCorrect} before \code{normalizeWithinArrays} will over-ride the default background correction.
 }
 \value{
 An \code{RGList} object in which components \code{R} and \code{G} are background corrected

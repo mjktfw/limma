@@ -1,6 +1,7 @@
 \name{LargeDataObject-class}
 \docType{class}
 \alias{LargeDataObject-class}
+\alias{show,LargeDataObject-method}
 \title{Large Data Object - class}
 
 \description{

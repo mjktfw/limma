@@ -214,7 +214,7 @@ qqt <- function(y,df=Inf,ylim=range(y),main="Student's t Q-Q Plot",xlab="Theoret
 }
 
 topTable <- function(fit,coef=1,number=10,genelist=NULL,adjust.method="holm",sort.by="B") {
-#	Summary table of top genes, Object-orientated version
+#	Summary table of top genes, object-orientated version
 #	Gordon Smyth
 #	4 August 2003
 
@@ -232,7 +232,7 @@ topTable <- function(fit,coef=1,number=10,genelist=NULL,adjust.method="holm",sor
 toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.method="holm",sort.by="B",...) {
 #	Summary table of top genes
 #	Gordon Smyth
-#	21 Nov 2002. Last revised 24 Mar 2003.
+#	21 Nov 2002. Last revised 18 Sep 2003.
 
 	if(is.null(eb)) {
 		fit$coefficients <- as.matrix(fit$coef)[,coef]
@@ -241,10 +241,11 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 		coef <- 1
 	}
 	M <- as.matrix(fit$coef)[,coef]
-	if(is.null(A))
+	if(is.null(A)) {
 		if(sort.by=="A") stop("Cannot sort by A-values as these have not been given")
-	else
+	} else {
 		if(NCOL(A)>1) A <- rowMeans(A,na.rm=TRUE)
+	}
 	tstat <- as.matrix(eb$t)[,coef]
 	P.Value <- as.matrix(eb$p)[,coef]
 	B <- as.matrix(eb$lods)[,coef]
