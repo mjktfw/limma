@@ -1,17 +1,20 @@
 \name{ebayes}
 \alias{ebayes}
+\alias{eBayes}
 \title{Empirical Bayes Statistics for Differential Expression}
 \description{Given a series of related parameter estimates and standard errors, compute moderated t-statistics and log-odds of differential expression by empirical Bayes shrinkage of the standard errors towards a common value.}
 \usage{
 ebayes(fit,proportion=0.01,std.coef=NULL)
+eBayes(fit,proportion=0.01,std.coef=NULL)
 }
 \arguments{
-  \item{fit}{a list object produced by \code{lm.series}, \code{gls.series} or \code{rlm.series} containing components \code{coefficients}, \code{stdev.unscaled}, \code{sigma} and \code{df.residual}}
+  \item{fit}{a list object produced by \code{lm.series}, \code{gls.series}, \code{rlm.series} or \code{lmFit} containing components \code{coefficients}, \code{stdev.unscaled}, \code{sigma} and \code{df.residual}}
   \item{proportion}{assumed proportion of genes which are differentially expressed}
   \item{std.coef}{assumed standard deviation of log2 fold changes for differentially expressed genes. Normally this parameter is estimated from the data.}
 }
 \value{
-  A list with components
+\code{ebayes} produces an ordinary list with the following components.
+\code{eBayes} adds the following components to \code{fit} to produce an augmented object, usually of class \code{MArrayLM}.
   \item{t}{numeric vector or matrix of penalized t-statistics}
   \item{p.value}{numeric vector of p-values corresponding to the t-statistics}
   \item{s2.prior}{estimated prior value for \code{sigma^2}}

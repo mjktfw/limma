@@ -1,15 +1,17 @@
 \name{read.maimages}
 \alias{read.maimages}
+\alias{read.imagene}
 \title{Read RGList from Image Analysis Output Files}
 \description{
 Reads an RGList from a series of microarray image analysis output files
 }
 \usage{
 read.maimages(files,source="spot",path=NULL,ext=NULL,names=files,columns=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote="\"",\dots)
+read.imagene(files,path=NULL,ext=NULL,names=NULL,columns=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote="\"",...)
 }
 \arguments{
   \item{files}{character vector giving the names of the files containing image analysis output or, for Imagene data, a character matrix of names of files}
-  \item{source}{character string specifing the image analysis program which produced the output files.  Choices are \code{"spot"}, \code{"spot.close.open"}, \code{"genepix"}, \code{"quantarray"} or \code{"imagene"}.}
+  \item{source}{character string specifing the image analysis program which produced the output files.  Choices are \code{arrayvision}, \code{"genepix"}, \code{"imagene"}, \code{"quantarray"}, \code{"spot"} or \code{"spot.close.open"}.}
   \item{path}{character string giving the directory containing the files. Can be omitted if the files are in the current working directory.}
   \item{ext}{character string giving optional extension to be added to each file name}
   \item{names}{character vector of names to be associated with each array as column name}
@@ -23,8 +25,9 @@ read.maimages(files,source="spot",path=NULL,ext=NULL,names=files,columns=NULL,wt
 \details{
 This is the main data input function for the LIMMA package.
 It extracts the foreground and background intensities from a series of files, produced by an image analysis program, and assembles them into the components of one list.
-At present, the image analysis programs SPOT, GenePix and QuantArray are supported.
-Other image analysis programs can potentially be accommodated though a user-specified \code{columns} argument.
+The image analysis programs ArrayVision, GenePix, Imagene, QuantArray and SPOT are supported explicitly.
+Data from some other image analysis programs can be read if the appropriate column names containing the foreground and background intensities are specified using the \code{columns} argument.
+(This with work if there are the column names are unique and if there is no rows in the file after the last line of data.)
 In the case of SPOT, two possible background estimators are supported:
 if \code{source="spot.close.open"} then background intensities are estimated from \code{morph.close.open} rather than \code{morph}.
 
@@ -35,6 +38,8 @@ See \code{\link{QualityWeights}} for provided weight functions.
 
 For Imagene image data the argument \code{files} should be a matrix with two columns.
 The first column should contain the names of the files containing green channel (cy3) data and the second column should contain names of files containing red channel (cy5) data.
+The function \code{read.imagene} is called by \code{read.maimages} when \code{source="imagene"}.
+It is does not need to be called directly by users.
 }
 \value{
 An \code{\link[limma:rglist]{RGList}} object containing the components
@@ -43,6 +48,8 @@ An \code{\link[limma:rglist]{RGList}} object containing the components
   \item{G}{matrix containing the green channel foreground intensities for each spot for each array.}
   \item{Gb}{matrix containing the green channel background intensities for each spot for each array.}
   \item{weights}{spot quality weights, if \code{wt.fun} is given}
+  \item{printer}{list of class \code{\link[limma:printlayout]{PrintLayout}}, currently set only if \code{source="imagene"}}
+  \item{genes}{data frame containing gene names and IDs and spatial positions on the array, currently set only if \code{source="imagene"}}
 }
 \author{Gordon Smyth}
 \seealso{

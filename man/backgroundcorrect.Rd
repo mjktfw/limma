@@ -5,14 +5,15 @@
 Apply background correction to microarray expression intensities.
 }
 \usage{
-backgroundCorrect(RG)
+backgroundCorrect(RG, method="subtract")
 }
 \arguments{
   \item{RG}{an \code{\link[limma:rglist]{RGList}} object or a unclassed list containing the same components as an \code{RGList}}
+  \item{method}{character string specifying correction method.  Possible values are \code{"subtract"} for simple subtraction of background from foreground or \code{"positive"} to ensure that all corrected intensities are positive.}
 }
 \details{
-At present this function simply subtracts the background intensities from the foreground intensities.
-Other correction methods are planned.
+If \code{method="subtract"} then this function simply subtracts the background intensities from the foreground intensities which is the usual background correction method.
+If \code{method="positive"} then intensities are set to 0.5 if they would otherwise be negative or to 0.75 if they would otherwise be zero.
 
 Background correction is also performed by the \code{\link[limma:normalizeWithinArrays-methods]{normalizeWithinArrays}} method for \code{RGList} objects, so at this time it is not necessary to call \code{backgroundCorrect} directly.
 }
@@ -26,6 +27,11 @@ Yang, Y. H., Buckley, M. J., Dudoit, S., and Speed, T. P. (2002). Comparison of 
 Yang, Y. H., Buckley, M. J., and Speed, T. P. (2001). Analysis of microarray images. Briefings in Bioinformatics 2, 341-349.
 }
 \author{Gordon Smyth}
+\examples{
+RG <- new("RGList", list(R=c(1,2,3,4),G=c(1,2,3,4),Rb=c(2,2,2,2),Gb=c(2,2,2,2)))
+backgroundCorrect(RG)
+backgroundCorrect(RG, method="positive")
+}
 \seealso{
 	\code{\link{read.maimages}}, \code{\link{normalizeWithinArrays}}
 }

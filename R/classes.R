@@ -15,6 +15,15 @@ setClass("MArrayLM",
 representation("list")
 )
 
+setClass("exprSet2",representation(
+	expressions="matrix",
+	weights="matrix",
+	targets="data.frame",
+	probes="data.frame",
+	printer="list",
+	notes="character"
+))
+
 printHead <- function(x) {
 	what <- "other"
 	if(is.vector(x)) what <- "vector"
@@ -63,4 +72,8 @@ function(object) {
 		}
 	}
 })
+
+dim.RGList <- function(x) dim(x$R)
+dim.MAList <- function(x) dim(x$M)
+dim.MArrayLM <- function(x) dim(x$coefficients)
 

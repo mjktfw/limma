@@ -30,9 +30,10 @@ Objects are normally created by \code{\link{lmFit}}.
 }
 
 \section{Methods}{
-\code{MAArrayLM} objects inherit a \code{show} method from the virtual class \code{LargeDataObject}.
+\code{RGList} objects will return dimensions and hence functions such as \code{\link[limma:dim]{dim}}, \code{\link[base:nrow]{nrow}} and \code{\link[base:nrow]{ncol}} are defined. 
+\code{MArrayLM} objects inherit a \code{show} method from the virtual class \code{LargeDataObject}.
 
-The functions \code{\link{ebayes}} and \code{\link{classifyTests}} accept \code{MAArrayLM} objects as arguments.
+The functions \code{\link{ebayes}} and \code{\link{classifyTests}} accept \code{MArrayLM} objects as arguments.
 }
 
 \author{Gordon Smyth}

@@ -8,7 +8,7 @@ Identify order in which spots were printed and the 384-well plate from which the
 printorder(layout, ndups=1, npins=layout$ngrid.r*layout$ngrid.c, start="topleft")
 }
 \arguments{
-  \item{layout}{list with the components \code{ngrid.r}, \code{ngrid.c}, \code{nspot.r} and \code{nspot.c}}
+  \item{layout}{list with the components \code{ngrid.r}, \code{ngrid.c}, \code{nspot.r} and \code{nspot.c}, or an \code{RGList} or \code{MAList} object from which the printer layout may be extracted.}
   \item{ndups}{number of duplicate spots, i.e., number of times print-head dips into each well}
   \item{npins}{actual number of pins or tips on the print-head}
   \item{start}{character string giving position of the spot printed first in each grid.

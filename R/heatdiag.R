@@ -37,11 +37,6 @@ heatdiagram <- function(classification,coef,primary=1,names=NULL,treatments=coln
 	names <- names[DE]
 	ord <- order(coef[,primary],decreasing=TRUE)
 
-#	Check colours
-	if(is.character(low)) low <- col2rgb(low)/255
-	if(is.character(high)) high <- col2rgb(high)/255
-	col <- rgb( seq(low[1],high[1],len=ncolors), seq(low[2],high[2],len=ncolors), seq(low[3],high[3],len=ncolors) )
-
 #	Truncate coefficients if limit is preset
 	if(!is.null(limit))
 		if(limit > 0) {
@@ -49,6 +44,11 @@ heatdiagram <- function(classification,coef,primary=1,names=NULL,treatments=coln
 			coef[coef > limit] <- limit
 		} else
 			warning("limit ignored because not positive")
+
+#	Check colours
+	if(is.character(low)) low <- col2rgb(low)/255
+	if(is.character(high)) high <- col2rgb(high)/255
+	col <- rgb( seq(low[1],high[1],len=ncolors), seq(low[2],high[2],len=ncolors), seq(low[3],high[3],len=ncolors) )
 
 #	Heat plot
 	coef <- coef[ord,,drop=FALSE]

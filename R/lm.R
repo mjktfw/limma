@@ -188,7 +188,7 @@ gls.series <- function(M,design=NULL,ndups=2,spacing=1,correlation=NULL,weights=
 #	Fit linear model for each gene to a series of microarrays.
 #	Fit is by generalized least squares allowing for correlation between duplicate spots.
 #	Gordon Smyth
-#	11 May 2002.  Last revised 30 June 2003.
+#	11 May 2002.  Last revised 18 Aug 2003.
 
 	if(ndups<2) {
 		warning("No duplicates: correlation between duplicates set to zero")
@@ -234,7 +234,7 @@ gls.series <- function(M,design=NULL,ndups=2,spacing=1,correlation=NULL,weights=
 			y <- backsolve(cholV,y,transpose=TRUE)
 			if(all(X==0)) {
 				df.residual[i] <- n
-				sigma[i] <- array(1/n,c(1,n)) %*% y^2
+				sigma[i] <- sqrt( array(1/n,c(1,n)) %*% y^2 )
 			} else {
 				X <- backsolve(cholV,X,transpose=TRUE)
 				out <- lm.fit(X,y)

@@ -111,7 +111,7 @@ MA.RG <- function(object) {
 	new("MAList",unclass(object))
 }
 
-normalizeWithinArrays <- function(object,layout=object$printer,method="printtiploess",weights=object$weights,span=0.3,iterations=4,controlspots=NULL,df=5,robust="M") {
+normalizeWithinArrays <- function(object,layout=object$printer,method="printtiploess",weights=object$weights,span=0.4,iterations=5,controlspots=NULL,df=5,robust="M") {
 #	Within array normalization
 #	Gordon Smyth
 #	2 March 2003.  Last revised 27 July 2003.
@@ -161,6 +161,8 @@ normalizeWithinArrays <- function(object,layout=object$printer,method="printtipl
 				y <- object$M[,j]
 				x <- object$A[,j]
 				w <- weights[,j]
+				f <- is.finite(y) & is.finite(x) & is.finite(w)
+				y[!f] <- NA
 				fit <- loess(y~x,weights=w,span=span,subset=controlspots,na.action=na.exclude,degree=0,surface="direct",family="symmetric",trace.hat="approximate",iterations=iterations)
 				global <- predict(fit,newdata=x)
 				alpha <- (rank(x)-1) / sum(!is.na(x))
@@ -349,14 +351,10 @@ setMethod("normalizeBetweenArrays", "matrix", definition=
 function(object, method="scale") {
 #	Normalize between arrays - method for matrix
 #	Gordon Smyth
-#	12 Apri 2003.  Last revised 15 June 2003.
+#	12 Apri 2003.  Last revised 18 Aug 2003.
 
 	choices <- c("none","scale","quantile")
-	method <- choices[pmatch(method,choices)]
-	if(is.na(method)) {
-		warning("normalization method not recognized, defaulting to \"none\"")
-		method <- "none"
-	}
+	method <- match.arg(method,choices)
 	switch(method,
 		none = object,
 		scale = normalizeMedianDeviations(object),
@@ -378,11 +376,10 @@ setMethod("normalizeBetweenArrays", "MAList", definition=
 function(object, method="scale") {
 #	Normalize between arrays - method for MAList
 #	Gordon Smyth
-#	12 Apri 2003.  Last revised 15 June 2003.
+#	12 Apri 2003.  Last revised 18 Aug 2003.
 
 	choices <- c("none","scale","quantile")
-	method <- choices[pmatch(method,choices)]
-	if(is.na(method)) warning("normalization method not recognized, defaulting to \"none\"")
+	method <- match.arg(method,choices)
 	switch(method,
 		scale = {
 			object$M <- normalizeMedianDeviations(object$M)

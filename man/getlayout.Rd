@@ -24,7 +24,7 @@ A list with components
 }
 \author{Gordon Smyth}
 \seealso{
-\code{\link[marrayTools]{gpTools}}.
+\code{\link[marrayTools:marrayTools]{gpTools}}.
 
 An overview of LIMMA functions for reading data is given in \link{3.ReadingData}.
 }

@@ -14,12 +14,13 @@
 <p align="center">Gordon Smyth<br>
 The
 Walter and Eliza Hall Institute of Medical Research<br>
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->08 August 2003<!--webbot bot="Timestamp" i-checksum="31348" endspan --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->28 August 2003<!--webbot bot="Timestamp" i-checksum="31350" endspan --></p>
 
 <h2>Table of Contents</h2>
 
 <ol>
   <li>Introduction</li>
+  <li>A Few Preliminaries on R</li>
   <li>Reading in Intensity Data</li>
   <li>Reading in Gene List Data</li>
   <li>Spot Quality Weights</li>
@@ -35,9 +36,9 @@ Walter and Eliza Hall Institute of Medical Research<br>
 
 <h2>1. Introduction</h2>
 
-<p>LIMMA is a library for the analysis of gene expression microarray data, 
+<p>Limma is a package for the analysis of gene expression microarray data, 
 especially the use of linear models for analysing designed experiments and the 
-assessment of differential expression. LIMMA provides the ability to analyse 
+assessment of differential expression. Limma provides the ability to analyse 
 comparisons between many RNA targets simultaneously. The normalization and data 
 analysis functions are for two-colour spotted microarrays. The linear model and 
 differential expression functions apply to all microarrays including Affymetrix 
@@ -45,53 +46,118 @@ and other multi-array oligonucleotide experiments.</p>
 
 <p>The Bioconductor packages marrayClasses, marrayInput and marrayNorm provide 
 alternative functions for reading and normalizing spotted microarray data. If 
-you are using LIMMA in conjunction with these packages, see Section 9. The 
+you are using limma in conjunction with these packages, see Section 12. The 
 package affy provides functions for reading and normalizing Affymetrix 
-microarray data. If you are using the affy package, see Section 10.</p>
+microarray data. If you are using the affy package, see Section 13.</p>
 
-<p>This tutorial was prepared using R Version 1.7.1 for Windows and LIMMA 
-Version 1.1.2. The latest version of LIMMA is always available from
+<p>This tutorial was prepared using R Version 1.7.1 for Windows and limma 
+Version 1.1.2. The latest version of limma is always available from
 <a href="http://www.bioconductor.org">http://www.bioconductor.org</a> under 
 &quot;Developmental Packages&quot;. If you 
-are using Windows, you can install the last official release version of LIMMA from the  drop-down menu 
+are using Windows, you can install the last official release version of limma from the  drop-down menu 
 in R, simply 
 select <code>Packages</code> then <code>Install package(s) from Bioconductor...</code>. 
 Download is also available from
 <a href="http://bioinf.wehi.edu.au/limma/">http://bioinf.wehi.edu.au/limma/</a>. 
 The data sets used in the examples can be downloaded from
 <a href="http://bioinf.wehi.edu.au/marray/genstat2002/">
-http://bioinf.wehi.edu.au/marray/genstat2002/</a>. Help with LIMMA is available 
+http://bioinf.wehi.edu.au/marray/genstat2002/</a>. Help with limma is available 
 by sending questions or problems to <a href="mailto:bioconductor@stat.math.ethz.ch">
 bioconductor@stat.math.ethz.ch</a>.</p>
 
-<h2>2. Reading in Intensity Data</h2>
+<h2>2. A Few Preliminaries on R</h2>
 
-<p>We assume that an experiment has been conducted with one or more microarrays 
-and that each array has been scanned to produce a TIFF image. We assume that 
-output is available from an image analysis program such a GenePix, SPOT, 
-ImageGene or QuantArray which gives the red and green foreground and background 
-intensities for each spot on each array. The output for each array is assumed to 
-be in a separate file.</p>
+<p>R is a program for statistical computing. It is a command-driven language 
+meaning that you have to type commands into it rather than pointing and 
+clicking. A good way to get started is to type</p>
+
+<pre>  <code>help.start()</code></pre>
+<p>at the 
+R prompt or, if you're using Windows, to follow the drop-down menu [Help &gt; Html 
+help]. Following the links [Packages &gt; limma] from the html help page will 
+lead you to the contents page of help topics for commands in limma.</p>
+
+<p>Before you can use any limma commands you have to load the package by typing</p>
+
+<pre>  library(limma)</pre>
+<p>at the R prompt. You can get help on any function in any loaded package by typing ? and the function 
+name at the R prompt, for example</p>
+
+<pre>  ?read.maimages</pre>
+<p>for detailed help on the <code>read.maimages</code> function. Anything that you create in 
+R is an &quot;object&quot;. Objects might include data sets, variables, functions, 
+anything at all. For example</p>
+<pre>  x &lt;- 2</pre>
+<p>will create a variable <code>y</code> and will assign it the value 2. At any 
+stage of your R session you can type</p>
+<pre>  objects()</pre>
+<p>to get a list of all the objects you have created. You see show the contents 
+of any object by typing the  name of the object at the prompt, for example either of the 
+following commands will print out the contents of <code>x</code>:</p>
+<pre>  show(x)
+  x</pre>
+<p>We hope that you can use limma without having to spend a lot of time learning 
+about the R language itself but a little knowledge in this direction will be 
+very helpful, especially when you want to do something not explicitly provided 
+for in limma or in the other Bioconductor packages. For more details about the R 
+language see <i>An 
+Introduction to R</i> which is available from the online help.</p>
+
+<h2>3. Reading in Intensity Data</h2>
+
+<p>We assume that an experiment has been conducted with one or more microarrays, 
+all printed with the same library of probes. Each array has been scanned to produce a TIFF image. The TIFF images 
+have then been processed using an image analysis program such a ArrayVision, 
+ImageGene, GenePix, QuantArray or SPOT to acquire the red and green foreground 
+and background intensities for each spot. The spot intensities have then been 
+exported from the image analysis program into a series of text files. There 
+should be one file for each array or, in the case of Imagene, two files for each 
+array. </p>
 
 <p>Let <code>files</code> be a character vector containing the names of the 
 image analysis output files. The foreground and background intensities can be 
-read into an RG-list using the command</p>
-<pre>&gt; RG &lt;- read.maimages(files,source=&quot;&lt;imageanalysisprogram&gt;&quot;,path=&quot;&lt;directory&gt;&quot;)</pre>
+read into an <code>RGList</code> object using a command of the form</p>
+<pre>  RG &lt;- read.maimages(files, source=&quot;&lt;imageanalysisprogram&gt;&quot;, path=&quot;&lt;directory&gt;&quot;)</pre>
 <p>where <code>&lt;imageanalysisprogram&gt;</code> is the name of the image analysis 
 program and <code>&lt;directory&gt;</code> is the full path of the directory 
 containing the files. If the files are in the current R working directory then 
-the argument <code>path</code> can be omitted. If the files are SPOT output and 
+the argument <code>path</code> can be omitted; see the help entry for <code>
+setwd</code> for how to set the current working directory. For example, if the files are SPOT output and 
 have common extension &quot;spot&quot; then they can 
 be read using</p>
-<pre>&gt; files &lt;- dir(pattern=&quot;*\\.spot&quot;)
-&gt; RG &lt;- read.maimages(files,source=&quot;spot&quot;)</pre>
-<p>If they are GenePix output files and have extension &quot;gpr&quot; then they 
+<pre>  files &lt;- dir(pattern=&quot;*\\.spot&quot;)
+  RG &lt;- read.maimages(files, source=&quot;spot&quot;)</pre>
+<p>The object <code>files</code> is then a character vector containing all the 
+spot file names in alphabetical order. If the files are GenePix output files and have extension &quot;gpr&quot; then they 
 can be read using</p>
-<pre>&gt; files &lt;- dir(pattern=&quot;*\\.gpr&quot;)
-&gt; RG &lt;- read.maimages(files,source=&quot;genepix&quot;)</pre>
+<pre>  files &lt;- dir(pattern=&quot;*\\.gpr&quot;)
+  RG &lt;- read.maimages(files, source=&quot;genepix&quot;)</pre>
 <p>Consult the help entry for <code>read.maimages</code> to see which other 
 image analysis programs are supported.</p>
-<h2>3. Reading in Gene List Data</h2>
+<p>What should you do if your image analysis program is not currently supported 
+by limma? 
+If your output files are of a standard format, you can supply the column names 
+corresponding to the intensities yourself. For example, </p>
+<pre>  RG &lt;- read.maimages(files, columns=list(Rf=&quot;F635 Mean&quot;,Gf=&quot;F532 Mean&quot;,Rb=&quot;B635 Median&quot;,Gb=&quot;B532 Median&quot;))</pre>
+<p>is exactly equivalent to the earlier command with <code>source=&quot;genepix&quot;</code>. 
+&quot;Standard format&quot; means here that there is a unique column name identifying each 
+column of interest and that there are no lines in the file following the last 
+line of data. Header information at the start of the file is ok. </p>
+<p>It is a good idea to look at your data to check that it has been read in 
+correctly. Type</p>
+<pre>  show(RG)</pre>
+<p>to see a print out the first few lines of data. Also try</p>
+<pre>  summary(RG$R)</pre>
+<p>to see a five-number summary of the red intensities for each array, and so 
+on.</p>
+<p>It is possible to read data sets in several steps. If <code>RG1</code> and
+<code>RG2</code> are two data sets corresponding to different sets of arrays 
+then</p>
+<pre>  RG &lt;- cbind(RG1, RG2)</pre>
+<p>will combine them into one large data set. Data sets can also be subsetted. 
+For example <code>RG[,1]</code> is the data for the first array only while <code>
+RG[1:100,]</code> is the data on the first 100 genes. </p>
+<h2>4. Reading in Gene List Data</h2>
 <p>If the arrays have been scanned with an Axon scanner, then the gene names 
 will be available in a GenePix Array List (GAL) file. If the GAL file has 
 extension &quot;gal&quot; and is in the current working directory, then it may be read into a data.frame 
@@ -99,7 +165,7 @@ by</p>
 <pre>&gt; gal &lt;- readGAL()</pre>
 <p>The print layout of the arrays can be extracted from the GAL by</p>
 <pre>&gt; layout &lt;- getLayout(gal)</pre>
-<h2>4. Spot Quality Weights</h2>
+<h2>5. Spot Quality Weights</h2>
 <p>It is desirable to use the image analysis to compute a weight for each spot 
 between 0 and 1 which indicates the reliability of the acquired intensities at 
 that spot. For example, if the SPOT image analysis program is used and the size 
@@ -119,8 +185,8 @@ GenePix program.</p>
 <p>Computing quality weights depends on the image analysis program. Consult the 
 help entry <code>QualityWeights</code> to see what quality weight functions are 
 available.</p>
-<h2>5. Linear Models</h2>
-<p>The package LIMMA uses an approach called <i>linear models</i> to analyse 
+<h2>6. Linear Models</h2>
+<p>The package limma uses an approach called <i>linear models</i> to analyse 
 designed microarray experiments. This approach allows very general experiments 
 to be analysed just as easily as a simple replicated experiment. The approach is 
 explained in Smyth (2003) and Yang and Speed (2002). The approach requires one 
@@ -129,8 +195,8 @@ indicates in effect which RNA samples have been applied to each array. The
 second is the <i>contrast matrix</i> which specifies which comparisons you would 
 like to make between the RNA samples. For very simple experiments, you may not 
 need to specify the contrast matrix.</p>
-<h2>6. Quick Start</h2>
-<p>For those who want to see very quickly what a LIMMA analysis might look like 
+<h2>7. Quick Start</h2>
+<p>For those who want to see very quickly what a limma analysis might look like 
 for cDNA data, here is a quick analysis of four replicate arrays (including two 
 dye-swaps). The data has been scanned using an Axon scanner, producing a Gene 
 Allocation List (GAL) file, and then the intensities have been captured from the 
@@ -138,16 +204,16 @@ images using SPOT software. The GAL file and the image analysis files are in the
 current working directory of R. For more detail about the data see the Swirl 
 Data example below.</p>
 <pre>&gt; files &lt;- dir(pattern=&quot;*.spot&quot;)            # Get the names of the files containing the intensity data
-&gt; RG &lt;- read.maimages(files,source=&quot;spot&quot;)  # Read in the data
+&gt; RG &lt;- read.maimages(files, source=&quot;spot&quot;) # Read in the data
 &gt; RG$genes &lt;- readGAL()                     # Read in GAL file containing gene names
 &gt; RG$printer &lt;- getLayout(RG$genes)         # Set printer layout information
 &gt; MA &lt;- normalizeWithinArrays(RG)           # Print-tip group loess normalization
 &gt; MA &lt;- normalizeBetweenArrays(RG)          # Scale normalization between arrays, optional
-&gt; fit &lt;- lmFit(MA,design=c(1,-1,1,-1))      # Estimate all the fold changes by fitting a linear model.
+&gt; fit &lt;- lmFit(MA, design=c(1,-1,1,-1))     # Estimate all the fold changes by fitting a linear model.
                                             # The design matrix indicates which arrays are dye-swaps
 &gt; fit &lt;- eBayes(fit)                        # Apply Bayesian smoothing to the standard errors (very important!)
 &gt; options(digits=3)
-&gt; topTable(fit,n=30,adjust=&quot;fdr&quot;)           # Show the top 30 genes, control false discovery rate
+&gt; topTable(fit, n=30, adjust=&quot;fdr&quot;)         # Show the top 30 genes, control false discovery rate
      Block Row Column      ID   Name     M     t  P.Value    B
 3721     8   2      1 control   BMP2 -2.21 -21.1 0.000357 7.96
 1609     4   2      1 control   BMP2 -2.30 -20.3 0.000357 7.78
@@ -179,7 +245,7 @@ Data example below.</p>
 6375    13   2     15 control   vent -1.37 -10.5 0.004026 3.91
 1146     3   4     18 fb22a12  2-I23  1.05  10.2 0.004242 3.76
 157      1   7     13 fb38a01   6-I1 -1.82 -10.2 0.004242 3.75</pre>
-<h2>7. One-Sample Experiments</h2>
+<h2>8. One-Sample Experiments</h2>
 
 <p>In this section we consider a case study in which two RNA sources are 
 compared directly on a set of replicate or dye-swap arrays. The case study 
@@ -442,7 +508,7 @@ assumes independent statistics which we do not have here (see <code>help(p.adjus
 </pre>
 <p align="center">
 <img border="0" src="swirl/avemaplot.png" width="795" height="706"></p>
-<h2>8. Two-Sample Experiments</h2>
+<h2>9. Two-Sample Experiments</h2>
 <p>In this section we consider a case study where two RNA sources are compared 
 through a common reference RNA. The analysis of the log-ratios involves a 
 two-sample comparison of means for each gene.</p>
@@ -576,7 +642,7 @@ to be differentially expressed in the knockout versus the control line.</p>
 &gt; text(fit$coef[top8,2],eb$lods[top8,2],labels=substring(genelist[top8,&quot;NAME&quot;],1,5),cex=0.8,col=&quot;blue&quot;)</pre>
 <p align="center">
 <img border="0" src="apoai/bayes.png" width="693" height="743"></p>
-<h2>9. Factorial Experiments</h2>
+<h2>10. Factorial Experiments</h2>
 <p>This case study considers a more involved analysis in which the sources of 
 RNA have a factorial structure.</p>
 <h3>Example. Weaver Mutant Data</h3>
@@ -700,7 +766,7 @@ those which have decreasing expression in the wild-type over time, and those
 which are down-regulated (green) in the mutant are those which increase over 
 time in the wild-type. The mutant is not participating in normal development 
 between 11 and 21 days in respect of these genes.</p>
-<h2>10. Within-Array Replicate Spots</h2>
+<h2>11. Within-Array Replicate Spots</h2>
 <p>In this section we consider a case study in which all genes (ESTs and 
 controls) are printed more than once on the array. This means that there is both 
 within-array and between-array replication for each gene. The structure of the 
@@ -840,7 +906,7 @@ hour for a series of arrays.</p>
 &gt; plot(fit$coef,eb$lods,xlab=&quot;Log2 Fold Change&quot;,ylab=&quot;Log Odds&quot;,pch=16,cex=0.1)</pre>
 <p align="center">
 <img border="0" src="bob/volcano.png" width="890" height="590"></p>
-<h2>11. Using limma with the marray Packages</h2>
+<h2>12. Using limma with the marray Packages</h2>
 <p>The packages marrayClasses, marrayInput, marrayNorm and marrayTools are 
 designed to read and normalize cDNA data. Normalization will produce an object 
 of class <code>marrayNorm</code>. The linear model commands from limma may be 
@@ -854,7 +920,7 @@ lm.series</code> as appropriate. The design matrix
 is chosen as in previous sections. Alternatively you can use the function <code>
 lmFit</code> which will accept a marrayNorm object directly, e.g..,</p>
 <pre>fit &lt;- lmFit(N,design)</pre>
-<h2>12. Affymetrix and Single-Color Arrays</h2>
+<h2>13. Affymetrix and Single-Color Arrays</h2>
 <p>Suppose for example that there are three arrays 
 hybridized with wt RNA and two arrays hybridized with mutant RNA. The design 
 matrix might be</p>

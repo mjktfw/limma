@@ -28,6 +28,7 @@ The row dimension of \code{targets} should match the column dimension of the mat
 \section{Methods}{
 This class inherits directly from class \code{list} so any operation appropriate for lists will work on objects of this class.
 In addition, \code{MAList} objects can be \link[limma:subsetting]{subsetted} and \link[limma:cbind]{combined}.
+\code{RGList} objects will return dimensions and hence functions such as \code{\link[limma:dim]{dim}}, \code{\link[base:nrow]{nrow}} and \code{\link[base:nrow]{ncol}} are defined. 
 \code{MALists} also inherit a \code{\link[methods]{show}} method from the virtual class \code{\link[limma:LargeDataObject]{LargeDataObject}}, which means that \code{RGLists} will print in a compact way.
 
 Other functions in LIMMA which operate on \code{MAList} objects include

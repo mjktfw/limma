@@ -1,4 +1,4 @@
-\name{normalizescale}
+\name{normalizeScale}
 \alias{normalizeMedianDeviations}
 \alias{normalizeMedians}
 \title{Normalize Columns of a Matrix to have the Same Scale}

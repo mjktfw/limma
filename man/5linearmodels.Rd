@@ -43,10 +43,10 @@ All the functions which fit linear models use \code{\link{unwrapdups}} which pro
 }
 
 \section{Assessing Differential Expression}{
-After fitting a linear model, the standard errors are moderated using a simple empirical Bayes model using \code{\link{ebayes}}.
+After fitting a linear model, the standard errors are moderated using a simple empirical Bayes model using \code{\link{ebayes}} or \code{\link{eBayes}}.
 A moderated t-statistic and a log-odds of differential expression is computed for each contrast for each gene.
 
-\code{\link{ebayes}} uses internal functions \code{\link{fitFDist}}, \code{\link{tmixture.matrix}} and \code{\link{tmixture.vector}}.
+\code{\link{ebayes}} and \code{\link{eBayes}} use internal functions \code{\link{fitFDist}}, \code{\link{tmixture.matrix}} and \code{\link{tmixture.vector}}.
 }
 
 \section{Summarizing Model Fits}{
@@ -73,4 +73,7 @@ After linear modelling and moderation, the results may be displayed or further p
 }
 
 \author{Gordon Smyth}
+\references{
+Smyth, G. K. (2003). Linear models and empirical Bayes methods for assessing differential expression in microarray experiments. \url{http://www.statsci.org/smyth/pubs/ebayes.pdf}
+}
 \keyword{documentation}

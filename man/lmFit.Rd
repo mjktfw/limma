@@ -24,6 +24,8 @@ Object of class \code{\link[limma:marraylm]{MArrayLM}}
 
 \details{
 A linear model is fitted for each gene by calling one of \code{lm.series}, \code{gls.series} or \code{rlm.series}.
+Note that the arguments \code{design}, \code{ndups} will be extracted from the data \code{object} if available and do not normally need to set explicitly in the call.
+If arguments are set in the call then they will over-ride slots or components in the data \code{object}.
 }
 
 \seealso{
