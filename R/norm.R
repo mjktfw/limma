@@ -150,44 +150,36 @@ normalizeRobustSpline <- function(M,A,layout,df=5,method="M") {
 
 #  PRINTORDER
 
-setGeneric("normalizeForPrintorder",function(object,...) standardGeneric("normalizeForPrintorder"))
-
-setMethod("normalizeForPrintorder", "RGList",
-function(object, ...) {
-#	Pre-normalize the foreground intensities for print order - method for RGList
+normalizeForPrintorder <- function(object,layout,start="topleft",method="loess",separate.channels=FALSE,span=0.1,plate.size=32) {
+#	Pre-normalize the foreground intensities for print order
 #	Gordon Smyth
-#	11 Mar 2002.  Last revised 24 April 2003.
+#	11 Mar 2002.  Last revised 18 June 2003.
 
+	if(is.null(object$R) || is.null(object$G)) stop("List must contain components R and G")
+	start <- match.arg(start,c("topleft","topright"))
+	method <- match.arg(method,c("loess","plate"))
+	po <- printorder(layout,start=start)$printorder
 	nslides <- NCOL(object$R)
 	for (i in 1:nslides) {
-		RG <- normalizeForPrintorder(object$R[,i],object$G[,i], ...)
+		RG <- normalizeForPrintorder.rg(R=object$R[,i],G=object$G[,i],printorder=po,method=method,separate.channels=separate.channels,span=span,plate.size=plate.size)
 		object$R[,i] <- RG$R
 		object$G[,i] <- RG$G
 	}
 	object
-})
+}
 
-setMethod("normalizeForPrintorder", "ANY",
-function(object, ...) normalizeForPrintorder(R=object, ...)
-)
-
-setMethod("normalizeForPrintorder", "missing",
-function(R,G,layout,method="loess",separate.channels=FALSE,span=0.1,plate.size=32,plot=FALSE) {
+normalizeForPrintorder.rg <- function(R,G,printorder,method="loess",separate.channels=FALSE,span=0.1,plate.size=32,plot=FALSE) {
 #	Pre-normalize the foreground intensities for print order, given R and G for a single array.
 #	Gordon Smyth
-#	8 Mar 2002.  Last revised 24 Apr 2003.
+#	8 Mar 2002.  Last revised 18 June 2003.
 
-	ngrid.r <- layout$ngrid.r
-	ngrid.c <- layout$ngrid.c
-	nspot.r <- layout$nspot.r
-	nspot.c <- layout$nspot.c
-	spot.c <- rep(1:nspot.c,ngrid.r*ngrid.c*nspot.r)
-	spot.r <- rep(rep(1:nspot.r,rep(nspot.c,nspot.r)),ngrid.r*ngrid.c)
-	printorder <- nspot.c*(spot.r-1)+nspot.c+1-spot.c
 	if(plot) ord <- order(printorder)
 	Rf <- log(R,2)
 	Gf <- log(G,2)
+	Rf[is.infinite(Rf)] <- NA
+	Gf[is.infinite(Gf)] <- NA
 	if(!separate.channels) Af <- (Rf+Gf)/2
+	method <- match.arg(method,c("loess","plate"))
 	if(method=="plate") {
 		# Correct for plate pack (usually four 384-well plates)
 		plate <- 1 + (printorder-0.5) %/% plate.size
@@ -207,8 +199,8 @@ function(R,G,layout,method="loess",separate.channels=FALSE,span=0.1,plate.size=3
 				lines(printorder[ord],mR[ord],col="red")
 				lines(printorder[ord],mG[ord],col="green")
 			}
-			mR <- mR - mean(mR)
-			mG <- mG - mean(mG)
+			mR <- mR - mean(mR,na.rm=TRUE)
+			mG <- mG - mean(mG,na.rm=TRUE)
 		} else {
 			plate.m <- tapply(Af,plate,hubermu)
 			m <- Af
@@ -217,7 +209,7 @@ function(R,G,layout,method="loess",separate.channels=FALSE,span=0.1,plate.size=3
 				plot(printorder,Af,xlab="Print Order",ylab="Log Intensity",pch=".")
 				lines(printorder[ord],m[ord])
 			}
-			mR <- mG <- m - mean(m)
+			mR <- mG <- m - mean(m,na.rm=TRUE)
 		}
 	} else {
 		# Smooth correction for time order
@@ -231,33 +223,32 @@ function(R,G,layout,method="loess",separate.channels=FALSE,span=0.1,plate.size=3
 				lines(printorder[ord],mR[ord],col="red")
 				lines(printorder[ord],mG[ord],col="green")
 			}
-			mR <- mR - mean(mR)
-			mG <- mG - mean(mG)
+			mR <- mR - mean(mR,na.rm=TRUE)
+			mG <- mG - mean(mG,na.rm=TRUE)
 		} else {
 			m <- fitted(loess(Af~printorder,span=span,degree=0,family="symmetric",trace.hat="approximate",iterations=5,surface="direct",na.action=na.exclude))
 			if(plot) {
 				plot(printorder,Af,xlab="Print Order",ylab="Log Intensity",pch=".")
 				lines(printorder[ord],m[ord])
 			}
-			mR <- mG <- m - mean(m)
+			mR <- mG <- m - mean(m,na.rm=TRUE)
 		}
 	}
-	list(R=2^(Rf-mR),G=2^(Gf-mG),printorder=printorder,R.trend=mR,G.trend=mG)
-})
+	list(R=2^(Rf-mR),G=2^(Gf-mG),R.trend=mR,G.trend=mG)
+}
 
-plotPrintorder <- function(R,G=NULL,layout,slide=1,method="loess",separate.channels=FALSE,span=0.1,plate.size=32) {
+plotPrintorder <- function(object,layout,start="topleft",slide=1,method="loess",separate.channels=FALSE,span=0.1,plate.size=32) {
 #	Pre-normalize the foreground intensities for print order.
-#	Input can be an RG list for a series of arrays or an R,G pair for a single array.
 #	Gordon Smyth
-#	9 Apr 2002.
+#	9 Apr 2002.  Last revised 18 June 2003.
 
-	if(is.list(R)) {
-		if(is.null(R$R) || is.null(R$G)) stop("List must contain components R and G")
-		G <- R$G[,slide]
-		R <- R$R[,slide]
-	}
+	if(is.null(object$R) || is.null(object$G)) stop("List must contain components R and G")
+	G <- object$G[,slide]
+	R <- object$R[,slide]
 	if(length(R) != length(G)) stop("R and G must have same length")
-	invisible(normalizeForPrintorder(R=R,G=G,layout=layout,method=method,separate.channels=separate.channels,span=span,plate.size=plate.size,plot=TRUE))
+	start <- match.arg(start,c("topleft","topright"))
+	po <- printorder(layout,start=start)$printorder
+	invisible(normalizeForPrintorder.rg(R=R,G=G,printorder=po,method=method,separate.channels=separate.channels,span=span,plate.size=plate.size,plot=TRUE))
 }
 
 #  BETWEEN ARRAY NORMALIZATION

@@ -8,13 +8,17 @@ A virtual class including the data classes \code{RGList}, \code{MAList} and \cod
 }
 
 \section{Methods}{
-\code{show} uses \code{printHead} to print only the leading elements or rows of components or slots which contain large quantities of data.
+A \code{show} method is defined for objects of class \code{LargeDataObject} which uses \code{printHead} to print only the leading elements or rows of components or slots which contain large quantities of data.
 }
 
 \author{Gordon Smyth}
 
 \seealso{
   \link{2.Classes} gives an overview of all the classes defined by this package.
+}
+
+\examples{
+#  see normalizeBetweenArrays
 }
 
 \keyword{classes}

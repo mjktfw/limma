@@ -19,13 +19,8 @@ In rare circumstances, data might be normalized using \code{\link{normalizeForPr
 \code{\link{normalizeWithinArrays}} calls \code{\link{MA.RG}} to do simple background correction and to convert \code{RGList} objects into \code{MAList} objects.
 At this time, the explicit background correction function \code{\link{backgroundCorrect}} is not used by LIMMA, but the function will become relevant as more sophisticated background correct methods are implemented.
 
-\code{\link{bayesianAdjustedRG}} is a more sophisticated background correction tool designed specifically for GenePix data.
-\code{bayesianAdjustedRG} is not currently used as a default method for GenePix data because it is computationally intensive.
-\code{bayesianAdjustedRG} uses utility functions
-\code{\link{bayesianAdjustedFG}},
-\code{\link{expectedBayesianAdjustedFG}},
-\code{\link{numeratorBayesianAdjustedFG}} and
-\code{\link{denominatorBayesianAdjustedFG}}.
+\code{\link{kooperberg}} is a Bayesian background correction tool designed specifically for GenePix data.
+\code{kooperberg} is not currently used as the default method for GenePix data because it is computationally intensive.
 }
 
 \author{Gordon Smyth}

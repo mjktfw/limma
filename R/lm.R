@@ -1,8 +1,16 @@
 #  LINEAR MODELS
 
 lmFit <- function(object,design=NULL,contrasts=NULL,ndups=1,spacing=1,correlation=0.75,weights=NULL,method="ls",...) {
+	gene <-
 	if(is(object,"MAList")) {
+		if(!is.null(object$design)) design <- object$design
+		if(!is.null(object$contrasts)) contrasts <- object$contrasts
+		if(!is.null(object$printerlayout)) {
+			ndups <- printerlayout$ndups
+			spacing <- printerlayout$spacing
+		}
 		weights <- object$weights
+		if(!is.null(gal)) gene <- as.character(gal[,5])
 		object <- as.matrix(object$M)
 	}
 	if(is(object,"marrayNorm")) {

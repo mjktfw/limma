@@ -11,10 +11,11 @@ Objects are normally created by \code{\link{lmFit}}.
 \section{Slots}{
   \describe{
     \item{\code{genes}:}{\code{data.frame} containing gene names and annotation}
-    \item{\code{design}:}{design \code{matrix}}
-    \item{\code{contrasts}:}{\code{matrix} defining contrasts of coefficients for which results are desired}
-    \item{\code{coefficients}:}{\code{matrix} containing fitted coefficients}
-    \item{\code{stdev.unscaled}:}{\code{matrix} containing unscaled standard deviations of the coefficients}
+    \item{\code{design}:}{full rank design \code{matrix}}
+    \item{\code{contrasts}:}{\code{matrix} defining contrasts of coefficients for which results are desired.
+    A zero length matrix indicates that no contrasts have been specified.}
+    \item{\code{coefficients}:}{\code{matrix} containing fitted coefficients or contrasts}
+    \item{\code{stdev.unscaled}:}{\code{matrix} containing unscaled standard deviations of the coefficients or contrasts}
     \item{\code{s2.residual}:}{\code{numeric} vector containing residual variances for each gene}
     \item{\code{df.residual}:}{\code{numeric} vector containing residual degrees of freedom for each gene}
     \item{\code{s2.prior}:}{\code{numeric} value giving empirical Bayes estimated prior value for residual variances}
@@ -27,6 +28,8 @@ Objects are normally created by \code{\link{lmFit}}.
 
 \section{Methods}{
 \code{MAList} objects inherit a \code{show} method from the virtual class \code{LargeDataObject}.
+
+Although not a formal method, the function \code{\link{classifyTests}} accepts \code{MAList} objects.
 }
 
 \author{Gordon Smyth}

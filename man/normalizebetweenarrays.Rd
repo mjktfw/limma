@@ -80,6 +80,8 @@ data(MouseArray)
 MA <- normalizeWithinArrays(mouse.data, mouse.setup)
 plot.scale.box(MA$M)
 MA <- normalizeBetweenArrays(MA,method="scale")
+print(MA)
+show(MA)
 plot.scale.box(MA$M)
 
 #  One can get the same results using the matrix method:

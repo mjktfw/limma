@@ -31,7 +31,7 @@ representation("list")
 
 #  Linear model fit
 setClass("MArrayLM", representation(
-	genes="data.frame",
+	gene="character",
 	design="matrix",
 	contrasts="matrix",
 	coefficients="matrix",
