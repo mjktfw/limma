@@ -1,10 +1,10 @@
 \name{rg.series.spot}
 \alias{rg.series.spot}
-\title{Extract RG list from Spot image analysis files}
+\title{Read RGList from SPOT Image Analysis Output Files}
 \description{
-Extracts an RG list from a series of Spot image analysis files.
+Extracts an RGList from a series of Spot image analysis files.
 This is a depreciated function.
-Use \code{read.maimages} instead.
+Use \code{\link{read.maimages}} instead.
 }
 \usage{
 rg.series.spot(slides,path=NULL,names.slides=names(slides),suffix="spot",wt.fun=NULL,verbose=TRUE,...)
@@ -19,9 +19,9 @@ rg.series.spot(slides,path=NULL,names.slides=names(slides),suffix="spot",wt.fun=
   \item{\dots}{any other arguments to be passed to \code{scan}}
 }
 \details{
-This function extracts the foreground and background intensities from a series of files, produced by the image analysis program Spot, and assembles them in the components of one list.
+This function extracts the foreground and background intensities from a series of files, produced by the image analysis program SPOT, and assembles them in the components of one list.
 
-Spot areas may also be extracted, which is useful for downweighting unusually small or large spots in subsequent analyses.
+Spot quality weights may also be extracted using an optional weight function.
 }
 \value{
 A list containing the components

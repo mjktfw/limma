@@ -1,16 +1,16 @@
 \name{rg.genepix}
 \alias{rg.genepix}
-\title{Extract RG list from Genepix output files}
+\title{Extract RGList from data.frames Containing Genepix Data}
 \description{
-Extracts an RG list from a series of Genepix output files
+Extracts an RGList from Genepix image analysis output when the data has already been read from files into data.frames objects.
 }
 \usage{
 rg.genepix(slides,names.slides=names(slides),suffix="gpr")
 }
 \arguments{
-  \item{slides}{Character vector giving the names of the data frames containing the Spot output.}
-  \item{names.slides}{Names to be associated with each slide as column name.}
-  \item{suffix}{The dataframe names are assumed to have this suffix added to names in \code{slides}.}
+  \item{slides}{character vector giving the names of the data frames containing the Spot output.}
+  \item{names.slides}{character vector giving column names to be associated with each slide.}
+  \item{suffix}{the dataframe names are assumed to have this suffix added to names in \code{slides}.}
 }
 \details{
 This function extracts the foreground and background intensities from a series of data frames and assembles them in the components of one list.

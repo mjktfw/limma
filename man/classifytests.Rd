@@ -1,19 +1,23 @@
 \name{classifyTests}
 \alias{classifyTests}
+\alias{classifyTests.matrix}
 \alias{classifyTests.vector}
 \title{Treat Simultaneous T-Tests as Classification Problem}
 \description{
 Classify a series of related t-statistics as up, down or not significant.
 }
 \usage{
-classifyTests(tstat,cor.matrix,df.residual,p.value)
-classifyTests.vector(tstat,cor.matrix,df.residual,p.value)
+classifyTests(tstat,cor.matrix=diag(ntests),df.residual=Inf,p.value=0.01)
+classifyTests.matrix(tstat,cor.matrix=diag(ntests),df.residual=Inf,p.value=0.01)
+classifyTests.vector(tstat, Q=diag(p), pF=ncol(Q)*4)
 }
 \arguments{
   \item{tstat}{numeric matrix (\code{classifyTests}) or vector (\code{classifyTests.vector}) of t-statistics. Missing values are allowed.}
-  \item{cor.matrix}{corelation matrix between the t-statistics}
+  \item{cor.matrix}{correlation matrix between the coefficients and the covariance matrix between the t-statistics}
   \item{df.residual}{numeric vector (\code{classifyTests}) or scalar (\code{classifyTests.vector}) giving the degrees of freedom for the t-statistics}
   \item{p.value}{numeric scalar between 0 and 1 giving the desired size of the test}
+  \item{Q}{matrix spanning range space of \code{cor.matrix}}
+  \item{pF}{critical value for F-type statistic}
 }
 \value{
   A matrix (\code{classifyTests}) or vector (\code{classifyTests.vector}) with elements \code{-1}, \code{0} or \code{1} depending on whether each t-statistic is classified as significantly negative, not significant or significantly positive.

@@ -23,12 +23,16 @@ read.maimages(files,source="spot",path=NULL,ext=NULL,names=files,columns=NULL,wt
 }
 \details{
 This function extracts the foreground and background intensities from a series of files, produced by an image analysis program, and assembles them in the components of one list.
+At present, the image analysis programs SPOT, GenePix and QuantArray are supported.
+If \code{source="spot.close.open"} then background intensities are estimated using \code{morph.close.open} rather than \code{morph}.
 
-Spot quality weights may also be extracted using a ready-made or a user-supplied weight function.
+Spot quality weights may also be extracted using a ready-made or a user-supplied weight function \code{wt.fun}.
+\code{wt.fun} may be any function which takes a data.frame as argument and returns a vector of weights.
+The columns of the data.frame are as in the image analysis output files.
 See \code{\link{QualityWeights}} for provided weight functions.
 }
 \value{
-A list containing the components
+A \code{\link[RGList-class]{RGList}} object containing the components
   \item{R}{matrix containing the red channel foreground intensities for each spot for each array.}
   \item{Rb}{matrix containing the red channel background intensities for each spot for each array.}
   \item{G}{matrix containing the green channel foreground intensities for each spot for each array.}
@@ -37,7 +41,8 @@ A list containing the components
 }
 \author{Gordon Smyth}
 \seealso{
-\code{\link[base]{read.table}}.
+\code{read.maimages} is based on \code{\link[base]{read.table}} in the base package.
+Input of spotted microarray data can also be accomplished using \code{\link[marrayInput:read.marrayRaw]{read.marrayRaw}} in the marrayInput package.
 
 An overview of LIMMA functions for reading data is given in \link{3.ReadingData}.
 }
@@ -46,5 +51,12 @@ An overview of LIMMA functions for reading data is given in \link{3.ReadingData}
 #
 #  files <- dir(pattern="*\\.gpr$")
 #  RG <- read.maimages(files,"genepix")
+#  Read all .gpr files from current working directory
+#
+#  Read all .spot files from current working director and down-weight
+#  spots smaller or larger than 150 pixels
+#
+#  files <- dir(pattern="*\\.spot$")
+#  RG <- read.maimages(files,"spot",wt.fun=wtarea(150))
 }
 \keyword{file}

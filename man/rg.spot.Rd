@@ -1,8 +1,8 @@
 \name{rg.spot}
 \alias{rg.spot}
-\title{Extract RG list from Spot output files}
+\title{Extract RGList from data.frames Containing SPOT Data}
 \description{
-Extracts an RG list from a series of Spot output files
+Extracts an RGList from Spot image analysis output when the data has already been read from files into data.frames objects.
 }
 \usage{
 rg.spot(slides,names.slides=names(slides),suffix="spot",area=FALSE)

@@ -1,8 +1,8 @@
 \name{rg.quantarray}
 \alias{rg.quantarray}
-\title{Extract RG list from Quantarray output files}
+\title{Extract RGList from data.frames Containing Quantarray Data}
 \description{
-Extracts an RG list from a series of Quantarray output files
+Extracts an RGList from Quantarray image analysis output when the data has already been read from files into data.frames objects.
 }
 \usage{
 rg.quantarray(slides,names.slides=names(slides),suffix="qta")

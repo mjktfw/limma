@@ -327,22 +327,26 @@ function(object, method="scale") {
 	object
 })
 
-normalizeQuantiles <- function(A) {
+normalizeQuantiles <- function(A, ties=FALSE) {
 #	Make all the columns of a matrix have the same quantiles, allowing for missing values.
 #	Gordon Smyth
-#	25 June 2002.  Last revised 12 Mar 2003.
+#	25 June 2002.  Last revised 5 June 2003.
 
 	n <- dim(A)
 	if(is.null(n)) return(A)
 	if(n[2]==1) return(A)
-	O <- S <- rep(NA,n[1]*n[2])
-	dim(O) <- dim(S) <- n
+	O <- S <- array(,n)
+	if(ties) R <- O
+	nobs <- rep(n[1],n[2])
+	i <- (0:(n[1]-1))/(n[1]-1)
 	for (j in 1:n[2]) {
-		Si <- sort(A[,j],index=TRUE)
-		isna <- is.na(A[,j])
-		if(any(isna)) {
-			nobs <- length(Si$x)
-			S[,j] <- approx((0:(nobs-1))/(nobs-1), Si$x, (0:(n[1]-1))/(n[1]-1))$y
+		Si <- sort(A[,j], method="quick", index.return=TRUE)
+		if(ties) R[,j] <- rank(A[,j])
+		nobsj <- length(Si$x)
+		if(nobsj < n[1]) {
+			nobs[j] <- nobsj
+			isna <- is.na(A[,j])
+			S[,j] <- approx((0:(nobsj-1))/(nobsj-1), Si$x, i, ties="ordered")$y
 			O[!isna,j] <- ((1:n[1])[!isna])[Si$ix]
 		} else {
 			S[,j] <- Si$x
@@ -351,12 +355,18 @@ normalizeQuantiles <- function(A) {
 	}
 	m <- rowMeans(S)
 	for (j in 1:n[2]) {
-		isna <- is.na(A[,j])
-		if(any(isna)) {
-			nobs <- sum(!isna)
-			A[O[!isna,j],j] <- approx((0:(n[1]-1))/(n[1]-1), m, (0:(nobs-1))/(nobs-1))$y
-		} else
-			A[O[,j],j] <- m 
+		if(nobs[j] < n[1]) {
+			isna <- is.na(A[,j])
+			if(ties)
+				A[!isna,j] <- approx(i, m, (R[!isna,j]-1)/(nobs[j]-1), ties="ordered")$y
+			else
+				A[O[!isna,j],j] <- approx(i, m, (0:(nobs[j]-1))/(nobs[j]-1), ties="ordered")$y
+		} else {
+			if(ties)
+				A[,j] <- approx(i, m, (R[,j]-1)/(n[1]-1), ties="ordered")$y
+			else
+				A[O[,j],j] <- m
+		}
 	}
 	A
 }

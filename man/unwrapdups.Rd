@@ -20,7 +20,9 @@ This facilitates fitting models or computing statistics for each gene.
 }
 \author{Gordon Smyth}
 \examples{
-M <- matrix(rnorm(24),8,3)
+M <- matrix(1:12,6,2)
 unwrapdups(M,ndups=2)
+unwrapdups(M,ndups=3)
+unwrapdups(M,ndups=2,spacing=3)
 }
 \keyword{array}

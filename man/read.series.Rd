@@ -15,6 +15,9 @@ read.series(slides, path=NULL, suffix="spot", ...)
 }
 \details{
 This function performs a series of calls to \code{read.table}.
+The image analysis output files are assumed to have been edited to remove all pre-heading material.
+The files are assumed to contain only column names and data.
+In most cases only can use \code{read.maimages} instead.
 
 The data.frames produced by this command will typically be processed further using one of the functions \code{rg.spot}, \code{rg.genepix} or \code{rg.quantarray}.
 }

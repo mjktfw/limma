@@ -1,19 +1,57 @@
 #  LINEAR MODELS
 
-#if(!isGeneric("lmFit"))
-#	setGeneric("lmFit", function(object,...) standardGeneric("lmFit")) 
-#
-#setMethod("lmFit","matrix",definition=
-#})
-#
-#setMethod("lmFit","MAList",definition=
-#})
-#
-#setMethod("lmFit","marrayNorm",definition=
-#})
-#
-#setMethod("lmFit","exprSet",definition=
-#})
+#  S4 functions suck!  Am reverting to using ordinary functions and doing my own dispatching!
+
+lmFit <- function(object,design=NULL,contrasts=NULL,ndups=1,spacing=1,correlation=0.75,weights=NULL,method="ls",...) {
+	if(is(object,"MAList")) {
+		weights <- object$weights
+		object <- as.matrix(object$M)
+	}
+	if(is(object,"marrayNorm")) {
+#		don't use accessor function so don't have to require marrayClasses
+		weights <- object@maW
+		if(length(w) == 0) weights <- NULL
+		object <- object@maM
+	}
+	if(is(object,"exprSet")) {
+#		don't use accessor function so don't have to require Biobase
+  		weights <- object@se.exprs
+		if(length(weights) == 0)
+			weights <- NULL
+		else
+			weights <- 1/pmax(weights,1e-14)^2
+		object <- object@exprs
+	}
+	if(is.null(design)) design <- matrix(1,ncol(object),1)
+	if(is.na(correlation) || is.null(correlation)) correlation <- numeric(0)
+	method <- match.arg(method,c("ls","robust"))
+	if(method=="robust")
+		fit <- rlm.series(object,design=design,ndups=ndups,spacing=spacing,weights=weights,...)
+	else
+		if(ndups < 2 || correlation==0 || length(correlation)==0)
+			fit <- lm.series(object,design=design,ndups=ndups,spacing=spacing,weights=weights,...)
+		else
+			fit <- gls.series(object,design=design,ndups=ndups,spacing=spacing,correlation=correlation,weights=weights,...)
+	if(is.null(contrasts))
+		contrasts <- matrix(0,0,0)
+	else
+		fit <- contrasts.fit(fit,contrasts)	
+	eb <- ebayes(fit)
+	new("MArrayLM",
+		design=design,
+		contrasts=as.matrix(contrasts),
+		coefficients=as.matrix(fit$coefficients),
+		stdev.unscaled=as.matrix(fit$stdev.unscaled),
+		s2.residual=eb$s2.residual,
+		df.residual=fit$df.residual,
+		correlation=correlation,
+		s2.prior=eb$s2.prior,
+		df.prior=eb$df.prior,
+		s2.post=eb$s2.post,
+		tstat=as.matrix(eb$t),
+		varcoef.prior=eb$var.prior
+	)
+}
 
 unwrapdups <- function(M,ndups=2,spacing=1) {
 #	Unwrap M matrix for a series of experiments so that all spots for a given gene are in one row

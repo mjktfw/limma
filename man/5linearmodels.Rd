@@ -8,7 +8,7 @@ This page gives an overview of the LIMMA functions available to fit linear model
 The core of this package is the fitting of gene-wise linear models to microarray data.
 The basic idea is to estimate log-ratios between two or more target RNA samples simultaneously.
 See the \emph{\link[limma:../doc/usersguide]{LIMMA User's Guide}} for several case studies.
-There are three functions in the package which fit linear models:
+There are four functions in the package which fit linear models:
 
 \describe{
 \item{ \code{\link{lm.series}} }{
@@ -20,6 +20,9 @@ There are three functions in the package which fit linear models:
 \item{ \code{\link{gls.series}} }{
 	Generalized least squares taking into account correlations between duplicate spots (i.e., replicate spots on the same array).
 	The function \code{\link{dupcor.series}} is used to estimate the inter-duplicate correlation before using \code{gls.series}.}
+
+\item{ \code{\link{lmFit}} }{
+	This is a high level function which provides an entry point to the previous three functions.}
 }
 Each of these functions accepts essentially the same argument list and produces a fitted model object of the same form.
 The main argument is the \bold{design matrix} which specifies the comparisons between the RNA targets which you want to estime.
