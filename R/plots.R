@@ -3,7 +3,7 @@
 imageplot <- function(z, layout=list(ngrid.r=12,ngrid.c=4,nspot.r=26,nspot.c=26), low=NULL, high=NULL, ncolors=123, zerocenter=NULL, zlim=NULL, mar=rep(1,4), ...) {
 #  Image plot of spotted microarray data
 #  Gordon Smyth
-#  20 Nov 2001.  Last revised 18 Sept 2003.
+#  20 Nov 2001.  Last revised 8 Feb 2004.
 
 #  Check input
 	gr <- layout$ngrid.r
@@ -45,9 +45,8 @@ imageplot <- function(z, layout=list(ngrid.r=12,ngrid.c=4,nspot.r=26,nspot.c=26)
 	dim(z) <- c(sc,sr,gc,gr)
 	z <- aperm(z,perm=c(2,4,1,3))
 	dim(z) <- c(gr*sr,gc*sc)
-	old.par <- par(no.readonly = TRUE)
+	old.par <- par(mar=mar)
 	on.exit(par(old.par))
-	par(mar=mar)
 	image(0:(gr*sr),0:(gc*sc),z,zlim=zlim,col=col,axes=FALSE,...)
 	for (igrid in 0:gc) lines( c(0,gr*sr), rep(igrid*sc,2) )
 	for (igrid in 0:gr) lines( rep(igrid*sr,2), c(0,gc*sc) )

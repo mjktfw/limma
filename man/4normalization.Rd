@@ -24,14 +24,14 @@ For more details see the \emph{\link[limma:../doc/usersguide]{LIMMA User's Guide
 
 \section{Backgound Correction}{
 Usually one doesn't need to explicitly ask for background correction of the intensities because this is done by default by \code{\link{normalizeWithinArrays}},
-which subtract the background from the foreground intensities before applying the normalization method.
+which subtracts the background from the foreground intensities before applying the normalization method.
 This default background correction method can be over-ridden by using \code{\link{backgroundCorrect}} which offers a number of alternative
 background correct methods to simple subtraction.
 Simply use \code{backgroundCorrect} to correct the \code{RGList} before applying \code{normalizeWithinArrays}.
 
 \code{\link{kooperberg}} is a Bayesian background correction tool designed specifically for GenePix data.
 \code{kooperberg} is not currently used as the default method for GenePix data because it is computationally intensive.
-It requires several columns of the Genepix data files which are not read in my read.maimages, so you will need to use \code{read.series} instead of \code{read.maimages} if you wish to use \code{kooperberg}.
+It requires several columns of the Genepix data files which are not read in by read.maimages, so you will need to use \code{read.series} instead of \code{read.maimages} if you wish to use \code{kooperberg}.
 }
 
 \author{Gordon Smyth}

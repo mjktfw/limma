@@ -3,15 +3,16 @@
 loessFit <- function(y, x, weights=NULL, span=0.3, bin=0.01/(2-is.null(weights)), iterations=4) {
 #	Fast loess fit for simple x and y
 #	Gordon Smyth
-#	28 June 2003.  Last revised 3 September 2003.
+#	28 June 2003.  Last revised 16 Feb 2004.
 
 	n <- length(y)
+	out <- list(fitted=rep(NA,n),residuals=rep(NA,n))
+	obs <- is.finite(y) & is.finite(x)
+	xobs <- x[obs]
+	yobs <- y[obs]
+	nobs <- length(yobs)
+	if(nobs==0) return(out)
 	if(is.null(weights)) {
-		obs <- is.finite(y) & is.finite(x)
-		xobs <- x[obs]
-		yobs <- y[obs]
-		nobs <- length(yobs)
-		if(nobs==0) stop("no observed points")
 		o <- order(xobs)
 		oo <- order(o)
 		iter <- iterations-1
@@ -19,22 +20,21 @@ loessFit <- function(y, x, weights=NULL, span=0.3, bin=0.01/(2-is.null(weights))
 		smoothy <- .C("lowess", x = as.double(xobs[o]), as.double(yobs[o]), 
 			nobs, as.double(span), as.integer(iter), as.double(delta), 
 			y = double(nobs), double(nobs), double(nobs), PACKAGE = "base")$y[oo]
-		out <- list(fitted=rep(NA,n),residuals=rep(NA,n))
 		out$fitted[obs] <- smoothy
 		out$residuals[obs] <- yobs-smoothy
 	} else {
-		obs <- is.finite(y) & is.finite(x) & is.finite(weights)
-		xobs <- x[obs]
-		yobs <- y[obs]
+		weights[!is.finite(weights)] <- 0
 		wobs <- weights[obs]
-		nobs <- length(yobs)
-		if(nobs==0) stop("no observed points")
-#		Suppress warning "k-d tree limited by memory"
-		oldopt <- options(warning.expression=expression())
-		on.exit(options(oldopt))
-		fit <- .vsimpleLoess(y=yobs, x=xobs, weights=wobs, span=span, degree=1,
-			cell=bin/span, iterations=iterations)
-		out <- list(fitted=rep(NA,n),residuals=rep(NA,n))
+		if(sum(wobs>0) < 4+1/span) {
+			fit <- lm.wfit(cbind(1,xobs),yobs,wobs)
+		} else {
+#			Suppress warning "k-d tree limited by memory"
+#			oldopt <- options(warning.expression=expression())
+			oldopt <- options(warn=-1)
+			on.exit(options(oldopt))
+			fit <- .vsimpleLoess(y=yobs, x=xobs, weights=wobs, span=span, degree=1,
+				cell=bin/span, iterations=iterations)
+		}
 		out$fitted[obs] <- fit$fitted
 		out$residuals[obs] <- fit$residuals
 	}
@@ -74,12 +74,14 @@ loessFit <- function(y, x, weights=NULL, span=0.3, bin=0.01/(2-is.null(weights))
 				xi = double(max.kd), vert = double(2 * D), vval = double((D + 
 				1) * max.kd), diagonal = double(N), trL = double(1), 
 				delta1 = double(1), delta2 = double(1), as.integer(surf.stat == 
-				"interpolate/exact"), PACKAGE = "stats")
+#				"interpolate/exact"), PACKAGE = "modreg")
+				"interpolate/exact"))
 			fitted.residuals <- y - z$fitted.values
 			if (j < iterations) 
 				robust <- .Fortran("lowesw", as.double(fitted.residuals), 
-				as.integer(N), robust = double(N), double(N), 
-				PACKAGE = "stats")$robust
+				as.integer(N), robust = double(N), double(N))$robust 
+#				as.integer(N), robust = double(N), double(N), 
+#				PACKAGE = "modreg")$robust
 		}
 	list(fitted = z$fitted.values, residuals = fitted.residuals)
 }

@@ -4,7 +4,7 @@
 \title{Correlation Between Duplicates}
 \description{Estimate the correlation between duplicate spots (replicate spots on the same array) from a series of arrays.}
 \usage{
-duplicateCorrelation(object,design=rep(1,ncol(M)),ndups=2,spacing=1,initial=0.8,trim=0.15,weights=NULL)
+duplicateCorrelation(object,design=rep(1,ncol(M)),ndups=2,spacing=1,trim=0.15,weights=NULL)
 dupcor.series(M,design=rep(1,ncol(M)),ndups=2,spacing=1,initial=0.8,trim=0.15,weights=NULL)
 }
 \arguments{
@@ -14,7 +14,8 @@ dupcor.series(M,design=rep(1,ncol(M)),ndups=2,spacing=1,initial=0.8,trim=0.15,we
   \item{design}{the design matrix of the microarray experiment, with rows corresponding to arrays and columns to comparisons to be estimated. The number of rows must match the number of columns of \code{M}. Defaults to the unit vector meaning that the arrays are treated as replicates.} 
   \item{ndups}{a positive integer giving the number of times each gene is printed on an array. \code{nrow(M)} must be divisible by \code{ndups}.}
   \item{spacing}{the spacing between the rows of \code{M} corresponding to duplicate spots, \code{spacing=1} for consecutive spots}
-  \item{initial}{a numeric value between -1 and 1 giving an initial estimate for the correlation.}
+  \item{initial}{a numeric value between -1 and 1 giving an initial estimate for the correlation.
+  Not currently used.}
   \item{trim}{the fraction of observations to be trimmed from each end of \code{tanh(cor.genes)} when computing the trimmed mean.}
   \item{weights}{an optional numeric matrix of the same dimension as \code{M} containing weights for each spot. If smaller than \code{M} then it will be filled out the same size.}
 }
@@ -26,16 +27,17 @@ dupcor.series(M,design=rep(1,ncol(M)),ndups=2,spacing=1,initial=0.8,trim=0.15,we
 \details{
 This function estimates the between-duplicate correlation using REML individually for each gene.
 It also returns a robust average of the individual correlations which can be used as input for 
-functions such as \code{gls.series}.
+functions \code{lmFit} or \code{gls.series}.
 
-\code{duplicateCorrelation} is a more object-orientated version of \code{dupcor.series} but produces the same value.
+\code{dupcor.series} is a depreciated function which may be removed in a future version.
+It produces the same value as \code{duplicateCorrelation}.
 }
 \note{
 This function may take long time to execute as it makes a call to \code{\link[nlme]{gls}} for each gene.
 Execution could be speeded up greatly if it could be assumed that \code{M} contains no NAs.
 }
 \seealso{
-These functions use \code{\link[nlme]{gls}} in the nlme package.
+These functions use \code{\link[statmod]{randomizedBlockFit}} in the statmod package.
 
 An overview of linear model functions in limma is given by \link{5.LinearModels}.
 }

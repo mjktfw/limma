@@ -14,7 +14,7 @@
 <p align="center">Gordon Smyth, Natalie Thorne and James Wettenhall<br>
 The
 Walter and Eliza Hall Institute of Medical Research<br>
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->11 November 2003<!--webbot bot="Timestamp" i-checksum="39815" endspan --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->13 February 2004<!--webbot bot="Timestamp" i-checksum="40992" endspan --></p>
 
 <h2>Table of Contents</h2>
 
@@ -283,11 +283,17 @@ the RG-list.</p>
 <pre>&gt; RG &lt;- read.maimages(files,source=&quot;genepix&quot;,wt.fun=wtflags(0.1))</pre>
 <p>will give weight 0.1 to any spot which receives a negative flag from the 
 GenePix program.</p>
-<p>Computing quality weights depends on the image analysis program. Consult the 
+<p>The appropriate way to computing spot quality weights depends on the image analysis program 
+that you are using. Consult the 
 help entry <code>QualityWeights</code> to see what quality weight functions are 
 available. The use of the <code>wt.fun</code> argument is very flexible and 
-allows you to construct your own weights.</p>
+allows you to construct your own weights. The <code>wt.fun</code> argument can 
+be any function which takes a data set as argument and computes the desired 
+weights. For example, if you wish to give zero weight to all Genepix flags less 
+than -50 you could use </p>
 
+<pre>myfun &lt;- function(x) as.numeric(x$Flags &gt; -50.5)
+RG &lt;- read.maimages(files, source=&quot;genepix&quot;, wt.fun=myfun)</pre>
 <h3>4.4 The Targets File</h3>
 <p>Although not strictly necessary, it is usually a good idea to construct a 
 Targets File which lists the RNA target hybridized to each channel of each 
@@ -432,7 +438,7 @@ of absolute expression levels as well as just log-ratios is covered in Section
 <p>The package limma uses an approach called <i>linear models</i> to analyse 
 designed microarray experiments. This approach allows very general experiments 
 to be analysed just as easily as a simple replicated experiment. The approach is 
-outlined in Smyth (2003) and Yang and Speed (2002). The approach requires one 
+outlined in Smyth (2004) and Yang and Speed (2002). The approach requires one 
 or two matrices to be specified. The first is the <i>design matrix</i> which 
 indicates in effect which RNA samples have been applied to each array. The 
 second is the <i>contrast matrix</i> which specifies which comparisons you would 
@@ -450,7 +456,7 @@ statistical knowledge.</p>
 <p>For statistical analysis and assessing differential expression, limma uses an 
 empirical Bayes method to moderate the standard errors of the estimated log-fold 
 changes. This results in more stable inference and improved power, especially 
-for experiments with small numbers of arrays (Smyth, 2003). For arrays with 
+for experiments with small numbers of arrays (Smyth, 2004). For arrays with 
 within-array replicate spots, limma uses a pooled correlation method to make 
 full use of the duplicate spots (Smyth et al, 2003).</p>
 <h3>7.2  Affymetrix and Other Single-Channel Designs</h3>
@@ -478,7 +484,7 @@ normalized and stored in an <code>exprSet</code> object, for example by</p>
 &gt; fit &lt;- lmFit(eset, design)</pre>
 <p>To make all pair-wise comparisons between the three groups the appropriate 
 contrast matrix can be created by</p>
-<pre>&gt; contrast.matrix &lt;- makeContrasts(group2-group1, group3-group3, group3-group1, levels=design)
+<pre>&gt; contrast.matrix &lt;- makeContrasts(group2-group1, group3-group2, group3-group1, levels=design)
 &gt; fit2 &lt;- contrasts.fit(fit, contrast.matrix)
 &gt; fit2 &lt;- eBayes(fit2)</pre>
 <p>A list of top genes differential expressed in group2 versus group1 can be 
@@ -760,7 +766,7 @@ this artefact will have suspect M-values. The streak also shows up as darker
 regions in the background plots.</p>
 <p><b>MA-plots</b>. An MA-plot plots the log-ratio of R vs G against the overall 
 intensity of each spot. The log-ratio is represented by the M-value, M = 
-log2(R)-log2(G), and the overall intensity by the A-value, A = log2(R)+log2(G). 
+log2(R)-log2(G), and the overall intensity by the A-value, A = (log2(R)+log2(G))/2. 
 Here is the MA-plot of the un-normalized values for the first array:</p>
 <pre>&gt; plotMA(MA)</pre>
 <div align="center">
@@ -1491,8 +1497,10 @@ to Lynn Corcoran for the Bob Mutant data.</p>
   analysis of gene expression in the developing pontocerebellar projection 
   system. <i>Neuron</i> <b>36</b>, 417-434. (<a href="http://neuron.org/cgi/content/full/36/3/417">Full 
   Text</a>)</li>
-  <li>Smyth, G. K. (2003). Linear models and empirical Bayes methods for 
-  assessing differential expression in microarray experiments. (<a href="http://www.statsci.org/smyth/pubs/ebayes.pdf">PDF</a>)</li>
+  <li>Smyth, G. K. (2004). Linear models and empirical Bayes methods for 
+  assessing differential expression in microarray experiments. <i>Statistical 
+  Applications in Genetics and Molecular Biology</i> <b>3</b>, No. 1, Article 3. (<a href="http://www.bepress.com/sagmb/vol3/iss1/art3/">Full 
+  Text</a>)</li>
   <li>Smyth, G. K., Michaud, J., and Scott, H. (2003). The use of within-array 
   replicate spots for assessing differential expression in microarray experiments. 
   (<a href="http://www.statsci.org/smyth/pubs/dupcor.pdf">PDF</a>)</li>

@@ -11,15 +11,21 @@ This package defines the following data classes.
 	usually by \code{read.maimages}.}
 
 \item{ \code{\link[limma:malist]{MAList}} }{
-	Intensities converted to M-values and A-values, i.e., to contrasts on the log-scale.
+	Intensities converted to M-values and A-values, i.e., to with-spot and whole-spot contrasts on the log-scale.
 	Usually created from an \code{RGList} using \code{MA.RG} or \code{normalizeWithinArrays}.}
 
 \item{ \code{\link[limma:marraylm]{MArrayLM}} }{
 	Store the result of fitting gene-wise linear models to the normalized intensities or log-ratios.
-	Usually created by \code{lmFit}.}
+	Usually created by \code{lmFit}.
+	Objects of this class normally contain only one row for each unique probe.}
 }
 
-Objects of these classes may be \link[limma:subsetting]{subsetted} and multiple data objects may be \link[limma:cbind]{combined}.
+All these data classes obey many analogies with matrices.
+In the case of \code{RGList} and \code{MAList}, rows correspond to spots and columns to arrays.
+In the case of \code{MarrayLM}, rows correspond to unique probes and the columns to parameters or contrasts.
+The functions \code{dim}, \code{length}, \code{ncol}, \code{nrow} have methods for these classes.
+Objects of any of these classes may be \link[limma:subsetting]{subsetted}.
+Multiple data objects may be \link[limma:cbind]{combined} by rows (to add extra probes) or by columns (to add extra arrays).
 
 All of these classes belong to the virtual class \code{\link[limma:LargeDataObject]{LargeDataObject}}.
 A \code{show} method is defined for \code{LargeDataOject}s which uses the utility function \code{\link{printHead}}.

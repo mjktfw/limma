@@ -16,7 +16,7 @@ read.imagene(files,path=NULL,ext=NULL,names=NULL,columns=NULL,wt.fun=NULL,verbos
   \item{path}{character string giving the directory containing the files. Can be omitted if the files are in the current working directory.}
   \item{ext}{character string giving optional extension to be added to each file name}
   \item{names}{character vector of names to be associated with each array as column name}
-  \item{columns}{list with fields \code{Rf}, \code{Gf}, \code{Rb} and \code{Gb} giving the column names to be used for red and green foreground and background.  This is not usually specified by the user but, if it is, it over-rides \code{source}.}
+  \item{columns}{list with fields \code{Rf}, \code{Gf}, \code{Rb} and \code{Gb} giving the column names to be used for red and green foreground and background or, in the case of Imagene data, a list with fields \code{f} and \code{b}.  This argument is not usually specified by the user but, if it is, it over-rides \code{source}.}
   \item{wt.fun}{function to calculate quality weights}
   \item{verbose}{logical, \code{TRUE} to report each time a file is read in}
   \item{sep}{the field separator character}
@@ -52,7 +52,7 @@ An \code{\link[limma:rglist]{RGList}} object containing the components
   \item{Gb}{matrix containing the green channel background intensities for each spot for each array.}
   \item{weights}{spot quality weights, if \code{wt.fun} is given}
   \item{printer}{list of class \code{\link[limma:printlayout]{PrintLayout}}, currently set only if \code{source="imagene"}}
-  \item{genes}{data frame containing gene names and IDs and spatial positions on the array, currently set only if \code{source="imagene"}}
+  \item{genes}{data frame containing gene names and IDs and spatial positions on the array, currently set only if \code{source="genepix"} or \code{source="imagene"}}
 }
 \author{Gordon Smyth}
 \references{

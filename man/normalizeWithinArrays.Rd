@@ -13,7 +13,7 @@ RG.MA(object)
 }
 \arguments{
   \item{object}{object of class \code{list}, \code{RGList} or \code{MAList} containing two-color microarray data}
-  \item{layout}{list specifying the dimensions of the spot matrix and the grid matrix}
+  \item{layout}{list specifying the dimensions of the spot matrix and the grid matrix. For details see \code{\link[limma:PrintLayout]{PrintLayout-class}}.}
   \item{method}{character string specifying the normalization method.
   Choices are \code{"none"}, \code{"median"}, \code{"loess"}, \code{"printtiploess"}, \code{"composite"} and \code{"robustspline"}.
   A partial string sufficient to uniquely identify the choice is permitted.}

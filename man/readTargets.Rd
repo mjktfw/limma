@@ -5,10 +5,12 @@
 Read a RNA targets file into dataframe.
 }
 \usage{
-readTargets(file="Targets.txt", sep="\t")
+readTargets(file="Targets.txt", path=NULL, sep="\t")
 }
 \arguments{
   \item{file}{character string giving the name of the targets file.}
+  \item{path}{character string giving the directory containing the file.
+       Can be omitted if the file is in the current working irectory.} 
   \item{sep}{the field separator character}
 }
 \details{

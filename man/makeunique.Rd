@@ -19,6 +19,7 @@ A character vector of the same length as \code{x}
 \author{Gordon Smyth}
 \seealso{
 \code{makeUnique} is called by \code{\link{merge.RGList}}.
+Compare with \code{\link[base]{make.unique}} in the base package.
 }
 \examples{
 x <- c("a","a","b")

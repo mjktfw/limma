@@ -32,6 +32,29 @@ isNumeric <- function(x) {
 	is.numeric(x) || (is.data.frame(x) && length(x)>0 && all(unlist(lapply(x,is.numeric))))
 }
 
+blockDiag <- function(...)
+#	Block diagonal matrix
+#	Gordon Smyth
+#	8 Feb 2004
+{
+	e <- list(...)
+	d <- matrix(unlist(lapply(e,dim)),ncol=2,byrow=TRUE)
+	if(nrow(d) != length(e)) stop("all arguments must be matrices")
+	dsum <- apply(d,2,sum)
+	z <- array(0,dsum)
+	dimnames(z) <- list(character(dsum[1]),character(dsum[2]))
+	coord <- c(0,0)
+	for (i in 1:length(e)) {
+		coord1 <- coord[1]+1:d[i,1]
+		coord2 <- coord[2]+1:d[i,2]
+		z[coord1,coord2] <- e[[i]]
+		rownames(z)[coord1] <- rownames(e[[i]],do.NULL=FALSE,prefix="")
+		colnames(z)[coord2] <- colnames(e[[i]],do.NULL=FALSE,prefix="")
+		coord <- coord+d[i,]
+	}
+	z
+}
+
 helpMethods <- function(genericFunction) {
 #	Prompt user for help topics on methods for generic function
 #	Gordon Smyth

@@ -219,10 +219,10 @@ qqt <- function(y,df=Inf,ylim=range(y),main="Student's t Q-Q Plot",xlab="Theoret
     invisible(list(x=x,y=y))
 }
 
-topTable <- function(fit,coef=1,number=10,genelist=NULL,adjust.method="holm",sort.by="B") {
+topTable <- function(fit,coef=1,number=10,genelist=NULL,adjust.method="holm",sort.by="B",resort.by=NULL) {
 #	Summary table of top genes, object-orientated version
 #	Gordon Smyth
-#	4 August 2003
+#	4 August 2003.  Last modified 16 Feb 2004.
 
 	if(!missing(genelist)) fit$genes <- genelist
 	toptable(fit=fit[c("coefficients","stdev.unscaled")],
@@ -232,13 +232,14 @@ topTable <- function(fit,coef=1,number=10,genelist=NULL,adjust.method="holm",sor
 		A=fit$Amean,
 		eb=fit[c("t","p.value","lods")],
 		adjust.method=adjust.method,
-		sort.by=sort.by)
+		sort.by=sort.by,
+		resort.by=resort.by)
 }
 
-toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.method="holm",sort.by="B",...) {
+toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.method="holm",sort.by="B",resort.by=NULL,...) {
 #	Summary table of top genes
 #	Gordon Smyth
-#	21 Nov 2002. Last revised 8 Nov 2003.
+#	21 Nov 2002. Last revised 16 Feb 2004.
 
 	if(is.null(eb)) {
 		fit$coefficients <- as.matrix(fit$coef)[,coef]
@@ -255,6 +256,7 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 	tstat <- as.matrix(eb$t)[,coef]
 	P.Value <- as.matrix(eb$p)[,coef]
 	B <- as.matrix(eb$lods)[,coef]
+	sort.by <- match.arg(sort.by,c("M","A","P","p","T","t","B"))
 	ord <- switch(sort.by,
 		M=order(abs(M),decreasing=TRUE),
 		A=order(A,decreasing=TRUE),
@@ -262,7 +264,8 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 		p=order(P.Value,decreasing=FALSE),
 		T=order(abs(tstat),decreasing=TRUE),
 		t=order(abs(tstat),decreasing=TRUE),
-		B=order(B,decreasing=TRUE),order(B,decreasing=TRUE))
+		B=order(B,decreasing=TRUE)
+	)
 	top <- ord[1:number]
 	i <- is.na(P.Value)
 	if(any(i))
@@ -280,6 +283,19 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 	if(!is.null(A)) tab <- data.frame(tab,A=A[top])
 	tab <- data.frame(tab,t=tstat[top],P.Value=P.Value[top],B=B[top])
 	rownames(tab) <- as.character(1:length(M))[top]
+	if(!is.null(resort.by)) {
+		resort.by <- match.arg(resort.by,c("M","A","P","p","T","t","B"))
+		ord <- switch(resort.by,
+			M=order(tab$M,decreasing=TRUE),
+			A=order(tab$A,decreasing=TRUE),
+			P=order(tab$P.Value,decreasing=FALSE),
+			p=order(tab$P.Value,decreasing=FALSE),
+			T=order(tab$t,decreasing=TRUE),
+			t=order(tab$t,decreasing=TRUE),
+			B=order(tab$lods,decreasing=TRUE)
+		)
+		tab <- tab[ord,]
+	}
 	tab
 }
 

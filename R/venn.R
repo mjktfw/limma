@@ -47,6 +47,7 @@ vennDiagram <- function(object,include="both",names,...) {
 	cex <- 1.5
 	plot(x=0,y=0,type="n",xlim=c(-4,4),ylim=c(-4,4),xlab="",ylab="",axes=FALSE,...)
 	for(circle in 1:nsets) {
+#		lines() better than symbols() to make circles follow aspect ratio of plot
 		lines(xcentres[circle]+r*cos(theta),ycentres[circle]+r*sin(theta))
 		text(xtext[circle],ytext[circle],names[circle],cex=cex)
 	}

@@ -1,1 +1,1 @@
-require("methods")
+library("methods")

@@ -212,7 +212,7 @@ gls.series <- function(M,design=NULL,ndups=2,spacing=1,correlation=NULL,weights=
 	ngenes <- nrow(M)
 	if(!is.null(weights)) weights <- unwrapdups(weights,ndups=ndups,spacing=spacing)
 	design <- design %x% rep(1,ndups)
-	cormatrix <- diag(rep(correlation,narrays)) %x% array(1,c(ndups,ndups))
+	cormatrix <- diag(rep(correlation,len=narrays)) %x% array(1,c(ndups,ndups))
 	diag(cormatrix) <- 1
 	stdev.unscaled <- beta <- matrix(NA,ngenes,nbeta,dimnames=list(NULL,coef.names))
 	sigma <- rep(NA,ngenes)
@@ -247,99 +247,6 @@ gls.series <- function(M,design=NULL,ndups=2,spacing=1,correlation=NULL,weights=
 		}
 	}
 	list(coefficients=drop(beta),stdev.unscaled=drop(stdev.unscaled),sigma=sigma,df.residual=df.residual,correlation=correlation)
-}
-
-duplicateCorrelation <- function(object,design=rep(1,ncol(M)),ndups=2,spacing=1,initial=0.8,trim=0.15,weights=NULL)
-{
-#	Estimate the correlation between duplicates given a series of arrays
-#	Gordon Smyth
-#	25 Apr 2002. Last revised 30 June 2003.
-
-	if(is(object,"MAList")) {
-		M <- object$M
-		if(missing(design) && !is.null(object$design)) design <- object$design
-		if(missing(ndups) && !is.null(object$printer$ndups)) ndups <- object$printer$ndups
-		if(missing(spacing) && !is.null(object$printer$spacing)) spacing <- object$printer$spacing
-		if(missing(weights) && !is.null(object$weights)) weights <- object$weights
-	}
-
-	M <- as.matrix(M)
-	if(ndups<2) {
-		warning("No duplicates: correlation between duplicates not estimable")
-		return( list(cor=NA,cor.genes=rep(NA,nrow(M))) )
-	}
-	require( "nlme" ) # need gls function
-	narrays <- ncol(M)
-	design <- as.matrix(design)
-	if(nrow(design) != narrays) stop("Number of rows of design matrix does not match number of arrays")
-	if(!is.null(weights)) {
-		weights <- as.matrix(weights)
-		if(any(dim(weights) != dim(M))) weights <- array(weights,dim(M))
-		M[weights < 1e-15 ] <- NA
-		weights[weights < 1e-15] <- NA
-	}
-	nbeta <- ncol(design)
-	M <- unwrapdups(M,ndups=ndups,spacing=spacing)
-	ngenes <- nrow(M)
-	if(!is.null(weights)) weights <- unwrapdups(weights,ndups=ndups,spacing=spacing)
-	design <- design %x% rep(1,ndups)
-	Array <- rep(1:narrays,rep(ndups,narrays))
-	rho <- rep(NA,ngenes)
-	for (i in 1:ngenes) {
-		y <- drop(M[i,])
-		if(any(!is.finite(y))) y[!is.finite(y)] <- NA
-		if(any(diff(Array[is.finite(y)])==0) && sum(!is.na(y)) > nbeta+1)
-		if(!is.null(weights)) {
-			w <- 1/drop(weights[i,])
-			rho[i] <- coef(gls(y~design-1,correlation=corCompSymm(initial,form=~1|Array,fixed=FALSE),weights=~w,na.action=na.omit,control=list(singular.ok=TRUE,returnObject=TRUE,apVar=FALSE))$modelStruct,FALSE)
-		} else
-			rho[i] <- coef(gls(y~design-1,correlation=corCompSymm(initial,form=~1|Array,fixed=FALSE),na.action=na.omit,control=list(singular.ok=TRUE,returnObject=TRUE,apVar=FALSE))$modelStruct,FALSE)
-	}
-	rhom <- tanh(mean(atanh(rho),trim=trim,na.rm=TRUE))
-	list(cor=rhom,cor.genes=rho)
-}
-
-
-dupcor.series <- function(M,design=rep(1,ncol(M)),ndups=2,spacing=1,initial=0.8,trim=0.15,weights=NULL)
-{
-#	Estimate the correlation between duplicates given a series of arrays
-#	Gordon Smyth
-#	25 Apr 2002. Last revised 28 Jan 2003.
-
-	M <- as.matrix(M)
-	if(ndups<2) {
-		warning("No duplicates: correlation between duplicates not estimable")
-		return( list(cor=NA,cor.genes=rep(NA,nrow(M))) )
-	}
-	require( "nlme" ) # need gls function
-	narrays <- ncol(M)
-	if(is.vector(design)) dim(design) <- c(narrays,1)
-	if(nrow(design) != narrays) stop("Number of rows of design matrix does not match number of arrays")
-	if(!is.null(weights)) {
-		weights <- as.matrix(weights)
-		if(any(dim(weights) != dim(M))) weights <- array(weights,dim(M))
-		M[weights < 1e-15 ] <- NA
-		weights[weights < 1e-15] <- NA
-	}
-	nbeta <- ncol(design)
-	M <- unwrapdups(M,ndups=ndups,spacing=spacing)
-	ngenes <- nrow(M)
-	if(!is.null(weights)) weights <- unwrapdups(weights,ndups=ndups,spacing=spacing)
-	design <- design %x% rep(1,ndups)
-	Array <- rep(1:narrays,rep(ndups,narrays))
-	rho <- rep(NA,ngenes)
-	for (i in 1:ngenes) {
-		y <- drop(M[i,])
-		if(any(!is.finite(y))) y[!is.finite(y)] <- NA
-		if(any(diff(Array[is.finite(y)])==0) && sum(!is.na(y)) > nbeta+1)
-		if(!is.null(weights)) {
-			w <- 1/drop(weights[i,])
-			rho[i] <- coef(gls(y~design-1,correlation=corCompSymm(initial,form=~1|Array,fixed=FALSE),weights=~w,na.action=na.omit,control=list(singular.ok=TRUE,returnObject=TRUE,apVar=FALSE))$modelStruct,FALSE)
-		} else
-			rho[i] <- coef(gls(y~design-1,correlation=corCompSymm(initial,form=~1|Array,fixed=FALSE),na.action=na.omit,control=list(singular.ok=TRUE,returnObject=TRUE,apVar=FALSE))$modelStruct,FALSE)
-	}
-	rhom <- tanh(mean(atanh(rho),trim=trim,na.rm=TRUE))
-	list(cor=rhom,cor.genes=rho)
 }
 
 contrasts.fit <- function(fit,contrasts) {

@@ -92,7 +92,8 @@ After the above steps the results may be displayed or further processed using:
 
 \author{Gordon Smyth}
 \references{
-Smyth, G. K. (2003). Linear models and empirical Bayes methods for assessing differential expression in microarray experiments. \url{http://www.statsci.org/smyth/pubs/ebayes.pdf}
+Smyth, G. K. (2004). Linear models and empirical Bayes methods for assessing differential expression in microarray experiments.
+\emph{Statistical Applications in Genetics and Molecular Biology}, \bold{3}, No. 1, Article 3. \url{http://www.bepress.com/sagmb/vol3/iss1/art3}
 
 Smyth, G. K., Michaud, J., and Scott, H. (2003). The use of within-array duplicate spots for assessing differential expression in microarray experiments.
 \url{http://www.statsci.org/smyth/pubs/dupcor.pdf}

@@ -31,7 +31,7 @@ An overview of linear model functions in limma is given by \link{5.LinearModels}
 \author{Gordon Smyth}
 \examples{
 M <- matrix(rnorm(10*6),10,6)
-cor.out <- dupcor.series(M)
+cor.out <- duplicateCorrelation(M)
 #  See cor.out$cor for estimated common correlation
 fit <- gls.series(M,correlation=cor.out$cor)
 }
