@@ -72,8 +72,13 @@ dupcor.series <- function(M,design=rep(1,ncol(M)),ndups=2,spacing=1,initial=0.8,
 {
 #	Estimate the correlation between duplicates given a series of arrays
 #	Gordon Smyth
-#	25 Apr 2002.
+#	25 Apr 2002.  Last modified 5 May 2004.
 #	This function is deprecated 2 Feb 2004.
 
-	duplicateCorrelation(object=M,design=design,ndups=ndups,spacing=spacing,trim=trim,weights=weights)
+	.Deprecated("duplicateCorrelation")
+	m <- as.list(match.call())
+	m[[1]] <- as.name("duplicateCorrelation")
+	m$object <- m$M
+	m$M <- m$initial <- NULL
+	eval(as.call(m))
 }

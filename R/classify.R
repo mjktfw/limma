@@ -10,9 +10,13 @@ setMethod("show","TestResults",function(object) {
 })
 
 classifyTests <- function(object,cor.matrix=NULL,design=NULL,contrasts=diag(ncol(design)),df=Inf,p.value=0.01,fstat.only=FALSE)
+#	Gordon Smyth
+#	Last modified 5 May 2004.
 {
 	.Deprecated("classifyTestsF")
-	classifyTestsF(object=object,cor.matrix=cor.matrix,design=design,contrasts=contrasts,df=df,p.value=p.value,fstat.only=FALSE)
+	m <- match.call()
+	m[[1]] <- as.name("classifyTestsF")
+	eval(m)
 }
 
 classifyTestsF <- function(object,cor.matrix=NULL,design=NULL,contrasts=diag(ncol(design)),df=Inf,p.value=0.01,fstat.only=FALSE) {
@@ -93,9 +97,12 @@ classifyTestsF <- function(object,cor.matrix=NULL,design=NULL,contrasts=diag(nco
 FStat <- function(object,cor.matrix=NULL,design=NULL,contrasts=diag(ncol(design)))
 #	Compute overall F-tests given a matrix of t-statistics
 #	Gordon Smyth
-#	24 February 2004.
+#	24 February 2004.  Last modified 5 May 2004.
 {
-	classifyTestsF(object=object,cor.matrix=cor.matrix,design=design,contrasts=contrasts,fstat.only=TRUE)
+	m <- as.list(match.call())
+	m[[1]] <- as.name("classifyTestsF")
+	m$fstat.only <- TRUE
+	eval(as.call(m))
 }
 
 classifyTestsT <- function(object,t1=4,t2=3) {

@@ -191,13 +191,38 @@ merge.RGList <- function(x,y,...) {
 	if(!is(y,"RGList")) stop("both x and y must be RGList objects")
 	genes1 <- rownames(x$R)
 	if(is.null(genes1)) genes1 <- rownames(x$G)
+	if(is.null(genes1)) genes1 <- x$genes$ID
 	genes2 <- rownames(y$R)
 	if(is.null(genes2)) genes2 <- rownames(y$G)
+	if(is.null(genes2)) genes2 <- y$genes$ID
 	if(is.null(genes1) || is.null(genes2)) stop("Need row names to align on") 
 
 	fields1 <- names(x)
 	fields2 <- names(y)
-	if(!identical(fields1,fields2)) stop("The two RGLists have different elements")
+	if(!identical(fields1,fields2)) stop("The two RGLists have different components")
+
+	ord2 <- match(makeUnique(genes1), makeUnique(genes2))
+	for (i in fields1) x[[i]] <- cbind(x[[i]],y[[i]][ord2,])
+	x
+}
+
+merge.MAList <- function(x,y,...) {
+#  Merge MAList y into x aligning by row names
+#  Gordon Smyth
+#  7 May 2004
+
+	if(!is(y,"MAList")) stop("both x and y must be MAList objects")
+	genes1 <- rownames(x$M)
+	if(is.null(genes1)) genes1 <- rownames(x$A)
+	if(is.null(genes1)) genes1 <- x$genes$ID
+	genes2 <- rownames(y$M)
+	if(is.null(genes2)) genes2 <- rownames(y$A)
+	if(is.null(genes2)) genes2 <- y$genes$ID
+	if(is.null(genes1) || is.null(genes2)) stop("Need row names to align on") 
+
+	fields1 <- names(x)
+	fields2 <- names(y)
+	if(!identical(fields1,fields2)) stop("The two MALists have different components")
 
 	ord2 <- match(makeUnique(genes1), makeUnique(genes2))
 	for (i in fields1) x[[i]] <- cbind(x[[i]],y[[i]][ord2,])

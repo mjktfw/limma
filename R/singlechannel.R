@@ -4,7 +4,7 @@ lmscFit <- function(object,design,correlation)
 #	Fit single channel linear model for each gene to a series of microarrays
 #	allowing for known correlation between the channels on each spot.
 #	Gordon Smyth
-#	14 March 2004.  Last modified 29 April 2004.
+#	14 March 2004.  Last modified 19 April 2004.
 {
 #	Check input
 	M <- as.matrix(object$M)
@@ -47,6 +47,8 @@ lmscFit <- function(object,design,correlation)
 	dimnames(fit$stdev.unscaled) <- dimnames(fit$stdev.unscaled) <- dimnames(fit$coefficients)
 	fit$design <- design
 	fit$correlation <- correlation
+	fit$genes <- object$genes
+	fit$Amean <- rowMeans(A,na.rm=TRUE)
 	new("MArrayLM",fit)
 }
 

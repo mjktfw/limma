@@ -11,14 +11,14 @@ auROC(truth, stat)
   \item{truth}{numeric vector of 0 and 1 indicating whether the null or alternative respectively is true for each case.
   If \code{stat} is missing then \code{truth} is assuming to be already sorted in decreasing test statistic order.}
   \item{stat}{numeric vector containing test statistics.
-  Hypotheses are to be reject if \code{stat} exceeds a given threshold.}
+  Hypotheses are to be rejected if \code{stat} exceeds a given threshold.}
 }
 \details{
-The values in each column of \code{tstat} are assumed to follow a mixture of an ordinary t-distribution, with mixing proportion \code{1-proportion}, and \code{(v0+v1)/v1} times a t-distribution, with mixing proportion \code{proportion}.
+This function computes the exact area under an empirical ROC curve.
+The number of true and false discoveries are determined by how well the true states represented by \code{truth} match up with the observed statistics given by \code{stat}.
 }
 \value{
-Numeric vector giving area under the curve, 1 being perfect and 0 being the minimum.
-\code{NULL} is truth has zero length.
+Numeric vector giving area under the curve, 1 being perfect and 0 being the minimum, or \code{NULL} if \code{truth} has zero length.
 }
 \seealso{
 \code{\link[ROC]{AUC}}

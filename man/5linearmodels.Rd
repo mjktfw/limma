@@ -95,7 +95,7 @@ After the above steps the results may be displayed or further processed using:
 \item{ \code{\link{write.fit}} }{
 	Writes an \code{MarrayLM} object to a file.}
 }
-When evaluating test procedures with simulated or known results, the utility function \code{\link{auROC}} can be used to compute the area under the Receiver Operating Curve for a the tesst results for a given probe.
+When evaluating test procedures with simulated or known results, the utility function \code{\link{auROC}} can be used to compute the area under the Receiver Operating Curve for the test results for a given probe.
 }
 
 \author{Gordon Smyth}

@@ -14,7 +14,7 @@
 <p align="center">Gordon Smyth, Natalie Thorne and James Wettenhall<br>
 The
 Walter and Eliza Hall Institute of Medical Research<br>
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->30 March 2004<!--webbot bot="Timestamp" i-checksum="27279" endspan --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->28 April 2004<!--webbot bot="Timestamp" i-checksum="28334" endspan --></p>
 
 <h2>Table of Contents</h2>
 
@@ -454,7 +454,7 @@ like to make between the RNA samples. For very simple experiments, you may not
 need to specify the contrast matrix.</p>
 <p>If you have data from Affymetrix experiments, from single-channel spotted 
 microarrays or from spotted microarrays using a common reference, then linear 
-modeling is the same a ordinary analysis of variance or multiple regression 
+modeling is the same as ordinary analysis of variance or multiple regression 
 except that a model is fitted for every gene. With data of this type you can 
 create design matrices as one would do for ordinary modeling with univariate 
 data. If you have  data from spotted microarrays using a direct design, 
@@ -1522,10 +1522,10 @@ to conduct the usual analysis of the arrays using generalized least squares.</p>
 for each gene, and then take a trimmed mean on the atanh scale to estimate the 
 overall correlation. This command takes a lot of time, perhaps as much as an 
 hour for a series of arrays.</p>
-<pre>&gt; cor &lt;- duplicateCorrelation(MA,design,ndups=2) # This is a very slow computation!
+<pre>&gt; cor &lt;- duplicateCorrelation(MA,design,ndups=2) # This is a slow computation!
 &gt; cor$consensus.correlation
 [1] 0.571377
-&gt; boxplot(cor$cor.genes)</pre>
+&gt; boxplot(cor$all.correlations)</pre>
 <p><img border="0" src="bob/corbox.png" width="290" height="724"></p>
 <pre>&gt; fit &lt;- lmFit(MA,design,ndups=2,correlation=0.571377)
 &gt; fit &lt;- eBayes(fit)
@@ -1729,6 +1729,17 @@ similar:</p>
 <pre>&gt; plotDensities(MA.MpAq)</pre>
 <p align="center">
 <img border="0" src="apoai/densRG.MpAq.png" width="590" height="590"></p>
+
+
+<h2>Conventions</h2>
+
+
+<p>Where possible, limma tries to use the convention that class names are in 
+upper CamelCase or PascalCase, i.e., the first letter of each word is 
+capitalized, while function names are in lower camelCase, i.e., as for CamelCase 
+but the first letter is lowercase. When periods appear in function names, the 
+first word should be an action while the second word is the name of a class of 
+variable on which the function acts.</p>
 
 
 <h2>Acknowledgements</h2>

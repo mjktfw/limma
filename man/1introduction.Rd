@@ -3,7 +3,7 @@
 \title{Introduction to the LIMMA Package}
 \description{
 LIMMA is a library for the analysis of gene expression microarray data, especially the use of linear models for analysing designed experiments and the assessment of differential expression.
-LLIMMA provides the ability to analyse comparisons between many RNA targets simultaneously in arbitrary complicated designed experiments.
+LIMMA provides the ability to analyse comparisons between many RNA targets simultaneously in arbitrary complicated designed experiments.
 Empirical Bayesian methods are used to provide stable results even when the number of arrays is small.
 The normalization and data analysis functions are for two-colour spotted microarrays.
 The linear model and differential expression functions apply to all microarrays including Affymetrix and other multi-array oligonucleotide experiments.

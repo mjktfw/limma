@@ -26,6 +26,7 @@ dupcor.series(M,design=rep(1,ncol(M)),ndups=2,spacing=1,initial=0.8,trim=0.15,we
 \value{
   A list with components
   \item{consensus.correlation}{the average estimated inter-duplicate correlation. The average is the 0.1 trimmed mean of the correlations for individual genes on the tanh-transformed scale.}
+  \item{cor}{same as \code{consensus.correlation}, for compatibility with earlier versions of the software}
   \item{all.correlations}{a numeric vector of length \code{nrow(M)/ndups} giving the individual genewise correlations.}
 }
 \details{
