@@ -7,16 +7,17 @@ Normalizes expression intensities so that the intensities or log-ratios have sim
 }
 
 \usage{
-normalizeBetweenArrays(object, method, ties=TRUE, targets=NULL)
+normalizeBetweenArrays(object, method, ties=TRUE, targets=NULL, vsn.arg=NULL)
 }
 
 \arguments{
   \item{object}{an \code{matrix} or \code{\link[limma:malist]{MAList}} object containing expression ratios for a series of arrays}
   \item{method}{character string specifying the normalization method to be used.
-  Choices are \code{"none"}, \code{"scale"}, \code{"quantile"}, \code{"Aquantile"}, \code{"Gquantile"}, \code{"Rquantile"} or \code{"Tquantile"}.
+  Choices are \code{"none"}, \code{"scale"}, \code{"quantile"}, \code{"Aquantile"}, \code{"Gquantile"}, \code{"Rquantile"}, \code{"Tquantile"} or \code{"vsn"}.
   A partial string sufficient to uniquely identify the choice is permitted.}
   \item{ties}{logical, if \code{TRUE} then ties are treated in a careful way during quantile normalization.  This takes longer but is more accurate.}
   \item{targets}{vector, factor or matrix of length twice the number of arrays, used to indicate target groups if \code{method="Tquantile"}}
+  \item{vsn.arg}{a list of arguments to be passed to \code{vsn} if \code{method="vsn"}, for example \code{vsn.arg=list(verbose=FALSE,niter=4)}}
 }
 
 \details{
@@ -38,6 +39,8 @@ These two methods are called "q" and "Aq" respectively in Yang and Thorne (2003)
 
 \code{method="Gquantile"} ensures that the green (first) channel has the same empirical distribution across arrays, leaving the M-values (log-ratios) unchanged.
 \code{method="Rquantile"} ensures that the red (second) channel has the same empirical distribution across arrays, leaving the M-values (log-ratios) unchanged.
+
+\code{method="vsn"} uses the \code{\link[vsn]{vsn}} function from the vsn package.
 
 If \code{object} is a \code{matrix} then the scale or quantile normlization will be applied to the columns.
 Applying \code{method="Aquantile"} when \code{object} is a \code{matrix} will produce an error.

@@ -366,22 +366,47 @@ plotPrintorder <- function(object,layout,start="topleft",slide=1,method="loess",
 
 #  BETWEEN ARRAY NORMALIZATION
 
-normalizeBetweenArrays <- function(object, method="scale", ties=TRUE, targets=NULL) {
+normalizeBetweenArrays <- function(object, method="scale", ties=TRUE, targets=NULL, vsn.arg=NULL) {
 #	Normalize between arrays
 #	Gordon Smyth
-#	12 Apri 2003.  Last revised 6 April 2004.
+#	12 Apri 2003.  Last revised 10 May 2004.
 
-	choices <- c("none","scale","quantile","Aquantile","Gquantile","Rquantile","Tquantile")
+	choices <- c("none","scale","quantile","Aquantile","Gquantile","Rquantile","Tquantile","vsn")
 	method <- match.arg(method,choices)
+	if(method=="vsn") require("vsn")
 	if(is(object,"matrix")) {
-		if(!(method %in% c("none","scale","quantile"))) stop("method not applicable to matrix objects")
+		if(!(method %in% c("none","scale","quantile","vsn"))) stop("method not applicable to matrix objects")
 		return(switch(method,
 			none = object,
 			scale = normalizeMedianDeviations(object),
-			quantile = normalizeQuantiles(object, ties=ties)
+			quantile = normalizeQuantiles(object, ties=ties),
+			vsn = {
+				vcall <- as.call(c(list(as.name("vsn"),intensities=as.name("object")),vsn.arg))
+				eval(vcall)@exprs/log(2)
+			}
 		))
 	}
-	if(is.null(object$M) || is.null(object$A)) stop("object must be a list with M and A components")
+	if(method=="vsn") {
+		y <- NULL
+		if(!is.null(object$G) && !is.null(object$R)) {
+			y <- cbind(object$G,object$R)
+			object$G <- object$R <- NULL
+		}
+		if(!is.null(object$M) && !is.null(object$A)) y <- 2^cbind(object$A-object$M/2,object$A+object$M/2)
+		if(is.null(y)) stop("object doesn't appear to be RGList or MAList")
+		vcall <- as.call(c(list(as.name("vsn"),intensities=as.name("y")),vsn.arg))
+		y <- eval(vcall)
+		n2 <- ncol(y@exprs)/2
+		G <- y@exprs[,1:n2]/log(2)
+		R <- y@exprs[,n2+(1:n2)]/log(2)
+		object$M <- R-G
+		object$A <- (R+G)/2
+		if(length(y@description@preprocessing)) object$preprocessing <- y@description@preprocessing
+		if(!is(object,"MAList")) object <- new("MAList",unclass(object))
+		return(object)
+	}
+	if(is(object,"RGList")) object <- MA.RG(object)
+	if(is.null(object$M) || is.null(object$A)) stop("object doesn't appear to be RGList or MAList object")
 	switch(method,
 		scale = {
 			object$M <- normalizeMedianDeviations(object$M)
