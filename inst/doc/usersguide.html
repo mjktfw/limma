@@ -1,0 +1,805 @@
+<html>
+
+<head>
+<title>LIMMA User's Guide</title>
+<link href="style.css" type="text/css" rel="stylesheet">
+</head>
+
+<body>
+
+<h1>limma: Linear Models for Microarray Data</h1>
+
+<h1>User's Guide</h1>
+
+<p align="center">Gordon Smyth<br>
+Walter and Eliza Hall Institute of Medical Research<br>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->24 April 2003<!--webbot bot="Timestamp" i-checksum="28310" endspan --></p>
+
+<h2>Table of Contents</h2>
+
+<ol>
+  <li>Introduction</li>
+  <li>Reading in Intensity Data</li>
+  <li>Reading in Gene List Data</li>
+  <li>Spot Quality Weights</li>
+  <li>One-Sample Experiments</li>
+  <li>Two-Sample Experiments</li>
+  <li>Factorial Experiments</li>
+  <li>Microarrays with Multiple Prints of each Gene</li>
+  <li>Affymetrix and Single-Color Microarrays</li>
+</ol>
+
+<h2>1. Introduction</h2>
+
+<p>This tutorial was prepared using R Version 1.7.0 for Windows and limma 
+Version 0.9.7. The latest version of limma is always available from
+<a href="http://bioinf.wehi.edu.au/limma/">http://bioinf.wehi.edu.au/limma/</a>.</p>
+
+<p>Sections 1 to 5 of this tutorial deal with two-colour spotted microarrays.  Section 6 
+deals with Affymetrix and other single-color arrays.</p>
+
+<h2>2. Reading in Intensity Data</h2>
+
+<p>We assume that an experiment has been conducted with one or more microarrays 
+and that each array has been scanned to produce a TIFF image. We assume that 
+output is available from an image analysis program such a GenePix, SPOT, 
+ImageGene or QuantArray which gives the red and green foreground and background 
+intensities for each spot on each array. The output for each array is assumed to 
+be in a separate file.</p>
+
+<p>Let <code>files</code> be a character vector containing the names of the 
+image analysis output files. The foreground and background intensities can be 
+read into an RG-list using the command</p>
+<pre>&gt; RG &lt;- read.maimages(files,source=&quot;&lt;imageanalysisprogram&gt;&quot;,path=&quot;&lt;directory&gt;&quot;)</pre>
+<p>where <code>&lt;imageanalysisprogram&gt;</code> is the name of the image analysis 
+program and <code>&lt;directory&gt;</code> is the full path of the directory 
+containing the files. If the files are in the current R working directory then 
+the argument <code>path</code> can be omitted. If the files are SPOT output and 
+have common extension &quot;spot&quot; then they can 
+be read using</p>
+<pre>&gt; files &lt;- dir(pattern=&quot;*\\.spot&quot;)
+&gt; RG &lt;- read.maimages(files,source=&quot;spot&quot;)</pre>
+<p>If they are GenePix output files and have extension &quot;gpr&quot; then they 
+can be read</p>
+<pre>&gt; files &lt;- dir(pattern=&quot;*\\.gpr&quot;)
+&gt; RG &lt;- read.maimages(files,source=&quot;genepix&quot;)</pre>
+<p>Consult the help entry for <code>read.maimages</code> to see which other 
+image analysis programs are supported.</p>
+<h2>3. Reading in Gene List Data</h2>
+<p>If the arrays have been scanned with an Axon scanner, then the gene names 
+will be available in a GenePix Array List (GAL) file. If the GAL file has 
+extension &quot;gal&quot; and is in the current working directory, then it may be read into a data.frame 
+by</p>
+<pre>&gt; gal &lt;- readGAL()</pre>
+<p>The print layout of the arrays can be extracted from the GAL by</p>
+<pre>&gt; layout &lt;- getLayout(gal)</pre>
+<h2>4. Spot Quality Weights</h2>
+<p>It is desirable to use the image analysis to compute a weight for each spot 
+between 0 and 1 which indicates the reliability of the acquired intensities at 
+that spot. For example, if the SPOT image analysis program is used and the size 
+of an ideal perfectly circular spot is known to be 100 pixels, then one might 
+use</p>
+<pre>&gt; RG &lt;- read.maimages(files,source=&quot;spot&quot;,wt.fun=wtarea(100))</pre>
+<p>The function <code>wtarea(100)</code> gives full weight to spots with area 
+100 pixels and down-weights smaller and larger spots. Spots which have zero area 
+or are more than twice the ideal size are given zero weight. This will create a 
+component called <code>weights</code> in the RG list. The weights will be used
+automatically by functions such as <code>normalizeWithinArrays</code> which operate on 
+the RG-list.</p>
+<p>With GenePix data</p>
+<pre>&gt; RG &lt;- read.maimages(files,source=&quot;genepix&quot;,wt.fun=wtflags(0.1))</pre>
+<p>will give weight 0.1 to any spot which receives a negative flag from the 
+GenePix program.</p>
+<p>Computing quality weights depends on the image analysis program. Consult the 
+help entry <code>QualityWeights</code> to see what quality weight functions are 
+available.</p>
+<h2>5. One-Sample Experiments</h2>
+
+<h3>Example. Swirl Zebrafish Data</h3>
+
+<p>In this example we assume that the data is provided as a GAL file and raw SPOT 
+output files.</p>
+
+<p><b>Background</b>. The 
+experiment was carried out using
+<a href="http://www.abc.net.au/quantum/s188488.htm">zebrafish</a> as a model 
+organism to study the early development in vertebrates. Swirl is a point mutant 
+in the BMP2 gene that affects the dorsal/ventral body axis. The main goal of the 
+Swirl experiment is to identify genes with altered expression in the Swirl 
+mutant compared to wild-type zebrafish.</p>
+
+<p><b>The arrays</b>. The microarrays used in this experiment were printed with 
+8448 probes (spots), including 768 control spots. The array printer uses a print 
+head with a 4x4 arrangement of print-tips and so the microarrays are partitioned 
+into a 4x4 grid of tip groups. Each grid consists of 22x24 spots that were 
+printed with a single print-tip. The gene name associated with each spot is 
+recorded in a GenePix array list (GAL) file:</p>
+
+<pre>&gt; gal &lt;- readGAL(&quot;fish.gal&quot;)
+&gt; gal[1:30,]
+   Block Row Column      ID     Name
+1      1   1      1 control    geno1
+2      1   1      2 control    geno2
+3      1   1      3 control    geno3
+4      1   1      4 control    3XSSC
+5      1   1      5 control    3XSSC
+6      1   1      6 control     EST1
+7      1   1      7 control    geno1
+8      1   1      8 control    geno2
+9      1   1      9 control    geno3
+10     1   1     10 control    3XSSC
+11     1   1     11 control    3XSSC
+12     1   1     12 control    3XSSC
+13     1   1     13 control     EST2
+14     1   1     14 control     EST3
+15     1   1     15 control     EST4
+16     1   1     16 control    3XSSC
+17     1   1     17 control    Actin
+18     1   1     18 control    Actin
+19     1   1     19 control    3XSSC
+20     1   1     20 control    3XSSC
+21     1   1     21 control    3XSSC
+22     1   1     22 control    3XSSC
+23     1   1     23 control    Actin
+24     1   1     24 control    Actin
+25     1   2      1 control     ath1
+26     1   2      2 control    Cad-1
+27     1   2      3 control   DeltaB
+28     1   2      4 control     Dlx4
+29     1   2      5 control ephrinA4
+30     1   2      6 control     FGF8</pre>
+<p><b>The hybridizations</b>. Two sets of dye-swap experiments were performed 
+making a total of four replicate hybridizations. Each of 
+the arrays compares RNA from swirl fish with RNA from normal (&quot;wild type&quot;) fish. 
+The experimenters have prepared a tab-delimited file called &quot;SwirlSamples.txt&quot; 
+which describes the four hybridizations:</p>
+<pre></pre>
+<pre>&gt; SwirlSample &lt;- read.table(&quot;SwirlSample.txt&quot;,header=TRUE,sep=&quot;\t&quot;,as.is=TRUE)
+&gt; SwirlSample
+  SlideNumber     FileName       Cy3       Cy5      Date
+1          81 swirl.1.spot     swirl wild type 2001/9/20
+2          82 swirl.2.spot wild type     swirl 2001/9/20
+3          93 swirl.3.spot     swirl wild type 2001/11/8
+4          94 swirl.4.spot wild type     swirl 2001/11/8</pre>
+<p>We see that slide numbers 81, 82, 93 and 94 were used to make the arrays. On 
+slides 81 and 93, swirl RNA was labelled with green (Cy3) dye and wild type RNA 
+was labelled with red (Cy5) dye. On slides 82 and 94, the labelling was the 
+other way around. </p>
+<p><b>Reading the first array</b>. Each of the four hybridized arrays was scanned 
+on an Axon scanner to produce a TIFF image, which was then processed using the image analysis 
+software <a href="http://www.cmis.csiro.au/iap/Spot/spotmanual.htm">SPOT</a>. 
+The data from the arrays are stored in the four output files listed above. 
+Normally we read in data from all the arrays into R at the same time, but for 
+this tutorial we will start off by reading in the first array manually and doing 
+some exploration:</p>
+<pre>&gt; swirl.1.spot &lt;- read.table(&quot;swirl.1.spot&quot;,header=TRUE)
+&gt; names(swirl.1.spot)
+ [1] &quot;indexs&quot;            &quot;grid.r&quot;            &quot;grid.c&quot;            &quot;spot.r&quot;           
+ [5] &quot;spot.c&quot;            &quot;area&quot;              &quot;Gmean&quot;             &quot;Gmedian&quot;          
+ [9] &quot;GIQR&quot;              &quot;Rmean&quot;             &quot;Rmedian&quot;           &quot;RIQR&quot;             
+[13] &quot;bgGmean&quot;           &quot;bgGmed&quot;            &quot;bgGSD&quot;             &quot;bgRmean&quot;          
+[17] &quot;bgRmed&quot;            &quot;bgRSD&quot;             &quot;valleyG&quot;           &quot;valleyR&quot;          
+[21] &quot;morphG&quot;            &quot;morphG.erode&quot;      &quot;morphG.close.open&quot; &quot;morphR&quot;           
+[25] &quot;morphR.erode&quot;      &quot;morphR.close.open&quot; &quot;logratio&quot;          &quot;perimeter&quot;        
+[29] &quot;circularity&quot;       &quot;badspot&quot;          </pre>
+<p>We will use <code>Rmean</code> and <code>Gmean</code> as foreground 
+intensities and <code>morphR</code> and <code>morphG</code> as background 
+intensities. We can extract M and A-values from the array and do some initial 
+data exploration.</p>
+<pre>&gt; M &lt;- m.spot(swirl.1.spot)
+&gt; A &lt;- a.spot(swirl.1.spot)
+&gt; plot(A,M,pch=16,cex=0.1)
+&gt; lines(lowess(A,M),col=&quot;blue&quot;)
+</pre>
+<pre></pre>
+<p align="center"><img border="0" src="swirl/maplot.png" width="862" height="645"></p>
+<pre>&gt; layout &lt;- getLayout(gal)
+&gt; layout
+$ngrid.r
+[1] 12
+
+$ngrid.c
+[1] 4
+
+$nspot.r
+[1] 22
+
+$nspot.c
+[1] 22
+
+&gt; imageplot(M,layout,zlim=c(-3,3))
+</pre>
+<p align="center">
+<img border="0" src="swirl/imagem.png" width="475" height="481"></p>
+<p>The <code>imageplot</code> function lies the slide on its side, so the first print-tip group is bottom left 
+in this plot. We can see a red 
+streak across the middle two grids of the 3rd row. Spots which are affected by 
+this artefact will have suspect M-values. These spots are also visible as a 
+cluster in the top right of the MA-plot.</p>
+<p>It is also interesting to look at the variation of background values over the 
+array:</p>
+<pre>&gt; Rb &lt;- swirl.1.spot$morphR
+&gt; Gb &lt;- swirl.1.spot$morphG
+&gt; imageplot(log(Rb,2),layout,low=&quot;white&quot;,high=&quot;red&quot;)
+&gt; imageplot(log(Gb,2),layout,low=&quot;white&quot;,high=&quot;green&quot;)</pre>
+<p align="center"><img border="0" src="swirl/imagerb.png" width="442" height="451"></p>
+<p align="center">
+<img border="0" src="swirl/imagebg.png" width="442" height="451"></p>
+<p><b>Reading all the data</b>. Normally we read in all the arrays at once 
+rather than one at a time as above.</p>
+<pre>&gt; slides &lt;- SwirlSample$FileName</pre>
+<p>Now we will read the foreground and background intensities from all the 
+arrays into one list. The function <code>rg.series.spot</code> assumes by 
+default that the actual file names include have the extension <code>.spot</code>.</p>
+<pre>&gt; RG &lt;- read.maimages(slides,source=&quot;spot&quot;)
+Read swirl.1.spot 
+Read swirl.2.spot 
+Read swirl.3.spot 
+Read swirl.4.spot 
+&gt; names(RG)
+[1] &quot;R&quot;  &quot;G&quot;  &quot;Rb&quot; &quot;Gb&quot;</pre>
+<p>The following plot displays the individual print-tip loess curves for the 
+third array (using a command from the SMA library):</p>
+<pre>&gt; plot.print.tip.lowess(RG,layout,pch=16,cex=0.1,image=3)</pre>
+<p align="center">
+<img border="0" src="swirl/tiploess.png" width="643" height="613"></p>
+<p>Now the same curves after normalization:</p>
+<pre>&gt; plot.print.tip.lowess(RG,layout,pch=16,cex=0.1,image=3,norm=&quot;p&quot;)</pre>
+<p align="center">
+<img border="0" src="swirl/tiploessnorm.png" width="643" height="613"></p>
+<p>&nbsp;</p>
+<p>Now store the M and A-values without normalizing:</p>
+<pre>&gt; MAraw &lt;- MA.RG(RG)
+&gt; names(MAraw)
+[1] &quot;M&quot;  &quot;A&quot;</pre>
+<p>Boxplots can further display differences between the M-values in each 
+print-tip group on the third array. The colouring used for the boxes is the same 
+as that used for the loess curves in the previous two scatterplots.</p>
+<pre>&gt; plot.scale.box(MAraw$M[,3],layout,col=rainbow(layout$ngrid.r*layout$ngrid.c))
+&gt; abline(0,0)</pre>
+<p align="center">
+<img border="0" src="swirl/tipboxraw.png" width="805" height="532"></p>
+<p>Now the same thing but after print-tip loess normalization. (Note that <code>
+normalizeWithinArrays</code> does print-tip loess normalization by default.)</p>
+<pre>&gt; MA &lt;- normalizeWithinArrays(RG,layout)
+&gt; plot.scale.box(MA$M[,3],layout,col=rainbow(layout$ngrid.r*layout$ngrid.c))
+&gt; abline(0,0)</pre>
+<p align="center">
+<img border="0" src="swirl/tipboxnorm.png" width="805" height="532"></p>
+<p>We have normalized the M-values with each array. A further question is 
+whether normalization is required between the arrays. The following plot shows 
+overall boxplots of the M-values for the four arrays.</p>
+<pre>&gt; boxplot(MA$M~col(MA$M),names=slides)</pre>
+<p align="center"><img border="0" src="swirl/scalebox.png" width="644" height="665"></p>
+<p>There is some evidence that the different arrays have different spreads of 
+M-values, so we will scale normalize between the arrays.</p>
+<pre>&gt; MA &lt;- normalizeBetweenArrays(MA)
+&gt; boxplot(MA$M~col(MA$M),names=slides)</pre>
+<p align="center"><img border="0" src="swirl/scalebox2.png" width="497" height="463"></p>
+<p><b>Linear model</b>. Now estimate the average M-value for each gene. We do this by fitting a 
+simple linear model for each gene. The negative numbers in the design matrix 
+indicate the dye-swaps.</p>
+<pre>&gt; design &lt;- c(-1,1,-1,1)
+&gt; fit &lt;- lm.series(MA$M,design)
+&gt; names(fit)
+[1] &quot;coefficients&quot; &quot;stdev.unscaled&quot; &quot;sigma&quot; &quot;df.residual&quot; </pre>
+<p>Now create an MA-plot of the average M and A-values for each gene.</p>
+<pre>&gt; M &lt;- fit$coef
+&gt; A &lt;- apply(MA$A,1,mean)
+&gt; plot(A,M,pch=16,cex=0.1)
+&gt; abline(0,0,col=&quot;blue&quot;)</pre>
+<p align="center">
+<img border="0" src="swirl/avemaplot1.png" width="616" height="581"></p>
+<p><b>Empirical Bayes analysis</b>. We will now go on and compute empirical Bayes statistics for differential 
+expression. The moderated t-statistics use sample standard deviations which have 
+been shrunk towards a pooled standard deviation value.</p>
+<pre>&gt; eb &lt;- ebayes(fit)
+&gt; qqt(eb$t,df=3+eb$df,pch=16,cex=0.1)
+&gt; abline(0,1)</pre>
+<p align="center"><img border="0" src="swirl/qqt.png" width="577" height="591"></p>
+<p>Visually there seems to be plenty of genes which are differentially 
+expressed. We will obtain a summary table of some key statistics for the top genes.<br>
+</p>
+<p></p>
+<pre>&gt; options(digits=3)
+&gt; toptable(number=30,genelist=gal,fit=fit,eb=eb,adjust=&quot;fdr&quot;)
+     Block Row Column      ID   Name     M     t  P.Value    B
+3721     8   2      1 control   BMP2 -2.21 -21.1 0.000357 7.96
+1609     4   2      1 control   BMP2 -2.30 -20.3 0.000357 7.78
+3723     8   2      3 control   Dlx3 -2.18 -20.0 0.000357 7.71
+1611     4   2      3 control   Dlx3 -2.18 -19.6 0.000357 7.62
+8295    16  16     15 fb94h06 20-L12  1.27  14.1 0.002067 5.78
+7036    14   8      4 fb40h07  7-D14  1.35  13.5 0.002067 5.54
+515      1  22     11 fc22a09 27-E17  1.27  13.4 0.002067 5.48
+5075    10  14     11 fb85f09 18-G18  1.28  13.4 0.002067 5.48
+7307    14  19     11 fc10h09 24-H18  1.20  13.2 0.002067 5.40
+319      1  14      7 fb85a01  18-E1 -1.29 -13.1 0.002067 5.32
+2961     6  14      9 fb85d05 18-F10 -2.69 -13.0 0.002067 5.29
+4032     8  14     24 fb87d12 18-N24  1.27  12.8 0.002067 5.22
+6903    14   2     15 control    Vox -1.26 -12.8 0.002067 5.20
+4546     9  14     10 fb85e07 18-G13  1.23  12.8 0.002067 5.18
+683      2   7     11 fb37b09  6-E18  1.31  12.4 0.002182 5.02
+1697     4   5     17 fb26b10  3-I20  1.09  12.4 0.002182 4.97
+7491    15   5      3 fb24g06  3-D11  1.33  12.3 0.002182 4.96
+4188     8  21     12 fc18d12 26-F24 -1.25 -12.2 0.002209 4.89
+4380     9   7     12 fb37e11  6-G21  1.23  12.0 0.002216 4.80
+3726     8   2      6 control  fli-1 -1.32 -11.9 0.002216 4.76
+2679     6   2     15 control    Vox -1.25 -11.9 0.002216 4.71
+5931    12   6      3 fb32f06  5-C12 -1.10 -11.7 0.002216 4.63
+7602    15   9     18 fb50g12  9-L23  1.16  11.7 0.002216 4.63
+2151     5   2     15 control   vent -1.40 -11.7 0.002216 4.62
+3790     8   4     22 fb23d08  2-N16  1.16  11.6 0.002221 4.58
+7542    15   7      6 fb36g12  6-D23  1.12  11.0 0.003000 4.27
+4263     9   2     15 control   vent -1.41 -10.8 0.003326 4.13
+6375    13   2     15 control   vent -1.37 -10.5 0.004026 3.91
+1146     3   4     18 fb22a12  2-I23  1.05  10.2 0.004242 3.76
+157      1   7     13 fb38a01   6-I1 -1.82 -10.2 0.004242 3.75
+</pre>
+<p>The top gene is BMP2 which is significantly down-regulated in the Swirl zebrafish, as it should be because the Swirl fish are mutant in this gene. Other 
+positive controls also appear in the top 50 genes in terms.</p>
+<p>In the table, t is the empirical Bayes moderated t-statistic, the 
+corresponding P-values have been adjusted to control the false discovery rate 
+and B is the empirical Bayes log odds of differential expression. Beware that 
+the Benjamini and Hochberg method used to control the false discovery rate 
+assumes independent statistics which we do not have here (see <code>help(p.adjust)</code>).</p>
+<pre>&gt; ord &lt;- order(eb$lods,decreasing=TRUE)
+&gt; top30 &lt;- ord[1:30]
+&gt; plot(A,M,pch=16,cex=0.1)
+&gt; text(A[top30],M[top30],labels=gal[top30,&quot;Name&quot;],cex=0.8,col=&quot;blue&quot;)
+</pre>
+<p align="center">
+<img border="0" src="swirl/avemaplot.png" width="795" height="706"></p>
+<h2>6. Two-Sample Experiments</h2>
+<h3>Example. ApoAI Knockout Data </h3>
+<p>In this example we assume that the data is available as an RG list in the 
+data file ApoAI.RData.</p>
+<p><b>Background</b>. The data is from a study of lipid metabolism by Callow et al (2000). The 
+apolipoprotein AI (ApoAI) gene is known to play a pivotal role in high density 
+lipoprotein (HDL) metabolism. Mouse which have the ApoAI gene knocked out have 
+very low HDL cholesterol levels. The purpose of this experiment is to determine 
+how ApoAI deficiency affects the action of other genes in the liver, with the 
+idea that this will help determine the molecular pathways through which ApoAI 
+operates. </p>
+<p><b>Hybridizations</b>. The experiment compared 8 ApoAI knockout mice with 8 normal C57BL/6 (&quot;black 
+six&quot;) mice, the control mice. For each of these 16 mice, target mRNA was obtained from liver 
+tissue and labelled using a Cy5 dye. The RNA from each mouse was hybridized to a 
+separate microarray. Common reference RNA was labelled with Cy3 dye and used for 
+all the arrays. The reference RNA was obtained by pooling RNA extracted from the 
+8 control mice.</p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border-left-width: 0; border-right-width: 0" bordercolor="#111111" id="AutoNumber1">
+    <tr>
+      <td width="180" style="border-left-style: none; border-left-width: medium; border-right-style: none; border-right-width: medium; border-top-style: solid; border-top-width: 1; border-bottom-style: solid; border-bottom-width: 1">
+      Number of arrays</td>
+      <td width="240" style="border-left-style: none; border-left-width: medium; border-right-style: none; border-right-width: medium; border-top-style: solid; border-top-width: 1; border-bottom-style: solid; border-bottom-width: 1">
+      Red</td>
+      <td width="200" style="border-left-style: none; border-left-width: medium; border-right-style: none; border-right-width: medium; border-top-style: solid; border-top-width: 1; border-bottom-style: solid; border-bottom-width: 1">
+      Green</td>
+    </tr>
+    <tr>
+      <td width="180" style="border-left-style: none; border-left-width: medium; border-right-style: none; border-right-width: medium; border-bottom-style: none; border-bottom-width: medium">
+      8</td>
+      <td width="240" style="border-left-style: none; border-left-width: medium; border-right-style: none; border-right-width: medium; border-bottom-style: none; border-bottom-width: medium">
+      Normal &quot;black six&quot; mice</td>
+      <td width="200" style="border-left-style: none; border-left-width: medium; border-right-style: none; border-right-width: medium; border-bottom-style: none; border-bottom-width: medium">
+      Pooled reference</td>
+    </tr>
+    <tr>
+      <td width="180" style="border-left-style: none; border-left-width: medium; border-right-style: none; border-right-width: medium; border-top-style: none; border-top-width: medium; border-bottom-style: solid; border-bottom-width: 1">
+      8</td>
+      <td width="240" style="border-left-style: none; border-left-width: medium; border-right-style: none; border-right-width: medium; border-top-style: none; border-top-width: medium; border-bottom-style: solid; border-bottom-width: 1">
+      ApoAI knockout</td>
+      <td width="200" style="border-left-style: none; border-left-width: medium; border-right-style: none; border-right-width: medium; border-top-style: none; border-top-width: medium; border-bottom-style: solid; border-bottom-width: 1">
+      Pooled reference</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p>This is an example of a single comparison experiment using a common 
+reference. The fact that the comparison is made by way of a common reference 
+rather than directly as for the swirl experiment makes this, for each gene, a 
+two-sample rather than a single-sample setup.</p>
+<pre>&gt; load(&quot;ApoAI.RData&quot;)
+&gt; objects()
+[1] &quot;design&quot;   &quot;genelist&quot; &quot;layout&quot;   &quot;RG&quot;
+&gt; RG$R[1:4,]
+       c1      c2      c3      c4      c5      c6      c7     c8      k1      k2      k3
+1 2765.58 1768.22 1440.54  763.06 2027.94  864.05  958.68 644.58  747.11 1388.79 1588.76
+2 2868.43 2277.18 1599.92 1238.33 1513.43 1079.33 1228.66 757.33 1930.25 2093.00 1369.81
+3 1236.32 1546.84 2639.45  999.48 3689.67 1505.20  785.10 994.86  753.52 1300.00 1301.61
+4  383.62  532.50  323.55  585.14  250.74  566.58  409.18 417.79  829.82  402.84  513.91
+       k4      k5      k6      k7      k8
+1 1280.17 1881.72 1733.53 1170.84 1512.45
+2 1071.17 3218.58 2451.04 1605.00 1700.82
+3 3292.26 1149.23 3424.30 1901.06 2200.82
+4  459.69  391.09  601.00  438.03  507.25
+&gt; MA &lt;- normalizeWithinArrays(RG,layout)
+&gt; boxplot(MA$M~col(MA$M),names=colnames(RG$R))</pre>
+<p align="center">
+<img border="0" src="apoai/scalebox.png" width="790" height="695"></p>
+<p>The differences in scale are moderate, so we won't scale normalize between 
+arrays.</p>
+<p>Now we can go on to estimate the fold change between the two groups. In this 
+case the design matrix has two columns. The coefficient for the second column 
+estimates the parameter of interest, the log-ratio between knockout and control 
+mice.</p>
+<pre>&gt; design
+   Control-Ref KO-Control
+c1           1          0
+c2           1          0
+c3           1          0
+c4           1          0
+c5           1          0
+c6           1          0
+c7           1          0
+c8           1          0
+k1           1          1
+k2           1          1
+k3           1          1
+k4           1          1
+k5           1          1
+k6           1          1
+k7           1          1
+k8           1          1
+&gt; fit &lt;- lm.series(MA$M,design)
+&gt; fit$coef[1:5,]
+     Control-Ref KO-Control
+[1,]     -0.6595     0.6393
+[2,]      0.2294     0.6552
+[3,]     -0.2518     0.3342
+[4,]     -0.0517     0.0405
+[5,]     -0.2501     0.2230
+&gt; eb &lt;- ebayes(fit)
+&gt; options(digits=3)
+&gt; toptable(coef=2,number=15,genelist=genelist[,1:6],fit=fit,eb=eb,adjust=&quot;fdr&quot;)
+     GridROW GridCOL ROW COL                 NAME TYPE      M      t  P.Value      B
+2149       2       2   8   7      ApoAI,lipid-Img cDNA -3.166 -23.98 3.05e-11 14.927
+540        1       2   7  15 EST,HighlysimilartoA cDNA -3.049 -12.96 5.02e-07 10.813
+5356       4       2   9   1 CATECHOLO-METHYLTRAN cDNA -1.848 -12.44 6.51e-07 10.448
+4139       3       3   8   2 EST,WeaklysimilartoC cDNA -1.027 -11.76 1.21e-06  9.929
+1739       2       1   7  17    ApoCIII,lipid-Img cDNA -0.933  -9.84 1.56e-05  8.192
+2537       2       3   7  17 ESTs,Highlysimilarto cDNA -1.010  -9.02 4.22e-05  7.305
+1496       1       4  15   5                  est cDNA -0.977  -9.00 4.22e-05  7.290
+4941       4       1   8   6 similartoyeaststerol cDNA -0.955  -7.44 5.62e-04  5.311
+947        1       3   8   2 EST,WeaklysimilartoF cDNA -0.571  -4.55 1.77e-01  0.563
+5604       4       3   1  18                      cDNA -0.366  -3.96 5.29e-01 -0.553
+4140       3       3   8   3         APXL2,5q-Img cDNA -0.420  -3.93 5.29e-01 -0.619
+6073       4       4   5   4          estrogenrec cDNA  0.421   3.91 5.29e-01 -0.652
+1337       1       4   7  14 psoriasis-associated cDNA -0.838  -3.89 5.29e-01 -0.687
+954        1       3   8   9   Caspase7,heart-Img cDNA -0.302  -3.86 5.30e-01 -0.757
+563        1       2   8  17 FATTYACID-BINDINGPRO cDNA -0.637  -3.81 5.30e-01 -0.839</pre>
+<p>Notice that the top gene is ApoAI itself which is heavily down-regulated. 
+Theoretically the M-value should be minus infinity for ApoAI because it is the 
+knockout gene. Several of the other genes are closely related. The top eight genes 
+here were confirmed by independent assay subsequent to the microarray experiment 
+to be differentially expressed in the knockout versus the control line.</p>
+<pre>&gt; plot(fit$coef[,2],eb$lods[,2],pch=16,cex=0.1,xlab=&quot;Log Fold Change&quot;,ylab=&quot;Log Odds&quot;,main=&quot;KO vs Control&quot;)
+&gt; ord &lt;- order(eb$lods[,2],decreasing=TRUE)
+&gt; top8 &lt;- ord[1:8]
+&gt; text(fit$coef[top8,2],eb$lods[top8,2],labels=substring(genelist[top8,&quot;NAME&quot;],1,5),cex=0.8,col=&quot;blue&quot;)</pre>
+<p align="center">
+<img border="0" src="apoai/bayes.png" width="693" height="743"></p>
+<h2>7. Factorial Experiments</h2>
+<h3>Example. Weaver Mutant Data</h3>
+<p>In this example we assume that data is available as an RG list.</p>
+<p><b>Background</b>. This is a case study examining the development of certain 
+neurons in wild-type and weaver mutant mice from Diaz et al (2002). The weaver 
+mutant affects cerebellar granule neurons, the most numerous cell-type in the 
+central nervous system. Weaver mutant mice are characterized by a weaving gait. 
+Granule cells are generated in the first postnatal week in the external granule 
+layer of the cerebellum. In normal mice, the terminally differentiated granule 
+cells migrate to the internal granule layer but in mutant mice the cells die 
+before doing so, meaning that the mutant mice have strongly reduced numbers of 
+cells in the internal granule layer. The expression level of any gene which is 
+specific to mature granule cells, or is expressed in response to granule cell 
+derived signals, is greatly reduced in the mutant mice.</p>
+<p><b>Tissue dissection and RNA preparation</b>. At each time point (P11 = 11 
+days postnatal and P21 = 21 days postnatal) cerebella were isolated from two 
+wild-type and two mutant littermates and pooled for RNA isolation. RNA was then 
+divided into aliquotes and labelled before hybridizing to the arrays. (This 
+means that different hybridizations are biologically related through using RNA 
+from the same mice, although we will ignore this in our analysis today. See Yang 
+and Speed (2002) for a detailed discussion of this issue in the context of this 
+experiment.)</p>
+<p><b>Hybridizations</b>. We have just four arrays each comparing two out of the 
+four treatment combinations of time (11 days or 21 days) by genotype (wild-type or 
+mutant). This has the structure of a 2x2 factorial experiment.</p>
+<pre>&gt; objects()
+[1] &quot;designIA&quot; &quot;designMt&quot; &quot;gal&quot; &quot;layout&quot; &quot;RG&quot; &quot;Targets&quot; 
+&gt; Targets
+   FileName        Name   Cy5   Cy3
+1 cb.1.spot P11WT.P11MT P11WT P11MT
+2 cb.2.spot P11MT.P21MT P11MT P21MT
+3 cb.3.spot P21MT.P21WT P21MT P21WT
+4 cb.4.spot P21WT.P11WT P21WT P11WT
+&gt; MA &lt;- normalizeWithinArrays(RG,layout)
+&gt; boxplot(MA$M~col(MA$M),names=Targets$Name)
+</pre>
+<p align="center">
+<img border="0" src="weaver/scalebox.png" width="881" height="518"></p>
+<p>
+First we consider a classical interaction parametrization.</p>
+<pre>&gt; designIA
+            TimeWt Mutant11 I/A
+P11WT.P11MT      0       -1   0
+P11MT.P21MT     -1        0  -1
+P21MT.P21WT      0        1   1
+P21WT.P11WT      1        0   0
+</pre>
+<p>
+TimeWt is late vs early time for the wild-type mice. Mutant11 is mutant vs 
+wild-type at the early time. The third column estimates the interaction between time 
+and genotype.</p>
+<pre>&gt; fitIA &lt;- lm.series(MA$M,designIA)
+&gt; ebIA &lt;- ebayes(fitIA)
+&gt; options(digits=3)
+&gt; toptable(&quot;I/A&quot;,10,gal,fitIA,ebIA,adjust=&quot;fdr&quot;)
+           ID            Name    M     t P.Value     B
+7737    RIKEN           Z6801 6.49 12.95   0.886 -4.03
+780     RIKEN            Z636 6.57 12.67   0.886 -4.03
+4063    RIKEN           Z3559 6.41 12.37   0.886 -4.03
+3627  Control              L1 6.08 11.89   0.886 -4.03
+3084    RIKEN           Z2652 4.88  9.38   1.000 -4.04
+16230 Control  T7/SP6 7- Vrg2 6.00  9.12   1.000 -4.05
+12537   RIKEN          Z11025 5.03  9.03   1.000 -4.05
+2866    RIKEN           Z2506 4.19  8.46   1.000 -4.05
+11430 Control T7/SP6 5- msx 1 3.31  6.40   1.000 -4.08
+15590   RIKEN          Z13718 3.17  5.88   1.000 -4.10</pre>
+<p>With only four arrays there is only one residual df for the linear model, so 
+even large M-values and t-statistics are not significant after adjusting for 
+multiple testing. There are differentially expressed genes here, although it is 
+difficult to confirm it from the four arrays that we are using for this 
+exercise.</p>
+<p>Consider another parametrization.</p>
+<pre>&gt; designMt
+            Mutant11 Mutant21 TimeMt
+P11WT.P11MT       -1        0      0
+P11MT.P21MT        0        0     -1
+P21MT.P21WT        0        1      0
+P21WT.P11WT        1       -1      1</pre>
+<p>Here Mutant21 is mutant vs wild-type at the later time and TimeMt is late vs 
+early time for the mutant mice.</p>
+<pre>&gt; fitMt &lt;- lm.series(MA$M,designMt)
+&gt; ebMt &lt;- ebayes(fitMt)
+&gt; plot(fitMt$coef[,&quot;Mutant11&quot;],fitMt$coef[,&quot;Mutant21&quot;],pch=16,cex=0.1,xlab=&quot;Mutant11&quot;,ylab=&quot;Mutant21&quot;)
+&gt; sel &lt;- abs(ebMt$t[,&quot;Mutant11&quot;])&gt;4 | abs(ebMt$t[,&quot;Mutant21&quot;])&gt;4
+&gt; points(fitMt$coef[sel,&quot;Mutant11&quot;],fitMt$coef[sel,&quot;Mutant21&quot;],col=&quot;blue&quot;)</pre>
+<p align="center">
+<img border="0" src="weaver/scatter.png" width="647" height="675"></p>
+<p>This scatterplot allows the genes to be visually clustered according to 
+whether they are differentially expressed in the mutant at the two times.<br>
+</p>
+<p>We will now collate the results of the two fits.</p>
+<pre>&gt; fit &lt;- fitIA
+&gt; fit$coefficients &lt;- cbind(fitMt$coef,fitIA$coef)
+&gt; fit$coefficients &lt;- fit$coef[,c(1,2,4,3,6)]
+&gt; fit$coef[1:5,]
+     Mutant11 Mutant21  TimeWt TimeMt    I/A
+[1,]  -0.5396   0.1670  1.3362  2.043 0.7066
+[2,]   0.2481   0.8601 -0.9112 -0.299 0.6120
+[3,]  -1.1368  -0.5642 -0.0119  0.561 0.5726
+[4,]  -1.0166  -0.5837  0.0837  0.517 0.4329
+[5,]   0.0135   0.0614  0.3701  0.418 0.0479
+&gt; fit$stdev.unscaled &lt;- cbind(fitMt$std,fitIA$std)
+&gt; fit$stdev.unscaled &lt;- fit$std[,c(1,2,4,3,6)]
+&gt; fit$std[1:5,]
+     Mutant11 Mutant21 TimeWt TimeMt I/A
+[1,]    0.866    0.866  0.866  0.866   1
+[2,]    0.866    0.866  0.866  0.866   1
+[3,]    0.866    0.866  0.866  0.866   1
+[4,]    0.866    0.866  0.866  0.866   1
+[5,]    0.866    0.866  0.866  0.866   1
+&gt; eb &lt;- ebayes(fit)
+&gt; heatdiagram(abs(eb$t),fit$coef,&quot;Mutant21&quot;,names=GeneNames)</pre>
+<p><img border="0" src="weaver/heat.png" width="1038" height="304"></p>
+<p>This heat diagram shows the expression profiles for all genes judged to be 
+differentially expressed (|t| &gt; 4) with respect to Mutant21. The genes are 
+sorted from left to right in terms of their coefficients for Mutant21, with red 
+meaning up-regulation and green meaning down-regulation. It is especially interesting 
+to see that genes which are up-regulated (red) in the mutant at 21 days are 
+those which have decreasing expression in the wild-type over time, and those 
+which are down-regulated (green) in the mutant are those which increase over 
+time in the wild-type. The mutant is not participating in normal development 
+between 11 and 21 days in respect of these genes.</p>
+<h2>8. Microarrays with Multiple Prints of Each Gene</h2>
+<h3>Example. Bob Mutant Data</h3>
+<p>In this example we assume that the data is available as an RG list.</p>
+<p><b>Background</b>. This data is from a study of transcription factors 
+critical to B cell maturation by Lynn Corcoran and Wendy Dietrich at the WEHI. 
+Mice which have a targeted mutation in the Bob (OBF-1) transcription factor 
+display a number of abnormalities in the B lymphocyte compartment of the immune 
+system. Immature B cells that have emigrated from the bone marrow fail to 
+differentiate into full fledged B cells, resulting in a notable deficit of 
+mature B cells.</p>
+<p><b>Arrays</b>. Arrays were printed with expressed sequence tags (ESTs) from 
+the National Institute of Aging 15k mouse clone library, plus a range of 
+positive, negative and calibration controls. The arrays were printed using a 48 
+tip print head and 26x26 spots in each tip group. Data from 24 of the tip groups 
+are given here. Every gene (ESTs and controls) was printed twice on each array.</p>
+<p><b>Hybridizations</b>. A retrovirus was used to add Bob back to a Bob 
+deficient cell line. Two RNA sources were compared using 2 dye-swap pairs of 
+microarrays. One RNA source was obtained from the Bob deficient cell line after 
+the retrovirus was used to add GFP (&quot;green fluorescent protein&quot;, a neutral 
+protein). The other RNA source was obtained after adding both GFP and Bob 
+protein. RNA from Bob+GFP was labelled with Cy5 in arrays 2 and 4, and with Cy3 
+in arrays 1 and 4.</p>
+<pre>&gt; objects()
+[1] &quot;design&quot; &quot;gal&quot;    &quot;layout&quot; &quot;RG&quot;    
+&gt; design
+[1] -1  1 -1  1
+&gt; gal[1:40,]
+   Library            Name
+1  Control       cDNA1.500
+2  Control       cDNA1.500
+3  Control Printing.buffer
+4  Control Printing.buffer
+5  Control Printing.buffer
+6  Control Printing.buffer
+7  Control Printing.buffer
+8  Control Printing.buffer
+9  Control       cDNA1.500
+10 Control       cDNA1.500
+11 Control Printing.buffer
+12 Control Printing.buffer
+13 Control Printing.buffer
+14 Control Printing.buffer
+15 Control Printing.buffer
+16 Control Printing.buffer
+17 Control       cDNA1.500
+18 Control       cDNA1.500
+19 Control Printing.buffer
+20 Control Printing.buffer
+21 Control Printing.buffer
+22 Control Printing.buffer
+23 Control Printing.buffer
+24 Control Printing.buffer
+25 Control       cDNA1.500
+26 Control       cDNA1.500
+27  NIA15k             H31
+28  NIA15k             H31
+29  NIA15k             H32
+30  NIA15k             H32
+31  NIA15k             H33
+32  NIA15k             H33
+33  NIA15k             H34
+34  NIA15k             H34
+35  NIA15k             H35
+36  NIA15k             H35
+37  NIA15k             H36
+38  NIA15k             H36
+39  NIA15k             H37
+40  NIA15k             H37
+</pre>
+<p>Although there are only four arrays, we have a total of eight spots for each 
+gene, and more for the controls. Naturally the two M-values obtained from 
+duplicate spots on the same array are highly correlated. The problem is how to 
+make use of the duplicate spots in the best way. The approach taken here is to 
+estimate the spatial correlation between the adjacent spots using REML and then 
+to conduct the usual analysis of the arrays using generalized least squares.</p>
+<p>First normalize the data using print-tip loess regression.</p>
+<pre>&gt; MA &lt;- normalizeWithinArrays(RG,layout)</pre>
+<p>Now estimate the spatial correlation. We estimate a correlation term by REML 
+for each gene, and then take a trimmed mean on the atanh scale to estimate the 
+overall correlation. This command takes a lot of time, perhaps as much as an 
+hour for a series of arrays.</p>
+<pre>&gt; cor &lt;- dupcor.series(MA$M,design,ndups=2) # This is a slow computation!
+&gt; cor$cor
+[1] 0.571377
+&gt; boxplot(cor$cor.genes)</pre>
+<p><img border="0" src="bob/corbox.png" width="290" height="724"></p>
+<pre>&gt; fit &lt;- gls.series(MA$M,design,ndups=2,correlation=0.571377)
+&gt; eb &lt;- ebayes(fit)
+&gt; genenames &lt;- uniquegenelist(gal[,&quot;Name&quot;],ndups=2)
+&gt; toptable(number=40,genelist=genenames,fit=fit,eb=eb,adjust=&quot;fdr&quot;)
+     Name          M          t      P.Value        B
+1  H34599  0.4035865  13.053838 0.0004860773 7.995550
+2  H31324 -0.5196599 -12.302094 0.0004860773 7.499712
+3  H33309  0.4203320  12.089742 0.0004860773 7.352862
+4   H3440  0.5678168  11.664229 0.0004860773 7.049065
+5  H36795  0.4600335  11.608550 0.0004860773 7.008343
+6   H3121  0.4408640  11.362917 0.0004860773 6.825927
+7  H36999  0.3806754  11.276571 0.0004860773 6.760715
+8   H3132  0.3699805  11.270201 0.0004860773 6.755881
+9  H32838  1.6404839  11.213454 0.0004860773 6.712681
+10 H36207 -0.3930972 -11.139510 0.0004860773 6.656013
+11 H37168  0.3909476  10.839880 0.0005405097 6.421932
+12 H31831 -0.3738452 -10.706775 0.0005405097 6.315602
+13 H32014  0.3630416  10.574797 0.0005405097 6.208714
+14 H34471 -0.3532587 -10.496483 0.0005405097 6.144590
+15 H37558  0.5319192  10.493157 0.0005405097 6.141856
+16  H3126  0.3849980  10.467091 0.0005405097 6.120389
+17 H34360 -0.3409371 -10.308779 0.0005852911 5.988745
+18 H36794  0.4716704  10.145670 0.0006399135 5.850807
+19  H3329  0.4125222  10.009042 0.0006660758 5.733424
+20 H35017  0.4337911   9.935639 0.0006660758 5.669656
+21 H32367  0.4092668   9.765338 0.0006660758 5.519781
+22 H32678  0.4608290   9.763809 0.0006660758 5.518423
+23 H31232 -0.3717084  -9.758581 0.0006660758 5.513778
+24  H3111  0.3693533   9.745794 0.0006660758 5.502407
+25 H34258  0.2991668   9.722656 0.0006660758 5.481790
+26 H32159  0.4183633   9.702614 0.0006660758 5.463892
+27 H33192 -0.4095032  -9.590227 0.0007130533 5.362809
+28 H35961 -0.3624470  -9.508868 0.0007205823 5.288871
+29 H36025  0.4265827   9.503974 0.0007205823 5.284403
+30  H3416  0.3401763   9.316136 0.0008096722 5.111117
+31 H33016  0.3519567   9.309343 0.0008096722 5.104784
+32 H31404  0.4736604   9.273895 0.0008096722 5.071663
+33 H34292  0.3742577   9.249119 0.0008096722 5.048437
+34  H3909  0.4035563   9.133708 0.0008799721 4.939425
+35  H3418  0.3637057   9.013667 0.0009627391 4.824582
+36 H36826  0.3278114   8.981420 0.0009665789 4.793475
+37  H3585  0.4387621   8.945039 0.0009753033 4.758249
+38 H35907  0.3744189   8.902819 0.0009907401 4.717193
+39 H36186  0.2781371   8.830103 0.0010388096 4.646038
+40 H34801 -0.3189120  -8.704827 0.0011000262 4.522116
+&gt; plot(fit$coef,eb$lods,xlab=&quot;Log2 Fold Change&quot;,ylab=&quot;Log Odds&quot;,pch=16,cex=0.1)</pre>
+<p align="center">
+<img border="0" src="bob/volcano.png" width="890" height="590"></p>
+<h2>9. Affymetrix and Single-Color Arrays</h2>
+<p>Suppose for example that there are three arrays 
+hybridized with wt RNA and two arrays hybridized with mutant RNA. The design 
+matrix might be</p>
+<pre>&gt; design
+    Wt  Mutant
+1    1       0
+2    1       0
+3    1       0
+4    1       1
+5    1       1</pre>
+<p>Normalization of Affymetrix data using functions in the package <code>affy</code> 
+will produce an object of class <code>exprSet</code> or of <code>AffyBatch</code> 
+which inherits from <code>exprSet</code>. Let <code>E</code> be the <code>
+exprSet</code> object. A linear model may be fitted using</p>
+<pre>fit &lt;- lm.series(exprs(E),design,weights=1/se.exprs(E)^2)
+eb &lt;- ebayes(fit)</pre>
+<p>Then one may proceed as for two-sample two color experiments. The second 
+coefficient in the linear model measures the difference between mutant and wt 
+expression.</p>
+<h2>Acknowledgements</h2>
+<p>Thanks to Yee Hwa Yang and Sandrine Dudoit for the first three data sets. The Swirl zebrafish data were provided by Katrin Wuennenburg-Stapleton from the
+<a href="http://mcb.berkeley.edu/labs/ngai/">Ngai Lab</a> at UC Berkeley. Thanks 
+to Lynn Corcoran for the Bob Mutant data.</p>
+
+<h2>References</h2>
+
+<ol>
+  <li>Callow, M. J., Dudoit, S., Gong, E. L., Speed, T. P., and Rubin, E. 
+  M. (2000).
+  Microarray expression profiling identifies genes with altered expression in 
+  HDL deficient mice. <i>Genome Research</i> <b>10</b>, 2022-2029. (<a href="http://www.genome.org/cgi/content/full/10/12/2022">Full 
+  Text</a>)</li>
+  <li>Diaz, E., Ge, Y., Yang, Y. H., Loh, K. C., Serafini, T. A., Okazaki, Y, 
+  Hayashizaki, Y, Speed, T. P., Ngai, J., Scheiffele, P. (2002). Molecular 
+  analysis of gene expression in the developing pontocerebellar projection 
+  system. <i>Neuron</i> <b>36</b>, 417-434. (<a href="http://neuron.org/cgi/content/full/36/3/417">Full 
+  Text</a>)</li>
+  <li> Smyth, G. K., and Speed, T. P. (2003). Normalization of cDNA microarray 
+  data. In: <i>METHODS: Selecting Candidate Genes from DNA Array Screens: 
+  Application to Neuroscience</i>, D. Carter (ed.). To appear. (<a href="http://www.statsci.org/smyth/pubs/normalize.pdf">PDF</a>)</li>
+  <li> Smyth, G. K., Yang, Y.-H., Speed, T. P. (2003). Statistical issues in 
+  microarray data analysis. In: <i>Functional Genomics: Methods and Protocols</i>, M. J. Brownstein 
+  and A. B. Khodursky 
+  (eds.), Methods in Molecular Biology Volume 224, Humana 
+  Press, Totowa, NJ, pages 111-136. (<a href="http://www.statsci.org/smyth/pubs/mareview.pdf">PDF</a>)</li>
+  <li> Yang, Y. H., and Speed, T. P. (2002). Design and analysis of comparative microarray 
+  experiments. In T. P. Speed (ed.), <i>Statistical Analysis of Gene Expression 
+  Microarray Data</i>. CRC Press.</li>
+</ol>
+
+<h2>Appendix:  Conventions</h2>
+<p>The use of periods &quot;.&quot; in function names indicate the type of argument that 
+the function takes. For extension &quot;.series&quot; as in <code>lm.series</code> or
+<code>gls.series</code>, indicates that the function operates on data from a 
+series of microarrays, usually represented by a matrix of log-ratios in which 
+columns correspond to arrays.</p>
+
+<p>The online documentation uses conventions suggested by
+<a href="http://bioinf.wehi.edu.au/limma/Rdocs.html">Writing .Rd Files For S4 
+Classes, Generic Functions and Methods</a>.</p>
+
+<p>&nbsp;</p>
+
+</body>
+
+</html>

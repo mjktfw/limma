@@ -1,0 +1,36 @@
+\name{dupcor.series}
+\alias{dupcor.series}
+\title{Correlation between duplicates}
+\description{Estimate the correlation between duplicate spots from a series of arrays.}
+\usage{dupcor.series(M,design=rep(1,ncol(M)),ndups=2,spacing=1,initial=0.7,trim=0.15,weights=NULL)}
+\arguments{
+  \item{M}{a numeric matrix. Usually the log-ratios of expression for a series of cDNA microarrrays with rows corresponding to genes and columns to arrays.}
+  \item{design}{the design matrix of the microarray experiment, with rows corresponding to arrays and columns to comparisons to be estimated. The number of rows must match the number of columns of \code{M}. Defaults to the unit vector meaning that the arrays are treated as replicates.} 
+  \item{ndups}{a positive integer giving the number of times each gene is printed on an array. \code{nrow(M)} must be divisible by \code{ndups}.}
+  \item{spacing}{the spacing between the rows of \code{M} corresponding to duplicate spots, \code{spacing=1} for consecutive spots}
+  \item{initial}{a numeric value between -1 and 1 giving an initial estimate for the correlation.}
+  \item{trim}{the fraction of observations to be trimmed from each end of \code{tanh(cor.genes)} when computing the trimmed mean.}
+  \item{weights}{an optional numeric matrix of the same dimension as \code{M} containing weights for each spot. If smaller than \code{M} then it will be filled out the same size.}
+}
+\value{
+  A list with components
+  \item{cor}{the average estimated inter-duplicate correlation. The average is the 0.1 trimmed mean of the correlations for individual genes on the tanh-transformed scale.}
+  \item{cor.genes}{a numeric vector of length \code{nrow(M)/ndups} giving the individual gene correlations.}
+}
+\seealso{
+\code{\link{gls.series}}, \code{\link[base]{gls}}, \code{\link{unwrapdups}}
+}
+\details{
+This function estimates the between-duplicate correlation using REML individually for each gene.
+It also returns a robust average of the individual correlations which can be used as input for 
+functions such as \code{gls.series}.
+}
+\note{
+This function may take long time to execute as it makes a call to \code{gls} for each gene.
+Execution could be speeded up greatly if it could be assumed that \code{M} contains no NAs.
+}
+\author{Gordon Smyth}
+\examples{
+#  See gls.series for an example
+}
+\keyword{multivariate}
