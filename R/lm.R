@@ -1,7 +1,5 @@
 #  LINEAR MODELS
 
-#  S4 functions suck!  Am reverting to using ordinary functions and doing my own dispatching!
-
 lmFit <- function(object,design=NULL,contrasts=NULL,ndups=1,spacing=1,correlation=0.75,weights=NULL,method="ls",...) {
 	if(is(object,"MAList")) {
 		weights <- object$weights
@@ -42,9 +40,8 @@ lmFit <- function(object,design=NULL,contrasts=NULL,ndups=1,spacing=1,correlatio
 		contrasts=as.matrix(contrasts),
 		coefficients=as.matrix(fit$coefficients),
 		stdev.unscaled=as.matrix(fit$stdev.unscaled),
-		s2.residual=eb$s2.residual,
+		s2.residual=fit$sigma^2,
 		df.residual=fit$df.residual,
-		correlation=correlation,
 		s2.prior=eb$s2.prior,
 		df.prior=eb$df.prior,
 		s2.post=eb$s2.post,

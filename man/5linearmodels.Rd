@@ -51,8 +51,6 @@ After linear modelling and moderation, the results may be displayed or further p
 All the functions which fit linear models use \code{\link{unwrapdups}} which gives an unified method for treating duplicate spots.
 
 \code{\link{ebayes}} uses internal functions \code{\link{fitFDist}}, \code{\link{tmixture.matrix}} and \code{\link{tmixture.vector}}.
-
-\code{\link{classifyTests}} uses internal function \code{\link{classifyTests.vector}}.
 }
 \author{Gordon Smyth}
 \keyword{documentation}

@@ -16,6 +16,6 @@ helpMethods(genericFunction)
 \code{\link[methods]{showMethods}}
 }
 \examples{
-# helpMethods(normalizeWithinArrays)
+\dontrun{helpMethods(normalizeWithinArrays)}
 }
 \keyword{methods}

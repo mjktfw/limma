@@ -38,7 +38,6 @@ setClass("MArrayLM", representation(
 	stdev.unscaled="matrix",
 	s2.residual="numeric",
 	df.residual="numeric",
-	correlation="numeric",
 	s2.prior="numeric",
 	df.prior="numeric",
 	s2.post="numeric",
