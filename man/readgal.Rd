@@ -18,8 +18,13 @@ readGAL(galfile=NULL,path=NULL,header=TRUE,sep="\t",quote="\"",skip=NULL,as.is=T
   \item{...}{any other arguments are passed to \code{read.table}}
 }
 \details{
-A GAL file is a list of genes and associated information produced by an Axon microarray scanner.
-This functions reads in the list, which is assumed to be a standard format apart from an unspecified number of lines at the beginning, with a minimum of user information.
+A GAL file is a list of genes IDs and associated information produced by an Axon microarray scanner.
+Apart from header information, the file must contain data columns labeled \code{Block}, \code{Column}, \code{Row} and \code{ID}.
+A \code{Name} column is usually included as well.
+Other columns are optional.
+See the Axon URL below for a detaile description of the GAL file format.
+
+This function reads in the data columns with a minimum of user information.
 In most cases the function can be used without specifying any of the arguments.
 }
 \value{
@@ -29,6 +34,7 @@ A data frame with columns
   \item{Row}{numeric vector containing the spot rows}
   \item{ID}{character vector, for factor if \code{as.is=FALSE}, containing gene library identifiers}
   \item{Name}{character vector, for factor if \code{as.is=FALSE}, containing gene names}
+The data frame will be sorted so that \code{Column} is the fastest moving index, then \code{Row}, then \code{Block}.
 }
 \author{Gordon Smyth}
 \seealso{

@@ -10,7 +10,7 @@ designMatrix <- function(targets, parameters=NULL, ref=NULL, verbose=TRUE) {
 #	'parameters' specifies desired coefficients corresponding to columns of design matrix
 #	'ref' is common reference if such exists
 #	Gordon Smyth
-#	25 June 2003. Last modified 2 Dec 2003.
+#	25 June 2003. Last modified 30 Dec 2003.
 
 	targets <- as.matrix(targets)
 	if(missing(targets)) stop("targets is required argument")
@@ -18,13 +18,14 @@ designMatrix <- function(targets, parameters=NULL, ref=NULL, verbose=TRUE) {
 	if(missing(parameters)==missing(ref)) stop("exactly one of the arguments parameters and ref should be specified")
 
 	target.names <- unique(as.vector(t(as.matrix(targets[,c("Cy3","Cy5")]))))
-	if(verbose) cat("Found unique target names:",target.names,"\n")
+	if(verbose) cat("Found unique target names:\n",target.names,"\n")
 	if(missing(parameters)) {
 		if(any((targets[,"Cy3"]==ref) == (targets[,"Cy5"]==ref))) stop("ref needs to occur in exactly one channel on each array")
 		other.names <- setdiff(target.names,ref)
+		target.names <- c(ref,other.names)
 		ntargets <- length(target.names)
 		parameters <- rbind(-1,diag(ntargets-1))
-		rownames(parameters) <- c(ref,other.names)
+		rownames(parameters) <- target.names
 		colnames(parameters) <- other.names
 	} else {
 		parameters <- as.matrix(parameters)
@@ -39,7 +40,7 @@ designMatrix <- function(targets, parameters=NULL, ref=NULL, verbose=TRUE) {
 	J <- t((t(J) == targets[,"Cy5"]) - (t(J) == targets[,"Cy3"]))
 	rownames(J) <- target.names
 	colnames(J) <- rownames(targets)
-	t(solve(crossprod(parameters),crossprod(parameters,J)))
+	zapsmall(t(solve(crossprod(parameters),crossprod(parameters,J))),14)
 }
 
 makeContrasts <- function(..., levels) {

@@ -93,7 +93,7 @@ dim.MArrayLM <- function(x) dim(x$coefficients)
 as.MAList <- function(object) {
 #	Convert marrayNorm object to MAList
 #	Gordon Smyth
-#	20 Sep 2003.  Last modified 5 Nov 2003.
+#	20 Sep 2003.  Last modified 20 Dec 2003.
 
 	MA <- new("MAList")
 	ifposlen <- function(x) if(length(x)) return(x) else return(NULL)
@@ -104,8 +104,6 @@ as.MAList <- function(object) {
 	MA$printer$ngrid.c <- ifposlen(object@maLayout@maNgc)
 	MA$printer$nspot.r <- ifposlen(object@maLayout@maNsr)
 	MA$printer$nspot.c <- ifposlen(object@maLayout@maNsc)
-	MA$printer$ngrid.r <- ifposlen(object@maLayout@maNgr)
-	MA$printer$ngrid.r <- ifposlen(object@maLayout@maNgr)
 	MA$printer$notes <- ifposlen(object@maLayout@maNotes)
 	MA$genes <- ifposlen(object@maGnames@maInfo)
 	MA$genes$Labels <- ifposlen(object@maGnames@maLabels)

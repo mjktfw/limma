@@ -5,13 +5,14 @@
 From the Block, Row and Column information in the GAL file, determine the number of grid rows and columns on the array and the number of spot rows and columns within each grid.
 }
 \usage{
-getLayout(gal)
+getLayout(gal, guessdups=FALSE)
 }
 \arguments{
   \item{gal}{data.frame containing the GAL, i.e., giving the position and gene identifier of each spot}
+  \item{guessdups}{logical, if \code{TRUE} then try to determine number and spacing of duplicate spots, i.e., within-array replicates}
 }
 \details{
-A GAL file is a list of genes and associated information produced by an Axon microarray scanner.
+A Gene Allocation List (GAL) file is a list of genes and associated information produced by an Axon microarray scanner.
 This function assumes that the data.frame contains columns \code{Block}, \code{Column} and \code{Row}.
 The number of tip columns is not determinable from the GAL but is assumed to be four.
 }
