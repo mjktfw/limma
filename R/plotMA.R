@@ -2,8 +2,8 @@
 
 plotMA <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
 #	MA-plot with color coding for controls
-#	Gordon Smyth 7 April 2003, modified by James Wettenhall 27 June 2003.
-#	Last modified 15 June 2004.
+#	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.
+#	Last modified 28 June 2004.
 {
 	if(is(MA,"RGList")) {
 		MA <- MA.RG(MA[,array])
@@ -28,7 +28,7 @@ plotMA <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xl
 	plot(x,y,xlab=xlab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,type="n",...)
 	if(is.null(status) || all(is.na(status))) {
 		if(missing(pch)) pch=16
-		if(missing(cex)) cex=0.2
+		if(missing(cex)) cex=0.3
 		points(x,y,pch=pch[[1]],cex=cex[1])
 	} else {
 		if(missing(values)) {
@@ -40,7 +40,7 @@ plotMA <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xl
 #		Non-highlighted points
 		sel <- !(status %in% values)
 		nonhi <- any(sel)
-		if(nonhi) points(x[sel],y[sel],pch=16,cex=0.2)
+		if(nonhi) points(x[sel],y[sel],pch=16,cex=0.3)
 
 		nvalues <- length(values)
 		if(missing(pch)) {
@@ -52,7 +52,7 @@ plotMA <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xl
 		if(missing(cex)) {
 			if(is.null(attr(status,"cex"))) {
 				cex <- rep(1,nvalues)
-				if(!nonhi) cex[1] <- 0.2
+				if(!nonhi) cex[1] <- 0.3
 			} else
 				cex <- attr(status,"cex")
 		}

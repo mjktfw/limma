@@ -1,3 +1,9 @@
+28 June 2004: limma 1.7.1
+
+- cex=16,pch=0.2 now default in plotMA()
+- cex=16,pch=0.1 changed to cex=16,pch=0.2 throughout User's Guide
+- calls in normalizeRobustSpline() to rlm() now explicitly set prior weights
+
 28 June 2004: limma 1.7.0
 
 - pdf version of User's Guide updated

@@ -207,7 +207,7 @@ normalizeWithinArrays <- function(object,layout=object$printer,method="printtipl
 normalizeRobustSpline <- function(M,A,layout,df=5,method="M") {
 #	Robust spline normalization
 #	Gordon Smyth
-#	27 April 2003.  Last revised 9 March 2004.
+#	27 April 2003.  Last revised 28 June 2004.
 
 	require(MASS)
 	require(splines)
@@ -220,7 +220,8 @@ normalizeRobustSpline <- function(M,A,layout,df=5,method="M") {
 	X[O,] <- ns(A[O],df=df,intercept=TRUE)
 	x <- X[O,,drop=FALSE]
 	y <- M[O]
-	s <- summary(rlm(x,y,method=method))
+	w <- rep(1,length(y))
+	s <- summary(rlm(x,y,weights=w,method=method),method="XtWX",correlation=FALSE)
 	beta0 <- s$coefficients[,1]
 	covbeta0 <- s$cov * s$stddev^2
 
@@ -235,7 +236,8 @@ normalizeRobustSpline <- function(M,A,layout,df=5,method="M") {
 			x <- X[spots,][o,,drop=FALSE]
 			r <- qr(x)$rank
 			if(r<df) x <- x[,1:r,drop=FALSE]
-			s <- summary(rlm(x,y,method=method))
+			w <- rep(1,length(y))
+			s <- summary(rlm(x,y,weights=w,method=method),method="XtWX",correlation=FALSE)
 			beta[i,1:r] <- s$coefficients[,1]
 			covbeta[i,1:r,1:r] <- s$cov * s$stddev^2
 		}

@@ -869,7 +869,7 @@ gene. Ordinary t-statistics for comparing mutant to wt could be computed by</p>
 computed below. Now create an MA-plot of the average M and A-values for each gene.</p>
 <pre>&gt; M &lt;- fit$coef
 &gt; A &lt;- fit$Amean
-&gt; plot(A,M,pch=16,cex=0.1)
+&gt; plot(A,M,pch=16,cex=0.2)
 &gt; abline(0,0,col=&quot;blue&quot;)</pre>
 <p align="center">
 <img border="0" src="swirl/avemaplot1.png" width="616" height="581"></p>
@@ -877,7 +877,7 @@ computed below. Now create an MA-plot of the average M and A-values for each gen
 expression. The moderated t-statistics use sample standard deviations which have 
 been shrunk towards a pooled standard deviation value.</p>
 <pre>&gt; fit &lt;- eBayes(fit)
-&gt; qqt(fit$t,df=fit$df.prior+fit$df.residual,pch=16,cex=0.1)
+&gt; qqt(fit$t,df=fit$df.prior+fit$df.residual,pch=16,cex=0.2)
 &gt; abline(0,1)</pre>
 <p align="center"><img border="0" src="swirl/qqt.png" width="577" height="591"></p>
 <p>Visually there seems to be plenty of genes which are differentially 
@@ -926,7 +926,7 @@ the Benjamini and Hochberg method used to control the false discovery rate
 assumes independent statistics which we do not have here (see <code>help(p.adjust)</code>).</p>
 <pre>&gt; ord &lt;- order(fit$lods,decreasing=TRUE)
 &gt; top30 &lt;- ord[1:30]
-&gt; plot(A,M,pch=16,cex=0.1)
+&gt; plot(A,M,pch=16,cex=0.2)
 &gt; text(A[top30],M[top30],labels=MA$genes[top30,&quot;Name&quot;],cex=0.8,col=&quot;blue&quot;)
 </pre>
 <p align="center">
@@ -1058,7 +1058,7 @@ Theoretically the M-value should be minus infinity for ApoAI because it is the
 knockout gene. Several of the other genes are closely related. The top eight genes 
 here were confirmed by independent assay subsequent to the microarray experiment 
 to be differentially expressed in the knockout versus the control line.</p>
-<pre>&gt; plot(fit$coef[,2],fit$lods[,2],pch=16,cex=0.1,xlab=&quot;Log Fold Change&quot;,ylab=&quot;Log Odds&quot;,main=&quot;KO vs Control&quot;)
+<pre>&gt; plot(fit$coef[,2],fit$lods[,2],pch=16,cex=0.2,xlab=&quot;Log Fold Change&quot;,ylab=&quot;Log Odds&quot;,main=&quot;KO vs Control&quot;)
 &gt; ord &lt;- order(fit$lods[,2],decreasing=TRUE)
 &gt; top8 &lt;- ord[1:8]
 &gt; text(fit$coef[top8,2],fit$lods[top8,2],labels=substring(genelist[top8,&quot;NAME&quot;],1,5),cex=0.8,col=&quot;blue&quot;)</pre>
@@ -1408,7 +1408,7 @@ P21WT.P11WT        1       -1      1</pre>
 early time for the mutant mice.</p>
 <pre>&gt; fitMt &lt;- lm.series(MA$M,designMt)
 &gt; ebMt &lt;- ebayes(fitMt)
-&gt; plot(fitMt$coef[,&quot;Mutant11&quot;],fitMt$coef[,&quot;Mutant21&quot;],pch=16,cex=0.1,xlab=&quot;Mutant11&quot;,ylab=&quot;Mutant21&quot;)
+&gt; plot(fitMt$coef[,&quot;Mutant11&quot;],fitMt$coef[,&quot;Mutant21&quot;],pch=16,cex=0.2,xlab=&quot;Mutant11&quot;,ylab=&quot;Mutant21&quot;)
 &gt; sel &lt;- abs(ebMt$t[,&quot;Mutant11&quot;])&gt;4 | abs(ebMt$t[,&quot;Mutant21&quot;])&gt;4
 &gt; points(fitMt$coef[sel,&quot;Mutant11&quot;],fitMt$coef[sel,&quot;Mutant21&quot;],col=&quot;blue&quot;)</pre>
 <p align="center">
@@ -1577,7 +1577,7 @@ hour for a series of arrays.</p>
 28 H35961 -0.3624470  -9.508868 0.0007205823 5.288871
 29 H36025  0.4265827   9.503974 0.0007205823 5.284403
 30  H3416  0.3401763   9.316136 0.0008096722 5.111117
-&gt; plot(fit$coef,eb$lods,xlab=&quot;Log2 Fold Change&quot;,ylab=&quot;Log Odds&quot;,pch=16,cex=0.1)</pre>
+&gt; plot(fit$coef,eb$lods,xlab=&quot;Log2 Fold Change&quot;,ylab=&quot;Log Odds&quot;,pch=16,cex=0.2)</pre>
 <p align="center">
 <img border="0" src="bob/volcano.png" width="890" height="590"></p>
 <h2><a name="marray">10. Using limma with the marray Packages</a></h2>
