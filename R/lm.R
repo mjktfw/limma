@@ -3,29 +3,29 @@
 lmFit <- function(object,design=NULL,ndups=1,spacing=1,correlation=0.75,weights=NULL,method="ls",...) {
 #	Fit linear model
 #	Gordon Smyth
-#	30 June 2003.  Last modified 27 October 2003.
+#	30 June 2003.  Last modified 18 November 2003.
 
 	M <- NULL
-	if(is(object,"marrayNorm")) {
-#		don't use accessor function so don't have to require marrayClasses
-		M <- object@maM
-		if(missing(weights) && length(object@maW)) weights <- object@maW
-	}
-	if(is(object,"exprSet")) {
-#		don't use accessor function so don't have to require Biobase
-		M <- object@exprs
-#		don't use weights until this is more thoroughly tested
-#		if(missing(weights) && length(object@se.exprs)) weights <- 1/pmax(object@se.exprs,1e-5)^2
-	}
 #	Method intended for MAList objects but allow unclassed lists as well
-	if(is.list(object)) {
+	if(is(object,"MAList") || is(object,"list")) {
 		M <- object$M
 		if(missing(design) && !is.null(object$design)) design <- object$design
 		if(missing(ndups) && !is.null(object$printer$ndups)) ndups <- object$printer$ndups
 		if(missing(spacing) && !is.null(object$printer$spacing)) spacing <- object$printer$spacing
 		if(missing(correlation) && !is.null(object$correlation)) correlation <- object$correlation
 		if(missing(weights) && !is.null(object$weights)) weights <- object$weights
-	}
+	} else {
+	if(is(object,"marrayNorm")) {
+#		don't use accessor function so don't have to require marrayClasses
+		M <- object@maM
+		if(missing(weights) && length(object@maW)) weights <- object@maW
+	} else {
+	if(is(object,"exprSet")) {
+#		don't use accessor function so don't have to require Biobase
+		M <- object@exprs
+#		don't use weights until this is more thoroughly tested
+#		if(missing(weights) && length(object@se.exprs)) weights <- 1/pmax(object@se.exprs,1e-5)^2
+	}}}
 #	Default method
 	if(is.null(M)) M <- as.matrix(object)
 
