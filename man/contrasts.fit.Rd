@@ -24,7 +24,7 @@ The design matrix used for this fit must have orthogonal columns.
 The idea is to fit a saturated oneway model using of the above functions, then use \code{contrasts.fit} to obtain coefficients and standard errors for any number of contrasts of the coefficients of the oneway model.
 }
 \seealso{
-\code{\link{lm.series}}, \code{\link{rlm.series}}, \code{\link{gls.series}}.
+An overview of linear model functions in limma is given by \link{5.LinearModels}.
 }
 \author{Gordon Smyth}
 \examples{

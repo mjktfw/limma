@@ -1,3 +1,6 @@
+1.Introduction          Introduction to the LIMMA Package
+2.Classes               Classes Defined by this Package
+3.LinearModels          Linear Models for Microarrays
 anova.MAList-method     ANOVA Table - method
 backgroundCorrect       Background Correct
 bwss.matrix             Between and within sums of squares for matrix
@@ -17,7 +20,6 @@ gridr                   Row and Column Positions on Microarray
 heatdiagram             Heat Diagram of Expression Profiles
 helpMethods             Prompt for Method Help Topics
 imageplot               Image Plot of Microarray Statistics
-.Introduction           Introduction to the LIMMA Package
 isNumeric               Test for Numeric Argument
 lm.series               Linear Model for Series of Arrays
 m.spot                  Extract M or A-values from SPOT data.frame or
@@ -25,7 +27,7 @@ m.spot                  Extract M or A-values from SPOT data.frame or
 makeUnique              Make Values of Character Vector Unique
 MAList-class            M-value, A-value Expression List - class
 matvec                  Multiply a Matrix by a Vector
-merge-generic           Merge Data Objects - generic function
+merge-generic           Merge Data Objects - generic
 merge.RGList-method     Merge Data Objects - method
 normalizeBetweenArrays.MAList-method
                         Normalize Between Arrays - method
@@ -41,9 +43,9 @@ normalizeQuantiles      Normalize Columns of a Matrix to have the same
                         Quantiles
 normalizescale          Normalize Columns of a Matrix to have the Same
                         Scale
+normalizeWithinArrays-methods
+                        Normalize Within Arrays - methods
 normalizeWithinArrays   Normalize Within Arrays - generic
-normalizeWithinArrays.RGList-method
-                        Normalize Within Arrays - method
 plotMA                  MA-Plot
 plotPrintTipLoess       MA Plots by Print-Tip Group
 qqt                     Student's t Quantile-Quantile Plot

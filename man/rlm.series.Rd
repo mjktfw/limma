@@ -24,7 +24,11 @@ The linear model is fit for each gene by calling the function \code{rlm} from th
 Warning: don't use weights with this function unless you understand how \code{rlm} treats weights.
 The treatment of weights is different from that of \code{lm.series} and \code{gls.series}.
 }
-\seealso{\code{\link[base]{rlm}}, \code{\link{lm.series}}, \code{\link{gls.series}}.}
+\seealso{
+\code{\link[MASS]{rlm}}.
+
+An overview of linear model functions in limma is given by \link{5.LinearModels}.
+}
 \author{Gordon Smyth}
 \examples{
 #  Simulate gene expression data,

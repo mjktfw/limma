@@ -5,7 +5,7 @@ require(modreg)
 MA.RG <- function(object) {
 #	Convert RGList to MAList
 #	Gordon Smyth
-#	2 March 2003.  Last revised 25 April 2003.
+#	2 March 2003.  Last revised 26 April 2003.
 
 	R <- object$R
 	G <- object$G
@@ -24,7 +24,7 @@ MA.RG <- function(object) {
 	object$R <- object$G <- object$Rb <- object$Gb <- NULL
 	object$M <- R-G
 	object$A <- (R+G)/2
-	new("MAList",object@.Data)
+	new("MAList",unclass(object))
 }
 
 if(!isGeneric("normalizeWithinArrays"))
@@ -37,7 +37,7 @@ function(object, ...) {
 
 setMethod("normalizeWithinArrays", "RGList", definition=
 function(object,layout,method="printtiploess",weights=object$weights,span=0.3,iterations=4,controlspots=NULL) {
-#	Within array loess normalization
+#	Sub-array loess normalization
 #	Gordon Smyth
 #	2 March 2003.  Last revised 25 April 2003.
 
@@ -237,7 +237,7 @@ function(object, method="scale") {
 #	23 Apri 2003
 
 #	Try to convert list to MAList
-	normalizeBetweenArrays(new("RGList",object), method=method)
+	normalizeBetweenArrays(new("MAList",object), method=method)
 })
 
 setMethod("normalizeBetweenArrays", "MAList", definition=

@@ -17,6 +17,7 @@ normalizeWithinArrays(object,...)
 Type \code{showMethods("normalizeWithinArrays")} at the R prompt to see what methods are available.
 Help on individual methods is generally available as \code{normalizeWithinArrays}.<class> where <class> is the class of the data object.
 
+An overview of LIMMA functions for normalization is given in \link{4.Normalization}.
 See also \code{\link{normalizeBetweenArrays}}, \code{\link[marrayNorm]{maNorm}} in the marrayNorm package and \code{\link[affy]{normalize}} in the affy package.
 }
 \keyword{models}

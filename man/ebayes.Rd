@@ -27,7 +27,9 @@ The estimates \code{s2.prior} and \code{df.prior} are computed by \code{fdist.fi
 The \code{lods} is sometimes known as the B-statistic.
 }
 \seealso{
-\code{\link{lm.series}}, \code{\link{rlm.series}}, \code{\link{gls.series}}, \code{\link{fitFDist}}.
+\code{\link{fitFDist}}, \code{\link{tmixture.matrix}}.
+
+An overview of linear model functions in limma is given by \link{5.LinearModels}.
 }
 \author{Gordon Smyth}
 \references{

@@ -14,7 +14,7 @@
   \item{bdf}{degrees of freedom corresponding to \code{bss}.}
   \item{wdf}{degrees of freedom corresponding to \code{wss}.}
 }
-\details{This is equivalent to a one-way analysis of variance.}
+\details{This is equivalent to one-way analysis of variance.}
 \author{Gordon Smyth}
 \seealso{\code{\link{bwss.matrix}}}
 \keyword{models}

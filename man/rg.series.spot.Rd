@@ -2,7 +2,9 @@
 \alias{rg.series.spot}
 \title{Extract RG list from Spot image analysis files}
 \description{
-Extracts an RG list from a series of Spot image analysis files
+Extracts an RG list from a series of Spot image analysis files.
+This is a depreciated function.
+Use \code{read.maimages} instead.
 }
 \usage{
 rg.series.spot(slides,path=NULL,names.slides=names(slides),suffix="spot",wt.fun=NULL,verbose=TRUE,...)
@@ -31,6 +33,6 @@ A list containing the components
 }
 \author{Gordon Smyth}
 \seealso{
-\code{\link{read.series}}, \code{\link{rg.spot}}, \code{\link{wtarea}}
+\code{\link{read.maimages}}, \code{\link{read.series}}, \code{\link{rg.spot}}, \code{\link{wtarea}}
 }
 \keyword{IO}

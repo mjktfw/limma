@@ -3,9 +3,19 @@
 \title{Introduction to the LIMMA Package}
 \description{
 LIMMA is a library for the analysis of gene expression microarray data, especially the use of linear models for analysing designed experiments and the assessment of differential expression.
-The package is mostly for two-colour microarrays but the linear model and differential expression routines are equally applicable to multi-array oligonucleotide experiments.
+LIMMA provides the ability to analyse comparisons between many RNA targets simultaneously.
+The normalization and data analysis functions are for two-colour spotted microarrays.
+The linear model and differential expression functions apply to all microarrays including Affymetrix and other multi-array oligonucleotide experiments.
 
-See "Accompanying documentation" at the top of the LIMMA index page for the LIMMA User's Guide.
+There are three types of documentation available:
+\describe{
+\item{\emph{LIMMA User's Guide}}{
+	See "Accompanying documentation" at the top of the LIMMA contents page.}
+\item{Alphabetical index of functions and classes}{
+	See the LIMMA contents page}
+\item{Grouping of functions by purpose}{
+	See the numbered chapters at the top of the LIMMA contents page.}
+}
 }
 \author{Gordon Smyth}
 \references{

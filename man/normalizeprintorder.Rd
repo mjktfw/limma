@@ -23,6 +23,7 @@ An object with normalized intensities.
 \author{Gordon Smyth}
 \seealso{
 See \code{\showMethods("normalizeForPrinter")} at the R prompt to see what classes of objects have associated methods for this function.
-See also \code{\link{normalizeWithinArrays}} and \code{\link{normalizeBetweenArrays}}
+
+An overview of LIMMA functions for normalization is given in \link{4.Normalization}.
 }
 \keyword{models}

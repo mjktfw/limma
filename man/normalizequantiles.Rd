@@ -3,7 +3,7 @@
 \title{Normalize Columns of a Matrix to have the same Quantiles}
 \description{
 Normalize the columns of a matrix to have the same quantiles, allowing for missing values.
-Users do not normally need to call this function directly - use \code{normalizeBetweenArrays} instead.
+Users do not normally need to call this function directly - use \code{\link{normalizeBetweenArrays}} instead.
 }
 \usage{
 normalizeQuantiles(A)
@@ -24,6 +24,6 @@ Bolstad, B. M., Irizarry R. A., Astrand, M., and Speed, T. P. (2003), A comparis
 }
 \author{Gordon Smyth}
 \seealso{
-  \code{\link{normalizeBetweenArrays}}, \code{\link{normalizeMedianDeviations}}
+An overview of LIMMA functions for normalization is given in \link{4.Normalization}.
 }  
 \keyword{models}

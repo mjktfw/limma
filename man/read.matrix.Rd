@@ -3,6 +3,7 @@
 \title{Read Matrix with Headers from File}
 \description{
 Read a numeric matrix from a file assuming column headings on the first line.
+Not normally used directly by users.
 }
 \usage{
 read.matrix(file,nrows=0,skip=0,...)

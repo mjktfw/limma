@@ -23,7 +23,11 @@
 \details{
 Normally \code{dupcor.series} will be called before \code{gls.series} to estimate the inter-duplicate correlation. Then t-statistics will be formed to rank the genes in order of evidence for differential expression.
 }
-\seealso{\code{\link{dupcor.series}}, \code{\link{lm.series}}, \code{\link{rlm.series}}.}
+\seealso{
+\code{\link{dupcor.series}}.
+
+An overview of linear model functions in limma is given by \link{5.LinearModels}.
+}
 \author{Gordon Smyth}
 \examples{
 M <- matrix(rnorm(10*6),10,6)

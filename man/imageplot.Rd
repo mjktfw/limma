@@ -13,7 +13,7 @@ nspot.c = 26), low = NULL, high = NULL, ncolors = 123, zerocenter = NULL,
 zlim = NULL, ...)
 }
 \arguments{
-  \item{z}{a numerical vector or array. This vector can contain any spot 
+  \item{z}{a numeric vector or array. This vector can contain any spot 
 statistics, such
 as log intensity ratios, spot sizes or shapes, or t-statistics. Missing values 
 are allowed and will result in blank spots on the image.}

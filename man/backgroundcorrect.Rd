@@ -1,6 +1,6 @@
 \name{backgroundCorrect}
 \alias{backgroundCorrect}
-\title{Background Correct}
+\title{Correct Intensities for Background}
 \description{
 Apply background correction to microarray expression intensities.
 }
@@ -8,16 +8,16 @@ Apply background correction to microarray expression intensities.
 backgroundCorrect(RG)
 }
 \arguments{
-  \item{RG}{A list containing the components \code{R}, \code{G}, \code{Rb} and \code{Gb} containing the foreground and background intensities for each spot on each array.}
+  \item{RG}{an \code{\link[limma:rglist]{RGList}} object or a unclassed list containing the same components as an \code{RGList}}
 }
 \details{
 At present this function simply subtracts the background intensities from the foreground intensities.
 Other correction methods are planned.
 
-Background correction is also performed by the \code{\link{normalizeWithinArrays.RGList}} normalize method, so it is not necessary to call \code{backgroundCorrect} explicitly.
+Background correction is also performed by the \code{\link[limma:normalizeWithinArrays-methods]{normalizeWithinArrays}} method for \code{RGList} objects, so at this time it is not necessary to call \code{backgroundCorrect} directly.
 }
 \value{
-A list the same as \code{RG} except that components \code{R} and \code{G} are background corrected
+An \code{RGList} object in which components \code{R} and \code{G} are background corrected
 and components \code{Rb} and \code{Gb} are removed.
 }
 \references{

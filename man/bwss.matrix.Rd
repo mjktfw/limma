@@ -1,7 +1,7 @@
 \name{bwss.matrix}
 \alias{bwss.matrix}
 \title{Between and within sums of squares for matrix}
-\description{Sums of squares between and within the columns of a matrix. Allows for missing values. This function is called by \code{anova.series}.}
+\description{Sums of squares between and within the columns of a matrix. Allows for missing values. This function is called by the \code{\link[limma:anova-method]{anova}} method for \code{MAList} objects.}
 \usage{bwss.matrix(x)}
 \arguments{
   \item{x}{a numeric matrix.}

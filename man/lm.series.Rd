@@ -17,9 +17,15 @@
   \item{sigma}{numeric vector containing the residual standard deviation for each gene.}
   \item{df.residual}{numeric vector giving the degrees of freedom corresponding to \code{sigma}.}
 }
-\details{The linear model is fit for each gene by calling the function \code{lm.fit} from the base library.}
-\seealso{\code{\link[base:lmfit]{lm.fit}}, \code{\link{rlm.series}}, \code{\link{gls.series}}, \code{\link{contrasts.fit}}}
+\details{
+The linear model is fit for each gene by calling the function \code{lm.fit} or \code{lm.wfit} from the base library.
+}
 \author{Gordon Smyth}
+\seealso{
+\code{\link[base:lmfit]{lm.fit}}.
+
+An overview of linear model functions in limma is given by \link{5.LinearModels}.
+}
 \examples{
 #  Simulate gene expression data,
 #  6 microarrays and 100 genes with one gene differentially expressed in first 3 arrays

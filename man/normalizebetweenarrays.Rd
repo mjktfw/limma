@@ -13,7 +13,8 @@ normalizeBetweenArrays(object,...)
 }
 \author{Gordon Smyth}
 \seealso{
-\code{\link{normalizeBetweenArrays.matrix}}, \code{\link{normalizeBetweenArrays.MAList}}.
 Type \code{showMethods("normalizeBetweenArrays")} at the R prompt to see what other methods are available.
+
+An overview of LIMMA functions for normalization is given in \link{4.Normalization}.
 }
 \keyword{multivariate}
