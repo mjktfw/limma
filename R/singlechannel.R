@@ -1,14 +1,15 @@
 #  SINGLE CHANNEL ANALYSIS
 
-lmsc.series <- function(M,A,design,correlation)
+lmscFit <- function(object,design,correlation)
 #	Fit single channel linear model for each gene to a series of microarrays
 #	allowing for known correlation between the channels on each spot.
 #	Gordon Smyth
-#	14 March 2004.  Last modified 22 March 2004.
+#	14 March 2004.  Last modified 29 April 2004.
 {
 #	Check input
-	M <- as.matrix(M)
-	A <- as.matrix(A)
+	M <- as.matrix(object$M)
+	A <- as.matrix(object$A)
+	if(is.null(M) || is.null(A)) stop("object must have components M and A")
 	dimM <- dim(M)
 	dimA <- dim(A)
 	if(any(dimM != dimA)) stop("dimensions of M and A don't match")
@@ -47,6 +48,46 @@ lmsc.series <- function(M,A,design,correlation)
 	fit$design <- design
 	fit$correlation <- correlation
 	new("MArrayLM",fit)
+}
+
+intraspotCorrelation <- function(object,design,trim=0.15)
+#	Estimate intra-spot correlation between channels for two channel data
+#	Gordon Smyth
+#	19 April 2004.
+{
+#	Check input
+	M <- as.matrix(object$M)
+	A <- as.matrix(object$A)
+	if(is.null(M) || is.null(A)) stop("object should have components M and A")
+	dimM <- dim(M)
+	dimA <- dim(A)
+	if(any(dimM != dimA)) stop("dimensions of M and A don't match")
+	if(!all(is.finite(M)) || !all(is.finite(A))) stop("Missing or infinite values found in M or A")
+	if(missing(design)) stop("design matrix must be specified")
+	ngenes <- dimM[1]
+	narrays <- dimM[2]
+	ny <- 2*narrays
+	design <- as.matrix(design)
+	if(nrow(design) != ny) stop("The number of rows of the design matrix should match the number of channel intensities, i.e., twice the number of arrays")
+
+#	Fit heteroscedastic regression for each gene
+	Ident <- diag(narrays)
+	designM <- (Ident %x% matrix(c(-1,1),1,2)) %*% design
+	designA <- (Ident %x% matrix(c(0.5,0.5),1,2)) %*% design
+	X <- rbind(designM, designA)
+	Z <- diag(2) %x% rep(1,narrays)
+	if(!require(statmod)) stop("statmod package required but is not available")
+	arho <- rep(0,ngenes)
+	degfre <- matrix(0,ngenes,2,dimnames=list(rownames(M),c("df.M","df.A")))
+	for (i in 1:ngenes) {
+		y <- c(M[i,],A[i,])
+		fit <- remlscore(y,X,Z)
+		arho[i] <- 0.5*(fit$gamma[2]-fit$gamma[1])
+		degfre[i,] <- crossprod(Z,1-fit$h)
+	}
+	arho <- arho+log(2)
+	arhobias <- digamma(degfre[,1]/2)-log(degfre[,1]/2)-digamma(degfre[,2]/2)+log(degfre[,2]/2)
+	list(consensus.correlation=tanh(mean(arho-arhobias,trim=trim)), all.correlations=arho, df=degfre)
 }
 
 array2channel <- function(targets,channels=c(1,2),channelwise.columns=list(Target=c("Cy3","Cy5")))

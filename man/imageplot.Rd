@@ -48,7 +48,7 @@ top left.
 \seealso{
 \code{\link[marrayPlots]{maImage}}, \code{\link[base]{image}}.
 
-An overview of diagnostic functions available in LIMMA is given in \link{6.Diagnostics}.
+An overview of diagnostic functions available in LIMMA is given in \link{7.Diagnostics}.
 }
 \examples{
 M <- rnorm(8*4*16*16)

@@ -18,7 +18,7 @@ For the direct two-color designs the design matrix often needs to be created by 
 
 \section{Fitting Models}{
 
-There are four functions in the package which fit linear models:
+There are four main functions in the package which fit linear models:
 
 \describe{
 \item{ \code{\link{lmFit}} }{
@@ -31,8 +31,8 @@ There are four functions in the package which fit linear models:
 	An alternative to \code{lm.series} using robust regression as implemented by the \code{rlm} function in the MASS package.}
 
 \item{ \code{\link{gls.series}} }{
-	Generalized least squares taking into account correlations between duplicate spots (i.e., replicate spots on the same array).
-	The functions \code{\link{duplicateCorrelation}} or \code{\link{dupcor.series}} are used to estimate the inter-duplicate correlation before using \code{gls.series}.}
+	Generalized least squares taking into account correlations between duplicate spots (i.e., replicate spots on the same array) or between technical replicates.
+	The function \code{\link{duplicateCorrelation}} is used to estimate the inter-duplicate correlation before using \code{gls.series}.}
 }
 Each of these functions accepts essentially the same argument list and produces a fitted model object of the same form.
 The first function \code{lmFit} formally produces an object of class \code{\link[limma:marraylm]{MArrayLM}}.
@@ -43,6 +43,9 @@ There is considerable freedom to choose the design matrix - there is always more
 The fitted model object consists of coefficients, standard errors and residual standard errors for each gene.
 
 All the functions which fit linear models use \code{\link{unwrapdups}} which provides an unified method for handling duplicate spots.
+
+All the above linear modeling functions accept two-color data in terms of log-ratios.
+See \link{6.SingleChannel} for the modeling of two-color data in terms of the individual log-intensities.
 }
 
 \section{Making Comparisons of Interest}{
