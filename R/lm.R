@@ -3,10 +3,9 @@
 lmFit <- function(object,design=NULL,ndups=1,spacing=1,correlation=0.75,weights=NULL,method="ls",...) {
 #	Fit linear model
 #	Gordon Smyth
-#	30 June 2003.  Last modified 2 July 2003.
+#	30 June 2003.  Last modified 27 October 2003.
 
 	M <- NULL
-	A <- NULL
 	if(is(object,"marrayNorm")) {
 #		don't use accessor function so don't have to require marrayClasses
 		M <- object@maM
@@ -15,7 +14,8 @@ lmFit <- function(object,design=NULL,ndups=1,spacing=1,correlation=0.75,weights=
 	if(is(object,"exprSet")) {
 #		don't use accessor function so don't have to require Biobase
 		M <- object@exprs
-		if(missing(weights) && length(object@se.exprs)) weights <- 1/pmax(object@se.exprs,1e-5)^2
+#		don't use weights until this is more thoroughly tested
+#		if(missing(weights) && length(object@se.exprs)) weights <- 1/pmax(object@se.exprs,1e-5)^2
 	}
 #	Method intended for MAList objects but allow unclassed lists as well
 	if(is.list(object)) {

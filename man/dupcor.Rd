@@ -40,6 +40,10 @@ These functions use \code{\link[nlme]{gls}} in the nlme package.
 An overview of linear model functions in limma is given by \link{5.LinearModels}.
 }
 \author{Gordon Smyth}
+\references{
+Smyth, G. K., Michaud, J., and Scott, H. (2003). The use of within-array duplicate spots for assessing differential expression in microarray experiments.
+\url{http://www.statsci.org/smyth/pubs/dupcor.pdf}
+}
 \examples{
 #  See gls.series for an example
 }

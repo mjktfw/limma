@@ -57,8 +57,9 @@ imageplot <- function(z, layout=list(ngrid.r=12,ngrid.c=4,nspot.r=26,nspot.c=26)
 plotPrintTipLoess <- function(MA,layout,array=1,span=0.4,...) {
 #  MA-plots by print-tip group
 #  Gordon Smyth
-#  7 April 2003.  Last revised 28 April 2003.
+#  7 April 2003.  Last revised 27 Oct 2003.
 
+	if(!is.null(MA$printer) && missing(layout)) layout <- MA$printer
 	y <- MA$M[,array]
 	x <- MA$A[,array]
 	coplot(y~x|factor(gridc(layout))*factor(gridr(layout)),xlab=c("A","Tip Column"),ylab=c("M","Tip Row"),pch=".",span=span,show.given=FALSE,panel=panel.smooth)

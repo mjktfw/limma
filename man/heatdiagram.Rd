@@ -1,4 +1,4 @@
-\title{Pruned Stem Heat Diagram}
+\title{Stemmed Heat Diagram}
 \name{heatdiagram}
 \alias{heatdiagram}
 \alias{heatDiagram}
@@ -30,6 +30,9 @@ heatDiagram(classification,coef,primary=1,names=NULL,treatments=colnames(coef),l
 This function plots an image of gene expression profiles in which rows (or columns for portrait orientation) correspond to treatment conditions and columns (or rows) correspond to genes.
 Only genes which are significantly differentially expressed in the primary condition are included.
 Genes are sorted by differential expression under the primary condition.
+
+Note: the plot produced by this function is unique to the limma package.
+It should not be confused with "heatmaps" often used to display results from cluster analyses.
 }
 \value{An image is created on the current graphics device.
 A dataframe containing the coefficients used in the plot is also invisibly returned.}

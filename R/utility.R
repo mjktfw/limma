@@ -35,7 +35,7 @@ isNumeric <- function(x) {
 helpMethods <- function(genericFunction) {
 #	Prompt user for help topics on methods for generic function
 #	Gordon Smyth
-#	21 April 2003
+#	21 April 2003.  Last revised 15 Oct 2003.
 
 	objectclass <- class(genericFunction)
  	if(objectclass != "genericFunction") {
@@ -53,12 +53,12 @@ helpMethods <- function(genericFunction) {
 		cat("No available methods\n")
 		return(invisible())
 	}
-	aliasnames <- paste(functionname,methodnames,sep=".")
+	aliasnames <- paste(functionname,",",methodnames,"-method",sep="")
 	for (i in 1:nmethods) cat(i,": ",aliasnames[i],"\n",sep="")
 	cat("Type number to choose help topic: ")
 	n <- as.integer(readline())
 	if(n > 0 && n <= nmethods)
-		eval(parse(text=paste("help(",aliasnames[n],")",sep="")))
+		eval(parse(text=paste("help(\"",aliasnames[n],"\")",sep="")))
 	else {
 	 	cat("No topic chosen\n")
 	 	return(invisible())

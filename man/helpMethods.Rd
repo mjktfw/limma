@@ -2,7 +2,7 @@
 \alias{helpMethods}
 \title{Prompt for Method Help Topics}
 \description{
-For any generic function, find all methods defined in currently loaded packages.
+For any S4 generic function, find all methods defined in currently loaded packages.
 Prompt the user to choose one of these to display the help document.
 }
 \usage{
@@ -16,6 +16,6 @@ helpMethods(genericFunction)
 \code{\link[methods]{showMethods}}
 }
 \examples{
-\dontrun{helpMethods(normalizeWithinArrays)}
+helpMethods(show)
 }
 \keyword{methods}

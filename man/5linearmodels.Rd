@@ -76,5 +76,8 @@ After linear modelling and moderation, the results may be displayed or further p
 \author{Gordon Smyth}
 \references{
 Smyth, G. K. (2003). Linear models and empirical Bayes methods for assessing differential expression in microarray experiments. \url{http://www.statsci.org/smyth/pubs/ebayes.pdf}
+
+Smyth, G. K., Michaud, J., and Scott, H. (2003). The use of within-array duplicate spots for assessing differential expression in microarray experiments.
+\url{http://www.statsci.org/smyth/pubs/dupcor.pdf}
 }
 \keyword{documentation}

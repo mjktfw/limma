@@ -20,7 +20,7 @@ For more details see the \emph{\link[limma:../doc/usersguide]{LIMMA User's Guide
 }
 
 \section{Backgound Correction}{
-Usually one doesn't need to explicitly ask for background correction of the intensities because this is done by default by code{\link{normalizeWithinArrays}},
+Usually one doesn't need to explicitly ask for background correction of the intensities because this is done by default by \code{\link{normalizeWithinArrays}},
 which subtract the background from the foreground intensities before applying the normalization method.
 This default background correction method can be over-ridden by using \code{\link{backgroundCorrect}} which offers a number of alternative
 background correct methods to simple subtraction.

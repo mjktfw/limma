@@ -1,9 +1,9 @@
 #  PLOT DENSITIES
 
-plotDensities<-function(object, log.transform=FALSE,arrays = NULL,
-                        singlechannels=NULL,groups=NULL,col=NULL)
+plotDensities<-function(object,log.transform=FALSE,arrays=NULL,singlechannels=NULL,groups=NULL,col=NULL)
 #  Plot empirical single-channel densities
 #  Natalie Thorne, 9 September 2003
+#  Modified by Gordon Smyth, 8 October 2003
 {
   matDensities<-function(X){
     densXY<-function(Z){
@@ -116,12 +116,12 @@ plotDensities<-function(object, log.transform=FALSE,arrays = NULL,
       }
     }
   }
-  if(log.transform)
-    x<-log(x,2)
+  if(log.transform) x <- log(x,2)
   
   dens.x<-matDensities(x)
-  XLIM<-c(min(dens.x$X),max(dens.x$X))
-  YLIM<-c(min(dens.x$Y),max(dens.x$Y))
+#  Commented out by GKS  8 Oct 2003
+#  XLIM<-c(min(dens.x$X),max(dens.x$X))
+#  YLIM<-c(min(dens.x$Y),max(dens.x$Y))
   matplot(dens.x$X,dens.x$Y, xlab = "Intensity", ylab = "Density",
           main = "RG densities",type="l",col=colors,lwd=2,lty=1)
 }
