@@ -21,12 +21,15 @@ eBayes <- function(fit,proportion=0.01,std.coef=NULL) {
 ebayes <- function(fit,proportion=0.01,std.coef=NULL) {
 #	Empirical Bayes statistics to select differentially expressed genes
 #	Gordon Smyth
-#	8 Sept 2002.  Last revised 29 April 2003.
+#	8 Sept 2002.  Last revised 14 August 2003.
 
 	coefficients <- fit$coefficients
 	stdev.unscaled <- fit$stdev.unscaled
 	sigma <- fit$sigma
 	df.residual <- fit$df.residual
+	if(is.null(coefficients) || is.null(stdev.unscaled) || is.null(sigma) || is.null(df.residual)) stop("No data, or argument is not a valid lmFit object")
+	if(all(df.residual==0)) stop("No residual degrees of freedom in linear model fits")
+	if(all(!is.finite(sigma))) stop("No finite residual standard deviations")
 
 #	Moderated t-statistic
 	out <- fitFDist(sigma^2,df1=df.residual)
@@ -34,6 +37,7 @@ ebayes <- function(fit,proportion=0.01,std.coef=NULL) {
 	out$df.prior <- out$df2
 	out$df2 <- out$scale <- NULL
 	df.total <- df.residual + out$df.prior
+	if(is.null(out$df.prior) || is.na(out$df.prior)) stop("Could not estimate prior df")
 	if(out$df.prior == Inf)
 		out$s2.post <- rep(out$s2.prior,length(sigma))
 	else

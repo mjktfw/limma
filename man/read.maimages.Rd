@@ -8,8 +8,8 @@ Reads an RGList from a series of microarray image analysis output files
 read.maimages(files,source="spot",path=NULL,ext=NULL,names=files,columns=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote="\"",\dots)
 }
 \arguments{
-  \item{files}{character vector giving the names of the files containing image analysis output}
-  \item{source}{character string specifing the image analysis program which produced the output files.  Choices are \code{"spot"}, \code{"spot.close.open"}, \code{"genepix"} or \code{"quantarray"}.}
+  \item{files}{character vector giving the names of the files containing image analysis output or, for Imagene data, a character matrix of names of files}
+  \item{source}{character string specifing the image analysis program which produced the output files.  Choices are \code{"spot"}, \code{"spot.close.open"}, \code{"genepix"}, \code{"quantarray"} or \code{"imagene"}.}
   \item{path}{character string giving the directory containing the files. Can be omitted if the files are in the current working directory.}
   \item{ext}{character string giving optional extension to be added to each file name}
   \item{names}{character vector of names to be associated with each array as column name}
@@ -32,6 +32,9 @@ Spot quality weights may be extracted from the image analysis files using a read
 \code{wt.fun} may be any user-supplied function which accepts a data.frame argument and returns a vector of non-negative weights.
 The columns of the data.frame are as in the image analysis output files.
 See \code{\link{QualityWeights}} for provided weight functions.
+
+For Imagene image data the argument \code{files} should be a matrix with two columns.
+The first column should contain the names of the files containing green channel (cy3) data and the second column should contain names of files containing red channel (cy5) data.
 }
 \value{
 An \code{\link[limma:rglist]{RGList}} object containing the components

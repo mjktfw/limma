@@ -14,8 +14,7 @@ MA.RG(object)
   \item{layout}{list specifying the dimensions of the spot matrix and the grid matrix}
   \item{method}{character string specifying the normalization method.
   Choices are \code{"none"}, \code{"median"}, \code{"loess"}, \code{"printtiploess"}, \code{"composite"} and \code{"robustspline"}.
-  A partial string sufficient to uniquely identify the choice is permitted.
-  If no method is recognized, then unnormalized M and A-values are returned.}
+  A partial string sufficient to uniquely identify the choice is permitted.}
   \item{weights}{numeric matrix or vector of the same size and shape as the components of \code{object}. Will use by default weights found in \code{object} if they exist.}
   \item{span}{numeric scalar giving the smoothing parameter for the \code{loess} fit}
   \item{iterations}{number of iterations used in loess fitting.  More iterations give a more robust fit.}
