@@ -42,7 +42,7 @@ assign("[.MAList",
 function(object, i, j, ...) {
 #  Subsetting for MAList objects
 #  Gordon Smyth
-#  29 June 2003.  Last modified 18 Aug 2003.
+#  29 June 2003.  Last modified 29 Oct 2003.
 
 	if(nargs() != 3) stop("Two subscripts required",call.=FALSE)
 	if(missing(i))
@@ -55,7 +55,7 @@ function(object, i, j, ...) {
 			object$targets <- object$targets[j,,drop=FALSE]
 			if(!is.null(object$design)) {
 				object$design <- as.matrix(object$design)[j,,drop=FALSE]
-				if(is.fullrank(object$design)) warning("design matrix is singular",call.=FALSE)
+				if(!is.fullrank(object$design)) warning("design matrix is singular",call.=FALSE)
 			}
 		}
 	else
@@ -72,7 +72,7 @@ function(object, i, j, ...) {
 			object$targets <- object$targets[j,,drop=FALSE]
 			if(!is.null(object$design)) {
 				object$design <- as.matrix(object$design)[j,,drop=FALSE]
-				if(is.fullrank(object$design)) warning("design matrix is singular",call.=FALSE)
+				if(!is.fullrank(object$design)) warning("design matrix is singular",call.=FALSE)
 			}
 		}
 	object
@@ -81,11 +81,11 @@ function(object, i, j, ...) {
 is.fullrank <- function(x) {
 #	Check whether a numeric matrix has full column rank
 #	Gordon Smyth
-#	18 August 2003
+#	18 August 2003.  Last modified 29 Oct 2003.
 
 	x <- as.matrix(x)
 	e <- La.eigen(crossprod(x),symmetric=TRUE,only.values=TRUE)$values
-	e[1]==0 || abs(e[length(e)]/e[1]) < 1e-13
+	e[1] > 0 && abs(e[length(e)]/e[1]) > 1e-13
 }
 
 cbind.RGList <- function(..., deparse.level=1) {

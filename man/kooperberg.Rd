@@ -57,11 +57,16 @@ Improved background correction for spotted DNA microarrays.
 }
 
 \examples{
-\dontrun{genepixFiles <- dir(pattern="\\\\.gpr") # get the names of the GenePix image analysis output files in the current directory
+#  This is example code for reading and background correcting GenePix data
+#  given GenePix Results (gpr) files in the working directory (data not
+#  provided).
+\dontrun{
+genepixFiles <- dir(pattern="\\\\.gpr") # get the names of the GenePix image analysis output files in the current directory
 read.series(genepixFiles, suffix=NULL, skip=26, sep="\t") # read in GenePix files
 layout <- list(ngrid.r=12, ngrid.c=4, nspot.r=26, nspot.c=26) # specify array layout
 RGmodel <- kooperberg(genepixFiles, layout=layout) # model-based background correction
-MA <- normalizeWithinArrays(RGModel, layout) # normalize the data}
+MA <- normalizeWithinArrays(RGModel, layout) # normalize the data
+}
 }
 
 \keyword{models}

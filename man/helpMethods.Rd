@@ -16,6 +16,6 @@ helpMethods(genericFunction)
 \code{\link[methods]{showMethods}}
 }
 \examples{
-helpMethods(show)
+\dontrun{helpMethods(show)}
 }
 \keyword{methods}

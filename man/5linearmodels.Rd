@@ -60,7 +60,7 @@ A moderated t-statistic and a log-odds of differential expression is computed fo
 \code{\link{ebayes}} and \code{\link{eBayes}} use internal functions \code{\link{fitFDist}}, \code{\link{tmixture.matrix}} and \code{\link{tmixture.vector}}.
 
 The function \code{\link{zscoreT}} is sometimes used for computing z-score equivalents for t-statistics so as to place t-statistics with different degrees of freedom on the same scale.
-\code{\link{zcoreGamma}} is used the same way with standard deviations instead of t-statistics.
+\code{\link{zscoreGamma}} is used the same way with standard deviations instead of t-statistics.
 These functions are for research purposes rather than for routine use.
 }
 

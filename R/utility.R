@@ -35,10 +35,10 @@ isNumeric <- function(x) {
 helpMethods <- function(genericFunction) {
 #	Prompt user for help topics on methods for generic function
 #	Gordon Smyth
-#	21 April 2003.  Last revised 15 Oct 2003.
+#	21 April 2003.  Last revised 28 Oct 2003.
 
 	objectclass <- class(genericFunction)
- 	if(objectclass != "genericFunction") {
+ 	if(objectclass != "standardGeneric") {
 		if(objectclass == "character" && isGeneric(genericFunction))
 			genericFunction <- getGeneric(genericFunction)
 		else {

@@ -35,9 +35,13 @@ A function which takes a dataframe or matrix as argument and produces a numeric 
 An overview of LIMMA functions for reading data is given in \link{3.ReadingData}.
 }
 \examples{
-#  Read in spot output files from current directory and give full weight to 165 pixel spots
-\dontrun{RG <- read.maimages(fnames,source="spot",wt.fun=wtarea(165))}
-#  normalize will downweight spots according to weights found in RG
-\dontrun{MA <- normalize(RG,layout)}
+#  Read in spot output files from current directory and give full weight to 165
+#  pixel spots.  Note: for this example to run you must set fnames to the names
+#  of actual spot output files (data not provided).
+\dontrun{
+RG <- read.maimages(fnames,source="spot",wt.fun=wtarea(165))
+#  Spot will be downweighted according to weights found in RG
+MA <- normalizeWithinArrays(RG,layout)
+}
 }
 \keyword{regression}
