@@ -1,11 +1,13 @@
 \name{classifyTests}
 \alias{classifyTests}
+\alias{classifyTests43}
 \title{Treat Simultaneous T-Tests as Classification Problem}
 \description{
 Classify a series of related t-statistics as up, down or not significant.
 }
 \usage{
 classifyTests(tstat, cor.matrix=NULL, design=NULL, contrasts=NULL, df=Inf, p.value=0.01)
+classifyTests43(tstat, t1=4, t2=3)
 }
 \arguments{
   \item{tstat}{numeric matrix of t-statistics or an \code{MArrayLM} object from which the t-statistics may be extracted.}
@@ -15,6 +17,8 @@ classifyTests(tstat, cor.matrix=NULL, design=NULL, contrasts=NULL, df=Inf, p.val
   \item{df}{numeric vector giving the degrees of freedom for the t-statistics.
   May have length 1 or length equal to the number of rows of \code{tstat}.}
   \item{p.value}{numeric value between 0 and 1 giving the desired size of the test}
+  \item{t1}{first critical value for absolute t-statistics}
+  \item{t2}{second critical value for absolute t-statistics}
 }
 \value{
   A matrix with elements \code{-1}, \code{0} or \code{1} depending on whether each t-statistic is classified as significantly negative, not significant or significantly positive respectively.
@@ -41,6 +45,6 @@ An overview of linear model functions in limma is given by \link{5.LinearModels}
 tstat <- matrix(c(0,5,0, 0,2.5,0, -2,-2,2, 1,1,1), 4, 3, byrow=TRUE)
 classifyTests(tstat)
 
-# See also the example for contrasts.fit
+# See also the examples for contrasts.fit and vennDiagram
 }
 \keyword{htest}

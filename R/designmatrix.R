@@ -21,3 +21,33 @@ designMatrix <- function(targets, ref) {
 	colnames(design) <- treatments
 	design
 }
+
+makeContrasts <- function(..., levels) {
+#	Construct matrix of custom contrasts
+#	Gordon Smyth
+#	30 June 2003.
+
+	if(is.factor(levels)) levels <- levels(levels)
+	if(is.matrix(levels)) levels <- colnames(levels)
+	levels <- make.names(levels)
+	n <- length(levels)
+	if(n < 1) stop("No levels to construct contrasts from")
+	indicator <- function(i,n) {
+		out <- rep(0,n)
+		out[i] <- 1
+		out
+	}
+	for (i in 1:n) assign(levels[i], indicator(i,n))
+	e <- substitute(list(...))
+	ne <- length(e)
+	cm <- matrix(0,n,ne-1)
+	rownames(cm) <- levels
+	if(ne < 2) return(cm)
+	colnames(cm) <- as.character(e)[2:ne]
+	for (j in 1:(ne-1)) {
+		ej <- e[[j+1]]
+		if(is.character(ej)) ej <- parse(text=ej)
+		cm[,j] <- eval(ej)
+	}
+	cm
+}

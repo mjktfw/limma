@@ -1,62 +1,59 @@
 #  LINEAR MODELS
 
 lmFit <- function(object,design=NULL,contrasts=NULL,ndups=1,spacing=1,correlation=0.75,weights=NULL,method="ls",...) {
-	gene <-
-	if(is(object,"MAList")) {
-		if(!is.null(object$design)) design <- object$design
-		if(!is.null(object$contrasts)) contrasts <- object$contrasts
-		if(!is.null(object$printerlayout)) {
-			ndups <- printerlayout$ndups
-			spacing <- printerlayout$spacing
-		}
-		weights <- object$weights
-		if(!is.null(gal)) gene <- as.character(gal[,5])
-		object <- as.matrix(object$M)
-	}
+#	Fit linear model
+#	Gordon Smyth
+#	30 June 2003.  Last modified 2 July 2003.
+
+	M <- NULL
+	A <- NULL
 	if(is(object,"marrayNorm")) {
 #		don't use accessor function so don't have to require marrayClasses
-		weights <- object@maW
-		if(length(w) == 0) weights <- NULL
-		object <- object@maM
+		M <- object@maM
+		if(missing(weights) && length(object@maW)) weights <- object@maW
 	}
 	if(is(object,"exprSet")) {
 #		don't use accessor function so don't have to require Biobase
-  		weights <- object@se.exprs
-		if(length(weights) == 0)
-			weights <- NULL
-		else
-			weights <- 1/pmax(weights,1e-14)^2
-		object <- object@exprs
+		M <- object@exprs
+		if(missing(weights) && length(object@se.exprs)) weights <- 1/pmax(object@se.exprs,1e-5)^2
 	}
-	if(is.null(design)) design <- matrix(1,ncol(object),1)
-	if(is.na(correlation) || is.null(correlation)) correlation <- numeric(0)
+#	Method intended for MAList objects but allow unclassed lists as well
+	if(is.list(object)) {
+		M <- object$M
+		if(missing(design) && !is.null(object$design)) design <- object$design
+		if(missing(contrasts) && !is.null(object$contrasts)) design <- object$contrasts
+		if(missing(ndups) && !is.null(object$printer$ndups)) ndups <- object$printer$ndups
+		if(missing(spacing) && !is.null(object$printer$spacing)) spacing <- object$printer$spacing
+		if(missing(correlation) && !is.null(object$correlation)) correlation <- object$correlation
+		if(missing(weights) && !is.null(object$weights)) weights <- object$weights
+	}
+#	Default method
+	if(is.null(M)) M <- as.matrix(object)
+
+	if(is.null(design)) design <- matrix(1,ncol(M),1)
+	design <- as.matrix(design)
 	method <- match.arg(method,c("ls","robust"))
 	if(method=="robust")
-		fit <- rlm.series(object,design=design,ndups=ndups,spacing=spacing,weights=weights,...)
+		fit <- rlm.series(M,design=design,ndups=ndups,spacing=spacing,weights=weights,...)
 	else
-		if(ndups < 2 || correlation==0 || length(correlation)==0)
-			fit <- lm.series(object,design=design,ndups=ndups,spacing=spacing,weights=weights,...)
+		if(ndups < 2 || correlation==0)
+			fit <- lm.series(M,design=design,ndups=ndups,spacing=spacing,weights=weights)
 		else
-			fit <- gls.series(object,design=design,ndups=ndups,spacing=spacing,correlation=correlation,weights=weights,...)
-	if(is.null(contrasts))
-		contrasts <- matrix(0,0,0)
-	else
-		fit <- contrasts.fit(fit,contrasts)	
-	eb <- ebayes(fit)
-	new("MArrayLM",
-		design=design,
-		contrasts=as.matrix(contrasts),
-		coefficients=as.matrix(fit$coefficients),
-		stdev.unscaled=as.matrix(fit$stdev.unscaled),
-		s2.residual=fit$sigma^2,
-		df.residual=fit$df.residual,
-		s2.prior=eb$s2.prior,
-		df.prior=eb$df.prior,
-		s2.post=eb$s2.post,
-		tstat=as.matrix(eb$t),
-		varcoef.prior=eb$var.prior,
-		call=match.call()
-	)
+			fit <- gls.series(M,design=design,ndups=ndups,spacing=spacing,correlation=correlation,weights=weights,...)
+	fit$design <- design
+	fit$correlation <- correlation
+	if(is(object,"MAList")) {
+		if(!is.null(object$genes)) fit$genes <- uniquegenelist(object$genes,ndups=ndups,spacing=spacing) 
+		if(!is.null(object$A)) fit$Amean <- rowMeans(unwrapdups(as.matrix(object$A),ndups=ndups,spacing=spacing),na.rm=TRUE)
+	}
+	if(is(object,"marrayNorm")) {
+		if(length(object@maGnames)) {
+			fit$genes <- uniquegenelist(data.frame(Labels=object@maGnames@maLabels,object@maGnames@maInfo),ndups=ndups,spacing=spacing)
+			attr(fit$genes, "Notes") <- object@maGnames@maNotes
+		}
+		if(length(object@maA)) fit$Amean <- rowMeans(unwrapdups(object@maA,ndups=ndups,spacing=spacing),na.rm=TRUE)
+	}
+	new("MArrayLM",fit)
 }
 
 unwrapdups <- function(M,ndups=2,spacing=1) {
@@ -90,12 +87,12 @@ lm.series <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL)
 {
 #	Fit linear model for each gene to a series of arrays
 #	Gordon Smyth
-#	18 Apr 2002. Revised 18 Jan 2003.
+#	18 Apr 2002. Revised 30 June 2003.
 
 	M <- as.matrix(M)
 	narrays <- ncol(M)
 	if(is.null(design)) design <- matrix(1,narrays,1)
-	if(is.vector(design)) dim(design) <- c(narrays,1)
+	design <- as.matrix(design)
 	nbeta <- ncol(design)
 	if(!is.null(weights)) {
 		weights <- as.matrix(weights)
@@ -142,13 +139,13 @@ rlm.series <- function(M,design=NULL,ndups=1,spacing=spacing,weights=NULL,...)
 {
 #	Robustly fit linear model for each gene to a series of arrays
 #	Gordon Smyth
-#	20 Mar 2002.  Last revised 2 Nov 2002.
+#	20 Mar 2002.  Last revised 30 June 2003.
 
 	require(MASS) # need rlm.default
 	M <- as.matrix(M)
 	narrays <- ncol(M)
 	if(is.null(design)) design <- matrix(1,narrays,1)
-	if(is.null(dim(design))) dim(design) <- c(narrays,1)
+	design <- as.matrix(design)
 	nbeta <- ncol(design)
 	if(!is.null(weights)) {
 		weights <- as.matrix(weights)
@@ -190,7 +187,7 @@ gls.series <- function(M,design=NULL,ndups=2,spacing=1,correlation=NULL,weights=
 #	Fit linear model for each gene to a series of microarrays.
 #	Fit is by generalized least squares allowing for correlation between duplicate spots.
 #	Gordon Smyth
-#	11 May 2002.  Last revised 20 Feb 2003.
+#	11 May 2002.  Last revised 30 June 2003.
 
 	if(ndups<2) {
 		warning("No duplicates: correlation between duplicates set to zero")
@@ -200,7 +197,7 @@ gls.series <- function(M,design=NULL,ndups=2,spacing=1,correlation=NULL,weights=
 	M <- as.matrix(M)
 	narrays <- ncol(M)
 	if(is.null(design)) design <- matrix(1,narrays,1)
-	if(is.null(dim(design))) dim(design) <- c(narrays,1)
+	design <- as.matrix(design)
 	if(nrow(design) != narrays) stop("Number of rows of design matrix does not match number of arrays")
 	if(is.null(correlation)) correlation <- dupcor.series(M,design,ndups,...)$cor
 	if(!is.null(weights)) {
@@ -252,6 +249,57 @@ gls.series <- function(M,design=NULL,ndups=2,spacing=1,correlation=NULL,weights=
 	list(coefficients=drop(beta),stdev.unscaled=drop(stdev.unscaled),sigma=sigma,df.residual=df.residual,correlation=correlation)
 }
 
+duplicateCorrelation <- function(object,design=rep(1,ncol(M)),ndups=2,spacing=1,initial=0.8,trim=0.15,weights=NULL)
+{
+#	Estimate the correlation between duplicates given a series of arrays
+#	Gordon Smyth
+#	25 Apr 2002. Last revised 30 June 2003.
+
+	if(is(object,"MAList")) {
+		M <- object$M
+		if(missing(design) && !is.null(object$design)) design <- object$design
+		if(missing(ndups) && !is.null(object$printer$ndups)) ndups <- object$printer$ndups
+		if(missing(spacing) && !is.null(object$printer$spacing)) spacing <- object$printer$spacing
+		if(missing(weights) && !is.null(object$weights)) weights <- object$weights
+	}
+
+	M <- as.matrix(M)
+	if(ndups<2) {
+		warning("No duplicates: correlation between duplicates not estimable")
+		return( list(cor=NA,cor.genes=rep(NA,nrow(M))) )
+	}
+	require( "nlme" ) # need gls function
+	narrays <- ncol(M)
+	design <- as.matrix(design)
+	if(nrow(design) != narrays) stop("Number of rows of design matrix does not match number of arrays")
+	if(!is.null(weights)) {
+		weights <- as.matrix(weights)
+		if(any(dim(weights) != dim(M))) weights <- array(weights,dim(M))
+		M[weights < 1e-15 ] <- NA
+		weights[weights < 1e-15] <- NA
+	}
+	nbeta <- ncol(design)
+	M <- unwrapdups(M,ndups=ndups,spacing=spacing)
+	ngenes <- nrow(M)
+	if(!is.null(weights)) weights <- unwrapdups(weights,ndups=ndups,spacing=spacing)
+	design <- design %x% rep(1,ndups)
+	Array <- rep(1:narrays,rep(ndups,narrays))
+	rho <- rep(NA,ngenes)
+	for (i in 1:ngenes) {
+		y <- drop(M[i,])
+		if(any(!is.finite(y))) y[!is.finite(y)] <- NA
+		if(any(diff(Array[is.finite(y)])==0) && sum(!is.na(y)) > nbeta+1)
+		if(!is.null(weights)) {
+			w <- 1/drop(weights[i,])
+			rho[i] <- coef(gls(y~design-1,correlation=corCompSymm(initial,form=~1|Array,fixed=FALSE),weights=~w,na.action=na.omit,control=list(singular.ok=TRUE,returnObject=TRUE,apVar=FALSE))$modelStruct,FALSE)
+		} else
+			rho[i] <- coef(gls(y~design-1,correlation=corCompSymm(initial,form=~1|Array,fixed=FALSE),na.action=na.omit,control=list(singular.ok=TRUE,returnObject=TRUE,apVar=FALSE))$modelStruct,FALSE)
+	}
+	rhom <- tanh(mean(atanh(rho),trim=trim,na.rm=TRUE))
+	list(cor=rhom,cor.genes=rho)
+}
+
+
 dupcor.series <- function(M,design=rep(1,ncol(M)),ndups=2,spacing=1,initial=0.8,trim=0.15,weights=NULL)
 {
 #	Estimate the correlation between duplicates given a series of arrays
@@ -297,10 +345,10 @@ dupcor.series <- function(M,design=rep(1,ncol(M)),ndups=2,spacing=1,initial=0.8,
 contrasts.fit <- function(fit,contrasts) {
 #	Extract contrast information from oneway linear model fit
 #	Gordon Smyth
-#	13 Oct 2002
+#	13 Oct 2002.  Last modified 1 July 2003.
 
-	out <- fit
-	out$coefficients <- fit$coefficients %*% contrasts
-	out$stdev.unscaled <- sqrt(fit$stdev.unscaled^2 %*% contrasts^2)
-	out
+	fit$coefficients <- fit$coefficients %*% contrasts
+	fit$stdev.unscaled <- sqrt(fit$stdev.unscaled^2 %*% contrasts^2)
+	fit$contrasts <- contrasts
+	fit
 }

@@ -19,8 +19,11 @@ This package defines the following data classes.
 	Usually created by \code{lmFit}.}
 }
 
+Objects of these classes may be \link[limma:subsetting]{subsetted} and multiple data objects may be \link[limma:cbind]{combined}.
+
 All of these classes belong to the virtual class \code{\link[limma:LargeDataObject]{LargeDataObject}}.
 A \code{show} method is defined for \code{LargeDataOject}s which uses the utility function \code{\link{printHead}}.
 }
+
 \author{Gordon Smyth}
 \keyword{documentation}

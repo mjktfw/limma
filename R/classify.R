@@ -1,16 +1,17 @@
 #  CLASSIFICATION
 
-classifyTests <- function(tstat,cor.matrix=NULL,design=NULL,contrasts=NULL,df=Inf,p.value=0.01) {
-#	Classify a series of vectors of t-test statistics into vector outcomes
+classifyTests <- function(tstat,cor.matrix=NULL,design=NULL,contrasts=diag(ncol(design)),df=Inf,p.value=0.01) {
+#	Use F-tests to classify vectors of t-test statistics into outcomes
 #	Gordon Smyth
-#	20 Mar 2003.  Last revised 19 June 2003.
+#	20 Mar 2003.  Last revised 3 July 2003.
 
-	if(is(tstat,"MArrayLM")) {
-		cor.matrix <- NULL
-		design <- tstat@design
-		contrasts <- tstat@contrasts
-		df <- tstat@df.prior+tstat@df.residual
-		tstat <- tstat@tstat
+#	Method intended for MAList objects but accept unclassed lists as well
+	if(is.list(tstat)) {
+		if(is.null(tstat$t)) stop("tstat cannot be extracted from object")
+		if(missing(design) && !is.null(tstat$design)) design <- tstat$design
+		if(missing(contrasts) && !is.null(tstat$contrasts)) contrasts <- tstat$contrasts
+		if(missing(df) && !is.null(tstat$df.prior) && !is.null(tstat$df.residual)) df <- tstat$df.prior+tstat$df.residual
+		tstat <- tstat$t
 	}
 
 	if(is.null(dim(tstat))) dim(tstat) <- c(1,length(tstat))
@@ -24,9 +25,9 @@ classifyTests <- function(tstat,cor.matrix=NULL,design=NULL,contrasts=NULL,df=In
 #	cor.matrix is estimated correlation matrix of the coefficients
 #	and also the estimated covariance matrix of the t-statistics
 	if(!is.null(cor.matrix) && !is.null(design)) stop("Cannot specify both cor.matrix and design")
-	if(is.null(cor.matrix) && !is.null(design)) {
+	if(!is.null(design)) {
+		design <- as.matrix(design)
 		R <- chol(crossprod(design))
-		if(length(contrasts)==0) contrasts <- diag(ncol(design))
 		cor.matrix <- crossprod(backsolve(R,contrasts,transpose=TRUE))
 		d <- sqrt(diag(cor.matrix))
 		cor.matrix <- cor.matrix / (d %*% t(d))
@@ -63,4 +64,14 @@ classifyTests <- function(tstat,cor.matrix=NULL,design=NULL,contrasts=NULL,df=In
 			}
 	}
 	result
+}
+
+classifyTests43 <- function(tstat,t1=4,t2=3) {
+#	Simple classification of vectors of t-test statistics
+#	Gordon Smyth
+#	1 July 2003.
+
+	if(is.list(tstat)) tstat <- tstat$t
+	if(is.null(dim(tstat))) dim(tstat) <- c(1,length(tstat))
+	apply(tstat,1,function(x) any(abs(x)>t1,na.rm=TRUE)) * sign(tstat)*(abs(tstat)>t2)
 }

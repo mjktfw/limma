@@ -111,10 +111,10 @@ MA.RG <- function(object) {
 	new("MAList",unclass(object))
 }
 
-normalizeWithinArrays <- function(object,layout,method="printtiploess",weights=object$weights,span=0.3,iterations=4,controlspots=NULL,df=5,robust="M") {
+normalizeWithinArrays <- function(object,layout=object$printer,method="printtiploess",weights=object$weights,span=0.3,iterations=4,controlspots=NULL,df=5,robust="M") {
 #	Within array normalization
 #	Gordon Smyth
-#	2 March 2003.  Last revised 28 June 2003.
+#	2 March 2003.  Last revised 2 July 2003.
 
 	if(!is(object,"MAList")) object <- MA.RG(object)
 	choices <- c("none","median","loess","printtiploess","composite","robustspline")
