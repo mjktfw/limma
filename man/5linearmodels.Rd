@@ -25,7 +25,8 @@ There are four functions in the package which fit linear models:
 	This is a high level function which provides an entry point to the previous three functions.}
 }
 Each of these functions accepts essentially the same argument list and produces a fitted model object of the same form.
-The main argument is the \bold{design matrix} which specifies the comparisons between the RNA targets which you want to estime.
+The main argument is the \bold{design matrix} which specifies the comparisons between the RNA targets which you want to estimate.
+Design matrices may be constructed for common reference experiments using \code{\link{designMatrix}}.
 The fitted model object consists of coefficients, standard errors and residual standard errors for each gene.
 
 If the design matrix has orthogonal columns, then the output object can be explanded using \code{\link{contrasts.fit}} to include contrasts not explicitly in the design matrix.

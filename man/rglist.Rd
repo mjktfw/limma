@@ -13,22 +13,28 @@ A simple list-based class for storing red and green channel foreground and backg
 Objects of this class contains no slots (other than \code{.Data}), but objects should contain the following list components:
 \tabular{ll}{
   \code{R}:\tab numeric matrix containing the red (cy5) foreground intensities.  Rows correspond to spots and columns to arrays.\cr
-  \code{G}:\tab numeric matrix containing the green (cy3) foreground intensities.\cr
-  \code{Rb}:\tab numeric matrix containing the red (cy5) background intensities.\cr
-  \code{Gb}:\tab numeric matrix containing the green background intensities.\cr
-  \code{weights}:\tab optional numeric matric containing relative spot quality weights. Should be non-negative.
+  \code{G}:\tab numeric matrix containing the green (cy3) foreground intensities\cr
+  \code{Rb}:\tab numeric matrix containing the red (cy5) background intensities\cr
+  \code{Gb}:\tab numeric matrix containing the green (cy3) background intensities
 }
-All of these matrices should have the same dimensions.
+Optional components include
+\tabular{ll}{
+  \code{weights}:\tab numeric matric containing relative spot quality weights.  Should be non-negative.\cr
+  \code{targets}:\tab data.frame containing information on the target RNA samples.  Should include factor or character columns \code{Cy3} and \code{Cy5} specifying which RNA was hybridized to each array.
+}
+All of the matrices should have the same dimensions.
+The row dimension of \code{targets} should match the column dimension of the matrices.
 }
 
 \section{Methods}{
 This class inherits directly from class \code{list} so any operation appropriate for lists will work on objects of this class.
+In addition, \code{RGList} objects can be \link[limma:subsetting]{subsetted}, \link[limma:cbind]{combined} and \link[limma:merge]{merged}.
+\code{RGLists} also inherit a \code{\link[methods]{show}} method from the virtual class \code{\link[limma:LargeDataObject]{LargeDataObject}}, which means that \code{RGLists} will print in a compact way.
 
-Functions in LIMMA which operate on \code{RGList} objects include \code{\link[limma:merge.rglist]{merge}}, \code{\link{normalizeBetweenArrays}},
+Other functions in LIMMA which operate on \code{RGList} objects include
+\code{\link{normalizeBetweenArrays}},
 \code{\link{normalizeForPrintorder}},
 \code{\link{normalizeWithinArrays}}.
-
-\code{RGList} objects inherit a \code{show} method from the virtual class \code{LargeDataObject}.
 }
 
 \author{Gordon Smyth}

@@ -13,12 +13,18 @@ plotMA(MA,array=1,pch=16,status=NULL,
 \arguments{
   \item{MA}{list with components \code{M} containing log-ratios and \code{A} containing average intensities}
   \item{array}{integer giving the array to be plotted. Corresponds to columns of \code{M} and \code{A}.}
-  \item{pch}{plotting character}
-  \item{status}{character vector giving the control status of each spot on the array}
+  \item{pch}{vector or list of plotting characters}
+  \item{status}{character vector giving the control status of each spot on the array.
+  If \code{NULL} then subsequent arguments are ignored.}
   \item{values}{character vector giving unique values of \code{status} corresponding to control states of interest}
   \item{col}{vector of colors, of the same length as \code{values}}
   \item{cex}{numeric vector of the same length as \code{values} giving sizes for plot symbols}
 }
+
+\details{
+See \code{\link[base]{points}} for possible values for \code{pch}, \code{col} and \code{cex}.
+}
+
 \value{A plot is created on the current graphics device.}
 \author{Gordon Smyth}
 \seealso{

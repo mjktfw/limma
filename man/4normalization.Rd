@@ -11,7 +11,7 @@ A minority of data will also be normalized using \code{\link{normalizeBetweenArr
 
 In rare circumstances, data might be normalized using \code{\link{normalizeForPrintorder}} before using \code{\link{normalizeWithinArrays}}.
 
-\code{normalizeWithinArrays} uses function \code{\link{normalizeRobustSpline}}.
+\code{normalizeWithinArrays} uses utility functions \code{\link{loessFit}} and \code{\link{normalizeRobustSpline}}.
 \code{normalizeBetweenArrays} uses utility functions \code{\link{normalizeMedians}}, \code{\link{normalizeMedianDeviations}} and \code{\link{normalizeQuantiles}}, none of which need to be called directly by users.
 }
 

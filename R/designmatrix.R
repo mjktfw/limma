@@ -2,7 +2,7 @@ designMatrix <- function(targets, ref) {
 #	Design matrix for two-color experiments
 #	'targets' is matrix or data.frame with columns Cy3 and Cy5
 #	Gordon Smyth
-#	25 June 2003
+#	25 June 2003.  Last modified 29 June 2003.
 
 	tar <- targets[,c("Cy3","Cy5")]
 	tar <- as.vector(t(as.matrix(tar)))
@@ -16,8 +16,8 @@ designMatrix <- function(targets, ref) {
 	X <- model.matrix(~-1+tar*col)
 	keeprows <- X[,1]==0
 	keepcols <- attr(X,"assign")==3
-	design <- X[keeprows,keepcols]
-	rownames(design) <- targets$SlideNumber
+	design <- X[keeprows,keepcols,drop=FALSE]
+	rownames(design) <- rownames(targets)
 	colnames(design) <- treatments
 	design
 }

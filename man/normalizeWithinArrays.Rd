@@ -6,7 +6,7 @@
 Normalize the expression log-ratios for one or more two-colour spotted microarray experiments so that the log-ratios average to zero within each array or sub-array.
 }
 \usage{
-normalizeWithinArrays(object, layout, method="printtiploess", weights=object$weights, span=0.4, iterations=4, controlspots=NULL, df=5, robust="M")
+normalizeWithinArrays(object, layout, method="printtiploess", weights=object$weights, span=0.3, iterations=4, controlspots=NULL, df=5, robust="M")
 MA.RG(object)
 }
 \arguments{
@@ -18,7 +18,7 @@ MA.RG(object)
   If no method is recognized, then unnormalized M and A-values are returned.}
   \item{weights}{numeric matrix or vector of the same size and shape as the components of \code{object}. Will use by default weights found in \code{object} if they exist.}
   \item{span}{numeric scalar giving the smoothing parameter for the \code{loess} fit}
-  \item{iterations}{number of robust iterations used in loess regressions.  The default gives a similar result to \code{lowess} regression.}
+  \item{iterations}{number of iterations used in loess fitting.  More iterations give a more robust fit.}
   \item{controlspots}{numeric or logical vector specifying the subset of spots which are non-differentially expressed control spots, for use with \code{method="composite"}}
   \item{df}{degrees of freedom for spline if \code{method="robustspline"}}
   \item{robust}{robust regression method if \code{method="robustspline"}.  Choices are \code{"M"} or \code{"MM"}.}
@@ -28,9 +28,12 @@ MA.RG(object)
 Normalization is intended to remove from the expression measures any systematic trends which arise from the microarray technology rather than from differences between the probes or between the target RNA samples hybridized to the arrays.
 
 This function normalizes M-values (log-ratios) for dye-bias within each array.
-Except for the \code{method="median"} option, all the normalization methods make use of the relationship between dye-bias and intensity.
+Apart from \code{method="none"} and \code{method="median"}, all the normalization methods make use of the relationship between dye-bias and intensity.
 The loess normalization methods were proposed by Yang et al (2001, 2002).
 Smyth and Speed (2003) give a detailed statement of the methods.
+
+More information on the loess control parameters \code{span} and \code{iterations} can be found under \code{\link{loessFit}}.
+The default values given here are equivalent to those for the older function \code{stat.ma} in the SMA package.
 
 The \code{"robustspline"} method calls \code{\link{normalizeRobustSpline}}.
 

@@ -54,33 +54,6 @@ imageplot <- function(z, layout=list(ngrid.r=12,ngrid.c=4,nspot.r=26,nspot.c=26)
 	invisible()
 }
 
-plotMA <- function(MA,array=1,pch=16,status=NULL,
-             values=c("gene","blank","buffer","utility","negative","calibration","ratio"),
-             col=c("black","yellow","orange","pink","brown","blue","red"),
-             cex=c(0.1,0.6,0.6,0.6,0.6,0.6,0.6)) {
-#  MA-plot with color coding for controls
-#  Gordon Smyth
-#  7 April 2003.  Last modified 27 June 2003.
-
-	x <- MA$A[,array]
-	y <- MA$M[,array]
-	plot(x,y,xlab="A",ylab="M",main=colnames(MA$M)[array],type="n")
-	if(is.null(status))
-		points(x,y,pch=pch[1],cex=cex[1])
-	else {
-		nvalues <- length(values)
-		pch <- rep(pch,length=nvalues)
-		col <- rep(col,length=nvalues)
-		cex <- rep(cex,length=nvalues)
-		for (i in 1:nvalues) {
-			sel <- status==values[i]
-			points(x[sel],y[sel],pch=pch[i],cex=cex[i],col=col[i])
-		}
-		legend(min(x,na.rm=TRUE),max(y,na.rm=TRUE),legend=values,pch=pch,col=col,cex=0.9)
-	}
-	invisible()
-}
-
 plotPrintTipLoess <- function(MA,layout,array=1,span=0.4,...) {
 #  MA-plots by print-tip group
 #  Gordon Smyth

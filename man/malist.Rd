@@ -12,22 +12,28 @@ A simple list-based class for storing M-values and A-values for a batch of spott
 \code{MAList} objects can be created by \code{new("MAList",MA)} where \code{MA} is a list.
 This class contains no slots (other than \code{.Data}), but objects should contain the following list components:
 \tabular{ll}{
-  \code{M}:\tab numeric matrix containing the M-values or log expression ratios (base 2).  Rows correspond to spots and columns to arrays.\cr
-  \code{A}:\tab numeric matrix containing the A-values or average log expression values (base 2).\cr
-  \code{weights}:\tab optional numeric matric containing relative spot quality weights.  Should be non-negative.
+  \code{M}:\tab numeric matrix containing the M-values or log-2 expression ratios.  Rows correspond to spots and columns to arrays.\cr
+  \code{A}:\tab numeric matrix containing the A-values or average log-2 expression values
+}
+\tabular{ll}{
+  \code{weights}:\tab numeric matric containing relative spot quality weights.  Should be non-negative.\cr
+  \code{targets}:\tab data.frame containing information on the target RNA samples.  Should include factor or character columns \code{Cy3} and \code{Cy5} specifying which RNA was hybridized to each array.
 }
 All of the matrices should have the same dimensions.
+The row dimension of \code{targets} should match the column dimension of the matrices.
 }
 
 \section{Methods}{
 This class inherits directly from class \code{list} so any operation appropriate for lists will work on objects of this class.
+In addition, \code{MAList} objects can be \link[limma:subsetting]{subsetted} and \link[limma:cbind]{combined}.
+\code{MALists} also inherit a \code{\link[methods]{show}} method from the virtual class \code{\link[limma:LargeDataObject]{LargeDataObject}}, which means that \code{RGLists} will print in a compact way.
 
-Functions in LIMMA which operate on \code{MAList} objects include
+Other functions in LIMMA which operate on \code{MAList} objects include
 \code{\link{normalizeWithinArrays}},
-\code{\link{normalizeBetweenArrays}}
-and \code{\link{normalizeForPrintorder}}
-
-\code{MAList} objects inherit a \code{show} method from the virtual class \code{LargeDataObject}.
+\code{\link{normalizeBetweenArrays}},
+\code{\link{normalizeForPrintorder}},
+\code{\link{plotMA}}
+and \code{\link{plotPrintTipLoess}}.
 }
 
 \author{Gordon Smyth}

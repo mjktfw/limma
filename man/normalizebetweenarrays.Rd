@@ -7,7 +7,7 @@ Normalizes expression intensities so that the intensities or log-ratios have sim
 }
 
 \usage{
-normalizeBetweenArrays(object,method)
+normalizeBetweenArrays(object, method)
 }
 
 \arguments{

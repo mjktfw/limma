@@ -11,7 +11,7 @@ loessFit(y, x, weights=NULL, span=0.3, cell=0.2, iterations=4)
   \item{y}{numeric vector of response values.  Missing values are allowed.}
   \item{x}{numeric vector of predictor values  Missing values are allowed.}
   \item{weights}{numeric vector of non-negative weights.  Missing values are allowed.}
-  \item{span}{numeric parameter between 0 and 1 specifying proportion of data to be used in loess moving window.
+  \item{span}{numeric parameter between 0 and 1 specifying proportion of data to be used in the local regression moving window.
   Larger numbers give smoother fits.}
   \item{cell}{numeric parameter between 0 and 1 used to specify granularity of loess fit}
   \item{iterations}{number of iterations of loess fit}
