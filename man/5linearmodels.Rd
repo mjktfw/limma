@@ -61,8 +61,8 @@ After linear modelling and moderation, the results may be displayed or further p
 	Not the same as heatdiagrams produced by other packages!}
 
 \item{ \code{\link{classifyTests}} }{
-	Uses an F-test method to classify the genes as up, down or even over the contrasts in the linear model.
-	\code{\link{classifyTests43}} is a simpler method using only t-statistics rather than F-tests.}
+	Uses a nested F-tests to classify the genes as up, down or even over the contrasts in the linear model with special attention to genes which are significant in more than one contrast.
+	\code{\link{classifyTestsT}} and \code{\link{classifyTestsP}} are simpler methods using cutoffs for the t-statistics or p-values individually.}
 
 \item{ \code{\link{vennCounts}} }{
 	Accepts output from \code{classifyTests} and counts the number of genes in each classification.}

@@ -66,7 +66,7 @@ classifyTests <- function(tstat,cor.matrix=NULL,design=NULL,contrasts=diag(ncol(
 	result
 }
 
-classifyTests43 <- function(tstat,t1=4,t2=3) {
+classifyTestsT <- function(tstat,t1=4,t2=3) {
 #	Simple classification of vectors of t-test statistics
 #	Gordon Smyth
 #	1 July 2003.
@@ -76,7 +76,7 @@ classifyTests43 <- function(tstat,t1=4,t2=3) {
 	apply(tstat,1,function(x) any(abs(x)>t1,na.rm=TRUE)) * sign(tstat)*(abs(tstat)>t2)
 }
 
-classifyTestsPValue <- function(tstat,df=Inf,p.value=0.05,method="holm") {
+classifyTestsP <- function(tstat,df=Inf,p.value=0.05,method="holm") {
 #	Simple classification of vectors of t-test statistics using adjusted p-values
 #	Gordon Smyth
 #	12 July 2003.

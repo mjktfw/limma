@@ -1,13 +1,15 @@
 \name{classifyTests}
 \alias{classifyTests}
-\alias{classifyTests43}
+\alias{classifyTestsT}
+\alias{classifyTestsP}
 \title{Treat Simultaneous T-Tests as Classification Problem}
 \description{
 Classify a series of related t-statistics as up, down or not significant.
 }
 \usage{
 classifyTests(tstat, cor.matrix=NULL, design=NULL, contrasts=NULL, df=Inf, p.value=0.01)
-classifyTests43(tstat, t1=4, t2=3)
+classifyTestsT(tstat, t1=4, t2=3)
+classifyTestsP(tstat, df=Inf, p.value=0.05, method="holm")
 }
 \arguments{
   \item{tstat}{numeric matrix of t-statistics or an \code{MArrayLM} object from which the t-statistics may be extracted.}
@@ -19,11 +21,15 @@ classifyTests43(tstat, t1=4, t2=3)
   \item{p.value}{numeric value between 0 and 1 giving the desired size of the test}
   \item{t1}{first critical value for absolute t-statistics}
   \item{t2}{second critical value for absolute t-statistics}
+  \item{method}{character string specifying p-value adjustment method.  See \code{\link[base]{p.adjust}} for possible values.}
 }
 \value{
   A matrix with elements \code{-1}, \code{0} or \code{1} depending on whether each t-statistic is classified as significantly negative, not significant or significantly positive respectively.
 }
 \details{
+\code{classifyTests} classifies using a nested F-test approach giving particular attention to correctly classifying genes which have two or more significant t-statistics, i.e., are differential expressed under two or more conditions.
+\code{classifyTestsT} and \code{classifyTestsP} implement simpler classification schemes based on threshold or critical values for the individual t-statistics in the case of \code{classifyTestsT} or p-values obtained from the t-statistics in the case of \code{classifyTestsP}.
+
 Rows of \code{tstat} correspond to genes and columns to coefficients or contrasts.
 For each row of \code{tstat}, F-statistics are constructed from the t-statistics.
 If the overall F-statistic is significant, then the function makes a best choice as to which t-statistics contributed to this result.

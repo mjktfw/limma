@@ -1,15 +1,6 @@
 #  PRESENTATION PLOTS
 
-heatDiagram <- function(object,primary=1,...) {
-#	Objected-orientated version of heat diagram function
-#	Gordon Smyth
-#	6 July 2003
-
-	if(!is(object,"MArrayLM")) stop("object should be an MArrayLM object")
-	heatdiagram(stat=object$t,coef=object$coefficients,...)
-}
-
-heatdiagram <- function(classification,coef,primary=1,names=NULL,treatments=colnames(coef),limit=NULL,orientation="landscape",cex=1,low="green",high="red",ncolors=123,...) {
+heatDiagram <- function(classification,coef,primary=1,names=NULL,treatments=colnames(coef),limit=NULL,orientation="landscape",cex=1,low="green",high="red",ncolors=123,...) {
 #	Heat diagram to display fold changes of genes under different conditions
 #	Gordon Smyth
 #	27 Oct 2002. Last revised 6 July 2003.
@@ -78,7 +69,7 @@ heatdiagram <- function(classification,coef,primary=1,names=NULL,treatments=coln
 	invisible(out)
 }
 
-heatdiagram0 <- function(stat,coef,primary=1,names=NULL,treatments=colnames(stat),critical.primary=4,critical.other=3,limit=NULL,orientation="landscape",cex=1,low="green",high="red",ncolors=123,...) {
+heatdiagram <- function(stat,coef,primary=1,names=NULL,treatments=colnames(stat),critical.primary=4,critical.other=3,limit=NULL,orientation="landscape",cex=1,low="green",high="red",ncolors=123,...) {
 #	Heat diagram to display fold changes of genes under different conditions
 #	Gordon Smyth
 #	27 Oct 2002. Last revised 6 Feb 2003.
