@@ -15,7 +15,7 @@
 \begin{document}
 \title{Limma Package Vignette}
 \author{Gordon Smyth}
-\date{12 October 2004}
+\date{23 October 2004}
 \maketitle
 
 Limma is an R package for the analysis of gene expression microarray data, especially the use of linear models for analysing designed experiments and the assessment of differential expression.
@@ -31,14 +31,7 @@ If you're not using windows, you can type
 \begin{Schunk}
 \begin{Sinput}
 > library(limma)
-> browseURL(limmaguideURL())
-\end{Sinput}
-\end{Schunk}
-or alternatively
-\begin{Schunk}
-\begin{Sinput}
-> library(Biobase)
-> openVignette()
+> limmaUsersGuide()
 \end{Sinput}
 \end{Schunk}
 or alternatively
@@ -47,8 +40,7 @@ or alternatively
 > help.start()
 \end{Sinput}
 \end{Schunk}
-and follow the links the limma package help.
-This last option will also lead you to the printable pdf version of the User's Guide.
+and follow the links to the limma package help.
 
 \end{document}
 
