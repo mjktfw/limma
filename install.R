@@ -1,2 +1,3 @@
-require(methods) # In case R version is earlier than 1.7.0
-require(modreg)  # In case R version is earlier than 1.7.0
+#  Following two lines are to enable limma to work with R 1.4-1.6
+require("methods")
+require("modreg")

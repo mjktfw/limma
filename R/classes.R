@@ -84,10 +84,10 @@ dim.MArrayLM <- function(x) dim(x$coefficients)
 as.MAList <- function(object) {
 #	Convert marrayNorm object to MAList
 #	Gordon Smyth
-#	20 Sep 2003
+#	20 Sep 2003.  Last modified 5 Nov 2003.
 
 	MA <- new("MAList")
-	ifposlen <- function(x) if(length(x) && x!="") return(x) else return(NULL)
+	ifposlen <- function(x) if(length(x)) return(x) else return(NULL)
 	MA$A <- ifposlen(object@maA)
 	MA$M <- ifposlen(object@maM)
 	MA$weights <- ifposlen(object@maW)
