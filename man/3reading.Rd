@@ -20,7 +20,7 @@ Another function, \code{\link{rg.series.spot}} is very similar to \code{\link{re
 This function will be removed in future versions of LIMMA.
 }
 
-\code{\link{read.maimages}} uses utility functions \code{\link{removeExt}}, \code{\link{read.matrix}}, \code{\link{read.imagene}} and \code{\link{getImageneHeaders}}.
+\code{\link{read.maimages}} uses utility functions \code{\link{removeExt}}, \code{\link{read.matrix}}, \code{\link{read.imagene}} and \code{\link{readImageneHeaders}}.
 
 \section{Reading Gene Annotation}{
 
