@@ -3,17 +3,18 @@
 \alias{imageplot}
 \description{
 Creates an image of shades
-of gray or colors, that represents the values of a statistic for each
-spot on the array. The statistic can be a log intensity ratio, quality
-information such as spot size or shape, or a t-statistic. This function
-can be used to explore whether there are any spatial effects in the data.}
+of gray or colours, that represents the values of a statistic for each
+spot on the array.
+The statistic can be a log intensity ratio, quality
+information such as spot size or shape, or a t-statistic.
+This function can be used to explore whether there are any spatial effects in the data.
+}
 \usage{
-imageplot(z, layout = list(ngrid.r = 12, ngrid.c = 4, nspot.r = 26, 
-nspot.c = 26), low = NULL, high = NULL, ncolors = 123, zerocenter = NULL, 
+imageplot(z, layout, low = NULL, high = NULL, ncolors = 123, zerocenter = NULL, 
 zlim = NULL, ...)
 }
 \arguments{
-  \item{z}{a numeric vector or array. This vector can contain any spot 
+  \item{z}{numeric vector or array. This vector can contain any spot 
 statistics, such
 as log intensity ratios, spot sizes or shapes, or t-statistics. Missing values 
 are allowed and will result in blank spots on the image.}
@@ -42,7 +43,11 @@ top left.
 }
 \value{An image is created on the current graphics device.}
 \author{Gordon Smyth}
-\seealso{\code{\link[marrayPlots]{maImage}}, \code{\link[base]{image}}.}
+\seealso{
+\code{\link[marrayPlots]{maImage}}, \code{\link[base]{image}}.
+
+An overview of diagnostic functions available in LIMMA is given in \link{6.Diagnostics}.
+}
 \examples{
 M <- rnorm(8*4*16*16)
 imageplot(M,layout=list(ngrid.r=8,ngrid.c=4,nspot.r=16,nspot.c=16))

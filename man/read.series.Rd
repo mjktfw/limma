@@ -24,6 +24,10 @@ However a series of data.frames are created on the current environment with name
 The files names are given by the elements of \code{slides} and the suffix is given by \code{suffix}.
 }
 \author{Gordon Smyth}
-\seealso{\code{\link[base]{read.table}}, \code{\link{rg.spot}}, \code{\link{rg.genepix}}, \code{\link{rg.quantarray}}}
+\seealso{
+\code{\link[base]{read.table}}.
+
+An overview of LIMMA functions for reading data is given in \link{3.ReadingData}.
+}
 
 \keyword{file}

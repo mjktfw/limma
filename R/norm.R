@@ -5,7 +5,7 @@ require(modreg)
 MA.RG <- function(object) {
 #	Convert RGList to MAList
 #	Gordon Smyth
-#	2 March 2003.  Last revised 26 April 2003.
+#	2 March 2003.  Last revised 28 April 2003.
 
 	R <- object$R
 	G <- object$G
@@ -22,8 +22,8 @@ MA.RG <- function(object) {
 	
 #	Minus and Add
 	object$R <- object$G <- object$Rb <- object$Gb <- NULL
-	object$M <- R-G
-	object$A <- (R+G)/2
+	object$M <- as.matrix(R-G)
+	object$A <- as.matrix((R+G)/2)
 	new("MAList",unclass(object))
 }
 
@@ -31,32 +31,36 @@ if(!isGeneric("normalizeWithinArrays"))
 	setGeneric("normalizeWithinArrays", function(object,...) standardGeneric("normalizeWithinArrays")) 
 
 setMethod("normalizeWithinArrays", "list", definition=
-function(object, ...) {
-	normalizeWithinArrays(new("RGList",object), ...)
-})
+function(object, ...)
+	normalizeWithinArrays(MA.RG(object), ...)
+)
 
 setMethod("normalizeWithinArrays", "RGList", definition=
-function(object,layout,method="printtiploess",weights=object$weights,span=0.3,iterations=4,controlspots=NULL) {
+function(object, ...)
+	normalizeWithinArrays(MA.RG(object), ...)
+)
+
+setMethod("normalizeWithinArrays", "MAList", definition=
+function(object,layout,method="printtiploess",weights=object$weights,span=0.4,iterations=4,controlspots=NULL,df=5,robust="M") {
 #	Sub-array loess normalization
 #	Gordon Smyth
-#	2 March 2003.  Last revised 25 April 2003.
+#	2 March 2003.  Last revised 28 April 2003.
 
-	MA <- MA.RG(object)
-	choices <- c("median","loess","printtiploess","composite","plate","printorder")
+	choices <- c("median","loess","printtiploess","composite","robustspline")
 	method <- choices[pmatch(method,choices)]
-	if(is.na(method)) return(MA)
-	ngenes <- NROW(MA$M)
-	narrays <- NCOL(MA$M)
+	if(is.na(method)) return(object)
+	ngenes <- nrow(object$M)
+	narrays <- ncol(object$M)
 	switch(method,
 		median = {
-			for (j in 1:narrays) MA$M[,j] <- MA$M[,j] - median(MA$M[,j],na.rm=TRUE)
+			for (j in 1:narrays) object$M[,j] <- object$M[,j] - median(object$M[,j],na.rm=TRUE)
 		},
 		loess = {
 			for (j in 1:narrays) {
-				y <- MA$M[,j]
-				x <- MA$A[,j]
+				y <- object$M[,j]
+				x <- object$A[,j]
 				w <- weights[,j]
-				MA$M[,j] <- residuals(loess(y~x,weights=w,span=0.75*span,na.action=na.exclude,degree=1,family="symmetric",trace.hat="approximate",iterations=iterations,surface="direct"))
+				object$M[,j] <- residuals(loess(y~x,weights=w,span=0.75*span,na.action=na.exclude,degree=1,family="symmetric",trace.hat="approximate",iterations=iterations,surface="direct"))
 			}
 		},
 		printtiploess = {
@@ -67,18 +71,18 @@ function(object,layout,method="printtiploess",weights=object$weights,span=0.3,it
 				spots <- 1:nspots
 				for (gridr in 1:ngr)
 				for (gridc in 1:ngc) {
-					y <- MA$M[spots,j]
-					x <- MA$A[spots,j]
+					y <- object$M[spots,j]
+					x <- object$A[spots,j]
 					w <- weights[spots,j]
-					MA$M[spots,j] <- residuals(loess(y~x,weights=w,span=span,na.action=na.exclude,degree=1,family="symmetric",trace.hat="approximate",iterations=iterations,surface="direct"))
+					object$M[spots,j] <- residuals(loess(y~x,weights=w,span=span,na.action=na.exclude,degree=1,family="symmetric",trace.hat="approximate",iterations=iterations,surface="direct"))
 					spots <- spots + nspots
 				}
 			}
 		},
 		composite = {
 			for (j in 1:narrays) {
-				y <- MA$M[,j]
-				x <- MA$A[,j]
+				y <- object$M[,j]
+				x <- object$A[,j]
 				w <- weights[,j]
 				fit <- loess(y~x,weights=w,span=span,subset=controlspots,na.action=na.exclude,degree=0,surface="direct",family="symmetric",trace.hat="approximate",iterations=iterations)
 				global <- predict(fit,newdata=x)
@@ -87,18 +91,78 @@ function(object,layout,method="printtiploess",weights=object$weights,span=0.3,it
 				nspots <- layout$nspot.r * layout$nspot.c
 				spots <- 1:nspots
 				for (tip in 1:ntips) {
-					y <- MA$M[spots,j]
-					x <- MA$A[spots,j]
+					y <- object$M[spots,j]
+					x <- object$A[spots,j]
 					w <- weights[spots,j]
 					local <- fitted(loess(y~x,weights=w,span=span,na.action=na.exclude,degree=1,family="symmetric",trace.hat="approximate",iterations=iterations,surface="direct"))
-					MA$M[spots,j] <- MA$M[spots,j] - alpha[spots]*global[spots]-(1-alpha[spots])*local
+					object$M[spots,j] <- object$M[spots,j] - alpha[spots]*global[spots]-(1-alpha[spots])*local
 					spots <- spots + nspots
 				}
 			}
+		},
+		robustspline = {
+			for (j in 1:narrays)
+				object$M[,j] <- normalizeRobustSpline(object$M[,j],object$A[,j],layout,df=df,method=robust)
 		}
 	)
-	MA
+	object
 })
+
+normalizeRobustSpline <- function(M,A,layout,df=5,method="M") {
+#	Robust spline normalization
+#	Gordon Smyth
+#	27 April 2003.  Last revised 28 April 2003.
+
+	require(MASS)
+	require(splines)
+	ngrids <- layout$ngrid.r * layout$ngrid.c
+	nspots <- layout$nspot.r * layout$nspot.c
+	col <- rainbow(ngrids,end=(ngrids-2)/ngrids)
+
+#	Global splines
+	O <- is.finite(M) & is.finite(A)
+	X <- matrix(NA,ngrids*nspots,df)
+	X[O,] <- ns(A[O],df=df,intercept=TRUE)
+	x <- X[O,]
+	y <- M[O]
+	s <- summary(rlm(x,y,method=method))
+	beta0 <- s$coefficients[,1]
+	covbeta0 <- s$cov * s$stddev^2
+
+#	Tip-wise splines
+	beta <- array(0,c(ngrids,df))
+	covbeta <- array(0,c(ngrids,df,df))
+	spots <- 1:nspots
+	for (i in 1:ngrids) {
+		o <- O[spots]
+		y <- M[spots][o]
+		x <- X[spots,][o,]
+		s <- summary(rlm(x,y,method=method))
+		beta[i,] <- s$coefficients[,1]
+		covbeta[i,,] <- s$cov * s$stddev^2
+		spots <- spots + nspots
+	}
+
+#	Empirical Bayes estimates
+	res.cov <- cov(beta) - apply(covbeta,c(2,3),mean)
+	Sigma0 <- covbeta0 * max(0, sum(diag(res.cov)) / sum(diag(covbeta0)) )
+#	Sigma0 <- covbeta0 * max(0,mean(eigen(solve(covbeta0,res.cov))$values))
+
+#	Shrunk splines
+	spots <- 1:nspots
+	for (i in 1:ngrids) {
+		beta[i,] <- beta0 + Sigma0 %*% solve(Sigma0+covbeta[i,,],beta[i,]-beta0)
+		o <- O[spots]
+		x <- X[spots,][o,]
+		M[spots][o] <- M[spots][o] - x %*% beta[i,]
+		M[spots][!o] <- NA
+		spots <- spots + nspots
+	}
+	M
+}
+
+
+#  PRINTORDER
 
 setGeneric("normalizeForPrintorder",function(object,...) standardGeneric("normalizeForPrintorder"))
 

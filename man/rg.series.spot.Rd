@@ -33,6 +33,6 @@ A list containing the components
 }
 \author{Gordon Smyth}
 \seealso{
-\code{\link{read.maimages}}, \code{\link{read.series}}, \code{\link{rg.spot}}, \code{\link{wtarea}}
+An overview of LIMMA functions for reading data is given in \link{3.ReadingData}.
 }
 \keyword{IO}

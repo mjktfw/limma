@@ -11,7 +11,7 @@ trigammaInverse(x)
   \item{x}{numeric vector or array}
 }
 \details{
-The function uses Newton's method with a clever starting value to ensure montonic convergence.
+The function uses Newton's method with a clever starting value to ensure monotonic convergence.
 }
 \value{
 Numeric vector or array \code{y} satisfying \code{trigamma(y)==x}.

@@ -22,7 +22,9 @@ A numeric matrix with column names.
 }
 \author{Gordon Smyth}
 \seealso{
-\code{\link[base]{read.table}}, \code{\link{read.maimages}}
+\code{\link[base]{read.table}}, \code{\link[base]{scan}}.
+
+An overview of LIMMA functions for reading data is given in \link{3.ReadingData}.
 }
 
 \keyword{file}

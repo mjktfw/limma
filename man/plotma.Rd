@@ -21,4 +21,7 @@ plotMA(MA,array=1,pch=16,status=NULL,
 }
 \value{A plot is created on the current graphics device.}
 \author{Gordon Smyth}
+\seealso{
+An overview of diagnostic functions available in LIMMA is given in \link{6.Diagnostics}.
+}
 \keyword{hplot}

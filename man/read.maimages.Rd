@@ -37,7 +37,9 @@ A list containing the components
 }
 \author{Gordon Smyth}
 \seealso{
-\code{\link{read.series}}, \code{\link{rg.spot}}, \code{\link{QualityWeights}}, \code{\link[base]{read.table}}
+\code{\link[base]{read.table}}.
+
+An overview of LIMMA functions for reading data is given in \link{3.ReadingData}.
 }
 \examples{
 #  Read all .gpr files from current working directory

@@ -1,5 +1,5 @@
 \name{3.ReadingData}
-\alias{3.Reading Data}
+\alias{3.ReadingData}
 \title{Reading Microarray Data from Files}
 
 \description{
@@ -34,6 +34,7 @@ The functions \code{\link{gridr}}, \code{\link{gridc}}, \code{\link{spotr}} and 
 If each gene is printed more than once of the arrays, then \code{\link{uniquegenelist}} will remove duplicate names from the gal-file or gene list.
 
 \code{\link{merge}} is designed to merge data sets with different gal-files provided that the gene library is the unchanged.
+\code{merge} uses utility function \code{\link{makeUnique}}.
 }
 
 \author{Gordon Smyth}

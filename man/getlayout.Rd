@@ -2,13 +2,13 @@
 \alias{getLayout}
 \title{Extract the Print Layout of an Array from the GAL File}
 \description{
-From the Block, Row and Column information in the GAL file, determined the number of tip rows and columns on the array and the number of spot rows and columns within each tip group.
+From the Block, Row and Column information in the GAL file, determine the number of tip rows and columns on the array and the number of spot rows and columns within each tip group.
 }
 \usage{
 getLayout(gal)
 }
 \arguments{
-  \item{gal}{data.frame containing the GAL, i.e., giving the position and annotation information of each spot}
+  \item{gal}{data.frame containing the GAL, i.e., giving the position and gene identifier of each spot}
 }
 \details{
 A GAL file is a list of genes and associated information produced by an Axon microarray scanner.
@@ -24,7 +24,9 @@ A list with components
 }
 \author{Gordon Smyth}
 \seealso{
-\code{\link{readGAL}}
+\code{\link[marrayTools]{gpTools}}.
+
+An overview of LIMMA functions for reading data is given in \link{3.ReadingData}.
 }
 \examples{
 # gal <- readGAL()

@@ -106,13 +106,13 @@ plotMA <- function(MA,array=1,pch=16,status=NULL,
 	invisible()
 }
 
-plotPrintTipLoess <- function(MA,layout,array=1) {
+plotPrintTipLoess <- function(MA,layout,array=1,span=0.4,...) {
 #  MA-plots by print-tip group
 #  Gordon Smyth
-#  7 April 2003.
+#  7 April 2003.  Last revised 28 April 2003.
 
 	y <- MA$M[,array]
 	x <- MA$A[,array]
-	coplot(y~x|factor(gridc(layout))*factor(gridr(layout)),xlab=c("A","Tip Column"),ylab=c("M","Tip Row"),pch=".",show.given=FALSE,panel=function(x, y, ...) panel.smooth(x, y, span = .4,,...))
+	coplot(y~x|factor(gridc(layout))*factor(gridr(layout)),xlab=c("A","Tip Column"),ylab=c("M","Tip Row"),pch=".",span=span,show.given=FALSE,panel=panel.smooth)
 	invisible()
 }

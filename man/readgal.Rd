@@ -32,7 +32,7 @@ A data frame with columns
 }
 \author{Gordon Smyth}
 \seealso{
-\code{\link{read.series}}, \code{\link{rg.spot}}
+An overview of LIMMA functions for reading data is given in \link{3.ReadingData}.
 }
 \examples{
 # readGAL()

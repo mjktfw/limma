@@ -16,6 +16,10 @@ removeExt(x)
 A character vector of the same length as \code{x} in which any common extension has been stripped off.
 }
 
+\seealso{
+An overview of LIMMA functions for reading data is given in \link{3.ReadingData}.
+}
+
 \examples{
 x <- c("slide1.spot","slide2.spot","slide3.spot")
 removeExt(x)

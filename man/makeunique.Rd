@@ -17,6 +17,9 @@ Repeat values of \code{x} are labelled with suffixes "1", "2" etc.
 A character vector of the same length as \code{x}
 }
 \author{Gordon Smyth}
+\seealso{
+\code{makeUnique} is called by \code{\link{merge.RGList}}.
+}
 \examples{
 x <- c("a","a","b")
 makeUnique(x)

@@ -1,8 +1,11 @@
 1.Introduction          Introduction to the LIMMA Package
 2.Classes               Classes Defined by this Package
-3.LinearModels          Linear Models for Microarrays
+3.ReadingData           Reading Microarray Data from Files
+4.Normalization         Normalization of Microarray Data
+5.LinearModels          Linear Models for Microarrays
+6.Diagnostics           Diagnostics and Quality Assessment
 anova.MAList-method     ANOVA Table - method
-backgroundCorrect       Background Correct
+backgroundCorrect       Correct Intensities for Background
 bwss.matrix             Between and within sums of squares for matrix
 bwss                    Between and within sums of squares
 classifyTests           Treat Simultaneous T-Tests as Classification
@@ -29,10 +32,8 @@ MAList-class            M-value, A-value Expression List - class
 matvec                  Multiply a Matrix by a Vector
 merge-generic           Merge Data Objects - generic
 merge.RGList-method     Merge Data Objects - method
-normalizeBetweenArrays.MAList-method
-                        Normalize Between Arrays - method
-normalizeBetweenArrays.matrix-method
-                        Normalize Between Arrays - method
+normalizeBetweenArrays-methods
+                        Normalize Between Arrays - methods
 normalizeBetweenArrays-generic
                         Normalize Between Arrays - generic
 normalizeForPrintorder-methods
@@ -41,6 +42,8 @@ normalizeForPrintorder
                         Print-Order Normalization - generic
 normalizeQuantiles      Normalize Columns of a Matrix to have the same
                         Quantiles
+normalizeRobustSpline   Normalize Single Microarray Using Shrunk
+                        Robust Splines
 normalizescale          Normalize Columns of a Matrix to have the Same
                         Scale
 normalizeWithinArrays-methods

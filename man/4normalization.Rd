@@ -13,6 +13,7 @@ In rare circumanstances, data might be normalized using \code{\link{normalizeFor
 
 \code{\link{normalizeWithinArrays}} also does background correction.
 At this time, the explicit background correction function \code{\link{backgroundCorrect}} is not used by LIMMA, but the function will become relevant if more sophisticated background correct methods are implemented.
+\code{normalizeWithinArrays} uses function \code{\link{normalizeRobustSpline}}.
 
 \code{normalizeBetweenArrays} uses utility functions \code{\link{normalizeMedians}}, \code{\link{normalizeMedianDeviations}} and \code{\link{normalizeQuantiles}}, none of which need to be called directly by users.
 }

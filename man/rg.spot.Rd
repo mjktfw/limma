@@ -26,5 +26,7 @@ A list containing the components
   \item{Gb}{A matrix containing the green channel background intensities for each spot for each array.}
 }
 \author{Gordon Smyth}
-\seealso{\code{\link{read.series}}, \code{\link{rg.series.spot}}, \code{\link{rg.quantarray}}, \code{\link{rg.genepix}}}
+\seealso{
+An overview of LIMMA functions for reading data is given in \link{3.ReadingData}.
+}
 \keyword{IO}

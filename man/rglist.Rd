@@ -25,7 +25,7 @@ All of these matrices should have the same dimensions.
 }
 
 \section{Methods}{
-This class inherits directly from class \code{"list"} so any operation appropriate for lists will work on objects of this class.
+This class inherits directly from class \code{list} so any operation appropriate for lists will work on objects of this class.
 Type \code{showMethods("RGList")} at the R prompt to see what methods are available for this class.
 }
 
