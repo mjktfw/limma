@@ -216,7 +216,7 @@ read.matrix <- function(file,nrows=0,skip=0,...) {
 read.maimages <- function(files,source="spot",path=NULL,ext=NULL,names=NULL,columns=NULL,annotation=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote="\"",...) {
 #	Extracts an RG list from a series of image analysis output files
 #	Gordon Smyth
-#	1 Nov 2002.  Last revised 5 March 2004.
+#	1 Nov 2002.  Last revised 22 March 2004.
 
 	if(missing(files)) {
 		if(missing(ext))
@@ -227,7 +227,6 @@ read.maimages <- function(files,source="spot",path=NULL,ext=NULL,names=NULL,colu
 			files <- sub(extregex,"",files)
 		}
 	}
-	if(!missing(source) && !missing(columns)) stop("Cannot specify both source and columns")
 	source <- match.arg(source,c("agilent","arrayvision","genepix","imagene","quantarray","smd","spot","spot.close.open"))
 	if(source=="imagene") return(read.imagene(files=files,path=path,ext=ext,names=names,columns=columns,wt.fun=wt.fun,verbose=verbose,sep=sep,quote=quote,...))
 	slides <- as.vector(as.character(files))

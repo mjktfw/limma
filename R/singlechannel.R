@@ -1,10 +1,10 @@
 #  SINGLE CHANNEL ANALYSIS
 
-lmsc.series <- function(M,A,design,correlation,variance.smooth=TRUE)
+lmsc.series <- function(M,A,design,correlation)
 #	Fit single channel linear model for each gene to a series of microarrays
 #	allowing for known correlation between the channels on each spot.
 #	Gordon Smyth
-#	14 March 2004.
+#	14 March 2004.  Last modified 22 March 2004.
 {
 #	Check input
 	M <- as.matrix(M)
@@ -24,7 +24,7 @@ lmsc.series <- function(M,A,design,correlation,variance.smooth=TRUE)
 #	Dimensions
 	nbeta <- ncol(design)
 	coef.names <- colnames(design)
-	ngenes <- nrow(M)
+	ngenes <- dimM[1]
 
 #	Main computation
 	sdM <- sqrt(2*(1-correlation))
@@ -33,10 +33,20 @@ lmsc.series <- function(M,A,design,correlation,variance.smooth=TRUE)
 	designM <- (diag(narrays) %x% matrix(c(-1,1),1,2)) %*% design
 	designA <- (diag(narrays) %x% matrix(c(0.5,0.5),1,2)) %*% design
 	X <- rbind(designM/sdM, designA/sdA)
+
+#	In general it may be necessary to allow for quality weights, this call does not
 	fit <- lm.fit(X,y)
-	fit$s2 <- drop(t(fit$effects[(fit$rank+1):ny,]^2) %*% matrix(1/fit$df.residual,ny-fit$rank,1))
-	if(variance.smooth) fit$s2 <- smoothVar(fit$s2, fit$df.residual)
-	fit
+	fit$sigma <- sqrt(colSums(fit$effects[(fit$rank+1):ny,]^2) / fit$df.residual)
+	fit$fitted.values <- fit$residuals <- fit$effects <- NULL
+#	if(variance.smooth) fit$s2 <- smoothVar(fit$s2, fit$df.residual)
+	fit$coefficients <- t(fit$coefficients)
+	stdev.unscaled <- sqrt(diag(chol2inv(fit$qr$qr)))
+	fit$stdev.unscaled <- matrix(stdev.unscaled,ngenes,nbeta,byrow=TRUE)
+	fit$df.residual <- rep.int(fit$df.residual,ngenes)
+	dimnames(fit$stdev.unscaled) <- dimnames(fit$stdev.unscaled) <- dimnames(fit$coefficients)
+	fit$design <- design
+	fit$correlation <- correlation
+	new("MArrayLM",fit)
 }
 
 array2channel <- function(targets,channels=c(1,2),channelwise.columns=list(Target=c("Cy3","Cy5")))

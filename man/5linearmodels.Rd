@@ -71,7 +71,7 @@ After the above steps the results may be displayed or further processed using:
 \item{ \code{\link{toptable}} or \code{\link{topTable}} }{
 	Presents a list of the genes most likely to be differentially expressed for a given contrast.}
 
-\item{ \code{\link{classifyTests}} }{
+\item{ \code{\link{classifyTestsF}} }{
 	Uses nested F-tests to classify the genes as up, down or even over the contrasts in the linear model with special attention to genes which are significant in more than one contrast.
 	\code{\link{classifyTestsT}} and \code{\link{classifyTestsP}} are simpler methods using cutoffs for the t-statistics or p-values individually.}
 

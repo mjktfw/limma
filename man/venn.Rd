@@ -29,7 +29,7 @@ An overview of linear model functions in limma is given by \link{5.LinearModels}
 \examples{
 tstat <- matrix(rt(300,df=10),100,3)
 tstat[1:33,] <- tstat[1:33,]+2
-clas <- classifyTests(tstat,df=10,p.value=0.05)
+clas <- classifyTestsF(tstat,df=10,p.value=0.05)
 a <- vennCounts(clas)
 print(a)
 vennDiagram(a)

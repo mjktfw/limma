@@ -3,7 +3,7 @@
 backgroundCorrect <- function(RG, method="subtract") {
 #	Apply background correction to microarray data
 #	Gordon Smyth
-#	12 April 2003.  Last modified 9 Dec 2003.
+#	12 April 2003.  Last modified 29 March 2004.
 
 	method <- match.arg(method, c("none","subtract", "half", "minimum", "edwards"))
 	switch(method,
@@ -37,14 +37,16 @@ backgroundCorrect <- function(RG, method="subtract") {
 #		spots with (0 < R-Rb < delta) is f=10% of the number spots
 #		with (R-Rb <= 0) for each channel and array.
 #		Note slight change from Edwards (2003).
-		nspots <- NROW(RG$R)
-		del <- function(d,f=0.1) quantile(d,sum(d<1e-16)*(1+f)/length(d),na.rm=TRUE)
+		one <- matrix(1,NROW(RG$R),1)
+		delta.vec <- function(d, f=0.1) {
+			quantile(d, mean(d<1e-16,na.rm=TRUE)*(1+f), na.rm=TRUE)
+		}
 		sub <- as.matrix(RG$R-RG$Rb)
-		delta <- apply(sub, 2, del)
-		RG$R <- ifelse(sub > rep(1,nspots)%o%delta, sub, delta*exp(1-(RG$Rb+delta)/RG$R))
+		delta <- one %*% apply(sub, 2, delta.vec)
+		RG$R <- ifelse(sub < delta, delta*exp(1-(RG$Rb+delta)/RG$R), sub)
 		sub <- as.matrix(RG$G-RG$Gb)
-		delta <- apply(sub, 2, del)
-		RG$G <- ifelse(sub > rep(1,nspots)%o%delta, sub, delta*exp(1-(RG$Gb+delta)/RG$G))
+		delta <- one %*% apply(sub, 2, delta.vec)
+		RG$G <- ifelse(sub < delta, delta*exp(1-(RG$Gb+delta)/RG$G), sub)
 	})
 	RG$Rb <- NULL
 	RG$Gb <- NULL

@@ -7,15 +7,16 @@ Normalizes expression intensities so that the intensities or log-ratios have sim
 }
 
 \usage{
-normalizeBetweenArrays(object, method, ties=FALSE)
+normalizeBetweenArrays(object, method, ties=TRUE, targets=NULL)
 }
 
 \arguments{
   \item{object}{an \code{matrix} or \code{\link[limma:malist]{MAList}} object containing expression ratios for a series of arrays}
   \item{method}{character string specifying the normalization method to be used.
-  Choices are \code{"none"}, \code{"scale"}, \code{"quantile"} or \code{"Aquantile"}.
+  Choices are \code{"none"}, \code{"scale"}, \code{"quantile"}, \code{"Aquantile"}, \code{"Gquantile"}, \code{"Rquantile"} or \code{"Tquantile"}.
   A partial string sufficient to uniquely identify the choice is permitted.}
-  \item{ties}{logical, if \code{TRUE} then ties are treated in a careful way when \code{method="quantile"} or \code{method="Aquantile"}}
+  \item{ties}{logical, if \code{TRUE} then ties are treated in a careful way during quantile normalization.  This takes longer but is more accurate.}
+  \item{targets}{vector, factor or matrix of length twice the number of arrays, used to indicate target groups if \code{method="Tquantile"}}
 }
 
 \details{
@@ -31,6 +32,12 @@ Quantile normalization was proposed by Bolstad et al (2003) for Affymetrix-style
 \code{method="quantile"} ensures that the intensities have the same empirical distribution across arrays and across channels.
 \code{method="Aquantile"} ensures that the A-values (average intensities) have the same empirical distribution across arrays leaving the M-values (log-ratios) unchanged.
 These two methods are called "q" and "Aq" respectively in Yang and Thorne (2003).
+
+\code{method="Tquantile"} performs quantile normalization separately for the groups indicated by \code{targets}.
+\code{targets} may be a target matrix such as read by \code{readTargets} or can be a vector indicating green channel groups followed by red channel groups.
+
+\code{method="Gquantile"} ensures that the green (first) channel has the same empirical distribution across arrays, leaving the M-values (log-ratios) unchanged.
+\code{method="Rquantile"} ensures that the red (second) channel has the same empirical distribution across arrays, leaving the M-values (log-ratios) unchanged.
 
 If \code{object} is a \code{matrix} then the scale or quantile normlization will be applied to the columns.
 Applying \code{method="Aquantile"} when \code{object} is a \code{matrix} will produce an error.

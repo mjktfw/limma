@@ -19,9 +19,10 @@ The targets file is a text file with rows corresponding to microarrays and colum
 Other columns are optional.
 }
 \value{
-A data frame including columns
+Data frame usually including columns
   \item{Cy3}{character vector giving names of RNA samples}
   \item{Cy5}{character vector giving names of RNA samples}
+Character columns are not converted to factors.
 }
 \author{Gordon Smyth}
 \seealso{

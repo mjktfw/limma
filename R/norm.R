@@ -366,15 +366,15 @@ plotPrintorder <- function(object,layout,start="topleft",slide=1,method="loess",
 
 #  BETWEEN ARRAY NORMALIZATION
 
-normalizeBetweenArrays <- function(object, method="scale", ties=FALSE) {
+normalizeBetweenArrays <- function(object, method="scale", ties=TRUE, targets=NULL) {
 #	Normalize between arrays
 #	Gordon Smyth
-#	12 Apri 2003.  Last revised 26 September 2003.
+#	12 Apri 2003.  Last revised 6 April 2004.
 
-	choices <- c("none","scale","quantile","Aquantile")
+	choices <- c("none","scale","quantile","Aquantile","Gquantile","Rquantile","Tquantile")
 	method <- match.arg(method,choices)
 	if(is(object,"matrix")) {
-		if(method=="Aquantile") stop("Aquantile normalization not applicable to matrix object")
+		if(!(method %in% c("none","scale","quantile"))) stop("method not applicable to matrix objects")
 		return(switch(method,
 			none = object,
 			scale = normalizeMedianDeviations(object),
@@ -389,14 +389,40 @@ normalizeBetweenArrays <- function(object, method="scale", ties=FALSE) {
 		},
 		quantile = {
 			narrays <- NCOL(object$M)
-			Z <- normalizeQuantiles(cbind(object$A+object$M/2,object$A-object$M/2),ties=ties)
-			R <- Z[,1:narrays]
-			G <- Z[,narrays+(1:narrays)]
+			Z <- normalizeQuantiles(cbind(object$A-object$M/2,object$A+object$M/2),ties=ties)
+			G <- Z[,1:narrays]
+			R <- Z[,narrays+(1:narrays)]
 			object$M <- R-G
 			object$A <- (R+G)/2
 		},
 		Aquantile = {
 			object$A <- normalizeQuantiles(object$A,ties=ties)
+		},
+		Gquantile = {
+			G <- object$A-object$M/2
+			E <- normalizeQuantiles(G,ties=ties) - G
+			object$M <- object$M - E
+			object$A <- object$A + E/2
+		},
+		Rquantile = {
+			R <- object$A+object$M/2
+			E <- normalizeQuantiles(R,ties=ties) - R
+			object$M <- object$M - E
+			object$A <- object$A + E/2
+		},
+		Tquantile = {
+			narrays <- NCOL(object$M)
+			if(NCOL(targets)>2) targets <- targets[,c("Cy3","Cy5")]
+			targets <- as.vector(targets)
+			Z <- cbind(object$A-object$M/2,object$A+object$M/2)
+			for (u in unique(targets)) {
+				j <- targets==u
+				Z[,j] <- normalizeQuantiles(Z[,j],ties=ties)
+			}
+			G <- Z[,1:narrays]
+			R <- Z[,narrays+(1:narrays)]
+			object$M <- R-G
+			object$A <- (R+G)/2
 		})
 	object
 }

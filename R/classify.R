@@ -9,7 +9,13 @@ setMethod("show","TestResults",function(object) {
 	printHead(object@.Data)
 })
 
-classifyTests <- function(object,cor.matrix=NULL,design=NULL,contrasts=diag(ncol(design)),df=Inf,p.value=0.01,fstat.only=FALSE) {
+classifyTests <- function(object,cor.matrix=NULL,design=NULL,contrasts=diag(ncol(design)),df=Inf,p.value=0.01,fstat.only=FALSE)
+{
+	.Deprecated("classifyTestsF")
+	classifyTestsF(object=object,cor.matrix=cor.matrix,design=design,contrasts=contrasts,df=df,p.value=p.value,fstat.only=FALSE)
+}
+
+classifyTestsF <- function(object,cor.matrix=NULL,design=NULL,contrasts=diag(ncol(design)),df=Inf,p.value=0.01,fstat.only=FALSE) {
 #	Use F-tests to classify vectors of t-test statistics into outcomes
 #	Gordon Smyth
 #	20 Mar 2003.  Last revised 24 February 2004.
@@ -89,7 +95,7 @@ FStat <- function(object,cor.matrix=NULL,design=NULL,contrasts=diag(ncol(design)
 #	Gordon Smyth
 #	24 February 2004.
 {
-	classifyTests(object=object,cor.matrix=cor.matrix,design=design,contrasts=contrasts,fstat.only=TRUE)
+	classifyTestsF(object=object,cor.matrix=cor.matrix,design=design,contrasts=contrasts,fstat.only=TRUE)
 }
 
 classifyTestsT <- function(object,t1=4,t2=3) {
@@ -112,12 +118,14 @@ classifyTestsT <- function(object,t1=4,t2=3) {
 classifyTestsP <- function(object,df=Inf,p.value=0.05,method="holm") {
 #	TestResults by rows for a matrix t-statistics using adjusted p-values
 #	Gordon Smyth
-#	12 July 2003.  Last modified 25 Feb 2004.
+#	12 July 2003.  Last modified 23 March 2004.
 
 #	Method intended for MAList objects but accept unclassed lists as well
 	if(is.list(object)) {
 		if(is.null(object$t)) stop("tstat cannot be extracted from object")
 		tstat <- object$t
+		if(!is.null(object$df.residual)) df <- object$df.residual
+		if(!is.null(object$df.prior)) df <- df+object$df.prior
 	} else {
 		tstat <- object
 	}

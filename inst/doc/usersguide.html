@@ -14,7 +14,7 @@
 <p align="center">Gordon Smyth, Natalie Thorne and James Wettenhall<br>
 The
 Walter and Eliza Hall Institute of Medical Research<br>
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->19 March 2004<!--webbot bot="Timestamp" i-checksum="27295" endspan --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->30 March 2004<!--webbot bot="Timestamp" i-checksum="27279" endspan --></p>
 
 <h2>Table of Contents</h2>
 
@@ -45,14 +45,15 @@ Walter and Eliza Hall Institute of Medical Research<br>
   <li><a href="#CaseStudies">Case Studies</a><ol>
   <li><a href="#Swirl">Swirl Data: A Single-Sample Experiments</a></li>
   <li><a href="#ApoAI">ApoAI Data: A Two-Sample Experiments</a></li>
+  <li><a href=#Ecoli>Ecoli Lrp Data: Affymetrix Data with Two Targets</a></li>
   <li><a href="#Estrogen">Estrogen Data: A 2x2 Factorial Experiment with Affymetrix Data</a></li>
-  <li><a href="#Weaver">Weaver Data: A Factorial Experiment</a></li>
+  <li><a href="#Weaver">Weaver Data: A 2x2 Factorial Experiment with Two-Color 
+  Data</a></li>
 </ol>
 
   </li>
   <li><a href="#DuplicateSpots">Within-Array Replicate Spots</a></li>
   <li><a href="#marray">Using limma with the marray Packages</a></li>
-  <li><a href="#AffymetrixData">Using limma with Affymetrix data</a></li>
   <li><a href="#SingleChannelNormalization">Single-Channel Normalization for Two-Color Arrays</a></li>
 </ol>
 
@@ -82,20 +83,26 @@ you are using limma in conjunction with these packages, see Section 10. The
 Bioconductor package affy provides functions for reading and normalizing Affymetrix 
 microarray data. If you are using the affy package, see Sections 7.2 and 11.</p>
 
-<p>This tutorial was prepared using R Version 1.8.0 for Windows and limma version 1.3.2. The latest version of limma is always available from
-<a href="http://www.bioconductor.org">http://www.bioconductor.org</a> under 
-&quot;Developmental Packages&quot; or from
+<p>This tutorial was prepared using R Version 1.9.0 for Windows and limma version 1.5.10.
+The latest version of limma is always available from
 <a href="http://bioinf.wehi.edu.au/limma/">http://bioinf.wehi.edu.au/limma/</a>. 
+The latest version of limma, built for the development version of R, is always available from
+<a href="http://www.bioconductor.org">http://www.bioconductor.org</a> under 
+&quot;Developmental Packages&quot;.
 If you are using R on a system with a suitable internet connection and with 
-installation privileges on your computer, you should be able to install the 
-latest version of limma from the latter site using</p>
+installation privileges on your computer, you should be able to install
+limma for the current version of R using</p>
 
-<pre> install.packages(&quot;limma&quot;,contriburl=&quot;<a href="http://bioinf.wehi.edu.au/limma">http://bioinf.wehi.edu.au/limma</a>&quot;)</pre>
-<p>at the R prompt. Limma is updated frequently, often a couple of times a week. If you 
+<pre> install.packages(&quot;limma&quot;,contriburl=&quot;http://bioinf.wehi.edu.au/limma&quot;)</pre>
+<p>at the R prompt. Limma is updated frequently, often a couple of times a week.
+
+<p>If you 
 are using Windows, you can install the last official Bioconductor release of limma from the  drop-down menu 
 in R, simply 
 select <code>Packages</code> then <code>Install package(s) from Bioconductor...</code>. 
-Note however that this is updated only once every 6 months. The data sets used in the 
+Note however that this is updated only once every 6 months.</p>
+
+<p>The data sets used in the 
 case study examples can be downloaded from
 <a href="http://bioinf.wehi.edu.au/marray/genstat2002/">
 http://bioinf.wehi.edu.au/marray/genstat2002/</a>. Help with limma is available 
@@ -492,7 +499,7 @@ contrast matrix can be created by</p>
 obtained from</p>
 <pre>&gt; topTable(fit2, coef=1, adjust=&quot;fdr&quot;)</pre>
 <p>You may classify each gene according to the three pair-wise comparisons using</p>
-<pre>&gt; clas &lt;- classifyTests(fit2)</pre>
+<pre>&gt; clas &lt;- classifyTestsF(fit2)</pre>
 
 <p>A Venn diagram showing numbers of genes significant in each comparison can be 
 obtained from</p>
@@ -1048,7 +1055,124 @@ to be differentially expressed in the knockout versus the control line.</p>
 &gt; text(fit$coef[top8,2],fit$lods[top8,2],labels=substring(genelist[top8,&quot;NAME&quot;],1,5),cex=0.8,col=&quot;blue&quot;)</pre>
 <p align="center">
 <img border="0" src="apoai/bayes.png" width="693" height="743"></p>
-<h3><a name="Estrogen">8.3 Estrogen Data: A 2x2 Factorial Experiment with Affymetrix Arrays</a></h3>
+<h3>8.3 Ecoli Lrp Data: Affymetrix Data with Two Targets</h3><a name="ecoli"></a>
+<p>The data are from experiments reported in Hung et al (2002) and are available 
+from the www site </p>
+<p>&nbsp; <a href="http://visitor.ics.uci.edu/genex/cybert/tutorial/index.html">http://visitor.ics.uci.edu/genex/cybert/tutorial/index.html</a></p>
+<p>The data is also available from the ecoliLeucine data package available from the 
+Bioconductor www site under &quot;Experimental Data&quot;. Hung et al (2002) 
+state that &quot;The purpose of the work presented here is to identify the network of 
+genes that are differentially regulated by the global E. coli regulatory 
+protein, leucine-responsive regulatory protein (Lrp), during steady state growth 
+in a glucose supplemented minimal salts medium. Lrp is a DNA-binding protein 
+tath has been reported to affect the expression of approximately 55 genes.&quot;&nbsp; 
+Gene expression in two E. coli bacteria strains, labelled lrp+ and lrp-, 
+were compared using eight Affymetrix ecoli chips, four 
+chips each for lrp+ and lrp-.</p>
+<p>The following code assumes that the data files for the eight chips are in 
+your current working directory. The E. coli CDF is also assumed to be available, 
+either the Ecoli CDF data package from Bioconductor is installed or the file 
+Ecoli.CDF is in your current working directory.</p>
+<pre>&gt; dir()
+[1] &quot;Ecoli.CDF&quot;            &quot;nolrp_1.CEL&quot;          &quot;nolrp_2.CEL&quot;
+[4] &quot;nolrp_3.CEL&quot;          &quot;nolrp_4.CEL&quot;          &quot;wt_1.CEL&quot;
+[7] &quot;wt_2.CEL&quot;             &quot;wt_3.CEL&quot;             &quot;wt_4.CEL&quot;</pre>
+<p>The data is read and normalized using the Bioconductor affy package.</p>
+<pre>&gt; library(affy)
+Welcome to Bioconductor 
+         Vignettes contain introductory material.  To view, 
+         simply type: openVignette() 
+         For details on reading vignettes, see
+         the openVignette help page.
+&gt; Data &lt;- ReadAffy()
+&gt; eset &lt;- rma(Data)
+Background correcting
+Normalizing
+Calculating Expression
+&gt; pData(eset)
+            sample
+nolrp_1.CEL      1
+nolrp_2.CEL      2
+nolrp_3.CEL      3
+nolrp_4.CEL      4
+wt_1.CEL         5
+wt_2.CEL         6
+wt_3.CEL         7
+wt_4.CEL         8</pre>
+<p>Now we consider differential expression between the lrp+ and lrp- strains.</p>
+<pre>&gt; strain &lt;- c(&quot;lrp-&quot;,&quot;lrp-&quot;,&quot;lrp-&quot;,&quot;lrp-&quot;,&quot;lrp+&quot;,&quot;lrp+&quot;,&quot;lrp+&quot;,&quot;lrp+&quot;)
+&gt; design &lt;- model.matrix(~factor(strain))
+&gt; colnames(design) &lt;- c(&quot;lrp-&quot;,&quot;lrp+vs-&quot;)
+&gt; design
+  lrp- lrp+vs-
+1    1       0
+2    1       0
+3    1       0
+4    1       0
+5    1       1
+6    1       1
+7    1       1
+8    1       1
+attr(,&quot;assign&quot;)
+[1] 0 1
+attr(,&quot;contrasts&quot;)
+attr(,&quot;contrasts&quot;)$&quot;factor(strain)&quot;
+[1] &quot;contr.treatment&quot;</pre>
+<p>The first coefficient measures log2-expression of each gene in the lrp- 
+strain. The second coefficient measures the log2-fold change of lrp+ over lrp-, 
+i.e., the log-fold change induced by lrp.</p>
+<pre>&gt; fit &lt;- lmFit(eset, design)
+&gt; fit &lt;- eBayes(fit)
+&gt; options(digits=2)
+&gt; topTable(fit, coef=2, n=40, adjust=&quot;fdr&quot;)
+                         ProbeSetID     M    A     t P.Value      B
+4282  IG_821_1300838_1300922_fwd_st -3.32 12.4 -23.1 5.3e-05  8.017
+5365                  serA_b2913_st  2.78 12.2  15.8 6.0e-04  6.603
+1389                  gltD_b3213_st  3.03 10.9  13.3 1.6e-03  5.779
+4625                   lrp_b0889_st  2.30  9.3  11.4 4.0e-03  4.911
+1388                  gltB_b3212_st  3.24 10.1  11.1 4.0e-03  4.766
+4609                  livK_b3458_st  2.35  9.9  10.8 4.0e-03  4.593
+4901                  oppB_b1244_st -2.91 10.7 -10.6 4.0e-03  4.504
+4903                  oppD_b1246_st -1.94 10.4 -10.5 4.0e-03  4.434
+5413                  sodA_b3908_st  1.50 10.3   9.7 6.5e-03  3.958
+4900                  oppA_b1243_st -2.98 13.0  -9.1 9.2e-03  3.601
+5217                   rmf_b0953_st -2.71 13.6  -9.0 9.3e-03  3.474
+7300                  ytfK_b4217_st -2.64 11.1  -8.9 9.3e-03  3.437
+5007                  pntA_b1603_st  1.58 10.1   8.3 1.4e-02  3.019
+4281  IG_820_1298469_1299205_fwd_st -2.45 10.7  -8.1 1.6e-02  2.843
+4491                  ilvI_b0077_st  0.95 10.0   7.4 2.9e-02  2.226
+5448                  stpA_b2669_st  1.79 10.0   7.4 2.9e-02  2.210
+611                        b2343_st -2.12 10.8  -7.1 3.4e-02  2.028
+5930                  ybfA_b0699_st -0.91 10.5  -7.0 3.5e-02  1.932
+1435                  grxB_b1064_st -0.91  9.8  -6.9 3.8e-02  1.810
+4634                  lysU_b4129_st -3.30  9.3  -6.9 3.9e-02  1.758
+4829                   ndk_b2518_st  1.07 11.1   6.7 4.3e-02  1.616
+2309 IG_1643_2642304_2642452_rev_st  0.83  9.6   6.7 4.3e-02  1.570
+4902                  oppC_b1245_st -2.15 10.7  -6.3 5.9e-02  1.238
+4490                  ilvH_b0078_st  1.11  9.9   5.9 8.8e-02  0.820
+1178                  fimA_b4314_st  3.40 11.7   5.9 8.8e-02  0.743
+6224                  ydgR_b1634_st -2.35  9.8  -5.8 8.8e-02  0.722
+4904                  oppF_b1247_st -1.46  9.9  -5.8 8.8e-02  0.720
+792                        b3914_st -0.77  9.5  -5.7 1.0e-01  0.565
+5008                  pntB_b1602_st  1.47 12.8   5.6 1.0e-01  0.496
+4610                  livM_b3456_st  1.04  8.5   5.5 1.1e-01  0.376
+5097                  ptsG_b1101_st  1.16 12.2   5.5 1.1e-01  0.352
+4886                  nupC_b2393_st  0.79  9.6   5.5 1.1e-01  0.333
+4898                  ompT_b0565_st  2.67 10.5   5.4 1.2e-01  0.218
+5482                   tdh_b3616_st -1.61 10.5  -5.3 1.3e-01  0.092
+1927       IG_13_14080_14167_fwd_st -0.55  8.4  -5.3 1.3e-01  0.076
+6320                  yeeF_b2014_st  0.88  9.9   5.3 1.3e-01  0.065
+196                   atpG_b3733_st  0.60 12.5   5.2 1.4e-01 -0.033
+954                   cydB_b0734_st -0.76 11.0  -5.0 1.8e-01 -0.272
+1186                  fimI_b4315_st  1.15  8.3   5.0 1.8e-01 -0.298
+4013     IG_58_107475_107629_fwd_st -0.49 10.4  -4.9 2.0e-01 -0.407</pre>
+<p>It is interesting to compare this table with Tables III and IV in Hung et al 
+(2002). Note that the top-ranked gene is an intergenic region (IG) tRNA gene. The 
+knock-out gene itself is in position four. Many of the genes in the above table, 
+including the ser, glt, liv, opp, lys, ilv and fim families, are known targets 
+of lrp. Positive M-values mean that the gene is up-regulated in lrp+, negative 
+values mean that it is repressed.</p>
+<h3><a name="Estrogen">8.4 Estrogen Data: A 2x2 Factorial Experiment with Affymetrix Arrays</a></h3>
 <p>This data is from the factDesign package. The data includes gene expression 
 levels for a subset of 500 genes from a 2x2 factorial experiment on MCF7 breast 
 cancer cells using Affymetrix HGU95av2 arrays. The factors in this experiment 
@@ -1170,7 +1294,7 @@ interest.</p>
 <pre>&gt; F.stat &lt;- FStat(fit2)</pre>
 <p>The F-statistic has 3 and 8.8 degrees of freedom. All three of the 
 coefficients of interest can be classified as up, down or not significant using 
-nested F-tests:</p>
+P-values:</p>
 <pre>&gt; results &lt;- classifyTestsP(fit2, p=0.0005)
 &gt; vennDiagram(results)</pre>
 <div align="center">
@@ -1180,11 +1304,12 @@ nested F-tests:</p>
   Examining individual t-statistics or p-values tends to underestimate the 
   number of genes which are differentially expressed for several coefficients 
   simultaneously. Classifying the coefficients using nested F-tests does a bit better:</p>
-  <pre>&gt; results &lt;- classifyTests(fit2, p=0.001)
+  <pre>&gt; results &lt;- classifyTestsF(fit2, p=0.001)
 &gt; vennDiagram(results)</pre>
   <p align="center">
   <img border="0" src="estrogen/venndiag2.png" width="669" height="525"></p>
-<h3><a name="Weaver">8.4 Weaver Mutant Data: A Factorial Experiment</a></h3>
+<h3><a name="Weaver">8.5 Weaver Mutant Data: A 2x2 Factorial Experiment with 
+Two-Color Data</a></h3>
 <p>This case study considers a more involved analysis in which the sources of 
 RNA have a factorial structure. In this example we assume that data is available as an 
 <code>RGList</code>.</p>
@@ -1236,7 +1361,7 @@ P21WT.P11WT      1        0   0
 TimeWt is late vs early time for the wild-type mice. Mutant11 is mutant vs 
 wild-type at the early time. The third column estimates the interaction between time 
 and genotype.</p>
-<pre>&gt; fitIA &lt;- lm.series(MA$M,designIA)
+<pre>&gt; fitIA &lt;- lmFit(MA,designIA)
 &gt; ebIA &lt;- ebayes(fitIA)
 &gt; options(digits=3)
 &gt; toptable(coef=&quot;I/A&quot;,n=10,genelist=gal,fit=fitIA,eb=ebIA,adjust=&quot;fdr&quot;)
@@ -1397,15 +1522,14 @@ to conduct the usual analysis of the arrays using generalized least squares.</p>
 for each gene, and then take a trimmed mean on the atanh scale to estimate the 
 overall correlation. This command takes a lot of time, perhaps as much as an 
 hour for a series of arrays.</p>
-<pre>&gt; cor &lt;- dupcor.series(MA$M,design,ndups=2) # This is a very slow computation!
-&gt; cor$cor
+<pre>&gt; cor &lt;- duplicateCorrelation(MA,design,ndups=2) # This is a very slow computation!
+&gt; cor$consensus.correlation
 [1] 0.571377
 &gt; boxplot(cor$cor.genes)</pre>
 <p><img border="0" src="bob/corbox.png" width="290" height="724"></p>
-<pre>&gt; fit &lt;- gls.series(MA$M,design,ndups=2,correlation=0.571377)
-&gt; eb &lt;- ebayes(fit)
-&gt; genenames &lt;- uniquegenelist(gal[,&quot;Name&quot;],ndups=2)
-&gt; toptable(number=30,genelist=genenames,fit=fit,eb=eb,adjust=&quot;fdr&quot;)
+<pre>&gt; fit &lt;- lmFit(MA,design,ndups=2,correlation=0.571377)
+&gt; fit &lt;- eBayes(fit)
+&gt; topTable(fit,n=30,adjust=&quot;fdr&quot;)
      Name          M          t      P.Value        B
 1  H34599  0.4035865  13.053838 0.0004860773 7.995550
 2  H31324 -0.5196599 -12.302094 0.0004860773 7.499712
@@ -1443,31 +1567,22 @@ hour for a series of arrays.</p>
 <h2><a name="marray">10. Using limma with the marray Packages</a></h2>
 <p>The packages marrayClasses, marrayInput, marrayNorm and marrayTools are 
 designed to read and normalize cDNA data. The marrayNorm package provides some 
-normalization methods which are not provided by limma. Normalization using marrayNorm will produce a 
+normalization methods which are not provided by limma. Data input using the 
+marray packages produces a data object of class <code>marrayRaw</code>. Normalization using marrayNorm will produce a 
 data object 
 of class <code>marrayNorm</code>. Suppose that you have an <code>marrayNorm</code> 
-object called <code>N</code>. The data may be converted into an <code>MAList</code> 
-suitable for further manipulation in limma using</p>
-  <pre>&gt; MA &lt;- as.MAList(N)</pre>
-  <p>Even without conversion, the <code>marrayNorm</code> object may be used 
+object called <code>Data</code>.</p>
+<p>The <code>marrayNorm</code> data object may be used 
   directly in the <code>lmFit</code> function in limma, for example</p>
-<pre>fit &lt;- lmFit(N, design)</pre>
+<pre>&gt; fit &lt;- lmFit(Data, design)</pre>
 <p>after which one proceeds exactly as in previous sections. </p>
-<p>Note that there are no facilities for importing <code>marrayRaw</code> 
-objects into limma. This means that, if you have read your data into R using the 
-marrayInput package, you should use marrayNorm rather than limma for 
-normalization. After normalization, you are free to use limma for analysis of 
-differential expression.</p>
-<h2><a name="AffymetrixData">11. Affymetrix and Single-Color Arrays</a></h2>
-<p>Normalization of Affymetrix data using functions in the package <code>affy</code> 
-will produce a data object of class <code>exprSet</code> or of <code>AffyBatch</code> 
-which inherits from <code>exprSet</code>. Objects of class exprSet may be used 
-directly in the <code>lmFit</code> function in limma. Let <code>eset</code> be the <code>
-exprSet</code> object. A linear model may be fitted using</p>
-<pre>fit &lt;- lmFit(eset, design)</pre>
-<p>See Section 7.2 for more details. </p>
-
-<h2><a name="SingleChannelNormalization">12. Single-Channel Normalization for Two-Color Arrays</a></h2>
+<p>Alternatively, you may convert marray data objects to limma data objects 
+using the convert package. <code>marrayRaw</code> objects may be converted to
+<code>RGList</code> objects and <code>marrayNorm</code> objects to <code>MAList</code> 
+objects:</p>
+<pre>&gt; library(convert)
+&gt; MA &lt;- as(Data, &quot;MAList&quot;)</pre>
+<h2><a name="SingleChannelNormalization">11. Single-Channel Normalization for Two-Color Arrays</a></h2>
 
 <p> We provide a short background on the topic of single-channel
 normalization for two color arrays. Throughout this section the ApoAI
@@ -1618,8 +1733,9 @@ similar:</p>
 
 <h2>Acknowledgements</h2>
 <p>Thanks to Yee Hwa Yang and Sandrine Dudoit for the first three data sets. The Swirl zebrafish data were provided by Katrin Wuennenburg-Stapleton from the
-<a href="http://mcb.berkeley.edu/labs/ngai/">Ngai Lab</a> at UC Berkeley. Thanks 
-to Lynn Corcoran for the Bob Mutant data.</p>
+<a href="http://mcb.berkeley.edu/labs/ngai/">Ngai Lab</a> at UC Berkeley. 
+Laurent Gautier made the ecoliLeucine data set available on Bioconductor. Lynn Corcoran 
+provided the Bob Mutant data.</p>
 
 <h2>References</h2>
 
@@ -1634,6 +1750,9 @@ to Lynn Corcoran for the Bob Mutant data.</p>
   analysis of gene expression in the developing pontocerebellar projection 
   system. <i>Neuron</i> <b>36</b>, 417-434. (<a href="http://www.neuron.org/content/article/fulltext?uid=PIIS0896627302010164">Full 
   Text</a>)</li>
+  <li>Hung, S., Baldi, P. and Hatfield, G. W. (2002). Global gene expression 
+profiling in Escherichia coli K12: The effects of leucine-responsive regulatory 
+protein. <i>Journal of Biological Chemistry</i> 277(43):40309-23.</li>
   <li>Li, C., and Wong, W. H. (2001). 
   Model-based analysis of oligonucleotide arrays: expression index computation 
   and outlier detection. <i>Proceedings of the 

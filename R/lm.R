@@ -1,9 +1,9 @@
 #  LINEAR MODELS
 
-lmFit <- function(object,design=NULL,ndups=1,spacing=1,correlation=0.75,weights=NULL,method="ls",...) {
+lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation=0.75,weights=NULL,method="ls",...) {
 #	Fit linear model
 #	Gordon Smyth
-#	30 June 2003.  Last modified 19 March 2004.
+#	30 June 2003.  Last modified 5 April 2004.
 
 	M <- NULL
 #	Method intended for MAList objects but allow unclassed lists as well
@@ -35,27 +35,27 @@ lmFit <- function(object,design=NULL,ndups=1,spacing=1,correlation=0.75,weights=
 	if(method=="robust")
 		fit <- rlm.series(M,design=design,ndups=ndups,spacing=spacing,weights=weights,...)
 	else
-		if(ndups < 2 || correlation==0)
+		if(ndups < 2 && is.null(block))
 			fit <- lm.series(M,design=design,ndups=ndups,spacing=spacing,weights=weights)
 		else
-			fit <- gls.series(M,design=design,ndups=ndups,spacing=spacing,correlation=correlation,weights=weights,...)
+			fit <- gls.series(M,design=design,ndups=ndups,spacing=spacing,block=block,correlation=correlation,weights=weights,...)
 	fit$method <- method
 	fit$design <- design
-	if(ndups > 1) fit$correlation <- correlation
 	if(is(object,"MAList")) {
 		if(!is.null(object$genes)) fit$genes <- uniquegenelist(object$genes,ndups=ndups,spacing=spacing) 
 		if(!is.null(object$A)) fit$Amean <- rowMeans(unwrapdups(as.matrix(object$A),ndups=ndups,spacing=spacing),na.rm=TRUE)
 	}
 	if(is(object,"marrayNorm")) {
 		if(length(object@maGnames)) {
-			fit$genes <- uniquegenelist(data.frame(Labels=object@maGnames@maLabels,object@maGnames@maInfo),ndups=ndups,spacing=spacing)
+			fit$genes <- uniquegenelist(data.frame(Labels=I(object@maGnames@maLabels),object@maGnames@maInfo),ndups=ndups,spacing=spacing)
 			attr(fit$genes, "Notes") <- object@maGnames@maNotes
 		}
 		if(length(object@maA)) fit$Amean <- rowMeans(unwrapdups(object@maA,ndups=ndups,spacing=spacing),na.rm=TRUE)
 	}
 	if(is(object,"exprSet")) {
-		ProbeID <- rownames(object@exprs)
-		if(!is.null(ProbeID)) fit$genes <- uniquegenelist(data.frame(ProbeID=ProbeID),ndups=ndups,spacing=spacing)
+		ProbeSetID <- rownames(object@exprs)
+		if(!is.null(ProbeSetID)) fit$genes <- uniquegenelist(data.frame(ID=I(ProbeSetID)),ndups=ndups,spacing=spacing)
+		fit$Amean <- rowMeans(object@exprs,na.rm=TRUE)
 	}
 	new("MArrayLM",fit)
 }
@@ -186,24 +186,37 @@ rlm.series <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL,...)
 	list(coefficients=drop(beta),stdev.unscaled=drop(stdev.unscaled),sigma=sigma,df.residual=df.residual)
 }
 
-gls.series <- function(M,design=NULL,ndups=2,spacing=1,correlation=NULL,weights=NULL,...)
+gls.series <- function(M,design=NULL,ndups=2,spacing=1,block=NULL,correlation=NULL,weights=NULL,...)
 {
 #	Fit linear model for each gene to a series of microarrays.
 #	Fit is by generalized least squares allowing for correlation between duplicate spots.
 #	Gordon Smyth
-#	11 May 2002.  Last revised 6 March 2004.
+#	11 May 2002.  Last revised 5 April 2004.
 
-	if(ndups<2) {
-		warning("No duplicates: correlation between duplicates set to zero")
-		ndups <- 1
-		correlation <- 0
-	}
 	M <- as.matrix(M)
 	narrays <- ncol(M)
 	if(is.null(design)) design <- matrix(1,narrays,1)
 	design <- as.matrix(design)
 	if(nrow(design) != narrays) stop("Number of rows of design matrix does not match number of arrays")
-	if(is.null(correlation)) correlation <- duplicateCorrelation(M,design=design,ndups=ndups,spacing=spacing,weights=weights,...)$cor
+	if(is.null(correlation)) correlation <- duplicateCorrelation(M,design=design,ndups=ndups,spacing=spacing,block=block,weights=weights,...)$consensus.correlation
+	if(is.null(block)) {
+		if(ndups<2) {
+			warning("No duplicates: correlation between duplicates set to zero")
+			ndups <- 1
+			correlation <- 0
+		}
+		if(is.null(spacing)) spacing <- 1
+		cormatrix <- diag(rep(correlation,len=narrays)) %x% array(1,c(ndups,ndups))
+	} else {
+		ndups <- spacing <- 1
+		block <- as.vector(block)
+		if(length(block)!=narrays) stop("Length of block does not match number of arrays")
+		ub <- unique(block)
+		nblocks <- length(ub)
+		Z <- matrix(block,narrays,nblocks)==matrix(ub,narrays,nblocks,byrow=TRUE)
+		cormatrix <- Z%*%(correlation*t(Z))
+	}
+	diag(cormatrix) <- 1
 	if(!is.null(weights)) {
 		weights <- as.matrix(weights)
 		if(any(dim(weights) != dim(M))) weights <- array(weights,dim(M))
@@ -216,8 +229,6 @@ gls.series <- function(M,design=NULL,ndups=2,spacing=1,correlation=NULL,weights=
 	ngenes <- nrow(M)
 	if(!is.null(weights)) weights <- unwrapdups(weights,ndups=ndups,spacing=spacing)
 	design <- design %x% rep(1,ndups)
-	cormatrix <- diag(rep(correlation,len=narrays)) %x% array(1,c(ndups,ndups))
-	diag(cormatrix) <- 1
 	stdev.unscaled <- beta <- matrix(NA,ngenes,nbeta,dimnames=list(NULL,coef.names))
 	sigma <- rep(NA,ngenes)
 	df.residual <- rep(0,ngenes)

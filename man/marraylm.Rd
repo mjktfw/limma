@@ -16,7 +16,7 @@ Objects are normally created by \code{\link{lmFit}}.
     \item{\code{sigma}:}{\code{numeric} vector containing residual variances for each gene}
     \item{\code{df.residual}:}{\code{numeric} vector containing residual degrees of freedom for each gene}
   }
-  Object may also contain the following optional components:
+  Objects may also contain the following optional components:
   \describe{
     \item{\code{genes}:}{\code{data.frame} containing gene names and annotation}
     \item{\code{design}:}{design \code{matrix} of full column rank}
@@ -33,7 +33,7 @@ Objects are normally created by \code{\link{lmFit}}.
 \code{RGList} objects will return dimensions and hence functions such as \code{\link[limma:dim]{dim}}, \code{\link[base:nrow]{nrow}} and \code{\link[base:nrow]{ncol}} are defined. 
 \code{MArrayLM} objects inherit a \code{show} method from the virtual class \code{LargeDataObject}.
 
-The functions \code{\link{ebayes}} and \code{\link{classifyTests}} accept \code{MArrayLM} objects as arguments.
+The functions \code{\link{ebayes}} and \code{\link{classifyTestsF}} accept \code{MArrayLM} objects as arguments.
 }
 
 \author{Gordon Smyth}

@@ -1,6 +1,6 @@
 \name{classifyTests}
 \alias{FStat}
-\alias{classifyTests}
+\alias{classifyTestsF}
 \alias{classifyTestsT}
 \alias{classifyTestsP}
 \title{Treat Simultaneous T-Tests as Classification Problem}
@@ -8,10 +8,10 @@
 Classify a series of related t-statistics as up, down or not significant.
 }
 \usage{
-FStat(object, cor.matrix=NULL, design=NULL, contrasts=diag(ncol(design)))
-classifyTests(object, cor.matrix=NULL, design=NULL, contrasts=diag(ncol(design)), df=Inf, p.value=0.01, fstat.only=FALSE)
+classifyTestsF(object, cor.matrix=NULL, design=NULL, contrasts=diag(ncol(design)), df=Inf, p.value=0.01, fstat.only=FALSE)
 classifyTestsT(object, t1=4, t2=3)
 classifyTestsP(object, df=Inf, p.value=0.05, method="holm")
+FStat(object, cor.matrix=NULL, design=NULL, contrasts=diag(ncol(design)))
 }
 \arguments{
   \item{object}{numeric matrix of t-statistics or an \code{MArrayLM} object from which the t-statistics may be extracted.}
@@ -29,12 +29,14 @@ classifyTestsP(object, df=Inf, p.value=0.05, method="holm")
 \value{
 An object of class \code{TestResults}.
 This is essentially a numeric matrix with elements \code{-1}, \code{0} or \code{1} depending on whether each t-statistic is classified as significantly negative, not significant or significantly positive respectively.
+
+\code{FStat} produces a numeric vector of F-statistics with attributes \code{df1} and \code{df2} giving the corresponding degrees of freedom.
 }
 \details{
 \code{FStat} computes the F-statistic for testing all the contrasts equal to zero.
-It is equivalent to \code{classifyTests} with \code{fstat.only=TRUE}.
+It is equivalent to \code{classifyTestsF} with \code{fstat.only=TRUE}.
 
-\code{classifyTests} classifies using a nested F-test approach giving particular attention to correctly classifying genes which have two or more significant t-statistics, i.e., are differential expressed under two or more conditions.
+\code{classifyTestsF} classifies using a nested F-test approach giving particular attention to correctly classifying genes which have two or more significant t-statistics, i.e., are differential expressed under two or more conditions.
 The overall F-statistic used is computed by \code{FStat}.
 At least one constrast will be classified as significant if and only if the overall F-statistic is significant.
 \code{classifyTestsT} and \code{classifyTestsP} implement simpler classification schemes based on threshold or critical values for the individual t-statistics in the case of \code{classifyTestsT} or p-values obtained from the t-statistics in the case of \code{classifyTestsP}.
@@ -58,7 +60,7 @@ An overview of linear model functions in limma is given by \link{5.LinearModels}
 \author{Gordon Smyth}
 \examples{
 tstat <- matrix(c(0,5,0, 0,2.5,0, -2,-2,2, 1,1,1), 4, 3, byrow=TRUE)
-classifyTests(tstat)
+classifyTestsF(tstat)
 
 # See also the examples for contrasts.fit and vennDiagram
 }
