@@ -51,6 +51,7 @@ normalizeWithinArrays-methods
 normalizeWithinArrays   Normalize Within Arrays - generic
 plotMA                  MA-Plot
 plotPrintTipLoess       MA Plots by Print-Tip Group
+printorder              Identify Order in which Spots were Printed
 qqt                     Student's t Quantile-Quantile Plot
 QualityWeights          Spot Quality Weights
 read.maimages           Read RG list from Image Analysis Output Files

@@ -14,9 +14,9 @@ merge(x,y,...)
 }
 \author{Gordon Smyth}
 \seealso{
-The default method \code{\link[base]{merge}} from R base is designed for data.frames.
+The default method \code{\link[base]{merge.default}} defined in R base is designed for data.frames.
 
-\code{\link{merge.RGList}}.
+\code{\link{merge.RGList.RGList}}.
 Type \code{showMethods("merge")} at the R prompt to see what other methods are available.
 }
 \keyword{models}

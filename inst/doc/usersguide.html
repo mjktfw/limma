@@ -13,7 +13,7 @@
 
 <p align="center">Gordon Smyth<br>
 Walter and Eliza Hall Institute of Medical Research<br>
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->24 April 2003<!--webbot bot="Timestamp" i-checksum="28310" endspan --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->03 May 2003<!--webbot bot="Timestamp" i-checksum="15114" endspan --></p>
 
 <h2>Table of Contents</h2>
 
@@ -26,6 +26,7 @@ Walter and Eliza Hall Institute of Medical Research<br>
   <li>Two-Sample Experiments</li>
   <li>Factorial Experiments</li>
   <li>Microarrays with Multiple Prints of each Gene</li>
+  <li>Using limma with marray Packages</li>
   <li>Affymetrix and Single-Color Microarrays</li>
 </ol>
 
@@ -205,7 +206,7 @@ $nspot.r
 [1] 22
 
 $nspot.c
-[1] 22
+[1] 24
 
 &gt; imageplot(M,layout,zlim=c(-3,3))
 </pre>
@@ -736,7 +737,17 @@ hour for a series of arrays.</p>
 &gt; plot(fit$coef,eb$lods,xlab=&quot;Log2 Fold Change&quot;,ylab=&quot;Log Odds&quot;,pch=16,cex=0.1)</pre>
 <p align="center">
 <img border="0" src="bob/volcano.png" width="890" height="590"></p>
-<h2>9. Affymetrix and Single-Color Arrays</h2>
+<h2>9. Using limma with marray Packages</h2>
+<p>The packages marrayClasses, marrayInput, marrayNorm and marrayTools are 
+designed to read and normalize cDNA data. Normalization will produce an object 
+of class <code>marrayNorm</code>. The linear model commands from limma may be 
+used after extracting the M-value matrix and the spot weights from the object. 
+If the normalized data object is called N, then a linear model may be fitted 
+using</p>
+<pre>fit &lt;- lm.series(maM(N),design,weights=maW(N))</pre>
+<p>after which one proceeds exactly as in previous sections. The design matrix 
+is chosen as in previous sections.</p>
+<h2>10. Affymetrix and Single-Color Arrays</h2>
 <p>Suppose for example that there are three arrays 
 hybridized with wt RNA and two arrays hybridized with mutant RNA. The design 
 matrix might be</p>
