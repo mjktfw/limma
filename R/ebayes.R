@@ -304,7 +304,7 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 	tab
 }
 
-smoothVar <- function(var, df)
+squeezeVar <- function(var, df)
 #	Empirical Bayes posterior variances
 #	Gordon Smyth
 #	2 March 2004

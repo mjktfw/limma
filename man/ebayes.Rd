@@ -31,7 +31,7 @@ The estimates \code{s2.prior} and \code{df.prior} are computed by \code{fdist.fi
 The \code{lods} is sometimes known as the B-statistic.
 }
 \seealso{
-\code{\link{smoothVar}}, \code{\link{fitFDist}}, \code{\link{tmixture.matrix}}.
+\code{\link{squeezeVar}}, \code{\link{fitFDist}}, \code{\link{tmixture.matrix}}.
 
 An overview of linear model functions in limma is given by \link{5.LinearModels}.
 }

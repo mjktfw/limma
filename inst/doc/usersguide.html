@@ -14,7 +14,7 @@
 <p align="center">Gordon Smyth, Natalie Thorne and James Wettenhall<br>
 The
 Walter and Eliza Hall Institute of Medical Research<br>
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->28 April 2004<!--webbot bot="Timestamp" i-checksum="28334" endspan --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->14 May 2004<!--webbot bot="Timestamp" i-checksum="15121" endspan --></p>
 
 <h2>Table of Contents</h2>
 
@@ -83,7 +83,7 @@ you are using limma in conjunction with these packages, see Section 10. The
 Bioconductor package affy provides functions for reading and normalizing Affymetrix 
 microarray data. If you are using the affy package, see Sections 7.2 and 11.</p>
 
-<p>This tutorial was prepared using R Version 1.9.0 for Windows and limma version 1.5.10.
+<p>This tutorial was prepared using R Version 1.9.0 for Windows and limma version 1.6.5.
 The latest version of limma is always available from
 <a href="http://bioinf.wehi.edu.au/limma/">http://bioinf.wehi.edu.au/limma/</a>. 
 The latest version of limma, built for the development version of R, is always available from
@@ -1173,141 +1173,140 @@ including the ser, glt, liv, opp, lys, ilv and fim families, are known targets
 of lrp. Positive M-values mean that the gene is up-regulated in lrp+, negative 
 values mean that it is repressed.</p>
 <h3><a name="Estrogen">8.4 Estrogen Data: A 2x2 Factorial Experiment with Affymetrix Arrays</a></h3>
-<p>This data is from the factDesign package. The data includes gene expression 
-levels for a subset of 500 genes from a 2x2 factorial experiment on MCF7 breast 
+<p>This data is from the estrogen package on Bioconductor. A subset of the data 
+is also analysed in the factDesign package vignette. To repeat this case study 
+you will need to have the R packages affy, estrogen and hgu95av2cdf installed.</p>
+<p>The data gives results from a 2x2 factorial experiment on MCF7 breast 
 cancer cells using Affymetrix HGU95av2 arrays. The factors in this experiment 
-were estrogen (ES: P present or A absent) and length of exposure (TIME: 10 or 48 hours). Gene 
-expression values were estimated using the PM-only method in dChip after 
-normalization using the Invariant Set Method (Li and Wong, 2001).</p>
-<pre>&gt; library(factDesign)
-&gt; data(estrogen)
-&gt; pData(estrogen)
-    ES TIME
-et1  A  10h
-et2  A  10h
-Et1  P  10h
-Et2  P  10h
-eT1  A  48h
-eT2  A  48h
-ET1  P  48h
-ET2  P  48h</pre>
-<p>The data object estrogen is an <code>exprSet</code> object. An exprSet object 
-often contains log-intensities, but in this case the data are absolute 
-intensities:</p>
-<pre>&gt; summary(exprs(estrogen))
-       X1                 X2                 X3                 X4          
- Min.   :   29.61   Min.   :   22.28   Min.   :   16.92   Min.   :   10.72  
- 1st Qu.:  256.37   1st Qu.:  264.84   1st Qu.:  276.55   1st Qu.:  271.25  
- Median :  566.77   Median :  546.22   Median :  564.49   Median :  560.21  
- Mean   : 1850.39   Mean   : 1807.19   Mean   : 1895.18   Mean   : 1821.11  
- 3rd Qu.: 1259.35   3rd Qu.: 1298.27   3rd Qu.: 1335.17   3rd Qu.: 1342.70  
- Max.   :40869.40   Max.   :37861.20   Max.   :43236.20   Max.   :43140.40  
-       X5                 X6                 X7                 X8          
- Min.   :   26.35   Min.   :   40.43   Min.   :   21.78   Min.   :   17.69  
- 1st Qu.:  270.88   1st Qu.:  272.89   1st Qu.:  278.05   1st Qu.:  286.50  
- Median :  574.65   Median :  560.79   Median :  559.83   Median :  557.66  
- Mean   : 1777.71   Mean   : 1662.30   Mean   : 1819.56   Mean   : 1794.73  
- 3rd Qu.: 1223.93   3rd Qu.: 1198.58   3rd Qu.: 1219.78   3rd Qu.: 1216.13  
- Max.   :27877.50   Max.   :27951.20   Max.   :28858.20   Max.   :29228.30  </pre>
-<p>A design matrix for this experiment can be constructed using the standard linear model formula 
-notation of R.</p>
-<pre>&gt; design &lt;- model.matrix(~ES*TIME, data=pData(estrogen))
-&gt; design
-    (Intercept) ESP TIME48h ESP:TIME48h
-et1           1   0       0           0
-et2           1   0       0           0
-Et1           1   1       0           0
-Et2           1   1       0           0
-eT1           1   0       1           0
-eT2           1   0       1           0
-ET1           1   1       1           1
-ET2           1   1       1           1
-attr(,&quot;assign&quot;)
-[1] 0 1 2 3
-attr(,&quot;contrasts&quot;)
-attr(,&quot;contrasts&quot;)$ES
-[1] &quot;contr.treatment&quot;
-
-attr(,&quot;contrasts&quot;)$TIME
-[1] &quot;contr.treatment&quot;
-</pre>
-<p>The coefficients corresponding to the four columns of the design matrix have 
-the following interpretation. The first coefficient (Intercept) estimates the 
-expression level for the &quot;et&quot; condition, i.e., estrogen absent at 10 hours. The 
-second coefficient (ESP) estimates the effect of adding estrogen at the 10 hour 
-time point. The third coefficient (TIME45h) estimated the change between the 48 
-hour and 10 hours time points when estrogen is absent. The fourth coefficient 
-(ESP:TIME48h) is the interaction term. It estimates the extra expression that 
-occurs when estrogen is present at the 48 hour time point, over and above the 
-sum of the separate effects for ESP and TIME48h.</p>
-<p>Now fit a linear model for each gene. Notice that the linear model is fit to 
-the log-base-2 intensities, not the original intensities themselves. If the data 
-object contained log-intensities, as it would have had it been output from the
-<code>rma</code> fuction in the affy package for example, then simply <code>
-lmFit(estrogen, design)</code> would have been enough.</p>
-<pre>fit &lt;- lmFit(log2(exprs(estrogen)), design)</pre>
-<p>The intercept term of not of real interest here as it simply represents the 
-baseline expression level of each gene. Let's pick out the other three 
-parameters, which are the ones of interest. This is done using the <code>
-contrasts.fit()</code> function. The function takes as argument a contrast 
-matrix which specifies which combinations of the original model coefficients are 
-to be examined.</p>
-<pre>&gt; cont.matrix &lt;- cbind(ESP=c(0,1,0,0), TIME48h=c(0,0,1,0), &quot;ESP:TIME48h&quot;=c(0,0,0,1))
+were estrogen (present or  absent) and length of exposure (10 or 48 hours). The 
+aim of the study is the identify genes which respond to estrogen and to classify 
+these into early and late responders. Genes which respond early are putative 
+direct-target genes while those which respond late are probably downstream 
+targets in the molecular pathway.</p>
+<p>First load the required packages:</p>
+<pre>&gt; library(limma)
+&gt; library(affy)
+Welcome to Bioconductor 
+         Vignettes contain introductory material.  To view, 
+         simply type: openVignette() 
+         For details on reading vignettes, see
+         the openVignette help page.
+&gt; library(hgu95av2cdf)</pre>
+<p>The data files are contained in the 'data' directory of the estrogen package:</p>
+<pre>&gt; datadir &lt;- file.path(.find.package(&quot;estrogen&quot;),&quot;data&quot;)
+&gt; dir(datadir)
+ [1] &quot;00Index&quot;       &quot;bad.cel&quot;       &quot;high10-1.cel&quot;  &quot;high10-2.cel&quot;  &quot;high48-1.cel&quot; 
+ [6] &quot;high48-2.cel&quot;  &quot;low10-1.cel&quot;   &quot;low10-2.cel&quot;   &quot;low48-1.cel&quot;   &quot;low48-2.cel&quot;  
+[11] &quot;phenoData.txt&quot;</pre>
+<p>The target file is called phenoData.txt. We see there are two arrays for each 
+experimental condition, giving a total of 8 arrays.</p>
+<pre>&gt; targets &lt;- readTargets(&quot;phenoData.txt&quot;,path=datadir,sep=&quot;&quot;,row.names=&quot;filename&quot;)
+&gt; targets
+             filename estrogen time.h
+low10-1   low10-1.cel   absent     10
+low10-2   low10-2.cel   absent     10
+high10-1 high10-1.cel  present     10
+high10-2 high10-2.cel  present     10
+low48-1   low48-1.cel   absent     48
+low48-2   low48-2.cel   absent     48
+high48-1 high48-1.cel  present     48
+high48-2 high48-2.cel  present     48</pre>
+<p>Now read the cel files into an AffyBatch object and normalize using the <code>
+rma()</code> function from the affy package:</p>
+<pre>&gt; ab &lt;- ReadAffy(filenames=file.path(datadir,targets$filename))
+&gt; eset &lt;- rma(ab)
+Background correcting
+Normalizing
+Calculating Expression</pre>
+<p>There are many ways to construct a design matrix for this experiment. Given 
+that we are interested in the early and late estrogen responders, we can choose 
+a parametrization which includes these two contrasts.</p>
+<pre>&gt; treatments &lt;- factor(c(1,1,2,2,3,3,4,4),labels=c(&quot;e10&quot;,&quot;E10&quot;,&quot;e48&quot;,&quot;E48&quot;))
+&gt; contrasts(treatments) &lt;- cbind(Time=c(0,0,1,1),E10=c(0,1,0,0),E48=c(0,0,0,1))
+&gt; design &lt;- model.matrix(~treatments)
+&gt; colnames(design) &lt;- c(&quot;Intercept&quot;,&quot;Time&quot;,&quot;E10&quot;,&quot;E48&quot;)</pre>
+<p>The second coefficient picks up the effect of time in the absence of estrogen. 
+The third and fourth coefficients estimate the log2-fold change for estrogen at 
+10 hours and 48 hours respectively.</p>
+<pre>&gt; fit &lt;- lmFit(eset,design)</pre>
+<p>We are only interested in the estrogen effects, so we choose a contrast 
+matrix which picks these two coefficients out:</p>
+<pre>&gt; cont.matrix &lt;- cbind(E10=c(0,0,1,0),E48=c(0,0,0,1))
 &gt; fit2 &lt;- contrasts.fit(fit, cont.matrix)
-&gt; fit2 &lt;- eBayes(fit2)
-&gt; topTable(fit2, coef=&quot;ESP:TIME48h&quot;, adjust=&quot;fdr&quot;,n=20)
-            M         t     P.Value         B
-25  -1.752633 -9.248934 0.002288030 4.3023246
-58  -1.504007 -8.992066 0.002288030 4.0822194
-490 -1.743248 -8.266519 0.002288030 3.4246563
-284  2.151867  8.133777 0.002288030 3.2983066
-479 -1.524163 -8.072253 0.002288030 3.2390830
-478 -1.926549 -7.759417 0.002600043 2.9312973
-270  1.545953  7.304549 0.003560586 2.4631640
-126 -1.278515 -7.095984 0.003890617 2.2399773
-449  1.689505  6.741165 0.004905043 1.8473788
-122  1.066377  6.682551 0.004905043 1.7809174
-88  -1.781021 -6.542536 0.005225304 1.6202727
-486  2.019201  6.398728 0.005650956 1.4524698
-173 -1.072508 -6.072121 0.007666149 1.0605708
-68   1.215764  5.896903 0.008801373 0.8440081
-165  1.402714  5.729358 0.010100825 0.6327184
-282  1.104436  5.527850 0.011485363 0.3730683
-295 -1.000517 -5.518481 0.011485363 0.3608481
-127  1.141904  5.483044 0.011485363 0.3145069
-292 -0.941858 -5.434085 0.011585718 0.2501714
-91   1.168843  5.369000 0.011970422 0.1640837</pre>
-<p>There are quite a few genes which appear o be differentially expressed with 
-respect to the interaction parameter. The t-tests are on 8.8 degrees of freedom; 
-4 degrees of freedom arising from residual degrees of freedom in the linear 
-model fit and 4.8 arising from the empirical Bayes smoothing of the residual 
-standard deviations:</p>
-<pre>&gt; summary(fit2$df.residual)
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-      4       4       4       4       4       4 
-&gt; fit2$df.prior
-[1] 4.842066</pre>
-<p><b>Overall F test</b>. Of special interest is to pick out those genes which 
-show any differential expression between any of the four treatment conditions. 
-This can be done by computing an overall F-test for the three coefficients of 
-interest.</p>
-<pre>&gt; F.stat &lt;- FStat(fit2)</pre>
-<p>The F-statistic has 3 and 8.8 degrees of freedom. All three of the 
-coefficients of interest can be classified as up, down or not significant using 
-P-values:</p>
-<pre>&gt; results &lt;- classifyTestsP(fit2, p=0.0005)
+&gt; fit2 &lt;- eBayes(fit2)</pre>
+<p>We can examine which genes respond to estrogen at either time by computing 
+moderated F-statistics on 2 degrees of freedom:</p>
+<pre>&gt; F.stat &lt;- FStat(fit2)
+&gt; p.value &lt;- pf(F.stat,df1=attr(F.stat,&quot;df1&quot;),df2=attr(F.stat,&quot;df2&quot;),lower.tail=FALSE)</pre>
+<p>What p-value cutoff should be used? One guide is to examine control 
+probe-clusters which are known not to be differentially expressed. We find that 
+the smallest p-value amongst these is about 0.00007. A cutoff p-value of 
+0.00001, say, would be conservatively below this.</p>
+<pre>&gt; i &lt;- grep(&quot;AFFX&quot;,geneNames(eset))
+&gt; summary(p.value[i])
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+0.0000695 0.1023000 0.2374000 0.3480000 0.5655000 0.9888000 </pre>
+<p>Now we consider those genes with moderated F-statistics with p-values below 
+0.00001, and classify these according to whether they are significantly up or 
+down regulated at the early or late times:</p>
+<pre>&gt; results &lt;- classifyTestsF(fit2, p.value=0.00001)
 &gt; vennDiagram(results)</pre>
-<div align="center">
-  <p align="center">
-  <img border="0" src="estrogen/venndiag.png" width="669" height="525"></div>
-  <p>
-  Examining individual t-statistics or p-values tends to underestimate the 
-  number of genes which are differentially expressed for several coefficients 
-  simultaneously. Classifying the coefficients using nested F-tests does a bit better:</p>
-  <pre>&gt; results &lt;- classifyTestsF(fit2, p=0.001)
-&gt; vennDiagram(results)</pre>
-  <p align="center">
-  <img border="0" src="estrogen/venndiag2.png" width="669" height="525"></p>
+<p align="center">
+<img border="0" src="estrogen/venndiag.png" width="550" height="483"></p>
+<pre>&gt; table(E10=results[,1],E48=results[,2])
+    E48
+E10  -1    0     1    
+  -1    19    17     0
+  0     11 12450    17
+  1      0    53    58</pre>
+<p>We see that 111 genes were up regulated at 10 hours, 58 of these still up at 
+48 hours. Also, 38 genes were down-regulated at 10 hours, 19 of these still down 
+at 48 hours.</p>
+<p><code>topTable</code> gives a detailed look at individual genes:</p>
+<pre>&gt; topTable(fit2,coef=&quot;E10&quot;,n=20)
+             ID         M         A         t      P.Value         B
+9735   39642_at  2.939426  7.876575  33.53605 3.263133e-06 12.882267
+12472    910_at  3.113819  9.660238  33.36231 3.408787e-06 12.857926
+1814   31798_at  2.800171 12.115770  23.17554 7.259227e-05 10.851057
+11509  41400_at  2.380968 10.041576  22.94090 7.903170e-05 10.787022
+10214  40117_at  2.555276  9.676543  22.17506 1.049435e-04 10.570530
+953     1854_at  2.507612  8.532131  21.43709 1.391853e-04 10.350484
+9848   39755_at  1.679301 12.131838  21.30103 1.467649e-04 10.308626
+922   1824_s_at  1.914703  9.238878  21.04113 1.625698e-04 10.227520
+140   1126_s_at  1.782902  6.880018  19.55894 2.986124e-04  9.734305
+580     1536_at  2.662459  5.937141  18.75855 4.224811e-04  9.444440
+12542    981_at  1.818656  7.781324  18.50787 4.723375e-04  9.349974
+3283   33252_at  1.740210  8.000383  17.80210 6.518589e-04  9.074028
+546     1505_at  2.395901  8.764730  17.64897 7.001317e-04  9.012134
+4405   34363_at -1.747992  5.553825 -17.24692 8.470921e-04  8.846054
+985   1884_s_at  2.799342  9.034811  17.04239 9.347963e-04  8.759523
+6194   36134_at  2.491428  8.275763  16.66637 1.123814e-03  8.596722
+7557   37485_at  1.607645  6.672829  16.10218 1.492706e-03  8.343041
+1244     239_at  1.569561 11.249179  14.71210 3.133528e-03  7.665514
+8195   38116_at  2.318462  9.513126  14.70398 3.147486e-03  7.661319
+10634  40533_at  1.256442  8.466023  14.64962 3.244150e-03  7.633173
+&gt; topTable(fit2,coef=&quot;E48&quot;,n=20)
+             ID         M         A         t      P.Value         B
+12472    910_at  3.855057  9.660238  29.20644 1.044142e-05 11.605898
+1814   31798_at  3.597260 12.115770  21.05243 1.619209e-04  9.891525
+953     1854_at  3.340938  8.532131  20.19570 2.288594e-04  9.641554
+8195   38116_at  3.758902  9.513126  16.85702 1.024068e-03  8.480462
+8143   38065_at  2.993559  9.097207  16.20839 1.415357e-03  8.213990
+9848   39755_at  1.765238 12.131838  15.83289 1.716547e-03  8.052632
+642     1592_at  2.296473  8.311364  15.78691 1.757989e-03  8.032497
+11509  41400_at  2.243529 10.041576  15.28528 2.292179e-03  7.807410
+3766   33730_at -2.041424  8.573493 -15.14238 2.475711e-03  7.741406
+732     1651_at  2.968250 10.504291  14.78105 3.017689e-03  7.570639
+8495   38414_at  2.016952  9.461199  14.58945 3.357736e-03  7.477774
+1049    1943_at  2.190196  7.596590  14.00517 4.689295e-03  7.184233
+10214  40117_at  2.276227  9.676543  13.96779 4.792311e-03  7.164906
+10634  40533_at  1.640311  8.466023  13.52368 6.235641e-03  6.930002
+9735   39642_at  1.614613  7.876575  13.02575 8.457864e-03  6.654591
+4898   34851_at  1.957261  9.961115  12.84558 9.468549e-03  6.551650
+922   1824_s_at  1.641325  9.238878  12.75402 1.003273e-02  6.498648
+6053   35995_at  2.755543  8.871992  12.68295 1.049631e-02  6.457180
+12455    893_at  1.540632 10.954033  12.66353 1.062647e-02  6.445800
+10175  40079_at -2.414135  8.230565 -12.62725 1.087526e-02  6.424480</pre>
 <h3><a name="Weaver">8.5 Weaver Mutant Data: A 2x2 Factorial Experiment with 
 Two-Color Data</a></h3>
 <p>This case study considers a more involved analysis in which the sources of 
@@ -1735,11 +1734,10 @@ similar:</p>
 
 
 <p>Where possible, limma tries to use the convention that class names are in 
-upper CamelCase or PascalCase, i.e., the first letter of each word is 
-capitalized, while function names are in lower camelCase, i.e., as for CamelCase 
-but the first letter is lowercase. When periods appear in function names, the 
-first word should be an action while the second word is the name of a class of 
-variable on which the function acts.</p>
+upper CamelCase, i.e., the first letter of each word is 
+capitalized, while function names are in lower camelCase, i.e., first word is lowercase. When periods appear in function names, the 
+first word should be an action while the second word is the name of a type of 
+object on which the function acts.</p>
 
 
 <h2>Acknowledgements</h2>

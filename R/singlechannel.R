@@ -39,7 +39,7 @@ lmscFit <- function(object,design,correlation)
 	fit <- lm.fit(X,y)
 	fit$sigma <- sqrt(colSums(fit$effects[(fit$rank+1):ny,]^2) / fit$df.residual)
 	fit$fitted.values <- fit$residuals <- fit$effects <- NULL
-#	if(variance.smooth) fit$s2 <- smoothVar(fit$s2, fit$df.residual)
+#	if(variance.smooth) fit$s2 <- squeezeVar(fit$s2, fit$df.residual)
 	fit$coefficients <- t(fit$coefficients)
 	stdev.unscaled <- sqrt(diag(chol2inv(fit$qr$qr)))
 	fit$stdev.unscaled <- matrix(stdev.unscaled,ngenes,nbeta,byrow=TRUE)
