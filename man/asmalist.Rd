@@ -1,6 +1,6 @@
 \name{as.MAList}
 \alias{as.MAList}
-\title{Convert marrayNorm Object into an MAList Object}
+\title{Convert marrayNorm Object to an MAList Object}
 
 \description{
 Convert marrayNorm Object to an MAList Object

@@ -10,6 +10,12 @@ The basic idea is to estimate log-ratios between two or more target RNA samples 
 See the \emph{\link[limma:../doc/usersguide]{LIMMA User's Guide}} for several case studies.
 }
 
+\section{Forming the Design Matrix}{
+The function \code{\link{designMatrix}} is provided to assist with creation of an appropriate design matrix for two-color microarray experiments using a common reference.
+Design matrices for Affymetrix or single-color arrays can be easily created using the ordinary R command \code{\link[base]{model.matrix}}.
+For the direct two-color designs the design matrix needs to be created by hand.
+}
+
 \section{Fitting Models}{
 
 There are four functions in the package which fit linear models:
@@ -32,32 +38,41 @@ Each of these functions accepts essentially the same argument list and produces 
 The first function \code{lmFit} formally produces an object of class \code{\link[limma:marraylm]{MArrayLM}}.
 The other three functions are lower level functions which produce similar output but in unclassed lists.
 
-The main argument is the \bold{design matrix} which specifies the comparisons between the RNA targets which you want to estimate.
-Design matrices may be constructed for common reference experiments using \code{\link{designMatrix}}.
+The main argument is the \bold{design matrix} which specifies which target RNA samples were applied to each channel on each array.
+There is considerable freedom to choose the design matrix - there is always more than one choice which is correct provided it is interpreted correctly.
 The fitted model object consists of coefficients, standard errors and residual standard errors for each gene.
-
-If the design matrix has orthogonal columns, then the output object can be expanded using \code{\link{contrasts.fit}} to include contrasts not explicitly in the design matrix.
-This is a way to compute all possible pairwise comparisons between treatments for example in an experiment which compares many treatments to a common reference.
 
 All the functions which fit linear models use \code{\link{unwrapdups}} which provides an unified method for handling duplicate spots.
 }
 
+\section{Making Comparisons of Interest}{
+
+Once a linear model has been fit using an appropriate design matrix, the command \code{\link{makeContrasts}} may be used to form a contrast matrix to make comparisons of interest.
+The fit and the contrast matrix are used by \code{\link{contrasts.fit}} to compute fold changes and t-statistics for the contrasts of interest.
+This is a way to compute all possible pairwise comparisons between treatments for example in an experiment which compares many treatments to a common reference.
+}
+
 \section{Assessing Differential Expression}{
+
 After fitting a linear model, the standard errors are moderated using a simple empirical Bayes model using \code{\link{ebayes}} or \code{\link{eBayes}}.
 A moderated t-statistic and a log-odds of differential expression is computed for each contrast for each gene.
 
 \code{\link{ebayes}} and \code{\link{eBayes}} use internal functions \code{\link{fitFDist}}, \code{\link{tmixture.matrix}} and \code{\link{tmixture.vector}}.
+
+The function \code{\link{zscoreT}} is sometimes used for computing z-score equivalents for t-statistics so as to place t-statistics with different degrees of freedom on the same scale.
+\code{\link{zcoreGamma}} is used the same way with standard deviations instead of t-statistics.
+These functions are for research purposes rather than for routine use.
 }
 
 \section{Summarizing Model Fits}{
 
-After linear modelling and moderation, the results may be displayed or further processed using:
+After the above steps the results may be displayed or further processed using:
 \describe{
 \item{ \code{\link{toptable}} }{
 	Presents a list of the genes most likely to be differentially expressed for a given contrast.}
 
 \item{ \code{\link{classifyTests}} }{
-	Uses a nested F-tests to classify the genes as up, down or even over the contrasts in the linear model with special attention to genes which are significant in more than one contrast.
+	Uses nested F-tests to classify the genes as up, down or even over the contrasts in the linear model with special attention to genes which are significant in more than one contrast.
 	\code{\link{classifyTestsT}} and \code{\link{classifyTestsP}} are simpler methods using cutoffs for the t-statistics or p-values individually.}
 
 \item{ \code{\link{heatdiagram}} }{

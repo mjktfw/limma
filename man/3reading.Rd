@@ -6,6 +6,10 @@
 This help page gives an overview of LIMMA functions used to read data into R from files.
 }
 
+\section{Reading Target Information}{
+The function \code{\link{readTargets}} is designed to help with organizing information about which RNA sample is hybridized to each channel on each array and which files store information for each array.
+}
+
 \section{Reading Intensity Data}{
 The first step in a microarray data analysis is to read into R the intensity data for each array provided by an image analysis program.
 This is done using the function \code{\link{read.maimages}}.
@@ -22,13 +26,15 @@ This function will be removed in future versions of LIMMA.
 
 \code{\link{read.maimages}} uses utility functions \code{\link{removeExt}}, \code{\link{read.matrix}}, \code{\link{read.imagene}} and \code{\link{readImageneHeaders}}.
 
-\section{Reading Gene Annotation}{
+\section{Reading the Gene List}{
 
 Many image analysis program provide gene IDs as columns in the image analysis output files, for example ArrayVision, Imagene and the Stanford Microarray Database.
 In other cases you may have gene name and annoation information in a separate file.
 The function \code{\link{readGAL}} reads information from a GenePix Allocation List (gal) file.
 It produces a data frame with known column names.
 If the gene names consist of a short name followed by annotation information, then \code{\link{splitName}} may be used to separate the name and annotation information into separate vectors.
+
+The functions \code{\link{readSpotTypes}} and \code{\link{controlStatus}} assist with separating control spots from ordinary genes in the analysis and data exploration.
 
 The function \code{\link{getLayout}} extracts from the gal-file data frame the print layout information for a spotted array.
 The functions \code{\link{gridr}}, \code{\link{gridc}}, \code{\link{spotr}} and \code{\link{spotc}} use the extracted layout to compute grid positions and spot positions within each grid for each spot.
