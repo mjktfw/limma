@@ -11,9 +11,9 @@ See the \emph{\link[limma:../doc/usersguide]{LIMMA User's Guide}} for several ca
 }
 
 \section{Forming the Design Matrix}{
-The function \code{\link{designMatrix}} is provided to assist with creation of an appropriate design matrix for two-color microarray experiments using a common reference.
-Design matrices for Affymetrix or single-color arrays can be easily created using the ordinary R command \code{\link[base]{model.matrix}}.
-For the direct two-color designs the design matrix needs to be created by hand.
+The function \code{\link{modelMatrix}} is provided to assist with creation of an appropriate design matrix for two-color microarray experiments using a common reference.
+Design matrices for Affymetrix or single-color arrays can be easily created using the function \code{\link[base]{model.matrix}} which is part of the R base package.
+For the direct two-color designs the design matrix often needs to be created by hand.
 }
 
 \section{Fitting Models}{

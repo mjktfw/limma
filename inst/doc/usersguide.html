@@ -14,49 +14,49 @@
 <p align="center">Gordon Smyth, Natalie Thorne and James Wettenhall<br>
 The
 Walter and Eliza Hall Institute of Medical Research<br>
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->08 March 2004<!--webbot bot="Timestamp" i-checksum="27292" endspan --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->19 March 2004<!--webbot bot="Timestamp" i-checksum="27295" endspan --></p>
 
 <h2>Table of Contents</h2>
 
 <ol>
-  <li>Introduction</li>
-  <li>A Few Preliminaries on R</li>
-  <li>Quick Start</li>
-  <li>Reading Data into Limma<ol>
-  <li>Recommended Files</li>
-  <li>Reading Intensity Data</li>
-  <li>Spot Quality Weights</li>
-  <li>The Targets File</li>
-  <li>Reading the Gene List</li>
-  <li>The Spot Types File</li>
+  <li><a href="#Introduction">Introduction</a></li>
+  <li><a href="#RPreliminaries">A Few Preliminaries on R</a></li>
+  <li><a href="#QuickStart">Quick Start</a></li>
+  <li><a href="#ReadingInData">Reading Data into Limma</a><ol>
+  <li><a href="#RecommendedFiles">Recommended Files</a></li>
+  <li><a href="#ReadingIntensityData">Reading Intensity Data</a></li>
+  <li><a href="#SpotQualityWeights">Spot Quality Weights</a></li>
+  <li><a href="#TargetsFile">The Targets File</a></li>
+  <li><a href="#ReadingGeneList">Reading the Gene List</a></li>
+  <li><a href="#SpotTypesFile">The Spot Types File</a></li>
 </ol>
 
   </li>
-  <li>Data Exploration</li>
-  <li>Normalization and Background Correction</li>
-  <li>Differential Expression<ol>
-  <li>Linear Models</li>
-  <li>Affymetrix and Other Single-Channel Designs</li>
-  <li>Common Reference Designs</li>
-  <li>Direct Two-Color Designs</li>
+  <li><a href="#DataExploration">Data Exploration</a></li>
+  <li><a href="#Normalization">Normalization and Background Correction</a></li>
+  <li><a href="#DifferentialExpression">Differential Expression</a><ol>
+  <li><a href="#LinearModels">Linear Models</a></li>
+  <li><a href="#AffymetrixDesigns">Affymetrix and Other Single-Channel Designs</a></li>
+  <li><a href="#CommonReferenceDesigns">Common Reference Designs</a></li>
+  <li><a href="#DirectDesigns">Direct Two-Color Designs</a></li>
 </ol>
 
   </li>
-  <li>Case Studies<ol>
-  <li>Swirl Data: A Single-Sample Experiments</li>
-  <li>ApoAI Data: A Two-Sample Experiments</li>
-  <li>Estrogen Data: A 2x2 Factorial Experiment with Affymetrix Data</li>
-  <li>Weaver Data: A Factorial Experiment</li>
+  <li><a href="#CaseStudies">Case Studies</a><ol>
+  <li><a href="#Swirl">Swirl Data: A Single-Sample Experiments</a></li>
+  <li><a href="#ApoAI">ApoAI Data: A Two-Sample Experiments</a></li>
+  <li><a href="#Estrogen">Estrogen Data: A 2x2 Factorial Experiment with Affymetrix Data</a></li>
+  <li><a href="#Weaver">Weaver Data: A Factorial Experiment</a></li>
 </ol>
 
   </li>
-  <li>Within-Array Replicate Spots</li>
-  <li>Using limma with the marray Packages</li>
-  <li>Using limma with Affymetrix data</li>
-  <li>Single-Channel Normalization for Two-Color Arrays</li>
+  <li><a href="#DuplicateSpots">Within-Array Replicate Spots</a></li>
+  <li><a href="#marray">Using limma with the marray Packages</a></li>
+  <li><a href="#AffymetrixData">Using limma with Affymetrix data</a></li>
+  <li><a href="#SingleChannelNormalization">Single-Channel Normalization for Two-Color Arrays</a></li>
 </ol>
 
-<h2>1. Introduction</h2>
+<h2><a name="Introduction">1. Introduction</a></h2>
 
 <p>Limma is a package for the analysis of gene expression microarray data, 
 especially the use of linear models for analysing designed experiments and the 
@@ -110,7 +110,7 @@ installing limmaGUI is at the time of writing a job for an IT professional or
 for an experienced computer user because it depends on tck/tk extensions 
 which are not part of standard R.</p>
 
-<h2>2. A Few Preliminaries on R</h2>
+<h2><a name="RPreliminaries">2. A Few Preliminaries on R</a></h2>
 
 <p>R is a program for statistical computing. It is a command-driven language 
 meaning that you have to type commands into it rather than pointing and 
@@ -148,7 +148,7 @@ for in limma or in the other Bioconductor packages. For more details about the R
 language see <i>An 
 Introduction to R</i> which is available from the online help.</p>
 
-<h2>3. Quick Start</h2>
+<h2><a name="QuickStart">3. Quick Start</a></h2>
 <p>For those who want to see very quickly what a limma analysis might look like 
 for cDNA data, here is a quick analysis of four replicate arrays (including two 
 dye-swaps). The data has been scanned using an Axon scanner, producing a Gene 
@@ -199,9 +199,9 @@ Data example below.</p>
 1146     3   4     18 fb22a12  2-I23  1.05 13.7  10.2 0.004242 3.76
 157      1   7     13 fb38a01   6-I1 -1.82 10.8 -10.2 0.004242 3.75</pre>
 
-<h2>4. Reading Data into Limma</h2>
+<h2><a name="ReadingInData">4. Reading Data into Limma</a></h2>
 
-<h3>4.1 Recommended Files</h3>
+<h3><a name="RecommendedFiles">4.1 Recommended Files</a></h3>
 
 <p>We assume that an experiment has been conducted with one or more microarrays, 
 all printed with the same library of probes. Each array has been scanned to produce a TIFF image. The TIFF images 
@@ -218,7 +218,7 @@ also desirable to have a <i>Targets File</i> which describes which RNA sample
 was hybridized to each channel of each array. A further optional file is the <i>
 Spot Types</i> file which identifies special probes such as control spots.</p>
 
-<h3>4.2 Reading in Intensity Data</h3>
+<h3><a name="ReadingIntensityData">4.2 Reading in Intensity Data</a></h3>
 
 <p>Let <code>files</code> be a character vector containing the names of the 
 image analysis output files. The foreground and background intensities can be 
@@ -267,7 +267,7 @@ then</p>
 <p>will combine them into one large data set. Data sets can also be subsetted. 
 For example <code>RG[,1]</code> is the data for the first array while <code>
 RG[1:100,]</code> is the data on the first 100 genes. </p>
-<h3>4.3. Spot Quality Weights</h3>
+<h3><a name="SpotQualityWeights">4.3. Spot Quality Weights</a></h3>
 <p>It is desirable to use the image analysis to compute a weight for each spot 
 between 0 and 1 which indicates the reliability of the acquired intensities at 
 that spot. For example, if the SPOT image analysis program is used and the size 
@@ -295,7 +295,7 @@ than -50 you could use </p>
 
 <pre>myfun &lt;- function(x) as.numeric(x$Flags &gt; -50.5)
 RG &lt;- read.maimages(files, source=&quot;genepix&quot;, wt.fun=myfun)</pre>
-<h3>4.4 The Targets File</h3>
+<h3><a name="TargetsFile">4.4 The Targets File</a></h3>
 <p>Although not strictly necessary, it is usually a good idea to construct a 
 Targets File which lists the RNA target hybridized to each channel of each 
 array.&nbsp;  The Targets File is normally in tab-delimited text format.  It should contain a  row for each microarray 
@@ -338,7 +338,7 @@ names, e.g.,</p>
 <pre>&gt; targets &lt;- readTargets()
 &gt; RG &lt;- read.maimages(targets$FileName)
 </pre>
-<h3>4.5 Reading the Gene List</h3>
+<h3><a name="ReadingGeneList">4.5 Reading the Gene List</a></h3>
 <p>If the arrays have been scanned with an Axon scanner, then the gene names 
 will be available in a GenePix Array List (GAL) file. If the GAL file has 
 extension &quot;gal&quot; and is in the current working directory, then it may be read 
@@ -350,7 +350,7 @@ into a data.frame by</p>
 from R base. If you have Imagene or SMD image analysis output, then the gene 
 list will be extracted from the image analysis output files by <code>read.images</code>.</p>
 
-<h3>4.6 The Spot Types File</h3>
+<h3><a name="SpotTypesFile">4.6 The Spot Types File</a></h3>
 <p>The Spot Types file (STF) is another optional tab-delimited text file which 
 allows you to identify different types of spots from the gene list. The STF is 
 typically used to distinguish control spots from those corresponding to genes of 
@@ -402,7 +402,7 @@ Then</p>
 <pre>&gt; plotMA(RG)</pre>
 <p>will produce an MA-Plot with colors, symbols and sizes and given in the STF.<br>
 </p>
-<h2>5. Data Exploration</h2>
+<h2><a name="DataExploration">5. Data Exploration</a></h2>
 <p>It is advisable to display your data in various ways as a quality check and 
 to check for unexpected effects. We recommend an imageplot of the raw log-ratios 
 and an MA-plot of the raw data for each array as a minimum routine displays. The 
@@ -414,7 +414,7 @@ down-regulated spike-in control spots as well as negative controls and
 calibration or sensitivity controls. See the Swirl data case study for other 
 examples.</p>
 <p align="center"><img border="0" src="other/maplotwst.png" width="796" height="722"></p>
-<h2>6. Normalization and Background Correction</h2>
+<h2><a name="Normalization">6. Normalization and Background Correction</a></h2>
 <p>Limma implements a range of normalization methods for spotted microarrays. 
 Smyth and Speed (2003) describe of the mostly commonly used methods. Most of the 
 examples given in this manual use print-tip loess normalization as the major 
@@ -434,8 +434,8 @@ intensities.</p>
 <p>Limma contains some more sophisticated normalization methods. Normalization 
 of absolute expression levels as well as just log-ratios is covered in Section 
 11 at the end of this guide.</p>
-<h2>7. Differential Expression</h2>
-<h3>7.1 Linear Models</h3>
+<h2><a name="DifferentialExpression">7. Differential Expression</a></h2>
+<h3><a name="LinearModels">7.1 Linear Models</a></h3>
 <p>The package limma uses an approach called <i>linear models</i> to analyse 
 designed microarray experiments. This approach allows very general experiments 
 to be analysed just as easily as a simple replicated experiment. The approach is 
@@ -460,7 +460,7 @@ changes. This results in more stable inference and improved power, especially
 for experiments with small numbers of arrays (Smyth, 2004). For arrays with 
 within-array replicate spots, limma uses a pooled correlation method to make 
 full use of the duplicate spots (Smyth et al, 2003).</p>
-<h3>7.2  Affymetrix and Other Single-Channel Designs</h3>
+<h3><a name="AffymetrixDesigns">7.2  Affymetrix and Other Single-Channel Designs</a></h3>
 <p>Affymetrix data will usually be normalized using the affy package. We will 
 assume here that the data is available as an <code>exprSet</code> object called <code>
 eset</code>. Such an object will have an slot containing the log-expression 
@@ -498,7 +498,7 @@ obtained from</p>
 obtained from</p>
 
 <pre>&gt; vennDiagram(clas)</pre>
-<h3>7.3  Common Reference Designs</h3>
+<h3><a name="CommonReferenceDesigns">7.3  Common Reference Designs</a></h3>
 <p>Now consider two-color microarray experiments in which a common reference has 
 been used on all the arrays. Such experiments can be analysed very similarly to 
 Affymetrix experiments except that allowance must be made for dye-swaps. The 
@@ -560,7 +560,7 @@ CBFb         0    1         0                0               -1</pre>
 computed:</p>
 <pre>&gt; fit2 &lt;- contrasts.fit(fit, contrasts.matrix)
 &gt; fit2 &lt;- eBayes(fit2)</pre>
-<h3>7.4 Direct Two-Color Designs</h3>
+<h3><a name="DirectDesigns">7.4 Direct Two-Color Designs</a></h3>
 <p>Two-colour designs without a common reference require the most statistical 
 knowledge to choose the appropriate design matrix. As an example, we consider an 
 experiment conducted by Dr Mireille Lahoud at the Walter and Eliza Hall 
@@ -612,8 +612,8 @@ DN-CD4        0      1     -1</pre>
 compute empirical Bayes statistics:</p>
 <pre>&gt; fit2 &lt;- constrast.fit(fit, contrast.matrix)
 &gt; fit2 &lt;- eBayes(fit2)</pre>
-<h2>8. Case Studies</h2>
-<h3>8.1. Swirl Zebrafish: A Single-Sample Experiment</h3>
+<h2><a name="CaseStudies">8. Case Studies</a></h2>
+<h3><a name="Swirl">8.1. Swirl Zebrafish: A Single-Sample Experiment</a></h3>
 
 <p>In this section we consider a case study in which two RNA sources are 
 compared directly on a set of replicate or dye-swap arrays. The case study 
@@ -915,7 +915,7 @@ assumes independent statistics which we do not have here (see <code>help(p.adjus
 </pre>
 <p align="center">
 <img border="0" src="swirl/avemaplot.png" width="795" height="706"></p>
-<h3>8.2 ApoAI Knockout Data: A Two-Sample Experiment</h3>
+<h3><a name="ApoAI">8.2 ApoAI Knockout Data: A Two-Sample Experiment</a></h3>
 <p>In this section we consider a case study where two RNA sources are compared 
 through a common reference RNA. The analysis of the log-ratios involves a 
 two-sample comparison of means for each gene.</p>
@@ -1010,7 +1010,7 @@ k5           1          1
 k6           1          1
 k7           1          1
 k8           1          1
-&gt; fit &lt;- lm.series(MA$M,design)
+&gt; fit &lt;- lmFit(MA, design)
 &gt; fit$coef[1:5,]
      Control-Ref KO-Control
 [1,]     -0.6595     0.6393
@@ -1018,9 +1018,9 @@ k8           1          1
 [3,]     -0.2518     0.3342
 [4,]     -0.0517     0.0405
 [5,]     -0.2501     0.2230
-&gt; eb &lt;- ebayes(fit)
+&gt; fit &lt;- eBayes(fit)
 &gt; options(digits=3)
-&gt; toptable(coef=2,number=15,genelist=genelist[,1:6],fit=fit,eb=eb,adjust=&quot;fdr&quot;)
+&gt; topTable(fit,coef=2,number=15,adjust=&quot;fdr&quot;)
      GridROW GridCOL ROW COL                 NAME TYPE      M      t  P.Value      B
 2149       2       2   8   7      ApoAI,lipid-Img cDNA -3.166 -23.98 3.05e-11 14.927
 540        1       2   7  15 EST,HighlysimilartoA cDNA -3.049 -12.96 5.02e-07 10.813
@@ -1042,13 +1042,13 @@ Theoretically the M-value should be minus infinity for ApoAI because it is the
 knockout gene. Several of the other genes are closely related. The top eight genes 
 here were confirmed by independent assay subsequent to the microarray experiment 
 to be differentially expressed in the knockout versus the control line.</p>
-<pre>&gt; plot(fit$coef[,2],eb$lods[,2],pch=16,cex=0.1,xlab=&quot;Log Fold Change&quot;,ylab=&quot;Log Odds&quot;,main=&quot;KO vs Control&quot;)
-&gt; ord &lt;- order(eb$lods[,2],decreasing=TRUE)
+<pre>&gt; plot(fit$coef[,2],fit$lods[,2],pch=16,cex=0.1,xlab=&quot;Log Fold Change&quot;,ylab=&quot;Log Odds&quot;,main=&quot;KO vs Control&quot;)
+&gt; ord &lt;- order(fit$lods[,2],decreasing=TRUE)
 &gt; top8 &lt;- ord[1:8]
-&gt; text(fit$coef[top8,2],eb$lods[top8,2],labels=substring(genelist[top8,&quot;NAME&quot;],1,5),cex=0.8,col=&quot;blue&quot;)</pre>
+&gt; text(fit$coef[top8,2],fit$lods[top8,2],labels=substring(genelist[top8,&quot;NAME&quot;],1,5),cex=0.8,col=&quot;blue&quot;)</pre>
 <p align="center">
 <img border="0" src="apoai/bayes.png" width="693" height="743"></p>
-<h3>8.3 Estrogen Data: A 2x2 Factorial Experiment with Affymetrix Arrays</h3>
+<h3><a name="Estrogen">8.3 Estrogen Data: A 2x2 Factorial Experiment with Affymetrix Arrays</a></h3>
 <p>This data is from the factDesign package. The data includes gene expression 
 levels for a subset of 500 genes from a 2x2 factorial experiment on MCF7 breast 
 cancer cells using Affymetrix HGU95av2 arrays. The factors in this experiment 
@@ -1085,7 +1085,7 @@ intensities:</p>
  Mean   : 1777.71   Mean   : 1662.30   Mean   : 1819.56   Mean   : 1794.73  
  3rd Qu.: 1223.93   3rd Qu.: 1198.58   3rd Qu.: 1219.78   3rd Qu.: 1216.13  
  Max.   :27877.50   Max.   :27951.20   Max.   :28858.20   Max.   :29228.30  </pre>
-<p>The design matrix can be constructed using the standard linear model formula 
+<p>A design matrix for this experiment can be constructed using the standard linear model formula 
 notation of R.</p>
 <pre>&gt; design &lt;- model.matrix(~ES*TIME, data=pData(estrogen))
 &gt; design
@@ -1117,7 +1117,10 @@ hour and 10 hours time points when estrogen is absent. The fourth coefficient
 occurs when estrogen is present at the 48 hour time point, over and above the 
 sum of the separate effects for ESP and TIME48h.</p>
 <p>Now fit a linear model for each gene. Notice that the linear model is fit to 
-the log-base-2 intensities, not the original intensities themselves.</p>
+the log-base-2 intensities, not the original intensities themselves. If the data 
+object contained log-intensities, as it would have had it been output from the
+<code>rma</code> fuction in the affy package for example, then simply <code>
+lmFit(estrogen, design)</code> would have been enough.</p>
 <pre>fit &lt;- lmFit(log2(exprs(estrogen)), design)</pre>
 <p>The intercept term of not of real interest here as it simply represents the 
 baseline expression level of each gene. Let's pick out the other three 
@@ -1181,7 +1184,7 @@ nested F-tests:</p>
 &gt; vennDiagram(results)</pre>
   <p align="center">
   <img border="0" src="estrogen/venndiag2.png" width="669" height="525"></p>
-<h3>8.4 Weaver Mutant Data: A Factorial Experiment</h3>
+<h3><a name="Weaver">8.4 Weaver Mutant Data: A Factorial Experiment</a></h3>
 <p>This case study considers a more involved analysis in which the sources of 
 RNA have a factorial structure. In this example we assume that data is available as an 
 <code>RGList</code>.</p>
@@ -1304,7 +1307,7 @@ those which have decreasing expression in the wild-type over time, and those
 which are down-regulated (green) in the mutant are those which increase over 
 time in the wild-type. The mutant is not participating in normal development 
 between 11 and 21 days in respect of these genes.</p>
-<h2>9. Within-Array Replicate Spots</h2>
+<h2><a name="DuplicateSpots">9. Within-Array Replicate Spots</a></h2>
 <p>In this section we consider a case study in which all genes (ESTs and 
 controls) are printed more than once on the array. This means that there is both 
 within-array and between-array replication for each gene. The structure of the 
@@ -1314,7 +1317,7 @@ for between within-array duplicates. The theory behind the approach is explained
 in Smyth, Michaud and Scott (2003). This approach assumes that all genes are 
 replicated the same number of times on the array and that the spacing between 
 the replicates is entirely regular.</p>
-<h3>Example. Bob Mutant Data</h3>
+<h3><a name="Bob">Example. Bob Mutant Data</a></h3>
 <p>In this example we assume that the data is available as an RG list.</p>
 <p><b>Background</b>. This data is from a study of transcription factors 
 critical to B cell maturation by Lynn Corcoran and Wendy Dietrich at the WEHI. 
@@ -1437,7 +1440,7 @@ hour for a series of arrays.</p>
 &gt; plot(fit$coef,eb$lods,xlab=&quot;Log2 Fold Change&quot;,ylab=&quot;Log Odds&quot;,pch=16,cex=0.1)</pre>
 <p align="center">
 <img border="0" src="bob/volcano.png" width="890" height="590"></p>
-<h2>10. Using limma with the marray Packages</h2>
+<h2><a name="marray">10. Using limma with the marray Packages</a></h2>
 <p>The packages marrayClasses, marrayInput, marrayNorm and marrayTools are 
 designed to read and normalize cDNA data. The marrayNorm package provides some 
 normalization methods which are not provided by limma. Normalization using marrayNorm will produce a 
@@ -1455,7 +1458,7 @@ objects into limma. This means that, if you have read your data into R using the
 marrayInput package, you should use marrayNorm rather than limma for 
 normalization. After normalization, you are free to use limma for analysis of 
 differential expression.</p>
-<h2>11. Affymetrix and Single-Color Arrays</h2>
+<h2><a name="AffymetrixData">11. Affymetrix and Single-Color Arrays</a></h2>
 <p>Normalization of Affymetrix data using functions in the package <code>affy</code> 
 will produce a data object of class <code>exprSet</code> or of <code>AffyBatch</code> 
 which inherits from <code>exprSet</code>. Objects of class exprSet may be used 
@@ -1464,7 +1467,7 @@ exprSet</code> object. A linear model may be fitted using</p>
 <pre>fit &lt;- lmFit(eset, design)</pre>
 <p>See Section 7.2 for more details. </p>
 
-<h2>12. Single-Channel Normalization for Two-Color Arrays</h2>
+<h2><a name="SingleChannelNormalization">12. Single-Channel Normalization for Two-Color Arrays</a></h2>
 
 <p> We provide a short background on the topic of single-channel
 normalization for two color arrays. Throughout this section the ApoAI
@@ -1631,6 +1634,10 @@ to Lynn Corcoran for the Bob Mutant data.</p>
   analysis of gene expression in the developing pontocerebellar projection 
   system. <i>Neuron</i> <b>36</b>, 417-434. (<a href="http://www.neuron.org/content/article/fulltext?uid=PIIS0896627302010164">Full 
   Text</a>)</li>
+  <li>Li, C., and Wong, W. H. (2001). 
+  Model-based analysis of oligonucleotide arrays: expression index computation 
+  and outlier detection. <i>Proceedings of the 
+  National Academy of Sciences</i> <b>98</b>, 31-36.</li>
   <li>Smyth, G. K. (2004). Linear models and empirical Bayes methods for 
   assessing differential expression in microarray experiments. <i>Statistical 
   Applications in Genetics and Molecular Biology</i> <b>3</b>, No. 1, Article 3. (<a href="http://www.bepress.com/sagmb/vol3/iss1/art3/">Full 

@@ -18,7 +18,10 @@ plotPrintTipLoess(object,layout,array=1,span=0.4,...)
 \details{
 Note that spot quality weights in \code{object} are not used for computing the loess curves for this plot even though such weights would be used for loess normalization using \code{normalizeWithinArrays}.
 }
-\value{A plot is created on the current graphics device}
+\value{
+A plot is created on the current graphics device.
+If there are missing values in the data, then the vector of row numbers for spots with missing values is invisibly returned, as for \code{coplot}.
+}
 \seealso{
 An overview of diagnostic functions available in LIMMA is given in \link{6.Diagnostics}.
 }

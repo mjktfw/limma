@@ -4,7 +4,7 @@ duplicateCorrelation <- function(object,design=rep(1,ncol(M)),ndups=2,spacing=1,
 {
 #	Estimate the correlation between duplicates given a series of arrays
 #	Gordon Smyth
-#	25 Apr 2002. Last revised 18 Feb 2004.
+#	25 Apr 2002. Last revised 20 March 2004.
 
 	if(is(object,"MAList")) {
 		M <- object$M
@@ -51,13 +51,13 @@ duplicateCorrelation <- function(object,design=rep(1,ncol(M)),ndups=2,spacing=1,
 			Z <- model.matrix(~factor(A)-1)
 			if(!is.null(weights)) {
 				w <- drop(weights[i,])[o]
-				s <- randomizedBlockFit(y,X,Z,w,fixed.estimates=FALSE)$sigmasquared
+				s <- randomizedBlockFit(y,X,Z,w,only.varcomp=TRUE,maxit=20)$varcomp
 			} else
-				s <- randomizedBlockFit(y,X,Z,fixed.estimates=FALSE)$sigmasquared
+				s <- randomizedBlockFit(y,X,Z,only.varcomp=TRUE,maxit=20)$varcomp
 			rho[i] <- s[2]/sum(s)
-			if(rho[i] < -1) rho[i] <- -1
 		}
 	}
+	rho <- pmax(-1,rho)
 	rhom <- tanh(mean(atanh(rho),trim=trim,na.rm=TRUE))
 	list(cor=rhom,cor.genes=rho)
 }
@@ -67,7 +67,7 @@ dupcor.series <- function(M,design=rep(1,ncol(M)),ndups=2,spacing=1,initial=0.8,
 #	Estimate the correlation between duplicates given a series of arrays
 #	Gordon Smyth
 #	25 Apr 2002.
-#	This function is depreciate 2 Feb 2004.
+#	This function is deprecated 2 Feb 2004.
 
 	duplicateCorrelation(object=M,design=design,ndups=ndups,spacing=spacing,trim=trim,weights=weights)
 }

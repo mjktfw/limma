@@ -1,4 +1,4 @@
-\name{designMatrix}
+\name{designMatrix-deprecated}
 \alias{designMatrix}
 \title{Construct Design Matrix}
 \description{
