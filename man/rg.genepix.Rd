@@ -1,8 +1,8 @@
 \name{rg.genepix}
 \alias{rg.genepix}
-\title{Extract RGList from data.frames Containing Genepix Data}
+\title{Extract RGList from data.frames Containing GenePix Data}
 \description{
-Extracts an RGList from Genepix image analysis output when the data has already been read from files into data.frames objects.
+Extracts an RGList from GenePix image analysis output when the data has already been read from files into data.frames objects.
 }
 \usage{
 rg.genepix(slides,names.slides=names(slides),suffix="gpr")

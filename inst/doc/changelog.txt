@@ -1,3 +1,14 @@
+3 July 2004: limma 1.7.3
+
+- plotMA() now does single-channel MA-plots and accepts exprSet and matrix objects
+- imageplot legend now rounds numbers to 1 decimal place
+- GenePix Allocation List to GenePix Array List throughout
+
+2 July 2004: limma 1.7.2
+
+- in Windows, loading limma twice no longer creates extra "Vignettes" menus
+- bug fixes to read.imagene() to account for changes to readImaGeneHeader() on 8 June
+
 28 June 2004: limma 1.7.1
 
 - cex=16,pch=0.2 now default in plotMA()

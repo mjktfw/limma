@@ -15,7 +15,7 @@ getLayout2(galfile)
   \item{guessdups}{logical, if \code{TRUE} then try to determine number and spacing of duplicate spots, i.e., within-array replicates}
 }
 \details{
-A Genepix Allocation List (GAL) file is a list of genes and associated information produced by an Axon microarray scanner.
+A GenePix Array List (GAL) file is a list of genes and associated information produced by an Axon microarray scanner.
 The function \code{getLayout} determines the print layout from a data frame created from a GAL file or gene list.
 The data.frame must contain columns \code{Block}, \code{Column} and \code{Row}.
 (The number of tip columns is not assumed to be either one or four.)

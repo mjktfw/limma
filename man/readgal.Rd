@@ -2,7 +2,7 @@
 \alias{readGAL}
 \title{Read a GAL file}
 \description{
-Read a GenePix Allocation List (GAL) file into a dataframe.
+Read a GenePix Array List (GAL) file into a dataframe.
 }
 \usage{
 readGAL(galfile=NULL,path=NULL,header=TRUE,sep="\t",quote="\"",skip=NULL,as.is=TRUE,...)

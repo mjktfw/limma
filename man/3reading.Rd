@@ -32,7 +32,7 @@ The function \link{as.MAList} can be used to convert a \code{marrayNorm} object 
 
 Many image analysis program provide gene IDs as columns in the image analysis output files, for example ArrayVision, Imagene and the Stanford Microarray Database.
 In other cases you may have the probe ID and annotation information in a separate file.
-The function \code{\link{readGAL}} reads information from a GenePix Allocation List (GAL) file.
+The function \code{\link{readGAL}} reads information from a GenePix Array List (GAL) file.
 It produces a data frame with known column names.
 If the probe IDs or names consist of multiple strings separated by a delimiter, then \code{\link{splitName}} may be used to separate the name and annotation information into separate vectors.
 

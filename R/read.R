@@ -3,7 +3,7 @@
 #	GAL FILES
 
 readGAL <- function(galfile=NULL,path=NULL,header=TRUE,sep="\t",quote="\"",skip=NULL,as.is=TRUE,...) {
-#	Read GenePix Allocation List (GAL) file
+#	Read GenePix Array List (GAL) file
 #	Gordon Smyth
 #	1 Mar 2003.  Last revised 26 Dec 2003.
 
@@ -367,7 +367,7 @@ read.imagene <- function(files,path=NULL,ext=NULL,names=NULL,columns=NULL,wt.fun
 #	Imagene requires special treatment because red and green channel
 #	intensities are in different files.
 #	Gordon Smyth
-#	14 Aug 2003.  Last modified 18 Dec 2003.
+#	14 Aug 2003.  Last modified 2 July 2004.
 
 	if(is.null(dim(files))) {
 		if(length(files)%%2==0)
@@ -389,8 +389,8 @@ read.imagene <- function(files,path=NULL,ext=NULL,names=NULL,columns=NULL,wt.fun
 	if(!is.null(path)) fullname <- file.path(path,fullname)
 	headers <- readImaGeneHeader(fullname)
 	if(verbose) cat("Read header information\n")
-	skip <- headers$Begin.Raw.Data
-	printer <- headers$Field.Dimensions[c("Metarows","Metacols","Rows","Cols")]
+	skip <- headers$NHeaderRecords
+	printer <- headers$FieldDimensions[c("Metarows","Metacols","Rows","Cols")]
 	names(printer) <- c("ngrid.r","ngrid.c","nspot.r","nspot.c")
 	if(length(printer) != 4) stop("Cannot read field dimension information")
 	nspots <- prod(unlist(printer))
@@ -405,9 +405,9 @@ read.imagene <- function(files,path=NULL,ext=NULL,names=NULL,columns=NULL,wt.fun
 		if(!is.null(path)) fullname <- file.path(path,fullname)
 		if(i > 1) {
 			headers <- readImaGeneHeader(fullname)
-			if(any(unlist(printer) != unlist(headers$Field.Dimensions[c("Metarows","Metacols","Rows","Cols")])))
+			if(any(unlist(printer) != unlist(headers$FieldDimensions[c("Metarows","Metacols","Rows","Cols")])))
 				stop(paste("Field dimensions of array",i,"not same as those of first array"))
-			skip <- headers$Begin.Raw.Data
+			skip <- headers$NHeaderRecords
 		}
 		obj<- read.table(fullname,skip=skip,header=TRUE,sep=sep,quote=quote,check.names=FALSE,comment.char="",fill=TRUE,nrows=nspots,...)
 		if(verbose) cat(paste("Read",fullname,"\n"))
@@ -448,12 +448,12 @@ readGPRHeader <- function(file) {
 readImaGeneHeader <- function(file) {
 #	Extracts header information from an Imagene analysis output file
 #	Gordon Smyth
-#	14 Aug 2003.  Last modified 8 June 2004.
+#	14 Aug 2003.  Last modified 2 July 2004.
 
 	firstfield <- scan(file,what="",sep="\t",quote="\"",nlines=60,flush=TRUE,quiet=TRUE,blank.lines.skip=FALSE,multi.line=FALSE)
 	NHeaderRecords <- grep("Begin Raw Data",firstfield)
 	txt <- scan(file,what="",sep="\t",quote="\"",nlines=NHeaderRecords-1,quiet=TRUE)
-	out <- list(NHeaderRecords=NHeaderRecords)
+	out <- list(NHeaderRecords=NHeaderRecords,BeginRawData=NHeaderRecords)
 	out$Version <- txt[grep("^version$",txt)+1]
 	out$Date <- txt[grep("^Date$",txt)+1]
 	out$ImageFile <- txt[grep("^Image File$",txt)+1]
