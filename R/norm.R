@@ -1,9 +1,9 @@
 #	LOESS FUNCTIONS
 
-loessFit <- function(y, x, weights=NULL, span=0.3, cell=0.2, iterations=4) {
+loessFit <- function(y, x, weights=NULL, span=0.3, bin=0.01/(2-is.null(weights)), iterations=4) {
 #	Fast loess fit for simple x and y
 #	Gordon Smyth
-#	28 June 2003.  Last revised 4 August 2003.
+#	28 June 2003.  Last revised 3 September 2003.
 
 	n <- length(y)
 	if(is.null(weights)) {
@@ -15,7 +15,7 @@ loessFit <- function(y, x, weights=NULL, span=0.3, cell=0.2, iterations=4) {
 		o <- order(xobs)
 		oo <- order(o)
 		iter <- iterations-1
-		delta = 0.01 * diff(range(xobs)) 
+		delta = bin * diff(range(xobs)) 
 		smoothy <- .C("lowess", x = as.double(xobs[o]), as.double(yobs[o]), 
 			nobs, as.double(span), as.integer(iter), as.double(delta), 
 			y = double(nobs), double(nobs), double(nobs), PACKAGE = "base")$y[oo]
@@ -33,7 +33,7 @@ loessFit <- function(y, x, weights=NULL, span=0.3, cell=0.2, iterations=4) {
 		oldopt <- options(warning.expression=expression())
 		on.exit(options(oldopt))
 		fit <- .vsimpleLoess(y=yobs, x=xobs, weights=wobs, span=span, degree=1,
-			cell=cell, iterations=iterations)
+			cell=bin/span, iterations=iterations)
 		out <- list(fitted=rep(NA,n),residuals=rep(NA,n))
 		out$fitted[obs] <- fit$fitted
 		out$residuals[obs] <- fit$residuals
@@ -111,7 +111,7 @@ MA.RG <- function(object) {
 	new("MAList",unclass(object))
 }
 
-normalizeWithinArrays <- function(object,layout=object$printer,method="printtiploess",weights=object$weights,span=0.4,iterations=5,controlspots=NULL,df=5,robust="M") {
+normalizeWithinArrays <- function(object,layout=object$printer,method="printtiploess",weights=object$weights,span=0.3,iterations=4,controlspots=NULL,df=5,robust="M") {
 #	Within array normalization
 #	Gordon Smyth
 #	2 March 2003.  Last revised 27 July 2003.

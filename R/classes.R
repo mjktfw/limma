@@ -53,6 +53,7 @@ setClass("LargeDataObject")
 setIs("RGList","LargeDataObject")
 setIs("MAList","LargeDataObject")
 setIs("MArrayLM","LargeDataObject")
+setIs("exprSet2","LargeDataObject")
 
 setMethod("show","LargeDataObject",
 function(object) {

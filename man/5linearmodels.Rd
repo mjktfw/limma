@@ -56,19 +56,20 @@ After linear modelling and moderation, the results may be displayed or further p
 \item{ \code{\link{toptable}} }{
 	Presents a list of the genes most likely to be differentially expressed for a given contrast.}
 
-\item{ \code{\link{heatdiagram}} }{
-	Allows visual comparison of the results across many different conditions in the linear model.
-	Not the same as heatdiagrams produced by other packages!}
-
 \item{ \code{\link{classifyTests}} }{
 	Uses a nested F-tests to classify the genes as up, down or even over the contrasts in the linear model with special attention to genes which are significant in more than one contrast.
 	\code{\link{classifyTestsT}} and \code{\link{classifyTestsP}} are simpler methods using cutoffs for the t-statistics or p-values individually.}
+
+\item{ \code{\link{heatdiagram}} }{
+	Allows visual comparison of the results across many different conditions in the linear model.
+	Not the same as heatdiagrams produced by other packages!
+	This function accepts a classification matrix produced by \code{classifyTests}.}
 
 \item{ \code{\link{vennCounts}} }{
 	Accepts output from \code{classifyTests} and counts the number of genes in each classification.}
 
 \item{ \code{\link{vennDiagram}} }{
-	Accepts output from \code{classifyTests} or \code{vennCounts} and produces a Venn Diagram plot.}
+	Accepts output from \code{classifyTests} or \code{vennCounts} and produces a Venn diagram plot.}
 }
 }
 

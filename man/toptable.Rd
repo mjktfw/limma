@@ -1,14 +1,17 @@
 \name{toptable}
 \alias{toptable}
+\alias{topTable}
 \title{Table of Top Genes from Linear Model Fit}
 \description{
 Extract a table of the top-ranked genes from a linear model fit.
 }
 \usage{
 toptable(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.method="holm",sort.by="B",...)
+topTable(fit,coef=1,number=10,genelist=NULL,adjust.method="holm",sort.by="B")
 }
 \arguments{
-  \item{fit}{output list from \code{lm.series}, \code{gls.series} or \code{rlm.series}}
+  \item{fit}{for \code{toptable}, this is an output list from \code{lm.series}, \code{gls.series} or \code{rlm.series}.
+  For \code{topTable} is an object of class \code{MArrayLM}.}
   \item{coef}{column number of the effect or contrast to rank the genes on}
   \item{number}{how many genes to pick out}
   \item{genelist}{a data frame containing the gene allocation list or a vector containing the gene names}
