@@ -5,7 +5,7 @@
 \description{Estimate the correlation between duplicate spots (replicate spots on the same array) from a series of arrays.}
 \usage{
 duplicateCorrelation(object,design=rep(1,ncol(M)),ndups=2,spacing=1,initial=0.8,trim=0.15,weights=NULL)
-dupcor.series(M,design=rep(1,ncol(M)),ndups=2,spacing=1,initial=0.7,trim=0.15,weights=NULL)
+dupcor.series(M,design=rep(1,ncol(M)),ndups=2,spacing=1,initial=0.8,trim=0.15,weights=NULL)
 }
 \arguments{
   \item{object}{a numeric matrix of log-ratios or an \code{\link[limma:malist]{MAList}} object from which the log-ratios can be extracted.

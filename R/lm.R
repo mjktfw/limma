@@ -135,7 +135,7 @@ lm.series <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL)
 	list(coefficients=drop(beta),stdev.unscaled=drop(stdev.unscaled),sigma=sigma,df.residual=df.residual)
 }
 
-rlm.series <- function(M,design=NULL,ndups=1,spacing=spacing,weights=NULL,...)
+rlm.series <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL,...)
 {
 #	Robustly fit linear model for each gene to a series of arrays
 #	Gordon Smyth

@@ -8,7 +8,7 @@ It currently works only with GenePix data.
 }
 
 \usage{
-kooperberg(names, fg="mean", bg="median", a=FALSE, layout)
+kooperberg(names, fg="mean", bg="median", a=TRUE, layout)
 }
 \arguments{
 \item{names}{character vector giving the names of data.frames containing GenePix data}

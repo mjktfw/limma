@@ -74,12 +74,12 @@ loessFit <- function(y, x, weights=NULL, span=0.3, bin=0.01/(2-is.null(weights))
 				xi = double(max.kd), vert = double(2 * D), vval = double((D + 
 				1) * max.kd), diagonal = double(N), trL = double(1), 
 				delta1 = double(1), delta2 = double(1), as.integer(surf.stat == 
-				"interpolate/exact"), PACKAGE = "modreg")
+				"interpolate/exact"), PACKAGE = "stats")
 			fitted.residuals <- y - z$fitted.values
 			if (j < iterations) 
 				robust <- .Fortran("lowesw", as.double(fitted.residuals), 
 				as.integer(N), robust = double(N), double(N), 
-				PACKAGE = "modreg")$robust
+				PACKAGE = "stats")$robust
 		}
 	list(fitted = z$fitted.values, residuals = fitted.residuals)
 }

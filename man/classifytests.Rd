@@ -7,7 +7,7 @@
 Classify a series of related t-statistics as up, down or not significant.
 }
 \usage{
-classifyTests(tstat, cor.matrix=NULL, design=NULL, contrasts=NULL, df=Inf, p.value=0.01)
+classifyTests(tstat, cor.matrix=NULL, design=NULL, contrasts=diag(ncol(design)), df=Inf, p.value=0.01)
 classifyTestsT(tstat, t1=4, t2=3)
 classifyTestsP(tstat, df=Inf, p.value=0.05, method="holm")
 }

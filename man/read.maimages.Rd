@@ -6,7 +6,7 @@
 Reads an RGList from a series of microarray image analysis output files
 }
 \usage{
-read.maimages(files,source="spot",path=NULL,ext=NULL,names=files,columns=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote="\"",\dots)
+read.maimages(files,source="spot",path=NULL,ext=NULL,names=NULL,columns=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote="\"",\dots)
 read.imagene(files,path=NULL,ext=NULL,names=NULL,columns=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote="\"",...)
 }
 \arguments{
@@ -40,6 +40,7 @@ See \code{\link{QualityWeights}} for provided weight functions.
 
 For Imagene image data the argument \code{files} should be a matrix with two columns.
 The first column should contain the names of the files containing green channel (cy3) data and the second column should contain names of files containing red channel (cy5) data.
+If \code{source="imagene"} and \code{files} is a vector of even length instead of a matrix, then each consecutive pair of file names is assumed to correspond to the same array.
 The function \code{read.imagene} is called by \code{read.maimages} when \code{source="imagene"}.
 It does not need to be called directly by users.
 }

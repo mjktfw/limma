@@ -2,7 +2,7 @@
 \alias{gls.series}
 \title{Generalized Least Squares for Series of Microarrays}
 \description{Fit linear models for each gene to a series of microarrays. Fit is by generalized least squares allowing for correlation between duplicate spots.}
-\usage{gls.series(M,design=rep(1,ncol(M)),ndups=2,spacing=1,correlation=NULL,weights=NULL,...)}
+\usage{gls.series(M,design=NULL,ndups=2,spacing=1,correlation=NULL,weights=NULL,...)}
 \arguments{
   \item{M}{a numeric matrix. Usually the log-ratios of expression for a series of cDNA microarrrays with rows corresponding to genes and columns to arrays.}
   \item{design}{the design matrix of the microarray experiment, with rows corresponding to arrays and columns to comparisons to be estimated. The number of rows must match the number of columns of \code{M}. Defaults to the unit vector meaning that the arrays are treated as replicates.} 

@@ -5,7 +5,7 @@
 Creates a coplot giving MA-plots with loess curves by print-tip groups.
 }
 \usage{
-plotPrintTipLoess(object,layout,array=1,span=0.3,...)
+plotPrintTipLoess(object,layout,array=1,span=0.4,...)
 }
 \arguments{
   \item{object}{\code{MAList} or \code{RGList} object or list with components \code{M} containing log-ratios and \code{A} containing average intensities}
