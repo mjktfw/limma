@@ -1,13 +1,15 @@
 \name{normalizeWithinArrays}
 \alias{normalizeWithinArrays}
 \alias{MA.RG}
+\alias{RG.MA}
 \title{Normalize Within Arrays}
 \description{
 Normalize the expression log-ratios for one or more two-colour spotted microarray experiments so that the log-ratios average to zero within each array or sub-array.
 }
 \usage{
 normalizeWithinArrays(object, layout, method="printtiploess", weights=object$weights, span=0.3, iterations=4, controlspots=NULL, df=5, robust="M")
-MA.RG(object)
+MA.RG(object, log.transform=TRUE)
+RG.MA(object)
 }
 \arguments{
   \item{object}{object of class \code{list}, \code{RGList} or \code{MAList} containing two-color microarray data}
@@ -21,6 +23,8 @@ MA.RG(object)
   \item{controlspots}{numeric or logical vector specifying the subset of spots which are non-differentially expressed control spots, for use with \code{method="composite"}}
   \item{df}{degrees of freedom for spline if \code{method="robustspline"}}
   \item{robust}{robust regression method if \code{method="robustspline"}.  Choices are \code{"M"} or \code{"MM"}.}
+  \item{log.transform}{logical indicating whether intensities should be log2 transformed.
+  If \code{FALSE} then intensities are assumed to be already logged.}
 }
 
 \details{
@@ -36,8 +40,10 @@ The default values given here are equivalent to those for the older function \co
 
 The \code{"robustspline"} method calls \code{\link{normalizeRobustSpline}}.
 
-\code{MA.RG} converts an \code{RGList} object into an \code{MAList} object.
+\code{MA.RG} converts an unlogged \code{RGList} object into an \code{MAList} object.
 \code{MA.RG(object)} is equivalent to \code{normalizeWithinArrays(object,method="none")}.
+
+\code{RG.MA(object)} converts back from an \code{MAList} object to a \code{RGList} object with intensities on the log2 scale.
 }
 \value{
 An object of class \code{\link[limma:malist]{MAList}}.

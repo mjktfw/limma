@@ -9,13 +9,14 @@ backgroundCorrect(RG, method="subtract")
 }
 \arguments{
   \item{RG}{an \code{\link[limma:rglist]{RGList}} object or a unclassed list containing the same components as an \code{RGList}}
-  \item{method}{character string specifying correction method.  Possible values are \code{"subtract"} for simple subtraction of background from foreground or \code{"positive"} to ensure that all corrected intensities are positive.}
+  \item{method}{character string specifying correction method.  Possible values are \code{"subtract"} for simple subtraction of background from foreground, \code{"half"} to set negative corrected intensities to 0.5 or \code{"minimum"} to set negative or zero corrected intensities to the minimum of the positive intensities.}
 }
 \details{
 If \code{method="subtract"} then this function simply subtracts the background intensities from the foreground intensities which is the usual background correction method.
-If \code{method="positive"} then intensities are set to 0.5 if they would otherwise be negative or to 0.75 if they would otherwise be zero.
+If \code{method="half"} then any intensity which is less than 0.5 after background subtraction is reset to be equal to 0.5.
+If \code{method="minimum"} then any intensity which is zero or negative after background subtraction is set equal to the minimum of the positive corrected intensities for that array.
 
-Background correction is also performed by the \code{\link[limma:normalizeWithinArrays-methods]{normalizeWithinArrays}} method for \code{RGList} objects, so at this time it is not necessary to call \code{backgroundCorrect} directly.
+Background correction is also performed by the \code{\link[limma:normalizeWithinArrays-methods]{normalizeWithinArrays}} method for \code{RGList} objects, so at this time it is not necessary to call \code{backgroundCorrect} directly unless one wants to use a method other than simple subtraction.
 }
 \value{
 An \code{RGList} object in which components \code{R} and \code{G} are background corrected
@@ -31,6 +32,7 @@ Yang, Y. H., Buckley, M. J., and Speed, T. P. (2001). Analysis of microarray ima
 RG <- new("RGList", list(R=c(1,2,3,4),G=c(1,2,3,4),Rb=c(2,2,2,2),Gb=c(2,2,2,2)))
 backgroundCorrect(RG)
 backgroundCorrect(RG, method="positive")
+backgroundCorrect(RG, method="minimum")
 }
 \seealso{
 	\code{\link{read.maimages}}, \code{\link{normalizeWithinArrays}}

@@ -86,10 +86,10 @@ loessFit <- function(y, x, weights=NULL, span=0.3, bin=0.01/(2-is.null(weights))
 
 #  WITHIN ARRAY NORMALIZATION
 
-MA.RG <- function(object) {
+MA.RG <- function(object, log.transform=TRUE) {
 #	Convert RGList to MAList
 #	Gordon Smyth
-#	2 March 2003.  Last revised 28 April 2003.
+#	2 March 2003.  Last revised 5 September 2003.
 
 	R <- object$R
 	G <- object$G
@@ -99,16 +99,30 @@ MA.RG <- function(object) {
 	if(!is.null(object$Gb)) G <- G-object$Gb
 
 #	Log
-	R[R <= 0] <- NA
-	G[G <= 0] <- NA
-	R <- log(R,2)
-	G <- log(G,2)
+	if(log.transform) { 
+		R[R <= 0] <- NA
+		G[G <= 0] <- NA
+		R <- log(R,2)
+		G <- log(G,2)
+	}
 	
 #	Minus and Add
 	object$R <- object$G <- object$Rb <- object$Gb <- NULL
 	object$M <- as.matrix(R-G)
 	object$A <- as.matrix((R+G)/2)
 	new("MAList",unclass(object))
+}
+
+RG.MA <- function(object) {
+#	Convert MAList to logged RGList
+#	Gordon Smyth
+#	5 September 2003.
+
+	object$R <- object$A+object$M/2
+	object$G <- object$A-object$M/2
+	object$M <- NULL
+	object$A <- NULL
+	new("RGList",unclass(object))
 }
 
 normalizeWithinArrays <- function(object,layout=object$printer,method="printtiploess",weights=object$weights,span=0.3,iterations=4,controlspots=NULL,df=5,robust="M") {
@@ -378,7 +392,7 @@ function(object, method="scale") {
 #	Gordon Smyth
 #	12 Apri 2003.  Last revised 18 Aug 2003.
 
-	choices <- c("none","scale","quantile")
+	choices <- c("none","scale","quantile","Aquantile")
 	method <- match.arg(method,choices)
 	switch(method,
 		scale = {
@@ -392,6 +406,9 @@ function(object, method="scale") {
 			G <- Z[,narrays+(1:narrays)]
 			object$M <- R-G
 			object$A <- (R+G)/2
+		},
+		Aquantile = {
+			object$A <- normalizeQuantiles(object$A)
 		})
 	object
 })

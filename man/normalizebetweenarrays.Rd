@@ -13,9 +13,8 @@ normalizeBetweenArrays(object, method)
 \arguments{
   \item{object}{an object, usually an \code{\link[limma:malist]{MAList}}, containing expression ratios for a series of arrays}
   \item{method}{character string specifying the normalization method to be used.
-  Choices are \code{"none"}, \code{"scale"} or \code{"quantile"}.
-  A partial string sufficient to uniquely identify the choice is permitted.
-  If no method is recognized then unnormalized values are returned.}
+  Choices are \code{"none"}, \code{"scale"}, \code{"quantile"} or \code{"Aquantile"}.
+  A partial string sufficient to uniquely identify the choice is permitted.}
 }
 
 \details{
@@ -28,6 +27,9 @@ This idea has also been implemented by the \code{maNormScale} function in the ma
 The implementation here is slightly different in that the MAD scale estimator is replaced with the median-absolute-value and the A-values are normalized as well as the M-values.
 
 Quantile normalization was proposed by Bolstad et al (2003) for Affymetrix-style single-channel arrays and by Yang and Thorne (2003) for two-color cDNA arrays.
+\code{method="quantile"} ensures that the intensities have the same empirical distribution across arrays and across channels.
+\code{method="Aquantile"} ensures that the A-values (average intensities) have the same empirical distribution across arrays leaving the M-values (log-ratios) unchanged.
+These two methods are called "q" and "Aq" respectively in Yang and Thorne (2003).
 }
 
 \section{Methods}{
@@ -79,6 +81,8 @@ library(sma)
 data(MouseArray)
 MA <- normalizeWithinArrays(mouse.data, mouse.setup)
 plot.scale.box(MA$M)
+
+#  Between array scale normalization as in Yang et al (2001):
 MA <- normalizeBetweenArrays(MA,method="scale")
 print(MA)
 show(MA)
@@ -87,6 +91,10 @@ plot.scale.box(MA$M)
 #  One can get the same results using the matrix method:
 M <- normalizeBetweenArrays(MA$M,method="scale")
 plot.scale.box(M)
+
+#  MpAq normalization as in Yang and Thorne (2003):
+MpAq <- normalizeWithinArrays(mouse.data, mouse.setup)
+MpAq <- normalizeBetweenArrays(MpAq, method="Aq")
 }
 
 \keyword{models}
