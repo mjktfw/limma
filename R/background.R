@@ -133,7 +133,7 @@ ma3x3.spottedarray <- function(x,printer,FUN=mean,na.rm=TRUE,...)
 fit.normexp <- function(foreground,background=NULL,background.matrix=NULL,trace=0,beta.start=NULL) {
 #	Fit background=normal + signal=exponential model.
 #	Gordon Smyth
-#	24 Aug 2002.
+#	24 Aug 2002.  Last modified 15 Dec 2004.
 
 	f <- foreground
 
@@ -154,12 +154,15 @@ fit.normexp <- function(foreground,background=NULL,background.matrix=NULL,trace=
 		}
 	}
 	sigma <- sqrt(mean((f[f<mu]-mu)^2,na.rm=TRUE))
-	if(!is.infinite(sigma) || sigma < 1) sigma <- 1
+	if(!is.finite(sigma) || sigma < 1) sigma <- 1
 	alpha <- mean(f,na.rm=TRUE) - mu
 	theta <- c(beta,log(sigma),log(alpha))
 	
 #	Nelder-Mead optimization
 	out <- optim(theta,m2loglik.normexp,control=list(trace=trace),foreground=f,background=background,background.matrix=background.matrix)
+
+	if(out$convergence==1) warning("optim iteration limit reached")
+	if(out$convergence==10) stop("optim failure: degeneracy of the Nelder-Mead simplex")
 	list(beta=out$par[1:nbeta],sigma=exp(out$par[nbeta+1]),alpha=exp(out$par[nbeta+2]),m2loglik=out$value,convergence=out$convergence)
 }
 

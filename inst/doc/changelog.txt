@@ -1,3 +1,63 @@
+10 Jan 2005: limma 1.8.17
+
+- uniquegenelist() now preserves data.frame or matrix class. This fixes a bug when fitting a model to an exprSet object with duplicate probes.
+
+9 Jan 2004: limma 1.8.16
+
+- bug fix for lmFit() when no weights or NAs but non-estimable coefficients
+
+8 Jan 2004: limma 1.8.15
+
+- lm.series() and lmFit() now treat linear model with no weights or NAs as a special case, with great increase in speed for typical Affymetrix analysis
+- lmFit() better recognises when an marrayNorm object has a non-empty list of gene names
+- new User's Guide section of Adjusting for Multiple Testing
+
+16 Dec 2004: limma 1.8.14
+
+- fix !is.infinite bug in starting values for fit.normexp()
+- tests for version of R removed from trigamma.inverse() and .vsimpleLoess()
+
+9 Dec 2004: limma 1.8.13
+
+- log and unlog arguments removed from MA.RG() and RG.MA().  RGLists are now always assumed to contain unlogged intensities.
+- changes to plotDensities() to accommodate above
+- bug fix to normalizeBetweenArrays with method="Gquantile" or "Rquantile".  Now changes only the A-values.
+
+2 Dec 2004: limma 1.8.12
+
+- fix to last section of User's Guide: quantile normalization code example was garbled
+- bug fix in plotDensities(): object=MAList and log.transform=TRUE should give log not log-log scale
+
+1 Dec 2004: limma 1.8.11
+
+- log.transform=TRUE now the default for plotDensities(), corresponding changes to help doc
+- new argument unlog for RG.MA()
+
+23 Nov 2004: limma 1.8.10
+
+- bug fix for summary.TestResults to remove reference to 'results'
+- fit.normexp() now catches and reports optimization errors
+- decideTests() now runs eBayes() if MArrayLM object found not to contain t-statistics
+
+4 Nov 2004: limma 1.8.9
+
+- new argument '...' for readTargets()
+- intraspotCorrelation() now uses try() to tolerate some fit errors from remlscore()
+- decideTests.Rd now longer says 'object' arg can be a matrix
+- convest() now plots pi0 in title of plot for doplot=TRUE
+- bug fix: changeLog() was always displaying 20 lines, also assumed "/" separator
+
+29 Oct 2004: limma 1.8.8
+
+- bug fix: lmFit() should call mrlm() not rlm.series()
+
+29 Oct 2004: limma 1.8.7
+
+- limma now officially requires R 2.0 (because of lazyloading)
+- new function convest()
+- new function arrayWeights()
+- as.matrix() methods for all data classes
+
 27 Oct 2004: limma 1.8.6
 
 - new function volcanoplot()
