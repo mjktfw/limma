@@ -5,7 +5,7 @@
 Identify order in which spots were printed and the 384-well plate from which they were printed.
 }
 \usage{
-printorder(layout, ndups, npins=layout$ngrid.r*layout$ngrid.c, start="topleft")
+printorder(layout, ndups=1, npins=layout$ngrid.r*layout$ngrid.c, start="topleft")
 }
 \arguments{
   \item{layout}{list with the components \code{ngrid.r}, \code{ngrid.c}, \code{nspot.r} and \code{nspot.c}}
@@ -25,10 +25,20 @@ Printing is assumed to proceed by rows within in each grid starting either from 
 }
 \value{
 List with components
-\item{printorder}{numeric vector giving printorder of each spot}
-\item{plate}{numeric vector giving plate number of each spot}
-\item{plateposition}{character vector giving plate position of the well from which each spot was printed with letters for rows and number for columns.
-For example \code{B13} is second row, 13th column.}
+\item{printorder}{numeric vector giving printorder of each spot, i.e., which dip of the print-head was used to print it}
+\item{plate}{numeric vector giving plate number from which each spot was printed}
+\item{plate.r}{numeric vector giving plate-row number of the well from which each spot was printed}
+\item{plate.c}{numeric vector giving plate-column number of the well from which each spot was printed}
+\item{plateposition}{character vector summarizing plate number and plate position of the well from which each spot was printed with letters for plate rows and number for columns.
+For example \code{02B13} is second row, 13th column, of the second plate.}
+}
+\seealso{
+\code{\link{normalizeForPrintorder}}.
+
+An overview of LIMMA functions for reading data is given in \link{3.ReadingData}.
 }
 \author{Gordon Smyth}
+\examples{
+printorder(list(ngrid.r=2,ngrid.c=2,nspot.r=12,nspot.c=8))
+}
 \keyword{IO}

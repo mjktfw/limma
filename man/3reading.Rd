@@ -31,6 +31,7 @@ If the gene names consist of a short name followed by annotation information, th
 
 The function \code{\link{getLayout}} extracts from the gal-file data frame the print layout information for a spotted array.
 The functions \code{\link{gridr}}, \code{\link{gridc}}, \code{\link{spotr}} and \code{\link{spotc}} use the extracted layout to compute grid positions and spot positions within each grid for each spot.
+The function \code{\link{printorder}} calculates the printorder, plate number and plate row and column position for each spot given the layout and associate information.
 
 If each gene is printed more than once of the arrays, then \code{\link{uniquegenelist}} will remove duplicate names from the gal-file or gene list.
 

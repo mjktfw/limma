@@ -18,7 +18,7 @@ Numeric vector or array \code{y} satisfying \code{trigamma(y)==x}.
 }
 \author{Gordon Smyth}
 \seealso{
-   \code{\link[base:trigamma]{trigamma}}
+   \code{\link[base:Special]{trigamma}}
 }
 \warning{
 This function does not accept a data.frame as argument although the internal function \code{trigamma} does.

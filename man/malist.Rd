@@ -17,14 +17,19 @@ This class contains no slots (other than \code{.Data}), but objects should conta
 \tabular{ll}{
   \code{M}:\tab numeric matrix containing the M-values or log expression ratios (base 2).  Rows correspond to spots and columns to arrays.\cr
   \code{A}:\tab numeric matrix containing the A-values or average log expression values (base 2).\cr
-  \code{w}:\tab optional numeric matric containing relative spot quality weights.  Should be non-negative.
+  \code{weights}:\tab optional numeric matric containing relative spot quality weights.  Should be non-negative.
 }
 All of the matrices should have the same dimensions.
 }
 
 \section{Methods}{
 This class inherits directly from class \code{list} so any operation appropriate for lists will work on objects of this class.
-Type \code{showMethods("MAList")} at the R prompt to see what methods are available for this class.
+
+Methods defined in the limma package include \code{\link[limma:normalizebetweenarrays-methods]{normalizeBetweenArrays}},
+\code{\link[limma:normalizeprintorder-methods]{normalizeForPrintorder}}
+and \code{\link[limma:normalizeWithinArrays-methods]{normalizeWithinArrays}}.
+
+Type \code{showMethods(classes="MAList")} at the R prompt for a complete list of methods for this class.
 }
 
 \author{Gordon Smyth}

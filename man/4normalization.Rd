@@ -9,7 +9,7 @@ Smyth and Speed (2003) give an overview of the normalization techniques implemen
 Virtually all data from spotted microarrays will be normalized using \code{\link{normalizeWithinArrays}} with \code{method="printtiploess"}.
 A minority of data will also be normalized using \code{\link{normalizeBetweenArrays}} if diagnostic plots suggest a difference in scale between the arrays.
 
-In rare circumanstances, data might be normalized using \code{\link{normalizeForPrintorder}} before using \code{\link{normalizeWithinArrays}}.
+In rare circumstances, data might be normalized using \code{\link{normalizeForPrintorder}} before using \code{\link{normalizeWithinArrays}}.
 
 \code{\link{normalizeWithinArrays}} also does background correction.
 At this time, the explicit background correction function \code{\link{backgroundCorrect}} is not used by LIMMA, but the function will become relevant if more sophisticated background correct methods are implemented.

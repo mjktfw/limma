@@ -9,7 +9,7 @@ Normalize intensity values on one or more spotted microarrays to adjust for prin
 normalizeForPrintorder(object, ...)
 }
 \arguments{
-  \item{object}{object contain expression intensities from a spotted microarray}
+  \item{object}{object containing expression intensities from a spotted microarray}
   \item{...}{any other arguments}
 }
 \details{
@@ -20,10 +20,15 @@ The may be variations in ambient conditions during the time the array is printed
 \value{
 An object with normalized intensities.
 }
+\section{Methods}{
+A method is defined in limma for \code{object} an object of class
+\code{\link[limma:normalizeprintorder-methods]{RGList}}.
+There are also default methods.
+
+Type \code{helpMethods("normalizeForPrinter")} at the R prompt for a complete list of classes for which methods are defined.
+}
 \author{Gordon Smyth}
 \seealso{
-See \code{\showMethods("normalizeForPrinter")} at the R prompt to see what classes of objects have associated methods for this function.
-
 An overview of LIMMA functions for normalization is given in \link{4.Normalization}.
 }
 \keyword{models}

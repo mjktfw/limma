@@ -7,15 +7,10 @@ LIMMA provides the ability to analyse comparisons between many RNA targets simul
 The normalization and data analysis functions are for two-colour spotted microarrays.
 The linear model and differential expression functions apply to all microarrays including Affymetrix and other multi-array oligonucleotide experiments.
 
-There are three types of documentation available:
-\describe{
-\item{\emph{LIMMA User's Guide}}{
-	See "Accompanying documentation" at the top of the LIMMA contents page.}
-\item{Alphabetical index of functions and classes}{
-	See the LIMMA contents page}
-\item{Grouping of functions by purpose}{
-	See the numbered chapters at the top of the LIMMA contents page.}
-}
+There are three types of documentation available.
+(1) The \emph{\link[limma:../doc/usersguide]{LIMMA User's Guide}} can be reached through the "Accompanying documentation" at the top of the LIMMA contents page.
+(2) An overview of limma functions grouped by purpose is contained in the numbered chapters at the top of the \link[limma:00Index]{LIMMA contents page}, of which this page is the first.
+(3) The \link[limma:00Index]{LIMMA contents page} gives an alphabetical index of detailed help topics.
 }
 \author{Gordon Smyth}
 \references{

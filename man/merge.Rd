@@ -12,11 +12,11 @@ merge(x,y,...)
   \item{y}{a data object of the same class as \code{x} to be merged with \code{x}}
   \item{...}{any other arguments}
 }
-\author{Gordon Smyth}
-\seealso{
+\section{Methods}{
+A method is defined in limma for \code{x} and \code{y} objects of class \code{\link[limma:merge.rglist]{RGList}}.
 The default method \code{\link[base]{merge.default}} defined in R base is designed for data.frames.
 
-\code{\link{merge.RGList.RGList}}.
-Type \code{showMethods("merge")} at the R prompt to see what other methods are available.
+Type \code{showMethods("merge")} at the R prompt for a complete list of classes for which methods are defined.
 }
+\author{Gordon Smyth}
 \keyword{models}

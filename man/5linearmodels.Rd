@@ -7,7 +7,7 @@ This page gives an overview of the LIMMA functions available to fit linear model
 
 The core of this package is the fitting of gene-wise linear models to microarray data.
 The basic idea is to estimate log-ratios between two or more target RNA samples simultaneously.
-See the \emph{limma User's Guide} for several case studies.
+See the \emph{\link[limma:../doc/usersguide]{LIMMA User's Guide}} for several case studies.
 There are three functions in the package which fit linear models:
 
 \describe{
