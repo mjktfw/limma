@@ -34,7 +34,9 @@ An overview of linear model functions in limma is given by \link{5.LinearModels}
 }
 \author{Gordon Smyth}
 \references{
-Lönnstedt, I. and Speed, T. P. (2002). Replicated microarray data. \emph{Statistica Sinica} \bold{12}, 31-46. 
+Lönnstedt, I. and Speed, T. P. (2002). Replicated microarray data. \emph{Statistica Sinica} \bold{12}, 31-46.
+
+Smyth, G. K. (2003). Linear models and empirical Bayes methods for assessing differential expression in microarray experiments. http://www.statsci.org/smyth/pubs/ebayes.pdf
 }
 \examples{
 #  Simulate gene expression data,

@@ -14,7 +14,7 @@
 <p align="center">Gordon Smyth<br>
 The
 Walter and Eliza Hall Institute of Medical Research<br>
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->22 June 2003<!--webbot bot="Timestamp" i-checksum="17568" endspan --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->08 August 2003<!--webbot bot="Timestamp" i-checksum="31348" endspan --></p>
 
 <h2>Table of Contents</h2>
 
@@ -23,6 +23,8 @@ Walter and Eliza Hall Institute of Medical Research<br>
   <li>Reading in Intensity Data</li>
   <li>Reading in Gene List Data</li>
   <li>Spot Quality Weights</li>
+  <li>Linear Models</li>
+  <li>Quick Start</li>
   <li>One-Sample Experiments</li>
   <li>Two-Sample Experiments</li>
   <li>Factorial Experiments</li>
@@ -58,8 +60,8 @@ Download is also available from
 <a href="http://bioinf.wehi.edu.au/limma/">http://bioinf.wehi.edu.au/limma/</a>. 
 The data sets used in the examples can be downloaded from
 <a href="http://bioinf.wehi.edu.au/marray/genstat2002/">
-http://bioinf.wehi.edu.au/marray/genstat2002/</a>. Bugs or other problems can be 
-reported to <a href="mailto:bioconductor@stat.math.ethz.ch">
+http://bioinf.wehi.edu.au/marray/genstat2002/</a>. Help with LIMMA is available 
+by sending questions or problems to <a href="mailto:bioconductor@stat.math.ethz.ch">
 bioconductor@stat.math.ethz.ch</a>.</p>
 
 <h2>2. Reading in Intensity Data</h2>
@@ -117,7 +119,67 @@ GenePix program.</p>
 <p>Computing quality weights depends on the image analysis program. Consult the 
 help entry <code>QualityWeights</code> to see what quality weight functions are 
 available.</p>
-<h2>5. One-Sample Experiments</h2>
+<h2>5. Linear Models</h2>
+<p>The package LIMMA uses an approach called <i>linear models</i> to analyse 
+designed microarray experiments. This approach allows very general experiments 
+to be analysed just as easily as a simple replicated experiment. The approach is 
+explained in Smyth (2003) and Yang and Speed (2002). The approach requires one 
+or two matrices to be specified. The first is the <i>design matrix</i> which 
+indicates in effect which RNA samples have been applied to each array. The 
+second is the <i>contrast matrix</i> which specifies which comparisons you would 
+like to make between the RNA samples. For very simple experiments, you may not 
+need to specify the contrast matrix.</p>
+<h2>6. Quick Start</h2>
+<p>For those who want to see very quickly what a LIMMA analysis might look like 
+for cDNA data, here is a quick analysis of four replicate arrays (including two 
+dye-swaps). The data has been scanned using an Axon scanner, producing a Gene 
+Allocation List (GAL) file, and then the intensities have been captured from the 
+images using SPOT software. The GAL file and the image analysis files are in the 
+current working directory of R. For more detail about the data see the Swirl 
+Data example below.</p>
+<pre>&gt; files &lt;- dir(pattern=&quot;*.spot&quot;)            # Get the names of the files containing the intensity data
+&gt; RG &lt;- read.maimages(files,source=&quot;spot&quot;)  # Read in the data
+&gt; RG$genes &lt;- readGAL()                     # Read in GAL file containing gene names
+&gt; RG$printer &lt;- getLayout(RG$genes)         # Set printer layout information
+&gt; MA &lt;- normalizeWithinArrays(RG)           # Print-tip group loess normalization
+&gt; MA &lt;- normalizeBetweenArrays(RG)          # Scale normalization between arrays, optional
+&gt; fit &lt;- lmFit(MA,design=c(1,-1,1,-1))      # Estimate all the fold changes by fitting a linear model.
+                                            # The design matrix indicates which arrays are dye-swaps
+&gt; fit &lt;- eBayes(fit)                        # Apply Bayesian smoothing to the standard errors (very important!)
+&gt; options(digits=3)
+&gt; topTable(fit,n=30,adjust=&quot;fdr&quot;)           # Show the top 30 genes, control false discovery rate
+     Block Row Column      ID   Name     M     t  P.Value    B
+3721     8   2      1 control   BMP2 -2.21 -21.1 0.000357 7.96
+1609     4   2      1 control   BMP2 -2.30 -20.3 0.000357 7.78
+3723     8   2      3 control   Dlx3 -2.18 -20.0 0.000357 7.71
+1611     4   2      3 control   Dlx3 -2.18 -19.6 0.000357 7.62
+8295    16  16     15 fb94h06 20-L12  1.27  14.1 0.002067 5.78
+7036    14   8      4 fb40h07  7-D14  1.35  13.5 0.002067 5.54
+515      1  22     11 fc22a09 27-E17  1.27  13.4 0.002067 5.48
+5075    10  14     11 fb85f09 18-G18  1.28  13.4 0.002067 5.48
+7307    14  19     11 fc10h09 24-H18  1.20  13.2 0.002067 5.40
+319      1  14      7 fb85a01  18-E1 -1.29 -13.1 0.002067 5.32
+2961     6  14      9 fb85d05 18-F10 -2.69 -13.0 0.002067 5.29
+4032     8  14     24 fb87d12 18-N24  1.27  12.8 0.002067 5.22
+6903    14   2     15 control    Vox -1.26 -12.8 0.002067 5.20
+4546     9  14     10 fb85e07 18-G13  1.23  12.8 0.002067 5.18
+683      2   7     11 fb37b09  6-E18  1.31  12.4 0.002182 5.02
+1697     4   5     17 fb26b10  3-I20  1.09  12.4 0.002182 4.97
+7491    15   5      3 fb24g06  3-D11  1.33  12.3 0.002182 4.96
+4188     8  21     12 fc18d12 26-F24 -1.25 -12.2 0.002209 4.89
+4380     9   7     12 fb37e11  6-G21  1.23  12.0 0.002216 4.80
+3726     8   2      6 control  fli-1 -1.32 -11.9 0.002216 4.76
+2679     6   2     15 control    Vox -1.25 -11.9 0.002216 4.71
+5931    12   6      3 fb32f06  5-C12 -1.10 -11.7 0.002216 4.63
+7602    15   9     18 fb50g12  9-L23  1.16  11.7 0.002216 4.63
+2151     5   2     15 control   vent -1.40 -11.7 0.002216 4.62
+3790     8   4     22 fb23d08  2-N16  1.16  11.6 0.002221 4.58
+7542    15   7      6 fb36g12  6-D23  1.12  11.0 0.003000 4.27
+4263     9   2     15 control   vent -1.41 -10.8 0.003326 4.13
+6375    13   2     15 control   vent -1.37 -10.5 0.004026 3.91
+1146     3   4     18 fb22a12  2-I23  1.05  10.2 0.004242 3.76
+157      1   7     13 fb38a01   6-I1 -1.82 -10.2 0.004242 3.75</pre>
+<h2>7. One-Sample Experiments</h2>
 
 <p>In this section we consider a case study in which two RNA sources are 
 compared directly on a set of replicate or dye-swap arrays. The case study 
@@ -325,7 +387,7 @@ indicate the dye-swaps.</p>
 expression. The moderated t-statistics use sample standard deviations which have 
 been shrunk towards a pooled standard deviation value.</p>
 <pre>&gt; eb &lt;- ebayes(fit)
-&gt; qqt(eb$t,df=3+eb$df,pch=16,cex=0.1)
+&gt; qqt(eb$t,df=fit$df+eb$df,pch=16,cex=0.1)
 &gt; abline(0,1)</pre>
 <p align="center"><img border="0" src="swirl/qqt.png" width="577" height="591"></p>
 <p>Visually there seems to be plenty of genes which are differentially 
@@ -380,7 +442,7 @@ assumes independent statistics which we do not have here (see <code>help(p.adjus
 </pre>
 <p align="center">
 <img border="0" src="swirl/avemaplot.png" width="795" height="706"></p>
-<h2>6. Two-Sample Experiments</h2>
+<h2>8. Two-Sample Experiments</h2>
 <p>In this section we consider a case study where two RNA sources are compared 
 through a common reference RNA. The analysis of the log-ratios involves a 
 two-sample comparison of means for each gene.</p>
@@ -514,7 +576,7 @@ to be differentially expressed in the knockout versus the control line.</p>
 &gt; text(fit$coef[top8,2],eb$lods[top8,2],labels=substring(genelist[top8,&quot;NAME&quot;],1,5),cex=0.8,col=&quot;blue&quot;)</pre>
 <p align="center">
 <img border="0" src="apoai/bayes.png" width="693" height="743"></p>
-<h2>7. Factorial Experiments</h2>
+<h2>9. Factorial Experiments</h2>
 <p>This case study considers a more involved analysis in which the sources of 
 RNA have a factorial structure.</p>
 <h3>Example. Weaver Mutant Data</h3>
@@ -638,7 +700,7 @@ those which have decreasing expression in the wild-type over time, and those
 which are down-regulated (green) in the mutant are those which increase over 
 time in the wild-type. The mutant is not participating in normal development 
 between 11 and 21 days in respect of these genes.</p>
-<h2>8. Microarrays with Multiple Prints of Each Gene</h2>
+<h2>10. Within-Array Replicate Spots</h2>
 <p>In this section we consider a case study in which all genes (ESTs and 
 controls) are printed more than once on the array. This means that there is both 
 within-array and between-array replication for each gene. The structure of the 
@@ -778,7 +840,7 @@ hour for a series of arrays.</p>
 &gt; plot(fit$coef,eb$lods,xlab=&quot;Log2 Fold Change&quot;,ylab=&quot;Log Odds&quot;,pch=16,cex=0.1)</pre>
 <p align="center">
 <img border="0" src="bob/volcano.png" width="890" height="590"></p>
-<h2>9. Using limma with the marray Packages</h2>
+<h2>11. Using limma with the marray Packages</h2>
 <p>The packages marrayClasses, marrayInput, marrayNorm and marrayTools are 
 designed to read and normalize cDNA data. Normalization will produce an object 
 of class <code>marrayNorm</code>. The linear model commands from limma may be 
@@ -789,8 +851,10 @@ using</p>
 <p>after which one proceeds exactly as in previous sections. The functions <code>
 gls.series</code> or <code>rlm.series</code> may be substituted for <code>
 lm.series</code> as appropriate. The design matrix 
-is chosen as in previous sections.</p>
-<h2>10. Affymetrix and Single-Color Arrays</h2>
+is chosen as in previous sections. Alternatively you can use the function <code>
+lmFit</code> which will accept a marrayNorm object directly, e.g..,</p>
+<pre>fit &lt;- lmFit(N,design)</pre>
+<h2>12. Affymetrix and Single-Color Arrays</h2>
 <p>Suppose for example that there are three arrays 
 hybridized with wt RNA and two arrays hybridized with mutant RNA. The design 
 matrix might be</p>
@@ -850,6 +914,8 @@ to Lynn Corcoran for the Bob Mutant data.</p>
   analysis of gene expression in the developing pontocerebellar projection 
   system. <i>Neuron</i> <b>36</b>, 417-434. (<a href="http://neuron.org/cgi/content/full/36/3/417">Full 
   Text</a>)</li>
+  <li>Smyth, G. K. (2003). Linear models and empirical Bayes methods for 
+  assessing differential expression in microarray experiments. (<a href="http://www.statsci.org/smyth/pubs/ebayes.pdf">PDF</a>)</li>
   <li> Smyth, G. K., and Speed, T. P. (2003). Normalization of cDNA microarray 
   data. In: <i>METHODS: Selecting Candidate Genes from DNA Array Screens: 
   Application to Neuroscience</i>, D. Carter (ed.). To appear. (<a href="http://www.statsci.org/smyth/pubs/normalize.pdf">PDF</a>)</li>
