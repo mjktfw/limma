@@ -374,14 +374,14 @@ contrasts.fit <- function(fit,contrasts) {
 	fit
 }
 
-contrasts.fit0 <- function(fit,contrasts) {
-#	Extract contrast information from oneway linear model fit
-#	Gordon Smyth
-#	13 Oct 2002.  Last modified 1 July 2003.
-
-	fit$coefficients <- fit$coefficients %*% contrasts
-	fit$stdev.unscaled <- sqrt(fit$stdev.unscaled^2 %*% contrasts^2)
-	fit$contrasts <- contrasts
-	fit
-}
+#contrasts.fit0 <- function(fit,contrasts) {
+##	Extract contrast information from oneway linear model fit
+##	Gordon Smyth
+##	13 Oct 2002.  Last modified 1 July 2003.
+#
+#	fit$coefficients <- fit$coefficients %*% contrasts
+#	fit$stdev.unscaled <- sqrt(fit$stdev.unscaled^2 %*% contrasts^2)
+#	fit$contrasts <- contrasts
+#	fit
+#}
 

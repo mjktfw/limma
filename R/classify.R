@@ -3,7 +3,7 @@
 classifyTests <- function(tstat,cor.matrix=NULL,design=NULL,contrasts=diag(ncol(design)),df=Inf,p.value=0.01) {
 #	Use F-tests to classify vectors of t-test statistics into outcomes
 #	Gordon Smyth
-#	20 Mar 2003.  Last revised 3 August 2003.
+#	20 Mar 2003.  Last revised 15 September 2003.
 
 #	Method intended for MAList objects but accept unclassed lists as well
 	if(is.list(tstat)) {
@@ -34,23 +34,24 @@ classifyTests <- function(tstat,cor.matrix=NULL,design=NULL,contrasts=diag(ncol(
 	}
 	if(is.null(cor.matrix)) {
 		r <- ntests
-		Q <- diag(r)
+		Q <- diag(r)/sqrt(r)
 	} else {
 		E <- eigen(cor.matrix,symmetric=TRUE)
 		r <- sum(E$values/E$values[1] > 1e-8)
-		Q <- matvec( E$vectors[,1:r], 1/sqrt(E$values[1:r]))
+		Q <- matvec( E$vectors[,1:r], 1/sqrt(E$values[1:r]))/sqrt(r)
 	}
 
-	qF <- r * qf(p.value, r, df, lower.tail=FALSE)
+	qF <- qf(p.value, r, df, lower.tail=FALSE)
 	if(length(qF)==1) qF <- rep(qF,ngenes) 
 	result <- matrix(0,ngenes,ntests,dimnames=dimnames(tstat))
+	Fstat <- rep(NA,ngenes)
 	if(is.null(colnames(tstat)) && !is.null(colnames(contrasts))) colnames(result) <- colnames(contrasts)
 	for (i in 1:ngenes) {
 		x <- tstat[i,]
 		if(any(is.na(x)))
 			result[i,] <- NA
 		else
-			if( crossprod(crossprod(Q,x)) > qF[i] ) {
+			if( (Fstat[i] <- crossprod(crossprod(Q,x))) > qF[i] ) {
 				ord <- order(abs(x),decreasing=TRUE)
 				result[i,ord[1]] <- sign(x[ord[1]])
 				for (j in 2:ntests) {
@@ -63,7 +64,7 @@ classifyTests <- function(tstat,cor.matrix=NULL,design=NULL,contrasts=diag(ncol(
 				}
 			}
 	}
-	result
+	structure(list(classification=result,Fstat=Fstat),class="classification")
 }
 
 classifyTestsT <- function(tstat,t1=4,t2=3) {

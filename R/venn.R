@@ -3,8 +3,9 @@
 vennCounts <- function(classification,include="both") {
 #	Venn diagram counts
 #	Gordon Smyth
-#	4 July 2003.  Last modified 4 September 2003.
+#	4 July 2003.  Last modified 15 September 2003.
 
+	if(is(classification,"classification")) classification <- classification$classification
 	include <- match.arg(include,c("both","up","down"))
 	classification <- switch(include,
 		both = as.matrix(abs(classification) > 0.5),

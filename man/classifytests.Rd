@@ -24,7 +24,9 @@ classifyTestsP(tstat, df=Inf, p.value=0.05, method="holm")
   \item{method}{character string specifying p-value adjustment method.  See \code{\link[base]{p.adjust}} for possible values.}
 }
 \value{
-  A matrix with elements \code{-1}, \code{0} or \code{1} depending on whether each t-statistic is classified as significantly negative, not significant or significantly positive respectively.
+A list with components
+  \item{classification}{numeric matrix with elements \code{-1}, \code{0} or \code{1} depending on whether each t-statistic is classified as significantly negative, not significant or significantly positive respectively}
+  \item{Fstat}{numeric vector containing moderated F-statistics for testing the contrasts simultaneously zero}
 }
 \details{
 \code{classifyTests} classifies using a nested F-test approach giving particular attention to correctly classifying genes which have two or more significant t-statistics, i.e., are differential expressed under two or more conditions.
