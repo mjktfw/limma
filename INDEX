@@ -31,7 +31,8 @@ makeUnique              Make Values of Character Vector Unique
 MAList-class            M-value, A-value Expression List - class
 matvec                  Multiply a Matrix by a Vector
 merge-generic           Merge Data Objects - generic
-merge.RGList-method     Merge Data Objects - method
+merge.RGList.RGList-method
+                        Merge Data Objects - method
 normalizeBetweenArrays-methods
                         Normalize Between Arrays - methods
 normalizeBetweenArrays-generic
