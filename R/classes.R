@@ -24,6 +24,15 @@ setClass("exprSet2",representation(
 	notes="character"
 ))
 
+setAs("RGList", "exprSet2", function(from, to) {
+	y <- new(to)
+	if(length(from$G)) y@expressions <- cbind(from$G,from$R)
+	if(length(from$weights)) y@weights <- cbind(from$weights,from$weights)
+	if(length(from$genes)) y@probes <- from$genes
+	if(length(from$printer)) y@printer <- unclass(from$printer)
+	y
+})
+
 printHead <- function(x) {
 	what <- "other"
 	if(is.vector(x)) what <- "vector"

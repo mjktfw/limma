@@ -1,6 +1,7 @@
 \name{RGList-class}
 \docType{class}
 \alias{RGList-class}
+\alias{coerce,RGList,exprSet2-method}
 \title{Red, Green Intensity List - class}
 
 \description{
@@ -33,6 +34,8 @@ This class inherits directly from class \code{list} so any operation appropriate
 In addition, \code{RGList} objects can be \link[limma:subsetting]{subsetted}, \link[limma:cbind]{combined} and \link[limma:merge]{merged}.
 \code{RGList} objects will return dimensions and hence functions such as \code{\link[limma:dim]{dim}}, \code{\link[base:nrow]{nrow}} and \code{\link[base:nrow]{ncol}} are defined. 
 \code{RGLists} also inherit a \code{\link[methods]{show}} method from the virtual class \code{\link[limma:LargeDataObject]{LargeDataObject}}, which means that \code{RGLists} will print in a compact way.
+
+\code{RGList} objects can be converted to \code{exprSet2} objects by \code{as(RG,"exprSet2")}.
 
 Other functions in LIMMA which operate on \code{RGList} objects include
 \code{\link{normalizeBetweenArrays}},

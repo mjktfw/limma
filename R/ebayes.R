@@ -1,12 +1,12 @@
 #  DIFFERENTIAL EXPRESSION
 
-eBayes <- function(fit,proportion=0.01,std.coef=NULL) {
+eBayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4)) {
 #	Empirical Bayes statistics to select differentially expressed genes
 #	Object orientated version
 #	Gordon Smyth
-#	4 August 2003.
+#	4 August 2003.  Last modified 12 Dec 2003.
 
-	eb <- ebayes(fit=fit,proportion=proportion,std.coef=std.coef)
+	eb <- ebayes(fit=fit,proportion=proportion,stdev.coef.lim=stdev.coef.lim)
 	fit$df.prior <- eb$df.prior
 	fit$s2.prior <- eb$s2.prior
 	fit$var.prior <- eb$var.prior
@@ -18,10 +18,10 @@ eBayes <- function(fit,proportion=0.01,std.coef=NULL) {
 	fit
 }
 
-ebayes <- function(fit,proportion=0.01,std.coef=NULL) {
+ebayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4)) {
 #	Empirical Bayes statistics to select differentially expressed genes
 #	Gordon Smyth
-#	8 Sept 2002.  Last revised 14 August 2003.
+#	8 Sept 2002.  Last revised 13 Dec 2003.
 
 	coefficients <- fit$coefficients
 	stdev.unscaled <- fit$stdev.unscaled
@@ -46,13 +46,12 @@ ebayes <- function(fit,proportion=0.01,std.coef=NULL) {
 	out$p.value <- 2*pt(-abs(out$t),df=df.total)
 
 #	B-statistic
-	if(is.null(std.coef)) {
-		varpriorlim <- 10/out$s2.prior
-		out$var.prior <- tmixture.matrix(out$t,stdev.unscaled,df.total,proportion,varpriorlim)
+	var.prior.lim <- stdev.coef.lim^2/out$s2.prior
+	out$var.prior <- tmixture.matrix(out$t,stdev.unscaled,df.total,proportion,var.prior.lim)
+	if(any(is.na(out$var.prior))) {
 		out$var.prior[ is.na(out$var.prior) ] <- 1/out$s2.prior
-		out$var.prior <- pmax(out$var.prior, 0.1/out$s2.prior)
-	} else
-		out$var.prior <- rep(std.coef^2/out$s2.prior, NCOL(out$t))
+		warning("Estimation of var.prior failed - set to default value")
+	}
 	r <- rep(1,NROW(out$t)) %o% out$var.prior
 	r <- (stdev.unscaled^2+r) / stdev.unscaled^2
 	t2 <- out$t^2
@@ -64,52 +63,59 @@ ebayes <- function(fit,proportion=0.01,std.coef=NULL) {
 	out
 }
 
-tmixture.matrix <- function(tstat,stdev.unscaled,df,proportion,c0lim=NULL) {
+tmixture.matrix <- function(tstat,stdev.unscaled,df,proportion,v0.lim=NULL) {
 #	Estimate the prior variance of the coefficients for DE genes
 #	Gordon Smyth
-#	18 Nov 2002
+#	18 Nov 2002. Last modified 12 Dec 2003.
 
 	tstat <- as.matrix(tstat)
 	stdev.unscaled <- as.matrix(stdev.unscaled)
 	if(any(dim(tstat) != dim(stdev.unscaled))) stop("Dims of tstat and stdev.unscaled don't match")
+	if(!is.null(v0.lim)) if(length(v0.lim) != 2) stop("v0.lim must have length 2")
 	ncoef <- ncol(tstat)
-	c0 <- rep(0,ncoef)
-	for (j in 1:ncoef) c0[j] <- tmixture.vector(tstat[,j],stdev.unscaled[,j],df,proportion,c0lim)	
-	c0
+	v0 <- rep(0,ncoef)
+	for (j in 1:ncoef) v0[j] <- tmixture.vector(tstat[,j],stdev.unscaled[,j],df,proportion,v0.lim)	
+	v0
 }
 
-tmixture.vector <- function(tstat,stdev.unscaled,df,proportion,c0lim=NULL) {
+tmixture.vector <- function(tstat,stdev.unscaled,df,proportion,v0.lim=NULL) {
 #	Estimate scale factor in mixture of two t-distributions
-#	tstat is assumed to follow (c0+c1)/c1*t(df) with probability proportion and t(df) otherwise
+#	tstat is assumed to follow (v0+v1)/v1*t(df) with probability proportion and t(df) otherwise
+#	v1 is stdev.unscaled^2 and v0 is to be estimated
 #	Gordon Smyth
-#	18 Nov 2002
+#	18 Nov 2002.  Last modified 13 Dec 2003.
 
 	if(any(is.na(tstat))) {
-		sel <- !is.na(tstat)
-		tstat <- tstat[sel]
-		stdev.unscaled <- stdev.unscaled[sel]
-		df <- df[sel]
+		o <- !is.na(tstat)
+		tstat <- tstat[o]
+		stdev.unscaled <- stdev.unscaled[o]
+		df <- df[o]
 	}
 	ngenes <- length(tstat)
 	ntarget <- ceiling(proportion/2*ngenes)
 	if(ntarget < 1) return(NA)
+
+#	If ntarget is v small, ensure p at least matches selected proportion
+#	This ensures ptarget < 1
+	p <- max(ntarget/ngenes,proportion)
+
 	tstat <- abs(tstat)
 	ttarget <- quantile(tstat,(ngenes-ntarget)/(ngenes-1))
 	top <- (tstat >= ttarget)
 	tstat <- tstat[top]
-	c1 <- stdev.unscaled[top]^2
+	v1 <- stdev.unscaled[top]^2
 	df <- df[top]
 	r <- ntarget-rank(tstat)+1
 	p0 <- pt(-tstat,df=df)
-	ptarget <- ( (r-0.5)/2/ngenes - (1-proportion)*p0 ) / proportion
+	ptarget <- ( (r-0.5)/2/ngenes - (1-p)*p0 ) / p
 	pos <- ptarget > p0
-	c0 <- rep(0,ntarget)
+	v0 <- rep(0,ntarget)
 	if(any(pos)) {
 		qtarget <- qt(ptarget[pos],df=df[pos])
-		c0[pos] <- c1[pos]*((tstat[pos]/qtarget)^2-1)
+		v0[pos] <- v1[pos]*((tstat[pos]/qtarget)^2-1)
 	}
-	if(!is.null(c0lim)) c0 <- pmin(c0,c0lim)
-	mean(c0)
+	if(!is.null(v0.lim)) v0 <- pmin(pmax(v0,v0.lim[1]),v0.lim[2])
+	mean(v0)
 }
 
 fitFDist <- function(x,df1) {

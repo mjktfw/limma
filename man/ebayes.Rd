@@ -4,13 +4,13 @@
 \title{Empirical Bayes Statistics for Differential Expression}
 \description{Given a series of related parameter estimates and standard errors, compute moderated t-statistics and log-odds of differential expression by empirical Bayes shrinkage of the standard errors towards a common value.}
 \usage{
-ebayes(fit,proportion=0.01,std.coef=NULL)
-eBayes(fit,proportion=0.01,std.coef=NULL)
+ebayes(fit,proportion=0.01,stdev.coef.lim=c(0.1,4))
+eBayes(fit,proportion=0.01,stdev.coef.lim=c(0.1,4))
 }
 \arguments{
   \item{fit}{a list object produced by \code{lm.series}, \code{gls.series}, \code{rlm.series} or \code{lmFit} containing components \code{coefficients}, \code{stdev.unscaled}, \code{sigma} and \code{df.residual}}
-  \item{proportion}{assumed proportion of genes which are differentially expressed}
-  \item{std.coef}{assumed standard deviation of log2 fold changes for differentially expressed genes. Normally this parameter is estimated from the data.}
+  \item{proportion}{numeric value between 0 and 1, assumed proportion of genes which are differentially expressed}
+  \item{stdev.coef.lim}{numeric vector of length 2, assumed lower and upper limits for the standard deviation of log2 fold changes for differentially expressed genes}
 }
 \value{
 \code{ebayes} produces an ordinary list with the following components.

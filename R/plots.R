@@ -54,14 +54,18 @@ imageplot <- function(z, layout=list(ngrid.r=12,ngrid.c=4,nspot.r=26,nspot.c=26)
 	invisible()
 }
 
-plotPrintTipLoess <- function(MA,layout,array=1,span=0.4,...) {
+plotPrintTipLoess <- function(object,layout,array=1,span=0.4,...) {
 #  MA-plots by print-tip group
 #  Gordon Smyth
-#  7 April 2003.  Last revised 27 Oct 2003.
+#  7 April 2003.  Last revised 10 Dec 2003.
 
-	if(!is.null(MA$printer) && missing(layout)) layout <- MA$printer
-	y <- MA$M[,array]
-	x <- MA$A[,array]
-	coplot(y~x|factor(gridc(layout))*factor(gridr(layout)),xlab=c("A","Tip Column"),ylab=c("M","Tip Row"),pch=".",span=span,show.given=FALSE,panel=panel.smooth)
+	if(is(object,"RGList")) {
+		object <- MA.RG(object[,array])
+		array <- 1
+	}
+	if(!is.null(object$printer) && missing(layout)) layout <- object$printer
+	y <- object$M[,array]
+	x <- object$A[,array]
+	coplot(y~x|factor(gridc(layout))*factor(layout$ngrid.r-gridr(layout)+1),xlab=c("A","Tip Column"),ylab=c("M","Tip Row"),pch=".",span=span,show.given=FALSE,panel=panel.smooth)
 	invisible()
 }
