@@ -14,7 +14,7 @@
 <p align="center">Gordon Smyth, Natalie Thorne and James Wettenhall<br>
 The
 Walter and Eliza Hall Institute of Medical Research<br>
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->29 October 2003<!--webbot bot="Timestamp" i-checksum="32293" endspan --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->11 November 2003<!--webbot bot="Timestamp" i-checksum="39815" endspan --></p>
 
 <h2>Table of Contents</h2>
 
@@ -60,21 +60,37 @@ Walter and Eliza Hall Institute of Medical Research<br>
 <p>Limma is a package for the analysis of gene expression microarray data, 
 especially the use of linear models for analysing designed experiments and the 
 assessment of differential expression. Limma provides the ability to analyse 
-comparisons between many RNA targets simultaneously. The normalization and data 
+comparisons between many RNA targets simultaneously. It has features which make 
+the analyses stable even for experiments with small number of arrays - this is 
+achieved by <font face="Times New Roman">“</font>borrowing<font face="Times New Roman">”</font> 
+information across genes. The normalization and exploratory data 
 analysis functions are for two-colour spotted microarrays. The linear model and 
 differential expression functions apply to all microarrays including Affymetrix 
-and other multi-array oligonucleotide experiments.</p>
+and other single-channel microarray experiments.</p>
+
+<p>This guide gives a tutorial-style introduction to the main limma features but 
+does not describe every feature of the package. A full description of the 
+package is given by the individual function help documents available from the R 
+online help system. To access the online help, type <code>help(package=limma)</code> 
+at the R prompt or else start the html help system using <code>help.start()</code> 
+or the Windows drop-down help menu.</p>
 
 <p>The Bioconductor packages marrayClasses, marrayInput and marrayNorm provide 
 alternative functions for reading and normalizing spotted microarray data. If 
 you are using limma in conjunction with these packages, see Section 10. The 
-package affy provides functions for reading and normalizing Affymetrix 
+Bioconductor package affy provides functions for reading and normalizing Affymetrix 
 microarray data. If you are using the affy package, see Sections 7.2 and 11.</p>
 
-<p>This tutorial was prepared using R Version 1.8.0 for Windows and limma version 1.3.0. The latest version of limma is always available from
+<p>This tutorial was prepared using R Version 1.8.0 for Windows and limma version 1.3.2. The latest version of limma is always available from
 <a href="http://www.bioconductor.org">http://www.bioconductor.org</a> under 
 &quot;Developmental Packages&quot; or from
-<a href="http://bioinf.wehi.edu.au/limma/">http://bioinf.wehi.edu.au/limma/</a>. If you 
+<a href="http://bioinf.wehi.edu.au/limma/">http://bioinf.wehi.edu.au/limma/</a>. 
+If you are using R on a system with a suitable internet connection and with 
+installation privileges on your computer, you should be able to install the 
+latest version of limma from the latter site using</p>
+
+<pre> install.packages(&quot;limma&quot;,contriburl=&quot;<a href="http://bioinf.wehi.edu.au/limma">http://bioinf.wehi.edu.au/limma</a>&quot;)</pre>
+<p>at the R prompt. Limma is updated frequently, often a couple of times a week. If you 
 are using Windows, you can install the last official Bioconductor release of limma from the  drop-down menu 
 in R, simply 
 select <code>Packages</code> then <code>Install package(s) from Bioconductor...</code>. 
@@ -269,13 +285,14 @@ the RG-list.</p>
 GenePix program.</p>
 <p>Computing quality weights depends on the image analysis program. Consult the 
 help entry <code>QualityWeights</code> to see what quality weight functions are 
-available.</p>
+available. The use of the <code>wt.fun</code> argument is very flexible and 
+allows you to construct your own weights.</p>
 
 <h3>4.4 The Targets File</h3>
-<p>Although not necessary to use limma it is usually a good idea to construct a 
-targets file which lists the RNA target hybridized to each channel of each 
-array.&nbsp;  The Targets File is normally in tab-delimited text format.  The 
-file should contain a  row for each microarray. It should contain FileName column, giving the file from
+<p>Although not strictly necessary, it is usually a good idea to construct a 
+Targets File which lists the RNA target hybridized to each channel of each 
+array.&nbsp;  The Targets File is normally in tab-delimited text format.  It should contain a  row for each microarray 
+in your experiment. It should contain a FileName column, giving the file from
 image-analysis containing raw foreground and background intensities for each slide, a Cy3 column giving the RNA
 type reverse transcribed and labelled with Cy3 dye for that slide (e.g. Wild Type) and a Cy5 column giving the
 RNA type reverse transcribed and labelled with Cy5 dye for that slide.  For ImaGene files, the FileName column
@@ -327,39 +344,69 @@ from R base. If you have Imagene or SMD image analysis output, then the gene
 list will be extracted from the image analysis output files by <code>read.images</code>.</p>
 
 <h3>4.6 The Spot Types File</h3>
-<p>The Spot Types file (another tab-delimited text file) is optional but it is very useful in distinguishing between
-genes, controls and blanks when using the Color-Coded M A Plot (with legend) feature.  Certain spot types
-(e.g. scorecard controls) can be excluded
-from a linear model fit if desired.  For a given spot type, e.g. "Ratio_control_*", spot sub-types "Ratio_control_1",
-"Ratio_control_2" can be determined automatically to give a series of box-plots comparing the moderated t-statistics
-or B statistics (log odds of differential expression) between the controls, which may help in deciding which genes
-are truly differentially expressed, i.e. what moderated t statistic is significant.</p>
+<p>The Spot Types file (STF) is another optional tab-delimited text file which 
+allows you to identify different types of spots from the gene list. The STF is 
+typically used to distinguish control spots from those corresponding to genes of 
+interest, to distinguish positive from negative controls, ratio from calibration 
+controls and so on. The SPF should have a column giving the names of the 
+different spot-types. We will assume that this column is called <code>SpotType</code>. 
+One or more other columns should have the same names as columns in the gene list 
+and should contain patterns or regular expressions sufficient to identify the 
+spot-type. Any other columns are assumed to contain plotting parameters, such as 
+colors or symbols, to be associated with the spot-types. The STF should have one 
+row for every spot-type which you want to distinguish. The STF is used to set 
+the control status of each spot on the arrays so that plots may highlight 
+different types of spots in an appropriate way.</p>
 
-<p>Every SpotType must have a SpotType column, for which each entry should be unique.  It must also have an ID column,
-a Name column and a default Color column.  The rows of the SpotTypes file should be read as a list of rules (in order)
-for defining spot types.  First, we say everything is a gene, then we rename certain spots according to what is find
-in the ID or Name column of the GAL file.  The color given here is just a 
-suggested color to associate with the spot type.</p>
+<p>The STF uses simplified regular expressions to match patterns. For example, '<code>AA*</code>' 
+means any string starting with '<code>AA</code>', '<code>*AA</code>' means any 
+code ending with '<code>AA</code>', '<code>AA</code>' means exactly these two 
+letters, '<code>*AA*</code>' means any string containing '<code>AA</code>', '<code>AA</code>.' 
+means '<code>AA</code>' followed by exactly one other character and '<code>AA\.'</code> 
+means exactly '<code>AA</code>' followed by a period and no other characters. 
+For those familiar with regular expressions, any other regular expressions are 
+allowed but the codes <code>^</code> for beginning of string and <code>$</code> 
+for end of string should be excluded. Note that the patterns are matched 
+sequentially from first to last, so more general patterns should be included 
+first. For example, it is often a good idea to include a default spot-type as 
+the first line in the STF with pattern '<code>*</code>' for all the 
+pattern-matching columns and with default plotting parameters. </p>
 
-<p>Again, do not change the capitalization or spelling of the column names and do not insert extra spaces.</p>
+<p>Here is a short STF appropriate for the ApoAI data:</p>
+<img src="limmaGUI/ApoAISpotTypesInExcel.png" width="418" height="324"><br>
 
-<p>Here is a short spot types file.</p>
-<img src="limmaGUI/ApoAISpotTypesInExcel.png" width="418" height="324"><br><br>
+<p>In this example, the columns ID and Name are found in the gene-list and 
+contain patterns to match. The asterisks are wildcards which can represent 
+anything. Be careful to use upper or lower case as appropriate and don't insert 
+any extra spaces. The remaining column gives colors to be associated with the 
+different types of points.</p>
 
-<p>The spot types file below defines the scorecard control spots.  The asterisks are wildcards which can represent anything.</p>
+<p>Here is a STF below appropriate for arrays with Lucidea Universal ScoreCard 
+control spots. </p>
 <img src="limmaGUI/ScorecardSpotTypesInExcel.png" width="418" height="324"><p>You can 
-read the spot types files using readSpotTypes(). For example, if the file has 
-the default name SpotTypes.txt you can use</p>
-<pre>&gt; spottypes &lt;- readSpotTypes()</pre>
-<p>The spot types file is used by the spotStatus() function to set the status of 
+read the STF using <code>readSpotTypes</code>. For example, if the file has 
+the default name <code>SpotTypes.txt </code>you can use simply</p>
+<pre>&gt; types &lt;- readSpotTypes()</pre>
+<p>The spot types file is used by the <code>controlStatus()</code> function to set the status of 
 each spot on the array, for example</p>
-<pre>&gt; RG$genes$Status &lt;- spotStatus(spottypes)
-</pre>
+<pre>&gt; RG$genes$Status &lt;- controlStatus(types, RG)</pre>
+<p>if <code>RG</code> is an <code>RGList</code> object with the gene-list set. 
+Then</p>
+<pre>&gt; plotMA(RG)</pre>
+<p>will produce an MA-Plot with colors, symbols and sizes and given in the STF.<br>
+</p>
 <h2>5. Data Exploration</h2>
 <p>It is advisable to display your data in various ways as a quality check and 
-to check for unexpected effects. We recommend an imageplot of the raw log-ratios and an MA-plot of 
-the raw data for each array as a minimum routine displays. See the Swirl data 
-case study for examples.</p>
+to check for unexpected effects. We recommend an imageplot of the raw log-ratios 
+and an MA-plot of the raw data for each array as a minimum routine displays. The 
+following is an example MA-Plot produced by <code>plotMA</code> for an <code>
+MAList</code> object with spot-types Gene, Unknown, Control, U03, D03, U10, D10, 
+U25, D25, Sensitivity and Buffer set using a spot-types file and the function
+<code>controlStatus</code> (data not included). This plot shows up and 
+down-regulated spike-in control spots as well as negative controls and 
+calibration or sensitivity controls. See the Swirl data case study for other 
+examples.</p>
+<p align="center"><img border="0" src="other/maplotwst.png" width="796" height="722"></p>
 <h2>6. Normalization and Background Correction</h2>
 <p>Limma implements a range of normalization methods for spotted microarrays. 
 Smyth and Speed (2003) describe of the mostly commonly used methods. Most of the 
@@ -506,7 +553,7 @@ CBFb         0    1         0                0               -1</pre>
 computed:</p>
 <pre>&gt; fit2 &lt;- contrasts.fit(fit, contrasts.matrix)
 &gt; fit2 &lt;- eBayes(fit2)</pre>
-<h3>7.3 Direct Two-Color Designs</h3>
+<h3>7.4 Direct Two-Color Designs</h3>
 <p>Two-colour designs without a common reference require the most statistical 
 knowledge to choose the appropriate design matrix. As an example, we consider an 
 experiment conducted by Dr Mireille Lahoud at the Walter and Eliza Hall 
@@ -1451,7 +1498,8 @@ to Lynn Corcoran for the Bob Mutant data.</p>
   (<a href="http://www.statsci.org/smyth/pubs/dupcor.pdf">PDF</a>)</li>
   <li> Smyth, G. K., and Speed, T. P. (2003). Normalization of cDNA microarray 
   data. In: <i>METHODS: Selecting Candidate Genes from DNA Array Screens: 
-  Application to Neuroscience</i>, D. Carter (ed.). To appear. (<a href="http://www.statsci.org/smyth/pubs/normalize.pdf">PDF</a>)</li>
+  Application to Neuroscience</i>, D. Carter (ed.). Methods Volume 31, Issue 4, 
+  December 2003, pages 265-273. (<a href="http://www.statsci.org/smyth/pubs/normalize.pdf">PDF</a>)</li>
   <li> Smyth, G. K., Yang, Y.-H., Speed, T. P. (2003). Statistical issues in 
   microarray data analysis. In: <i>Functional Genomics: Methods and Protocols</i>, M. J. Brownstein 
   and A. B. Khodursky 

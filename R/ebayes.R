@@ -232,7 +232,7 @@ topTable <- function(fit,coef=1,number=10,genelist=NULL,adjust.method="holm",sor
 toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.method="holm",sort.by="B",...) {
 #	Summary table of top genes
 #	Gordon Smyth
-#	21 Nov 2002. Last revised 16 Oct 2003.
+#	21 Nov 2002. Last revised 8 Nov 2003.
 
 	if(is.null(eb)) {
 		fit$coefficients <- as.matrix(fit$coef)[,coef]
@@ -265,10 +265,12 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 		P.Value <- p.adjust(P.Value,method=adjust.method)
 	if(is.null(genelist))
 		tab <- data.frame(M=M[top])
-	else if(is.null(dim(genelist)))
-		tab <- data.frame(Name=I(genelist[top]),M=M[top])
-	else
-		tab <- data.frame(genelist[top,],M=M[top])
+	else {
+		if(is.null(dim(genelist)))
+			tab <- data.frame(Name=I(genelist[top]),M=M[top])
+		else
+			tab <- data.frame(genelist[top,,drop=FALSE],M=M[top])
+	}
 	if(!is.null(A)) tab <- data.frame(tab,A=A[top])
 	tab <- data.frame(tab,t=tstat[top],P.Value=P.Value[top],B=B[top])
 	rownames(tab) <- as.character(1:length(M))[top]

@@ -33,6 +33,6 @@ It requires several columns of the Genepix data files which are not read in my r
 
 \author{Gordon Smyth}
 \references{
-Smyth, G. K., and Speed, T. P. (2003). Normalization of cDNA microarray data. In: \emph{METHODS: Selecting Candidate Genes from DNA Array Screens: Application to Neuroscience}, D. Carter (ed.). To appear. \url{http://www.statsci.org/smyth/pubs/normalize.pdf}
+Smyth, G. K., and Speed, T. P. (2003). Normalization of cDNA microarray data. In: \emph{METHODS: Selecting Candidate Genes from DNA Array Screens: Application to Neuroscience}, D. Carter (ed.). Methods Volume 31, Issue 4, December 2003, pages 265-273. \url{http://www.statsci.org/smyth/pubs/normalize.pdf}
 }
 \keyword{documentation}
