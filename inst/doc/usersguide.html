@@ -14,7 +14,7 @@
 <p align="center">Gordon Smyth and Natalie Thorne<br>
 The
 Walter and Eliza Hall Institute of Medical Research<br>
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->09 September 2003<!--webbot bot="Timestamp" i-checksum="39506" endspan --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->01 October 2003<!--webbot bot="Timestamp" i-checksum="32275" endspan --></p>
 
 <h2>Table of Contents</h2>
 
@@ -24,6 +24,7 @@ Walter and Eliza Hall Institute of Medical Research<br>
   <li>Reading in Intensity Data</li>
   <li>Reading in Gene List Data</li>
   <li>Spot Quality Weights</li>
+  <li>Background Correction</li>
   <li>Linear Models</li>
   <li>Quick Start</li>
   <li>One-Sample Experiments</li>
@@ -190,7 +191,19 @@ GenePix program.</p>
 <p>Computing quality weights depends on the image analysis program. Consult the 
 help entry <code>QualityWeights</code> to see what quality weight functions are 
 available.</p>
-<h2>6. Linear Models</h2>
+<h2>6. Background Correction</h2>
+<p>By default, limma will subtract the background from the foreground 
+intensities as part of the normalization process using <code>
+normalizeWithinArrays</code> so there is no need for any special action on the 
+part of users. If you want to over-ride this default background correct, for 
+example to ensure that all the corrected intensities are positive, then use the
+<code>backgroundCorrect</code> function. For example use</p>
+<pre>RG &lt;- backgroundCorrect(RG, method=&quot;minimum&quot;)</pre>
+<p>to reset zero or negative intensities to half the value of the minimum value 
+of the positive intensities. No further background correction will be performed 
+when <code>normalizeWithinArrays</code> is used subsequently to normalize the 
+intensities.</p>
+<h2>7. Linear Models</h2>
 <p>The package limma uses an approach called <i>linear models</i> to analyse 
 designed microarray experiments. This approach allows very general experiments 
 to be analysed just as easily as a simple replicated experiment. The approach is 
@@ -209,7 +222,7 @@ data. If you have have data from spotted microarrays using a direct design,
 i.e., a connected design with no common reference, then the linear modeling 
 approach is very powerful but the creation of the design matrix may require more 
 statistical knowledge.</p>
-<h2>7. Quick Start</h2>
+<h2>8. Quick Start</h2>
 <p>For those who want to see very quickly what a limma analysis might look like 
 for cDNA data, here is a quick analysis of four replicate arrays (including two 
 dye-swaps). The data has been scanned using an Axon scanner, producing a Gene 
@@ -259,7 +272,7 @@ Data example below.</p>
 6375    13   2     15 control   vent -1.37 -10.5 0.004026 3.91
 1146     3   4     18 fb22a12  2-I23  1.05  10.2 0.004242 3.76
 157      1   7     13 fb38a01   6-I1 -1.82 -10.2 0.004242 3.75</pre>
-<h2>8. One-Sample Experiments</h2>
+<h2>9. One-Sample Experiments</h2>
 
 <p>In this section we consider a case study in which two RNA sources are 
 compared directly on a set of replicate or dye-swap arrays. The case study 
@@ -522,7 +535,7 @@ assumes independent statistics which we do not have here (see <code>help(p.adjus
 </pre>
 <p align="center">
 <img border="0" src="swirl/avemaplot.png" width="795" height="706"></p>
-<h2>9. Two-Sample Experiments</h2>
+<h2>10. Two-Sample Experiments</h2>
 <p>In this section we consider a case study where two RNA sources are compared 
 through a common reference RNA. The analysis of the log-ratios involves a 
 two-sample comparison of means for each gene.</p>
@@ -656,7 +669,7 @@ to be differentially expressed in the knockout versus the control line.</p>
 &gt; text(fit$coef[top8,2],eb$lods[top8,2],labels=substring(genelist[top8,&quot;NAME&quot;],1,5),cex=0.8,col=&quot;blue&quot;)</pre>
 <p align="center">
 <img border="0" src="apoai/bayes.png" width="693" height="743"></p>
-<h2>10. Factorial Experiments</h2>
+<h2>11. Factorial Experiments</h2>
 <p>This case study considers a more involved analysis in which the sources of 
 RNA have a factorial structure.</p>
 <h3>Example. Weaver Mutant Data</h3>
@@ -780,7 +793,7 @@ those which have decreasing expression in the wild-type over time, and those
 which are down-regulated (green) in the mutant are those which increase over 
 time in the wild-type. The mutant is not participating in normal development 
 between 11 and 21 days in respect of these genes.</p>
-<h2>11. Within-Array Replicate Spots</h2>
+<h2>12. Within-Array Replicate Spots</h2>
 <p>In this section we consider a case study in which all genes (ESTs and 
 controls) are printed more than once on the array. This means that there is both 
 within-array and between-array replication for each gene. The structure of the 
@@ -920,9 +933,9 @@ hour for a series of arrays.</p>
 &gt; plot(fit$coef,eb$lods,xlab=&quot;Log2 Fold Change&quot;,ylab=&quot;Log Odds&quot;,pch=16,cex=0.1)</pre>
 <p align="center">
 <img border="0" src="bob/volcano.png" width="890" height="590"></p>
-<h2>12. Using limma with the marray Packages</h2>
+<h2>13. Using limma with the marray Packages</h2>
 <p>The packages marrayClasses, marrayInput, marrayNorm and marrayTools are 
-designed to read and normalize cDNA data. Normalization will produce an object 
+designed to read and normalize cDNA data. Normalization using marrayNorm will produce an object 
 of class <code>marrayNorm</code>. The linear model commands from limma may be 
 used after extracting the M-value matrix and the spot weights from the object. 
 If the normalized data object is called <code>N</code>, then a linear model may be fitted 
@@ -934,7 +947,7 @@ lm.series</code> as appropriate. The design matrix
 is chosen as in previous sections. Alternatively you can use the function <code>
 lmFit</code> which will accept a marrayNorm object directly, e.g..,</p>
 <pre>fit &lt;- lmFit(N,design)</pre>
-<h2>13. Affymetrix and Single-Color Arrays</h2>
+<h2>14. Affymetrix and Single-Color Arrays</h2>
 <p>Suppose for example that there are three arrays 
 hybridized with wt RNA and two arrays hybridized with mutant RNA. The design 
 matrix might be</p>
@@ -977,7 +990,7 @@ obtained from</p>
 <p>You may classify each gene according to the three pair-wise comparisons using</p>
 <pre>&gt; clas &lt;- classifyTests(eb$t, design=design, contrasts=contrast.matrix)</pre>
 
-<h2>14. Single-Channel Normalization for Two-Color Arrays</h2>
+<h2>15. Single-Channel Normalization for Two-Color Arrays</h2>
 
 <p> We provide a short background on the topic of single-channel
 normalization for two color arrays. Throughout this section the ApoAI
@@ -1165,17 +1178,6 @@ to Lynn Corcoran for the Bob Mutant data.</p>
   Festschrift for Terry Speed</i>, IMS Lecture Notes - Monograph Series, Volume 
   40, pp. 403-418.</li>
 </ol>
-
-<h2>Appendix:  Conventions</h2>
-<p>The use of periods &quot;.&quot; in function names indicate the type of argument that 
-the function takes. For extension &quot;.series&quot; as in <code>lm.series</code> or
-<code>gls.series</code>, indicates that the function operates on data from a 
-series of microarrays, usually represented by a matrix of log-ratios in which 
-columns correspond to arrays.</p>
-
-<p>The online documentation uses conventions suggested by
-<a href="http://bioinf.wehi.edu.au/limma/Rdocs.html">Writing .Rd Files For S4 
-Classes, Generic Functions and Methods</a>.</p>
 
 </body>
 

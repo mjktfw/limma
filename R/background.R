@@ -3,20 +3,21 @@
 backgroundCorrect <- function(RG, method="subtract") {
 #	Apply background correction to microarray data
 #	Gordon Smyth
-#	12 April 2003.  Last modified 20 September 2003.
+#	12 April 2003.  Last modified 1 October 2003.
 
-	method <- match.arg(method, c("none","subtract", "half", "minimum"))
-	if(method != "none") {
-		RG$R <- RG$R - RG$Rb
-		RG$G <- RG$G - RG$Gb
-	}
-	if(method=="half") {
-		RG$R <- pmax(RG$R, 0.5)
-		RG$G <- pmax(RG$G, 0.5)
-	}
-	if(method=="minimum") {
-		RG$R <- as.matrix(RG$R)
-		RG$G <- as.matrix(RG$G)
+	method <- match.arg(method, c("none","subtract", "half", "minimum", "edwards"))
+	switch(method,
+	subtract={
+		RG$R <- RG$R-RG$Rb
+		RG$G <- RG$G-RG$Gb
+	},
+	half={
+		RG$R <- pmax(RG$R-RG$Rb, 0.5)
+		RG$G <- pmax(RG$G-RG$Gb, 0.5)
+	},
+	minimum={
+		RG$R <- as.matrix(RG$R - RG$Rb)
+		RG$G <- as.matrix(RG$G - RG$Gb)
 		for (slide in 1:ncol(RG$R)) {
 			i <- RG$R[,slide] < 1e-18
 			if(any(i)) {
@@ -29,9 +30,22 @@ backgroundCorrect <- function(RG, method="subtract") {
 				RG$G[i,slide] <- m/2
 			}
 		}
-	}
+	},
+	edwards={
+#		Log-linear interpolation for dull spots as in Edwards (2003).
+#		The threshold values (delta) are chosen such that the number of
+#		spots with (0 <= R-Rb < delta) is 100f=10% of the number spots,
+#		with (R-Rb < 0) for each channel and array.
+		nspots <- NROW(RG$R)
+		del <- function(d,f=0.1) quantile(d,sum(d<0)*(1+f)/length(d))
+		sub <- as.matrix(RG$R-RG$Rb)
+		delta <- apply(sub, 2, del)
+		RG$R <- ifelse(sub > rep(1,nspots)%o%delta, sub, delta*exp(1-(RG$Rb+delta)/RG$R))
+		sub <- as.matrix(RG$G-RG$Gb)
+		delta <- apply(sub, 2, del)
+		RG$G <- ifelse(sub > rep(1,nspots)%o%delta, sub, delta*exp(1-(RG$Gb+delta)/RG$G))
+	})
 	RG$Rb <- NULL
 	RG$Gb <- NULL
 	new("RGList",unclass(RG))
 }
-
