@@ -207,35 +207,38 @@ normalizeWithinArrays <- function(object,layout=object$printer,method="printtipl
 normalizeRobustSpline <- function(M,A,layout,df=5,method="M") {
 #	Robust spline normalization
 #	Gordon Smyth
-#	27 April 2003.  Last revised 28 April 2003.
+#	27 April 2003.  Last revised 9 March 2004.
 
 	require(MASS)
 	require(splines)
 	ngrids <- layout$ngrid.r * layout$ngrid.c
 	nspots <- layout$nspot.r * layout$nspot.c
-#	col <- rainbow(ngrids,end=(ngrids-2)/ngrids)
 
 #	Global splines
 	O <- is.finite(M) & is.finite(A)
 	X <- matrix(NA,ngrids*nspots,df)
 	X[O,] <- ns(A[O],df=df,intercept=TRUE)
-	x <- X[O,]
+	x <- X[O,,drop=FALSE]
 	y <- M[O]
 	s <- summary(rlm(x,y,method=method))
 	beta0 <- s$coefficients[,1]
 	covbeta0 <- s$cov * s$stddev^2
 
 #	Tip-wise splines
-	beta <- array(0,c(ngrids,df))
+	beta <- array(1,c(ngrids,1)) %*% array(beta0,c(1,df))
 	covbeta <- array(0,c(ngrids,df,df))
 	spots <- 1:nspots
 	for (i in 1:ngrids) {
 		o <- O[spots]
 		y <- M[spots][o]
-		x <- X[spots,][o,]
-		s <- summary(rlm(x,y,method=method))
-		beta[i,] <- s$coefficients[,1]
-		covbeta[i,,] <- s$cov * s$stddev^2
+		if(length(y)) {
+			x <- X[spots,][o,,drop=FALSE]
+			r <- qr(x)$rank
+			if(r<df) x <- x[,1:r,drop=FALSE]
+			s <- summary(rlm(x,y,method=method))
+			beta[i,1:r] <- s$coefficients[,1]
+			covbeta[i,1:r,1:r] <- s$cov * s$stddev^2
+		}
 		spots <- spots + nspots
 	}
 

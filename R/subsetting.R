@@ -81,10 +81,10 @@ function(object, i, j, ...) {
 is.fullrank <- function(x) {
 #	Check whether a numeric matrix has full column rank
 #	Gordon Smyth
-#	18 August 2003.  Last modified 29 Oct 2003.
+#	18 August 2003.  Last modified 9 March 2004.
 
 	x <- as.matrix(x)
-	e <- La.eigen(crossprod(x),symmetric=TRUE,only.values=TRUE)$values
+	e <- eigen(crossprod(x),symmetric=TRUE,only.values=TRUE)$values
 	e[1] > 0 && abs(e[length(e)]/e[1]) > 1e-13
 }
 

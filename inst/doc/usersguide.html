@@ -14,7 +14,7 @@
 <p align="center">Gordon Smyth, Natalie Thorne and James Wettenhall<br>
 The
 Walter and Eliza Hall Institute of Medical Research<br>
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->05 March 2004<!--webbot bot="Timestamp" i-checksum="27286" endspan --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->08 March 2004<!--webbot bot="Timestamp" i-checksum="27292" endspan --></p>
 
 <h2>Table of Contents</h2>
 
@@ -43,9 +43,10 @@ Walter and Eliza Hall Institute of Medical Research<br>
 
   </li>
   <li>Case Studies<ol>
-  <li>One-Sample Experiments</li>
-  <li>Two-Sample Experiments</li>
-  <li>Factorial Experiments</li>
+  <li>Swirl Data: A Single-Sample Experiments</li>
+  <li>ApoAI Data: A Two-Sample Experiments</li>
+  <li>Estrogen Data: A 2x2 Factorial Experiment with Affymetrix Data</li>
+  <li>Weaver Data: A Factorial Experiment</li>
 </ol>
 
   </li>
@@ -1047,7 +1048,140 @@ to be differentially expressed in the knockout versus the control line.</p>
 &gt; text(fit$coef[top8,2],eb$lods[top8,2],labels=substring(genelist[top8,&quot;NAME&quot;],1,5),cex=0.8,col=&quot;blue&quot;)</pre>
 <p align="center">
 <img border="0" src="apoai/bayes.png" width="693" height="743"></p>
-<h3>8.3 Weaver Mutant Data: A Factorial Experiment</h3>
+<h3>8.3 Estrogen Data: A 2x2 Factorial Experiment with Affymetrix Arrays</h3>
+<p>This data is from the factDesign package. The data includes gene expression 
+levels for a subset of 500 genes from a 2x2 factorial experiment on MCF7 breast 
+cancer cells using Affymetrix HGU95av2 arrays. The factors in this experiment 
+were estrogen (ES: P present or A absent) and length of exposure (TIME: 10 or 48 hours). Gene 
+expression values were estimated using the PM-only method in dChip after 
+normalization using the Invariant Set Method (Li and Wong, 2001).</p>
+<pre>&gt; library(factDesign)
+&gt; data(estrogen)
+&gt; pData(estrogen)
+    ES TIME
+et1  A  10h
+et2  A  10h
+Et1  P  10h
+Et2  P  10h
+eT1  A  48h
+eT2  A  48h
+ET1  P  48h
+ET2  P  48h</pre>
+<p>The data object estrogen is an <code>exprSet</code> object. An exprSet object 
+often contains log-intensities, but in this case the data are absolute 
+intensities:</p>
+<pre>&gt; summary(exprs(estrogen))
+       X1                 X2                 X3                 X4          
+ Min.   :   29.61   Min.   :   22.28   Min.   :   16.92   Min.   :   10.72  
+ 1st Qu.:  256.37   1st Qu.:  264.84   1st Qu.:  276.55   1st Qu.:  271.25  
+ Median :  566.77   Median :  546.22   Median :  564.49   Median :  560.21  
+ Mean   : 1850.39   Mean   : 1807.19   Mean   : 1895.18   Mean   : 1821.11  
+ 3rd Qu.: 1259.35   3rd Qu.: 1298.27   3rd Qu.: 1335.17   3rd Qu.: 1342.70  
+ Max.   :40869.40   Max.   :37861.20   Max.   :43236.20   Max.   :43140.40  
+       X5                 X6                 X7                 X8          
+ Min.   :   26.35   Min.   :   40.43   Min.   :   21.78   Min.   :   17.69  
+ 1st Qu.:  270.88   1st Qu.:  272.89   1st Qu.:  278.05   1st Qu.:  286.50  
+ Median :  574.65   Median :  560.79   Median :  559.83   Median :  557.66  
+ Mean   : 1777.71   Mean   : 1662.30   Mean   : 1819.56   Mean   : 1794.73  
+ 3rd Qu.: 1223.93   3rd Qu.: 1198.58   3rd Qu.: 1219.78   3rd Qu.: 1216.13  
+ Max.   :27877.50   Max.   :27951.20   Max.   :28858.20   Max.   :29228.30  </pre>
+<p>The design matrix can be constructed using the standard linear model formula 
+notation of R.</p>
+<pre>&gt; design &lt;- model.matrix(~ES*TIME, data=pData(estrogen))
+&gt; design
+    (Intercept) ESP TIME48h ESP:TIME48h
+et1           1   0       0           0
+et2           1   0       0           0
+Et1           1   1       0           0
+Et2           1   1       0           0
+eT1           1   0       1           0
+eT2           1   0       1           0
+ET1           1   1       1           1
+ET2           1   1       1           1
+attr(,&quot;assign&quot;)
+[1] 0 1 2 3
+attr(,&quot;contrasts&quot;)
+attr(,&quot;contrasts&quot;)$ES
+[1] &quot;contr.treatment&quot;
+
+attr(,&quot;contrasts&quot;)$TIME
+[1] &quot;contr.treatment&quot;
+</pre>
+<p>The coefficients corresponding to the four columns of the design matrix have 
+the following interpretation. The first coefficient (Intercept) estimates the 
+expression level for the &quot;et&quot; condition, i.e., estrogen absent at 10 hours. The 
+second coefficient (ESP) estimates the effect of adding estrogen at the 10 hour 
+time point. The third coefficient (TIME45h) estimated the change between the 48 
+hour and 10 hours time points when estrogen is absent. The fourth coefficient 
+(ESP:TIME48h) is the interaction term. It estimates the extra expression that 
+occurs when estrogen is present at the 48 hour time point, over and above the 
+sum of the separate effects for ESP and TIME48h.</p>
+<p>Now fit a linear model for each gene. Notice that the linear model is fit to 
+the log-base-2 intensities, not the original intensities themselves.</p>
+<pre>fit &lt;- lmFit(log2(exprs(estrogen)), design)</pre>
+<p>The intercept term of not of real interest here as it simply represents the 
+baseline expression level of each gene. Let's pick out the other three 
+parameters, which are the ones of interest. This is done using the <code>
+contrasts.fit()</code> function. The function takes as argument a contrast 
+matrix which specifies which combinations of the original model coefficients are 
+to be examined.</p>
+<pre>&gt; cont.matrix &lt;- cbind(ESP=c(0,1,0,0), TIME48h=c(0,0,1,0), &quot;ESP:TIME48h&quot;=c(0,0,0,1))
+&gt; fit2 &lt;- contrasts.fit(fit, cont.matrix)
+&gt; fit2 &lt;- eBayes(fit2)
+&gt; topTable(fit2, coef=&quot;ESP:TIME48h&quot;, adjust=&quot;fdr&quot;,n=20)
+            M         t     P.Value         B
+25  -1.752633 -9.248934 0.002288030 4.3023246
+58  -1.504007 -8.992066 0.002288030 4.0822194
+490 -1.743248 -8.266519 0.002288030 3.4246563
+284  2.151867  8.133777 0.002288030 3.2983066
+479 -1.524163 -8.072253 0.002288030 3.2390830
+478 -1.926549 -7.759417 0.002600043 2.9312973
+270  1.545953  7.304549 0.003560586 2.4631640
+126 -1.278515 -7.095984 0.003890617 2.2399773
+449  1.689505  6.741165 0.004905043 1.8473788
+122  1.066377  6.682551 0.004905043 1.7809174
+88  -1.781021 -6.542536 0.005225304 1.6202727
+486  2.019201  6.398728 0.005650956 1.4524698
+173 -1.072508 -6.072121 0.007666149 1.0605708
+68   1.215764  5.896903 0.008801373 0.8440081
+165  1.402714  5.729358 0.010100825 0.6327184
+282  1.104436  5.527850 0.011485363 0.3730683
+295 -1.000517 -5.518481 0.011485363 0.3608481
+127  1.141904  5.483044 0.011485363 0.3145069
+292 -0.941858 -5.434085 0.011585718 0.2501714
+91   1.168843  5.369000 0.011970422 0.1640837</pre>
+<p>There are quite a few genes which appear o be differentially expressed with 
+respect to the interaction parameter. The t-tests are on 8.8 degrees of freedom; 
+4 degrees of freedom arising from residual degrees of freedom in the linear 
+model fit and 4.8 arising from the empirical Bayes smoothing of the residual 
+standard deviations:</p>
+<pre>&gt; summary(fit2$df.residual)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      4       4       4       4       4       4 
+&gt; fit2$df.prior
+[1] 4.842066</pre>
+<p><b>Overall F test</b>. Of special interest is to pick out those genes which 
+show any differential expression between any of the four treatment conditions. 
+This can be done by computing an overall F-test for the three coefficients of 
+interest.</p>
+<pre>&gt; F.stat &lt;- FStat(fit2)</pre>
+<p>The F-statistic has 3 and 8.8 degrees of freedom. All three of the 
+coefficients of interest can be classified as up, down or not significant using 
+nested F-tests:</p>
+<pre>&gt; results &lt;- classifyTestsP(fit2, p=0.0005)
+&gt; vennDiagram(results)</pre>
+<div align="center">
+  <p align="center">
+  <img border="0" src="estrogen/venndiag.png" width="669" height="525"></div>
+  <p>
+  Examining individual t-statistics or p-values tends to underestimate the 
+  number of genes which are differentially expressed for several coefficients 
+  simultaneously. Classifying the coefficients using nested F-tests does a bit better:</p>
+  <pre>&gt; results &lt;- classifyTests(fit2, p=0.001)
+&gt; vennDiagram(results)</pre>
+  <p align="center">
+  <img border="0" src="estrogen/venndiag2.png" width="669" height="525"></p>
+<h3>8.4 Weaver Mutant Data: A Factorial Experiment</h3>
 <p>This case study considers a more involved analysis in which the sources of 
 RNA have a factorial structure. In this example we assume that data is available as an 
 <code>RGList</code>.</p>

@@ -151,7 +151,7 @@ fitFDist <- function(x,df1) {
 trigammaInverse <- function(x) {
 #	Solve trigamma(y) = x for y
 #	Gordon Smyth
-#	8 Sept 2002.  Last revised 12 April 2003.
+#	8 Sept 2002.  Last revised 12 March 2004.
 
 #	Non-numeric or zero length input
 	if(!is.numeric(x)) stop("Non-numeric argument to mathematical function")
@@ -190,12 +190,17 @@ trigammaInverse <- function(x) {
 #	Newton's method
 #	1/trigamma(y) is convex, nearly linear and strictly > y-0.5,
 #	so iteration to solve 1/x = 1/trigamma is monotonically convergent
+	Rversion <- as.numeric(version$major)+as.numeric(version$minor)/10
+	if(Rversion > 1.81)
+		tetraGamma <- function(x) psigamma(x,deriv=2)
+	else
+		tetraGamma <- tetragamma
 	y <- 0.5+1/x
 	iter <- 0
 	repeat {
 		iter <- iter+1
 		tri <- trigamma(y)
-		dif <- tri*(1-tri/x)/tetragamma(y)
+		dif <- tri*(1-tri/x)/tetraGamma(y)
 		y <- y+dif
 		if(max(-dif/y) < 1e-8) break
 		if(iter > 50) {
