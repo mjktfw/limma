@@ -24,9 +24,9 @@ All of these matrices should have the same dimensions.
 \section{Methods}{
 This class inherits directly from class \code{list} so any operation appropriate for lists will work on objects of this class.
 
-Methods defined in limma for this class include \code{\link[limma:merge.rglist]{merge}}, \code{\link[limma:normalizebetweenarrays-methods]{normalizeBetweenArrays}},
-\code{\link[limma:normalizeprintorder-methods]{normalizeForPrintorder}},
-\code{\link[limma:normalizeWithinArrays-methods]{normalizeWithinArrays}}.
+Functions in LIMMA which operate on \code{RGList} objects include \code{\link[limma:merge.rglist]{merge}}, \code{\link{normalizeBetweenArrays}},
+\code{\link{normalizeForPrintorder}},
+\code{\link{normalizeWithinArrays}}.
 
 \code{RGList} objects inherit a \code{show} method from the virtual class \code{LargeDataObject}.
 }

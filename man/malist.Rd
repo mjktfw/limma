@@ -24,8 +24,8 @@ This class inherits directly from class \code{list} so any operation appropriate
 
 Functions in LIMMA which operate on \code{MAList} objects include
 \code{\link{normalizeWithinArrays}},
-\code{\link[limma:normalizebetweenarrays-methods]{normalizeBetweenArrays}}
-and \code{\link[limma:normalizeprintorder-methods]{normalizeForPrintorder}}
+\code{\link{normalizeBetweenArrays}}
+and \code{\link{normalizeForPrintorder}}
 
 \code{MAList} objects inherit a \code{show} method from the virtual class \code{LargeDataObject}.
 }

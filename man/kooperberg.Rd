@@ -4,11 +4,11 @@
 \description{
 This function uses a Bayesian model to background correct
 data from a series of microarray experiments.
-It is currently implemented only for GenePix data.
+It currently works only with GenePix data.
 }
 
 \usage{
-kooperberg(names, fg="mean", bg="median")
+kooperberg(names, fg="mean", bg="median", a=FALSE, layout)
 }
 \arguments{
 \item{names}{character vector giving the names of data.frames containing GenePix data}
@@ -16,24 +16,25 @@ kooperberg(names, fg="mean", bg="median")
 Choices are \code{"mean"} or \code{"median"}.}
 \item{bg}{character string giving foreground estimator.
 Choices are \code{"mean"} or \code{"median"}.}
+\item{a}{logical.  If \code{TRUE}, the 'a' parameters in the model (equation 3 and 4) are estimated for each slide.  If \code{FALSE} the 'a' parameters are set to unity.}
+\item{layout}{list containing print layout with components \code{ngrid.r}, \code{ngrid.c}, \code{nspot.r} and \code{nspot.c}}
 }
 
 \details{
-\code{bayesianAdjustedRG} serially extracts the foreground and background intensities, standard
+This function is for use with Genepix data and is designed to cope with the problem of large numbers of negative intensities and hence missing values on the log-intensity scale.
+It avoids missing values in most cases and at the same time dampens down the variability of log-ratios for low intensity spots.
+See Kooperberg et al (2003) for more details.
+
+\code{kooperberg} serially extracts the foreground and background intensities, standard
 deviations and number of pixels from GenePix data frames.
+This information is used to compute empirical estimates of the model parameters
+as described in equation 2 of Kooperberg et al (2003).
 
-This information provides empirical estimates of the model parameters
-described in equation 2 of Kooperberg et al (2003).
-Note that the 'a' parameters in equations 3 and 4 have been omitted for simplicity.
-
-Choices are \code{"mean"} for \code{F635.Mean} (red) and
-\code{F532.Mean} (green) or \code{"median"} for \code{F635.Median}
-and \code{F532.Median}.}
-\item{bg}{character string giving foreground estimator.
-Choices are \code{"mean"} for \code{B635.Mean} (red) and
-\code{B532.Mean} (green) or \code{"median"} for \code{B635.Median}
-and \code{B532.Median}.}
-
+The foreground and background estimates extracted from the Genepix files may be based on means or medians of pixel values.
+Setting \code{fg="mean"} uses the Genepix column \code{F635.Mean} for red foreground and
+the Genepix column \code{F532.Mean} for green foreground.
+Setting \code{fg="median"} uses columns \code{F635.Median} and \code{F532.Median}.
+Similarly for the background, \code{bg="mean"} uses columns \code{B635.Mean} and \code{B532.Mean} while \code{bg="median"} uses columns \code{B635.Median} and \code{B532.Median}.
 }
 
 \value{
@@ -58,7 +59,9 @@ Improved background correction for spotted DNA microarrays.
 \examples{
 \dontrun{genepixFiles <- dir(pattern="\\\\.gpr") # get the names of the GenePix image analysis output files in the current directory
 read.series(genepixFiles, suffix=NULL, skip=26, sep="\t") # read in GenePix files
-RGmodel <- bayesianAdjustedRG(genepixFiles) # perform model based background correction for GenePix data}
+layout <- list(ngrid.r=12, ngrid.c=4, nspot.r=26, nspot.c=26) # specify array layout
+RGmodel <- kooperberg(genepixFiles, layout=layout) # model-based background correction
+MA <- normalizeWithinArrays(RGModel, layout) # normalize the data}
 }
 
 \keyword{models}

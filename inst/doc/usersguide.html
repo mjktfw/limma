@@ -14,7 +14,7 @@
 <p align="center">Gordon Smyth<br>
 The
 Walter and Eliza Hall Institute of Medical Research<br>
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->18 May 2003<!--webbot bot="Timestamp" i-checksum="15125" endspan --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->22 June 2003<!--webbot bot="Timestamp" i-checksum="17568" endspan --></p>
 
 <h2>Table of Contents</h2>
 
@@ -27,7 +27,7 @@ Walter and Eliza Hall Institute of Medical Research<br>
   <li>Two-Sample Experiments</li>
   <li>Factorial Experiments</li>
   <li>Microarrays with Multiple Prints of each Gene</li>
-  <li>Using limma with marray Packages</li>
+  <li>Using limma with the marray Packages</li>
   <li>Affymetrix and Single-Color Microarrays</li>
 </ol>
 
@@ -47,14 +47,20 @@ you are using LIMMA in conjunction with these packages, see Section 9. The
 package affy provides functions for reading and normalizing Affymetrix 
 microarray data. If you are using the affy package, see Section 10.</p>
 
-<p>This tutorial was prepared using R Version 1.7.0 for Windows and limma 
-Version 0.9.7. The latest version of limma is always available from
-<a href="http://www.bioconductor.org">http://www.bioconductor.org</a>. Easy 
-download of limma as also available from
+<p>This tutorial was prepared using R Version 1.7.1 for Windows and LIMMA 
+Version 1.1.2. The latest version of LIMMA is always available from
+<a href="http://www.bioconductor.org">http://www.bioconductor.org</a> under 
+&quot;Developmental Packages&quot;. If you 
+are using Windows, you can install the last official release version of LIMMA from the  drop-down menu 
+in R, simply 
+select <code>Packages</code> then <code>Install package(s) from Bioconductor...</code>. 
+Download is also available from
 <a href="http://bioinf.wehi.edu.au/limma/">http://bioinf.wehi.edu.au/limma/</a>. 
 The data sets used in the examples can be downloaded from
 <a href="http://bioinf.wehi.edu.au/marray/genstat2002/">
-http://bioinf.wehi.edu.au/marray/genstat2002/</a>.</p>
+http://bioinf.wehi.edu.au/marray/genstat2002/</a>. Bugs or other problems can be 
+reported to <a href="mailto:bioconductor@stat.math.ethz.ch">
+bioconductor@stat.math.ethz.ch</a>.</p>
 
 <h2>2. Reading in Intensity Data</h2>
 
@@ -772,15 +778,17 @@ hour for a series of arrays.</p>
 &gt; plot(fit$coef,eb$lods,xlab=&quot;Log2 Fold Change&quot;,ylab=&quot;Log Odds&quot;,pch=16,cex=0.1)</pre>
 <p align="center">
 <img border="0" src="bob/volcano.png" width="890" height="590"></p>
-<h2>9. Using limma with marray Packages</h2>
+<h2>9. Using limma with the marray Packages</h2>
 <p>The packages marrayClasses, marrayInput, marrayNorm and marrayTools are 
 designed to read and normalize cDNA data. Normalization will produce an object 
 of class <code>marrayNorm</code>. The linear model commands from limma may be 
 used after extracting the M-value matrix and the spot weights from the object. 
-If the normalized data object is called N, then a linear model may be fitted 
+If the normalized data object is called <code>N</code>, then a linear model may be fitted 
 using</p>
 <pre>fit &lt;- lm.series(maM(N),design,weights=maW(N))</pre>
-<p>after which one proceeds exactly as in previous sections. The design matrix 
+<p>after which one proceeds exactly as in previous sections. The functions <code>
+gls.series</code> or <code>rlm.series</code> may be substituted for <code>
+lm.series</code> as appropriate. The design matrix 
 is chosen as in previous sections.</p>
 <h2>10. Affymetrix and Single-Color Arrays</h2>
 <p>Suppose for example that there are three arrays 
@@ -797,11 +805,33 @@ matrix might be</p>
 will produce an object of class <code>exprSet</code> or of <code>AffyBatch</code> 
 which inherits from <code>exprSet</code>. Let <code>E</code> be the <code>
 exprSet</code> object. A linear model may be fitted using</p>
-<pre>fit &lt;- lm.series(exprs(E),design,weights=1/se.exprs(E)^2)
+<pre>fit &lt;- lm.series(exprs(E),design)
 eb &lt;- ebayes(fit)</pre>
 <p>Then one may proceed as for two-sample two color experiments. The second 
 coefficient in the linear model measures the difference between mutant and wt 
-expression.</p>
+expression. The function <code>rlm.series</code> may be substituted for <code>
+lm.series</code> if a robust fit is desired.</p>
+<p>As a second example, suppose that there are three RNA sources to be compared. 
+Suppose that the first three arrays are hybridized with RNA1, the next two with 
+RNA2 and the next three with RNA3. Suppose that all pair-wise comparisons 
+between the RNA sources are of interest. We assume that the data has been 
+normalized and stored in an <code>exprSet</code> object, for example by</p>
+<pre>&gt; data &lt;- ReadAffy()
+&gt; data2&lt;- rma(data)</pre>
+<p>An appropriate design matrix can be created and a linear model fitted using</p>
+<pre>&gt; design &lt;- model.matrix(~ -1+factor(c(1,1,1,2,2,3,3,3)))
+&gt; colnames(design) &lt;- c(&quot;group1&quot;, &quot;group2&quot;, &quot;group3&quot;)
+&gt; fit &lt;- lm.series(exprs(data2), design)</pre>
+<p>and To make all pairwise comparisons between the three groups the appropriate 
+contrasts can be created by</p>
+<pre>&gt; contrast.matrix &lt;- cbind(group2vs1=c(-1,1,0), group3vs2=c(0,-1,1), group3vs1=c(-1,0,1))
+&gt; fit2 &lt;- contrasts.fit(fit, contrast.matrix)
+&gt; eb &lt;- ebayes(fit2)</pre>
+<p>A list of top genes differential expressed in group2 versus group1 can be 
+obtained from</p>
+<pre>&gt; toptable(coef=&quot;group2vs1&quot;, fit=fit2, eb=eb, genelist=geneNames(data2), adjust=&quot;fdr&quot;)</pre>
+<p>You may classify each gene according to the three pair-wise comparisons using</p>
+<pre>&gt; clas &lt;- classifyTests(eb$t, design=design, contrasts=contrast.matrix)</pre>
 <h2>Acknowledgements</h2>
 <p>Thanks to Yee Hwa Yang and Sandrine Dudoit for the first three data sets. The Swirl zebrafish data were provided by Katrin Wuennenburg-Stapleton from the
 <a href="http://mcb.berkeley.edu/labs/ngai/">Ngai Lab</a> at UC Berkeley. Thanks 
