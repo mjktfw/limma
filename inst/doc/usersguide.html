@@ -11,10 +11,10 @@
 
 <h1>User's Guide</h1>
 
-<p align="center">Gordon Smyth<br>
+<p align="center">Gordon Smyth and Natalie Thorne<br>
 The
 Walter and Eliza Hall Institute of Medical Research<br>
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->01 September 2003<!--webbot bot="Timestamp" i-checksum="39490" endspan --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->09 September 2003<!--webbot bot="Timestamp" i-checksum="39506" endspan --></p>
 
 <h2>Table of Contents</h2>
 
@@ -32,6 +32,7 @@ Walter and Eliza Hall Institute of Medical Research<br>
   <li>Microarrays with Multiple Prints of each Gene</li>
   <li>Using limma with the marray Packages</li>
   <li>Affymetrix and Single-Color Microarrays</li>
+  <li>Single-Channel Normalization for Two-Color Arrays</li>
 </ol>
 
 <h2>1. Introduction</h2>
@@ -51,7 +52,7 @@ package affy provides functions for reading and normalizing Affymetrix
 microarray data. If you are using the affy package, see Section 13.</p>
 
 <p>This tutorial was prepared using R Version 1.7.1 for Windows and limma 
-Version 1.1.2. The latest version of limma is always available from
+Version 1.1.18. The latest version of limma is always available from
 <a href="http://www.bioconductor.org">http://www.bioconductor.org</a> under 
 &quot;Developmental Packages&quot;. If you 
 are using Windows, you can install the last official release version of limma from the  drop-down menu 
@@ -88,7 +89,7 @@ name at the R prompt, for example</p>
 R is an &quot;object&quot;. Objects might include data sets, variables, functions, 
 anything at all. For example</p>
 <pre>  x &lt;- 2</pre>
-<p>will create a variable <code>y</code> and will assign it the value 2. At any 
+<p>will create a variable <code>x</code> and will assign it the value 2. At any 
 stage of your R session you can type</p>
 <pre>  objects()</pre>
 <p>to get a list of all the objects you have created. You see show the contents 
@@ -975,6 +976,156 @@ obtained from</p>
 <pre>&gt; toptable(coef=&quot;group2vs1&quot;, fit=fit2, eb=eb, genelist=geneNames(data2), adjust=&quot;fdr&quot;)</pre>
 <p>You may classify each gene according to the three pair-wise comparisons using</p>
 <pre>&gt; clas &lt;- classifyTests(eb$t, design=design, contrasts=contrast.matrix)</pre>
+
+<h2>14. Single-Channel Normalization for Two-Color Arrays</h2>
+
+<p> We provide a short background on the topic of single-channel
+normalization for two color arrays. Throughout this section the ApoAI
+data set will be used to demonstrate single-channel normalization.</p>
+
+<p>Load the ApoAI data and perform background correction
+on the <code>RGlist</code> data object.</p> 
+
+<pre>&gt; load("ApoAI.RData")
+&gt; RG.b &lt;-backgroundCorrect(RG,method="minimum")</pre> 
+<p>cDNA (or oligo) microarrays compare the gene expression between two
+different sources of RNA for thousands of genes simultaneously. In
+general, the log-ratio of spot intensities for the red and green
+channels form the primary data used for downstream analysis. Thus
+traditional normalization methods, which remove systematic variation
+in microarray data, focus on adjusting the log-ratios within each
+slide.  However sometimes it is desirable to work with single-channel
+(log-intensity) data rather than the log-ratios and so new techniques
+for normalizing such single-channel data have been investigated.  In
+the current literature there has been limited attention given to
+single-channel normalization despite many groups basing their entire
+analyses on single channel data.  Single- channel data display a
+higher level of systematic variation than that observed in log-ratio
+data.</p>
+
+<p> For example below are <code>imageplots</code> of the log-intensity
+single-channels and the log-ratio for a single array from the ApoAI
+data set. (The <code> imageplots</code> below are based on non-normalised
+background corrected data). Clearly some of the systematic spatial variation is
+cancelled out by forming the log-ratio.  This is just a simple
+demonstration of how M-values are less noisy than single-channels. </p>
+
+<pre>&gt; imageplot(log(RG.b$R[,4],2), layout, low="white", high="red") </pre>
+<p align="center">
+<img border="0" src="apoai/imageRG.b.R4.png" width="590" height="590"></p>
+
+<pre>&gt; imageplot(log(RG.b$G[,4],2), layout, low="white", high="green") </pre>
+<p align="center">
+<img border="0" src="apoai/imageRG.b.G4.png" width="590" height="590"></p>
+
+<pre>&gt; imageplot(log(MA.n$M[,4],2), layout, low="white", high="blue") </pre>
+<p align="center">
+<img border="0" src="apoai/imageMA.n.M4.png" width="590" height="590"></p>
+
+<p>It should be noted that analysing log-ratios corresponds to doing all
+analysis on the basis of within-array contrasts while the
+single-channel approach gives the possibility of recovering
+information from the between-array variation.  This should only be
+considered after careful single- channel normalization to remove
+uncontrolled systematic effects at the array level. Yang and Thorne
+(2003) provides an outline of the motivations for performing
+single-channel (log-intensity) analysis. We currently perform
+single-channel normalization using a quantile method based on Bolstad
+<i> et al.</i>'s quantile normalization of high density
+oligonucleotide data). In the following we demonstrate within-slide
+and between-slide single-channel normalization routines. We use the
+ApoAI data set to illustrate the methods.</p>
+
+<p>We perform the normalization of single-channel data using methods
+in the <code>normalizeWithinArrays</code> and
+<code>normalizeBetweenArrays</code> functions.  
+
+<p>Note that <code> RG.b </code> contains unlogged single-channel
+intensities and <code> normalizeWithinArrays </code> expects its input
+<code> RGlist </code> to be unlogged.  There is an argument <code>
+log.transform=F </code> which needs to be implemented if the <code>
+RGlist </code> supplied is already logged.  The following command
+creates an <code> MAList </code> containing non-normalized background
+corrected values.</p> 
+
+<pre>&gt; MA.n &lt;-normalizeWithinArrays(RG.b,layout,method="n")</pre> 
+
+<p>Next we normalize the Mvalues via the default within array
+normalization of <code>printtiploess </code> (we could have use the
+method <code> loess </code> instead, but we find that <code>
+printtiploess </code> is often a good choice since it acts as a proxy
+for spatial normalization of the Mvalues.</p> 
+
+<pre>&gt; MA.p &lt;-normalizeWithinArrays(RG.b,layout)</pre> 
+
+<p>At any stage we can recover the <code> RGList </code> of normalized
+single-channels using <code>RG.MA</code>.  <code>RG.MA(MA.p)</code>
+would give us within-array only normalized single-channels.  Next we
+perform between array normalization of the single-channels. We use the
+function <code> normalizeBetweenArrays</code> which takes and returns
+an <code>MAList</code>.  <code> normalizeBetweenArrays </code> forms an RG matrix when implementing the <code>quantile</code>
+normalization method on the single-channels; and although it returns
+an <code> MAList</code> the single-channel normalised values can be
+obtained by using the function <code> RG.MA</code>.  We show how to
+implement the following between array normalization methods
+respectively, quantile normalization between all single-channels
+only (<b>q</b>); quantile normalization after printtiploess
+normalization within arrays (<b>pq</b>); quantile normalization
+between the arrays on the <code>Aq</code> values which is then
+combined with the within array printtiploess normalization
+<code>Mp</code> to give <code> MpAq </code>.  Notice that for <code>
+MpAq </code> we have mixed and matched different within and between
+array normlizations to create a <i> simultaneous within and between
+array</i> single-channel normalization method.</p>
+
+<pre>&gt; MA.q &lt;- normalizeBetweenArrays(MA.n, method="quantile") 
+&gt; MA.pq &lt;- normalizeBetweenArrays(MA.p, method="quantile") 
+&gt; MA.Aq &lt;- normalizeBetweenArrays(MA.n, method="Aquantile") 
+&gt; MA.MpAq &lt;- new("MAList", list(M=MA.p$M, A=MA.Aq$A))</pre> 
+
+<p>We find that <b>pq</b> and <b>MpAq</b> work quite well.  Next we
+show some plots of the single-channel log-intensity densities which
+illustrate the results of the different single-channel normalization methods.  We use the function <code> plotDensities</code> which will
+take either an <code> RGList</code> or an <code> MAList </code>.  The
+form of the call is: <code>plotDensities(object, log.transform = FALSE, arrays = NULL, singlechannels = NULL, 
+    groups = NULL, col = NULL)</code>.
+The default usage of plotDensities results in red/green coloring of the densities.</p>
+
+<p>Without any background correction there is a significant difference 
+between the red and green single-channel intensity distributions:</p>
+<pre> &gt; plotDensities(RG, log.transform=TRUE)</pre>
+<p align="center">
+<img border="0" src="apoai/densRG.png" width="590" height="590"></p>
+
+<pre>&gt; plotDensities(RG.b, log.transform=TRUE)</pre>
+<p align="center">
+<img border="0" src="apoai/densRG.b.png" width="590" height="590"></p>
+
+<pre>&gt; plotDensities(MA.n)</pre>
+<p align="center">
+<img border="0" src="apoai/densRG.n.png" width="590" height="590"></p>
+
+<p> <code> Printtiploess</code> makes the single-channels within arrays
+similar:</p>
+<pre>&gt; plotDensities(MA.p)</pre>
+<p align="center">
+<img border="0" src="apoai/densRG.p.png" width="590" height="590"></p>
+
+<p> All the single-channels have the same distribution. </p>
+<pre>&gt; plotDensities(MA.q, col="black")</pre>
+<p align="center">
+<img border="0" src="apoai/densRG.q.png" width="590" height="590"></p>
+
+<pre>&gt; plotDensities(MA.pq, col="black")</pre>
+<p align="center">
+<img border="0" src="apoai/densRG.pq.png" width="590" height="590"></p>
+
+<p><b>MpAq</b> gives very similar results as <b>pq</b>.</p>
+<pre>&gt; plotDensities(MA.MpAq)</pre>
+<p align="center">
+<img border="0" src="apoai/densRG.MpAq.png" width="590" height="590"></p>
+
+
 <h2>Acknowledgements</h2>
 <p>Thanks to Yee Hwa Yang and Sandrine Dudoit for the first three data sets. The Swirl zebrafish data were provided by Katrin Wuennenburg-Stapleton from the
 <a href="http://mcb.berkeley.edu/labs/ngai/">Ngai Lab</a> at UC Berkeley. Thanks 
@@ -1006,6 +1157,13 @@ to Lynn Corcoran for the Bob Mutant data.</p>
   <li> Yang, Y. H., and Speed, T. P. (2002). Design and analysis of comparative microarray 
   experiments. In T. P. Speed (ed.), <i>Statistical Analysis of Gene Expression 
   Microarray Data</i>. CRC Press.</li>
+  <li> Yang, Y. H., and Speed, T. P. (2003). Design and analysis of comparative microarray 
+  experiments. In T. P. Speed (ed.), <i>Statistical Analysis of Gene Expression 
+  Microarray Data</i>. Chapman &amp; Hall/CRC Press, pages 35-91.</li>
+<li>Yang, Y. H., and Thorne, N. P. (2003). Normalization for two-color cDNA 
+  microarray data. In: D. R. Goldstein (ed.), <i>Science and Statistics: A 
+  Festschrift for Terry Speed</i>, IMS Lecture Notes - Monograph Series, Volume 
+  40, pp. 403-418.</li>
 </ol>
 
 <h2>Appendix:  Conventions</h2>
@@ -1018,8 +1176,6 @@ columns correspond to arrays.</p>
 <p>The online documentation uses conventions suggested by
 <a href="http://bioinf.wehi.edu.au/limma/Rdocs.html">Writing .Rd Files For S4 
 Classes, Generic Functions and Methods</a>.</p>
-
-<p>&nbsp;</p>
 
 </body>
 

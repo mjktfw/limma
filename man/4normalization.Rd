@@ -11,6 +11,9 @@ A minority of data will also be normalized using \code{\link{normalizeBetweenArr
 
 In rare circumstances, data might be normalized using \code{\link{normalizeForPrintorder}} before using \code{\link{normalizeWithinArrays}}.
 
+If one is planning analysis of single-channel information from the microarrays rather than analysis of differential expression based on log-ratios, then the data should be normalized using a single channel-normalization technique.
+Single channel normalization uses further options of the \code{\link{normalizeBetweenArrays}} function.
+
 \code{normalizeWithinArrays} uses utility functions \code{\link{loessFit}} and \code{\link{normalizeRobustSpline}}.
 \code{normalizeBetweenArrays} uses utility functions \code{\link{normalizeMedians}}, \code{\link{normalizeMedianDeviations}} and \code{\link{normalizeQuantiles}}, none of which need to be called directly by users.
 }

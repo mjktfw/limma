@@ -31,7 +31,7 @@ Yang, Y. H., Buckley, M. J., and Speed, T. P. (2001). Analysis of microarray ima
 \examples{
 RG <- new("RGList", list(R=c(1,2,3,4),G=c(1,2,3,4),Rb=c(2,2,2,2),Gb=c(2,2,2,2)))
 backgroundCorrect(RG)
-backgroundCorrect(RG, method="positive")
+backgroundCorrect(RG, method="half")
 backgroundCorrect(RG, method="minimum")
 }
 \seealso{

@@ -95,6 +95,7 @@ plot.scale.box(M)
 #  MpAq normalization as in Yang and Thorne (2003):
 MpAq <- normalizeWithinArrays(mouse.data, mouse.setup)
 MpAq <- normalizeBetweenArrays(MpAq, method="Aq")
+plotDensities(MpAq)
 }
 
 \keyword{models}

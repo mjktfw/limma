@@ -1,8 +1,8 @@
 Package: limma
-Version: 1.1.17
-Date: 2003/09/06
+Version: 1.1.18
+Date: 2003/09/08
 Title: Linear Models for Microarray Data
-Author: Gordon Smyth <smyth@wehi.edu.au>, Matt Ritchie <mritchie@wehi.edu.au>, James Wettenhall <wettenhall@wehi.edu.au>
+Author: Gordon Smyth <smyth@wehi.edu.au>, Matt Ritchie <mritchie@wehi.edu.au>, James Wettenhall <wettenhall@wehi.edu.au>, Natalie Thorne <thorne@wehi.edu.au>
 Maintainer: Gordon Smyth <smyth@wehi.edu.au>
 Depends: methods, modreg, MASS, splines, nls, nlme, sma, R (>= 1.7.0)
 Description:  Data analysis, linear models and differential expression for spotted and oligonucleotide microarrays.
