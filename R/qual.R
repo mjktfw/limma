@@ -21,3 +21,11 @@ function(gpr) {
 	flagged <- (gpr[,"Flags"] < 0)
 	flagged.wt*flagged + !flagged
 }
+
+wtIgnore.Filter <- function(qta) {
+#	Quality weights based on Ignore Filter from QuantArray output
+#	Gordon Smyth
+#	23 May 2003.
+
+	qta$Ignore.Filter
+}
