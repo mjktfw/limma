@@ -46,7 +46,8 @@ lmFit <- function(object,design=NULL,contrasts=NULL,ndups=1,spacing=1,correlatio
 		df.prior=eb$df.prior,
 		s2.post=eb$s2.post,
 		tstat=as.matrix(eb$t),
-		varcoef.prior=eb$var.prior
+		varcoef.prior=eb$var.prior,
+		call=match.call()
 	)
 }
 

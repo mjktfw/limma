@@ -5,14 +5,11 @@
 
 \description{
 A simple list-based class for storing M-values and A-values for a batch of spotted microarrays.
-}
-
-\section{Creating Objects from the Class}{
-Objects can be created by calls of the form \code{new("MAList",MA)} where \code{MA} is a list.
-Objects are normally created by \code{\link{MA.RG}} or \code{\link{normalizeWithinArrays}}.
+\code{MAList} objects are usually created during normalization by the functions \code{\link{normalizeWithinArrays}} or \code{\link{MA.RG}}.
 }
 
 \section{Slots/List Components}{
+\code{MAList} objects can be created by \code{new("MAList",MA)} where \code{MA} is a list.
 This class contains no slots (other than \code{.Data}), but objects should contain the following list components:
 \tabular{ll}{
   \code{M}:\tab numeric matrix containing the M-values or log expression ratios (base 2).  Rows correspond to spots and columns to arrays.\cr
@@ -25,11 +22,12 @@ All of the matrices should have the same dimensions.
 \section{Methods}{
 This class inherits directly from class \code{list} so any operation appropriate for lists will work on objects of this class.
 
-Methods defined in the limma package include \code{\link[limma:normalizebetweenarrays-methods]{normalizeBetweenArrays}},
-\code{\link[limma:normalizeprintorder-methods]{normalizeForPrintorder}}
-and \code{\link[limma:normalizeWithinArrays-methods]{normalizeWithinArrays}}.
+Functions in LIMMA which operate on \code{MAList} objects include
+\code{\link{normalizeWithinArrays}},
+\code{\link[limma:normalizebetweenarrays-methods]{normalizeBetweenArrays}}
+and \code{\link[limma:normalizeprintorder-methods]{normalizeForPrintorder}}
 
-Type \code{showMethods(classes="MAList")} at the R prompt for a complete list of methods for this class.
+\code{MAList} objects inherit a \code{show} method from the virtual class \code{LargeDataObject}.
 }
 
 \author{Gordon Smyth}

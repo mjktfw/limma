@@ -18,6 +18,9 @@ This package defines the following data classes.
 	Store the result of fitting gene-wise linear models to the normalized intensities or log-ratios.
 	Usually created by \code{lmFit}.}
 }
+
+All of these classes belong to the virtual class \code{\link[limma:LargeDataObject]{LargeDataObject}}.
+A \code{show} method is defined for \code{LargeDataOject}s which uses the utility function \code{\link{printHead}}.
 }
 \author{Gordon Smyth}
 \keyword{documentation}

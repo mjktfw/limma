@@ -27,6 +27,6 @@ Yang, Y. H., Buckley, M. J., and Speed, T. P. (2001). Analysis of microarray ima
 }
 \author{Gordon Smyth}
 \seealso{
-	\code{\link{read.maimages}}, \code{\link{normalizeWithinArrays.RGList}}
+	\code{\link{read.maimages}}, \code{\link{normalizeWithinArrays}}
 }
 \keyword{models}

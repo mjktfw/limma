@@ -11,11 +11,21 @@ A minority of data will also be normalized using \code{\link{normalizeBetweenArr
 
 In rare circumstances, data might be normalized using \code{\link{normalizeForPrintorder}} before using \code{\link{normalizeWithinArrays}}.
 
-\code{\link{normalizeWithinArrays}} also does background correction.
-At this time, the explicit background correction function \code{\link{backgroundCorrect}} is not used by LIMMA, but the function will become relevant if more sophisticated background correct methods are implemented.
 \code{normalizeWithinArrays} uses function \code{\link{normalizeRobustSpline}}.
-
 \code{normalizeBetweenArrays} uses utility functions \code{\link{normalizeMedians}}, \code{\link{normalizeMedianDeviations}} and \code{\link{normalizeQuantiles}}, none of which need to be called directly by users.
+}
+
+\section{Backgound Correction}{
+\code{\link{normalizeWithinArrays}} calls \code{\link{MA.RG}} to do simple background correction and to convert \code{RGList} objects into \code{MAList} objects.
+At this time, the explicit background correction function \code{\link{backgroundCorrect}} is not used by LIMMA, but the function will become relevant as more sophisticated background correct methods are implemented.
+
+\code{\link{bayesianAdjustedRG}} is a more sophisticated background correction tool designed specifically for GenePix data.
+\code{bayesianAdjustedRG} is not currently used as a default method for GenePix data because it is computationally intensive.
+\code{bayesianAdjustedRG} uses utility functions
+\code{\link{bayesianAdjustedFG}},
+\code{\link{expectedBayesianAdjustedFG}},
+\code{\link{numeratorBayesianAdjustedFG}} and
+\code{\link{denominatorBayesianAdjustedFG}}.
 }
 
 \author{Gordon Smyth}

@@ -1,7 +1,5 @@
 #  WITHIN ARRAY NORMALIZATION
 
-require(modreg)
-
 MA.RG <- function(object) {
 #	Convert RGList to MAList
 #	Gordon Smyth
@@ -27,28 +25,16 @@ MA.RG <- function(object) {
 	new("MAList",unclass(object))
 }
 
-if(!isGeneric("normalizeWithinArrays"))
-	setGeneric("normalizeWithinArrays", function(object,...) standardGeneric("normalizeWithinArrays")) 
-
-setMethod("normalizeWithinArrays", "list", definition=
-function(object, ...)
-	normalizeWithinArrays(MA.RG(object), ...)
-)
-
-setMethod("normalizeWithinArrays", "RGList", definition=
-function(object, ...)
-	normalizeWithinArrays(MA.RG(object), ...)
-)
-
-setMethod("normalizeWithinArrays", "MAList", definition=
-function(object,layout,method="printtiploess",weights=object$weights,span=0.4,iterations=4,controlspots=NULL,df=5,robust="M") {
+normalizeWithinArrays <- function(object,layout,method="printtiploess",weights=object$weights,span=0.4,iterations=4,controlspots=NULL,df=5,robust="M") {
 #	Sub-array loess normalization
 #	Gordon Smyth
-#	2 March 2003.  Last revised 28 April 2003.
+#	2 March 2003.  Last revised 15 June 2003.
 
-	choices <- c("median","loess","printtiploess","composite","robustspline")
+	if(!is(object,"MAList")) object <- MA.RG(object)
+	choices <- c("none","median","loess","printtiploess","composite","robustspline")
 	method <- choices[pmatch(method,choices)]
-	if(is.na(method)) return(object)
+	if(is.na(method)) warning("normalization method not recognized, defaulting to \"none\"")
+	if(is.na(method) || method=="none") return(object)
 	ngenes <- nrow(object$M)
 	narrays <- ncol(object$M)
 	switch(method,
@@ -106,7 +92,7 @@ function(object,layout,method="printtiploess",weights=object$weights,span=0.4,it
 		}
 	)
 	object
-})
+}
 
 normalizeRobustSpline <- function(M,A,layout,df=5,method="M") {
 #	Robust spline normalization
@@ -276,17 +262,20 @@ plotPrintorder <- function(R,G=NULL,layout,slide=1,method="loess",separate.chann
 
 #  BETWEEN ARRAY NORMALIZATION
 
-if(!isGeneric("normalizeBetweenArrays"))
-	setGeneric("normalizeBetweenArrays", function(object,...) standardGeneric("normalizeBetweenArrays")) 
+setGeneric("normalizeBetweenArrays", function(object,method="scale") standardGeneric("normalizeBetweenArrays")) 
 
 setMethod("normalizeBetweenArrays", "matrix", definition=
 function(object, method="scale") {
 #	Normalize between arrays - method for matrix
 #	Gordon Smyth
-#	12 Apri 2003
+#	12 Apri 2003.  Last revised 15 June 2003.
 
 	choices <- c("none","scale","quantile")
 	method <- choices[pmatch(method,choices)]
+	if(is.na(method)) {
+		warning("normalization method not recognized, defaulting to \"none\"")
+		method <- "none"
+	}
 	switch(method,
 		none = object,
 		scale = normalizeMedianDeviations(object),
@@ -301,21 +290,23 @@ function(object, method="scale") {
 #	23 Apri 2003
 
 #	Try to convert list to MAList
-	normalizeBetweenArrays(new("MAList",object), method=method)
+	normalizeBetweenArrays(new("MAList",unclass(object)), method=method)
 })
 
 setMethod("normalizeBetweenArrays", "MAList", definition=
 function(object, method="scale") {
-#	Normalize between arrays - method for MA-list
+#	Normalize between arrays - method for MAList
 #	Gordon Smyth
-#	12 Apri 2003
+#	12 Apri 2003.  Last revised 15 June 2003.
 
 	choices <- c("none","scale","quantile")
 	method <- choices[pmatch(method,choices)]
+	if(is.na(method)) warning("normalization method not recognized, defaulting to \"none\"")
 	switch(method,
 		scale = {
 			object$M <- normalizeMedianDeviations(object$M)
-			object$A <- normalizeMedians(object$A)},
+			object$A <- normalizeMedians(object$A)
+		},
 		quantile = {
 			narrays <- NCOL(object$M)
 			Z <- normalizeQuantiles(cbind(object$A+object$M/2,object$A-object$M/2))

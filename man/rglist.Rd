@@ -5,15 +5,12 @@
 
 \description{
 A simple list-based class for storing red and green channel foreground and background intensities for a batch of spotted microarrays.
-}
-
-\section{Creating Objects from the Class}{
-Objects can be created by calls of the form \code{new("RGList",RG)} where \code{RG} is a list.
-Objects are normally created by \code{\link{read.maimages}}.
+\code{RGList} objects are normally created by \code{\link{read.maimages}}.
 }
 
 \section{Slots/List Components}{
-This class contains no slots (other than \code{.Data}), but objects should contain the following list components:
+\code{RGList} objects can be created by \code{new("RGList",RG)} where \code{RG} is a list.
+Objects of this class contains no slots (other than \code{.Data}), but objects should contain the following list components:
 \tabular{ll}{
   \code{R}:\tab numeric matrix containing the red (cy5) foreground intensities.  Rows correspond to spots and columns to arrays.\cr
   \code{G}:\tab numeric matrix containing the green (cy3) foreground intensities.\cr
@@ -31,7 +28,7 @@ Methods defined in limma for this class include \code{\link[limma:merge.rglist]{
 \code{\link[limma:normalizeprintorder-methods]{normalizeForPrintorder}},
 \code{\link[limma:normalizeWithinArrays-methods]{normalizeWithinArrays}}.
 
-Type \code{showMethods(classes="RGList")} at the R prompt for a complete list of methods available for this class.
+\code{RGList} objects inherit a \code{show} method from the virtual class \code{LargeDataObject}.
 }
 
 \author{Gordon Smyth}

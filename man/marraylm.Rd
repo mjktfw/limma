@@ -26,7 +26,7 @@ Objects are normally created by \code{\link{lmFit}}.
 }
 
 \section{Methods}{
-There are no formal methods currently defined for this class.
+\code{MAList} objects inherit a \code{show} method from the virtual class \code{LargeDataObject}.
 }
 
 \author{Gordon Smyth}
