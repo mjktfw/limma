@@ -1,0 +1,71 @@
+#  SINGLE CHANNEL ANALYSIS
+
+lmsc.series <- function(M,A,design,correlation,variance.smooth=TRUE)
+#	Fit single channel linear model for each gene to a series of microarrays
+#	allowing for known correlation between the channels on each spot.
+#	Gordon Smyth
+#	14 March 2004.
+{
+#	Check input
+	M <- as.matrix(M)
+	A <- as.matrix(A)
+	dimM <- dim(M)
+	dimA <- dim(A)
+	if(any(dimM != dimA)) stop("dimensions of M and A don't match")
+	if(!all(is.finite(M)) || !all(is.finite(A))) stop("Missing or infinite values found in M or A")
+	if(missing(design)) stop("design matrix must be specified")
+	narrays <- dimM[2]
+	ny <- 2*narrays
+	design <- as.matrix(design)
+	if(nrow(design) != ny) stop("The number of rows of the design matrix should match the number of channel intensities, i.e., twice the number of arrays")
+	if(missing(correlation)) stop("intra-spot correlation must be specified")
+	if(abs(correlation) >= 1) stop("correlation must be strictly between -1 and 1")
+
+#	Dimensions
+	nbeta <- ncol(design)
+	coef.names <- colnames(design)
+	ngenes <- nrow(M)
+
+#	Main computation
+	sdM <- sqrt(2*(1-correlation))
+	sdA <- sqrt((1+correlation)/2)
+	y <- rbind(t(M)/sdM, t(A)/sdA)
+	designM <- (diag(narrays) %x% matrix(c(-1,1),1,2)) %*% design
+	designA <- (diag(narrays) %x% matrix(c(0.5,0.5),1,2)) %*% design
+	X <- rbind(designM/sdM, designA/sdA)
+	fit <- lm.fit(X,y)
+	fit$s2 <- drop(t(fit$effects[(fit$rank+1):ny,]^2) %*% matrix(1/fit$df.residual,ny-fit$rank,1))
+	if(variance.smooth) fit$s2 <- smoothVar(fit$s2, fit$df.residual)
+	fit
+}
+
+array2channel <- function(targets,channels=c(1,2),channelwise.columns=list(Target=c("Cy3","Cy5")))
+#	Convert data.frame with one row for each two-color array,
+#	into data.frame with one row for each channel
+#	Gordon Smyth
+#	16 March 2004.
+{
+	targets <- as.data.frame(targets)
+	lcc <- length(channelwise.columns)
+	if(lcc) {
+		out <- channelwise.columns
+		cheaders <- names(channelwise.columns)
+		for (i in 1:lcc) {
+			aheaders <- channelwise.columns[[i]]
+			if(all(aheaders %in% names(targets))) {
+				out[[i]] <- as.vector(as.matrix((targets[,aheaders])))
+				targets[[ aheaders[1] ]] <- NULL
+				targets[[ aheaders[2] ]] <- NULL
+			} else {
+				out[[ cheaders[i] ]] <- NULL
+			}
+		}
+	}
+	narrays <- nrow(targets)
+	channel.col <- rep(channels,c(narrays,narrays))
+	out <- cbind(Channel=channel.col,rbind(targets,targets),out)
+	row.names(out) <- paste(row.names(targets),channel.col,sep=".")
+	o <- as.vector(t(matrix(1:(2*narrays),narrays,2)))
+	out[o,]
+}
+
