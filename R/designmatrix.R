@@ -1,12 +1,16 @@
 #  DESIGNMATRIX.R
 
+uniqueTargets <- function(targets) {
+	sort(unique(as.vector(as.matrix(targets[,c("Cy3","Cy5")]))))
+}
+
 designMatrix <- function(targets, parameters=NULL, ref=NULL, verbose=TRUE) {
 #	Design matrix for two-color experiments
 #	'targets' is matrix or data.frame with columns Cy3 and Cy5
 #	'parameters' specifies desired coefficients corresponding to columns of design matrix
 #	'ref' is common reference if such exists
 #	Gordon Smyth
-#	25 June 2003. Last modified 1 Dec 2003.
+#	25 June 2003. Last modified 2 Dec 2003.
 
 	targets <- as.matrix(targets)
 	if(missing(targets)) stop("targets is required argument")
@@ -26,7 +30,7 @@ designMatrix <- function(targets, parameters=NULL, ref=NULL, verbose=TRUE) {
 		parameters <- as.matrix(parameters)
 		if(length(target.names) != nrow(parameters)) stop("rows of parameters don't match unique target names")
 		if(any(sort(target.names)!=sort(rownames(parameters)))) stop("rownames of parameters don't match unique target names")
-		targets.names <- rownames(parameters)
+		target.names <- rownames(parameters)
 		ntargets <- nrow(parameters)
 		if(ncol(parameters) != ntargets-1) warning("number of parameters should be one less than number of targets")
 	}

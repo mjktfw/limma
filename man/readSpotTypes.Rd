@@ -5,11 +5,13 @@
 Read a table giving regular expressions to identify different types of spots in the gene-dataframe.
 }
 \usage{
-readSpotTypes(file="SpotTypes.txt", sep="\t")
+readSpotTypes(file="SpotTypes.txt",sep="\t",check.names=FALSE,...)
 }
 \arguments{
   \item{file}{character string giving the name of the file specifying the spot types.}
   \item{sep}{the field separator character}
+  \item{check.names}{logical, if \code{FALSE} column names will not be converted to valid variable names, for example spaces in column names will not be left as is}
+  \item{\dots}{any other arguments are passed to \code{read.table}}
 }
 \details{
 The file is a text file with rows corresponding to types of spots and the following columns: \code{SpotType} gives the name for the spot type, \code{ID} is a regular expression matching the ID column, \code{Name} is a regular expression matching the Name column, and \code{Color} is the R name for the color to be associated with this type.

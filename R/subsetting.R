@@ -126,6 +126,25 @@ cbind.MAList <- function(..., deparse.level=1) {
 	out
 }
 
+rbind.RGList <- function(..., deparse.level=1) {
+#  Combine MAList objects assuming same array lists
+#  Gordon Smyth
+#  6 Dec 2003
+
+	objects <- list(...)
+	nobjects <- length(objects)
+	out <- objects[[1]]
+	if(nobjects > 1)
+	for (i in 2:nobjects) {
+		out$R <- rbind(out$R,objects[[i]]$R)
+		out$G <- rbind(out$G,objects[[i]]$G)
+		out$Rb <- rbind(out$Rb,objects[[i]]$Rb)
+		out$Gb <- rbind(out$Gb,objects[[i]]$Gb)
+		out$weights <- rbind(out$weights,objects[[i]]$weights)
+	}
+	out
+}
+
 makeUnique <- function(x) {
 #  Add characters to the elements of a character vector to make all values unique
 #  Gordon Smyth
