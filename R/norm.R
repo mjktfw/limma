@@ -1,7 +1,63 @@
 #	LOESS FUNCTIONS
 
+#loessFitnew <- function(y, x, weights=NULL, span=0.3, bin=0.01/(2-is.null(weights)), iterations=4) {
+##	Fast loess fit for simple x and y
+##	This function uses lowess if no weights and loess otherwise.
+##	It is intended to give a streamlined common interface to the two functions.
+##	Gordon Smyth
+##	28 June 2003.  Last revised 27 Feb 2005.
+#
+#	n <- length(y)
+#	out <- list(fitted=rep(NA,n),residuals=rep(NA,n))
+#	obs <- is.finite(y) & is.finite(x)
+#	xobs <- x[obs]
+#	yobs <- y[obs]
+#	nobs <- length(yobs)
+#	if(nobs==0) return(out)
+#	if(is.null(weights)) {
+#		o <- order(xobs)
+#		oo <- order(o)
+#		iter <- iterations-1
+#		delta = bin * diff(range(xobs)) 
+#		smoothy <- .C("lowess", x = as.double(xobs[o]), as.double(yobs[o]), 
+#			nobs, as.double(span), as.integer(iter), as.double(delta), 
+#			y = double(nobs), double(nobs), double(nobs), PACKAGE = "base")$y[oo]
+#		out$fitted[obs] <- smoothy
+#		out$residuals[obs] <- yobs-smoothy
+#	} else {
+#		weights[is.na(weights) | weights<0] <- 0
+#		wt0 <- obs & weights==0
+#		if(any(wt0)) {
+#			obs[wt0] <- FALSE
+#			xobs <- x[obs]
+#			yobs <- y[obs]
+#			nobs <- length(yobs)
+#			if(nobs==0) return(out)
+#		}
+#		wobs <- weights[obs]
+#		if(nobs < 4+1/span) {
+#			fit <- lm.wfit(cbind(1,xobs),yobs,wobs)
+#		} else {
+##			Suppress warning "k-d tree limited by memory"
+#			oldopt <- options(warn=-1)
+#			on.exit(options(oldopt))
+# This is now quite fast
+#			fit <- loess(yobs~xobs,weights=wobs,span=span,degree=1,family="symmetric",cell=bin/span,iterations=iterations,trace.hat="approximate")
+#		}
+#		out$fitted[obs] <- fitted(fit)
+#		out$residuals[obs] <- residuals(fit)
+#		if(any(wt0)) {
+#			out$fitted[wt0] <- predict(fit,newdata=x[wt0])
+#			out$residuals[wt0] <- y[wt0]-out$fitted(
+#		}
+#	}
+#	out
+#}
+
 loessFit <- function(y, x, weights=NULL, span=0.3, bin=0.01/(2-is.null(weights)), iterations=4) {
 #	Fast loess fit for simple x and y
+#	This function uses lowess if no weights and loess otherwise.
+#	It is intended to give a streamlined common interface to the two functions.
 #	Gordon Smyth
 #	28 June 2003.  Last revised 16 Feb 2004.
 
@@ -200,7 +256,7 @@ normalizeWithinArrays <- function(object,layout=object$printer,method="printtipl
 normalizeRobustSpline <- function(M,A,layout,df=5,method="M") {
 #	Robust spline normalization
 #	Gordon Smyth
-#	27 April 2003.  Last revised 28 June 2004.
+#	27 April 2003.  Last revised 2 Feb 2005.
 
 	require(MASS)
 	require(splines)
@@ -214,9 +270,9 @@ normalizeRobustSpline <- function(M,A,layout,df=5,method="M") {
 	x <- X[O,,drop=FALSE]
 	y <- M[O]
 	w <- rep(1,length(y))
-	s <- summary(rlm(x,y,weights=w,method=method),method="XtWX",correlation=FALSE)
-	beta0 <- s$coefficients[,1]
-	covbeta0 <- s$cov * s$stddev^2
+	s0 <- summary(rlm(x,y,weights=w,method=method),method="XtWX",correlation=FALSE)
+	beta0 <- s0$coefficients[,1]
+	covbeta0 <- s0$cov * s0$stddev^2
 
 #	Tip-wise splines
 	beta <- array(1,c(ngrids,1)) %*% array(beta0,c(1,df))
@@ -239,18 +295,24 @@ normalizeRobustSpline <- function(M,A,layout,df=5,method="M") {
 
 #	Empirical Bayes estimates
 	res.cov <- cov(beta) - apply(covbeta,c(2,3),mean)
-	Sigma0 <- covbeta0 * max(0, sum(diag(res.cov)) / sum(diag(covbeta0)) )
+	a <- max(0, sum(diag(res.cov)) / sum(diag(covbeta0)) )
+	Sigma0 <- covbeta0 * a 
 #	Sigma0 <- covbeta0 * max(0,mean(eigen(solve(covbeta0,res.cov))$values))
 
 #	Shrunk splines
-	spots <- 1:nspots
-	for (i in 1:ngrids) {
-		beta[i,] <- beta0 + Sigma0 %*% solve(Sigma0+covbeta[i,,],beta[i,]-beta0)
-		o <- O[spots]
-		x <- X[spots,][o,]
-		M[spots][o] <- M[spots][o] - x %*% beta[i,]
-		M[spots][!o] <- NA
-		spots <- spots + nspots
+	if(a==0) {
+		M[O] <- s0$residuals
+		M[!O] <- NA
+	} else {
+		spots <- 1:nspots
+		for (i in 1:ngrids) {
+			beta[i,] <- beta0 + Sigma0 %*% solve(Sigma0+covbeta[i,,],beta[i,]-beta0)
+			o <- O[spots]
+			x <- X[spots,][o,]
+			M[spots][o] <- M[spots][o] - x %*% beta[i,]
+			M[spots][!o] <- NA
+			spots <- spots + nspots
+		}
 	}
 	M
 }
@@ -485,7 +547,7 @@ normalizeQuantiles <- function(A, ties=TRUE) {
 	A
 }
 
-normalizeMedianDeviations <- function(x) 
+normalizeMedianDeviations <- function(x)
 {
 #	Normalize columns of a matrix to have the same median absolute value
 #	Gordon Smyth

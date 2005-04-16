@@ -1,3 +1,54 @@
+14 April 2005: limma 1.9.1
+
+- In read.maimages() and readImaGeneHeader: argument allowEscapes=FALSE added to use of scan() to prevent new "feature" in R 2.1.0
+- new method as.data.frame.MArrayLM
+
+6 April 2005: limma 1.9.0
+
+- bug fix to getLayout2() when GAL-file has no header
+
+6 April 2005: limma 1.8.23
+
+- readImaGeneHeader now allows for headers up to 100 lines (previously 60)
+- comments in Between Arrays Normalization of usersguide.pdf about non-negative background correction
+- some additions to venn.Rd, say explicitly now that Venn diagrams for no more than three contrasts
+- corrections to code in Time Course Experiments section of User's Guide
+- duplicateCorrelation() now traps error condition when all non-missing observations for a gene belong to same block
+- topTable() default column name for gene names is now 'ProbeID'
+- lmFit() captures rownames if object is matrix
+- update to topTable.Rd on adjusted p-values
+
+24 Feb 2005: limma 1.8.22
+
+- note added to dupcor.Rd that the function may issue some warnings
+- section added to User's Guide on "software packages using limma"
+- corrected text version component of CITATION
+
+8 Feb 2005: limma 1.8.21
+
+- new version of arrayWeights() by Matt Ritchie, old version renamed to arrayWeightsQuick()
+- modifications to m2loglik.normexp function and derivatives, grloglik() removed
+
+2 Feb 2005: limma 1.8.20
+
+- Note on possibility of adjusted p-values all equal to one added to topTable.Rd
+- bug fix in normalizeRobustSpline when Sigma0==0, i.e., when method reduces to global spline
+- CITATION updated to Bioconductor book chapter
+
+1 Feb 2005: limma 1.8.19
+
+- New BFGS version of fit.normexp by Jeremy Silver introduced,
+  old Nelder-Mead version renamed to fit.normexp0.  Several new utilities
+  functions compute the likelihood and gradient for the BFGS version.
+- signal.normexp() more resistant to floating overflow/underflow
+- decideTests() now allows for NA p-values for method="separate" or "global" (was giving wrong answers)
+- summary.TestResults now allowed for NA p-values
+- User's Guide starts to use bibtex, not fully converted yet
+- new sections "Time Course Experiments" and "Separate Channel Analyses" in user's guide
+- 'columns' argument no longer overwrites 'source' argument of read.maimages()
+- readTargets() now looks for columns "Label" or "FileName" to make row.names if row.names arg is NULL
+- removeExt() now coerces argument to character
+
 13 Jan 2005: limma 1.8.18
 
 - Bug fixes to lmFit with NoWts and df.residual equal to 0 or 1

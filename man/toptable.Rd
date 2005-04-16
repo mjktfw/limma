@@ -28,7 +28,7 @@ topTable(fit,coef=1,number=10,genelist=NULL,adjust.method="holm",sort.by="B",res
   \item{genelist}{if genelist was included as input}
   \item{M}{estimate of the effect or the contrast, on the log2 scale}
   \item{t}{moderated t-statistic}
-  \item{P.Value}{nominal P-value}
+  \item{P.Value}{adjusted p-value or q-value}
   \item{B}{log odds that the gene is differentially expressed}
 }
 \details{
@@ -39,6 +39,9 @@ The p-values for the coefficient/contrast of interest are adjusted for multiple 
 The \code{"holm"} method is the default because it is conservative and valid for any type of dependence between the p-values.
 In most microarray contexts however the less conservative Benjamini and Hochberg method \code{"fdr"} may be more suitable.
 See \code{help("p.adjust")} for more information.
+Note, if there is no good evidence for differential expression in the experiment, that it is quite possible for all the adjusted p-values to be large, even for all of them to be equal to one.
+It is quite possible for all the adjusted p-values to be equal to one if the smallest p-value is no smaller than \code{1/ngenes} where \code{ngenes} is the number of genes with non-missing p-values.
+Note that p-values adjusted to control the false discovery rate are often called q-values.
 
 The \code{sort.by} argument is used to select the top genes.
 Normally the genes appear in order of selection in the output table.

@@ -3,7 +3,7 @@
 lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation=0.75,weights=NULL,method="ls",...) {
 #	Fit linear model
 #	Gordon Smyth
-#	30 June 2003.  Last modified 8 January 2005.
+#	30 June 2003.  Last modified 20 March 2005.
 
 	M <- NULL
 #	Method intended for MAList objects but allow unclassed lists as well
@@ -62,11 +62,12 @@ lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation=0.
 		}
 		if(length(object@maA)) fit$Amean <- rowMeans(unwrapdups(object@maA,ndups=ndups,spacing=spacing),na.rm=TRUE)
 	}
-	if(is(object,"exprSet")) {
-		ProbeSetID <- rownames(M)
-		if(!is.null(ProbeSetID)) fit$genes <- uniquegenelist(data.frame(ID=I(ProbeSetID)),ndups=ndups,spacing=spacing)
+	if(is(object,"exprSet") || is(object,"matrix")) {
+		ProbeID <- rownames(M)
+		if(!is.null(ProbeID)) fit$genes <- uniquegenelist(data.frame(ID=I(ProbeID)),ndups=ndups,spacing=spacing)
 		fit$Amean <- rowMeans(M,na.rm=TRUE)
 	}
+	if(is.null(fit$genes)) fit$genes <- rownames(M)
 	new("MArrayLM",fit)
 }
 
