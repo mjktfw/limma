@@ -1,3 +1,8 @@
+23 April 2005: limma 1.9.2
+
+- edits to topTable.Rd and decideTests.Rd
+- gls.series() now returns error when ndups>2 and block is non-NULL
+
 14 April 2005: limma 1.9.1
 
 - In read.maimages() and readImaGeneHeader: argument allowEscapes=FALSE added to use of scan() to prevent new "feature" in R 2.1.0
