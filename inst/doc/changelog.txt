@@ -1,3 +1,8 @@
+25 April 2005: limma 1.9.3
+
+- updates to references in User's Guide
+- syntax fix to TestResults.Rd
+
 23 April 2005: limma 1.9.2
 
 - edits to topTable.Rd and decideTests.Rd
