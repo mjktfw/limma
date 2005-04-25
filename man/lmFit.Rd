@@ -10,7 +10,7 @@ lmFit(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation=0.75,weights=N
   \item{design}{the design matrix of the microarray experiment, with rows corresponding to arrays and columns to coefficients to be estimated.  Defaults to the unit vector meaning that the arrays are treated as replicates.} 
   \item{ndups}{positive integer giving the number of times each gene is printed on an array}
   \item{spacing}{positive integer giving the spacing between duplicate spots, \code{spacing=1} for consecutive spots}
-  \item{block}{vector or factor specifying a blocking variable on the arrays. Has length equal to the number of arrays.}
+  \item{block}{vector or factor specifying a blocking variable on the arrays. Has length equal to the number of arrays. Must be \code{NULL} if \code{ndups>2}.}
   \item{correlation}{the inter-duplicate or inter-technical replicate correlation}
   \item{weights}{optional numeric matrix containing weights for each spot}
   \item{method}{character string, \code{"ls"} for least squares or \code{"robust"} for robust regression}
@@ -41,6 +41,12 @@ The arguments \code{design}, \code{ndups}, \code{spacing} and \code{weights} wil
 On the other hand, if any of these are set in the function call then they will over-ride the slots or components in the data \code{object}.
 If \code{object} is an \code{PLMset}, then weights are computed as \code{1/pmax(object@se.chip.coefs, 1e-05)^2}.
 If \code{object} is an \code{exprSet} object, then weights are not computed.
+
+If the argument \code{block} is used, then it is assumed that \code{ndups=1}.
+It is not possible at this time to fit models with both a block structure and a duplicate-spot structure simultaneously.
+
+The \code{correlation} argument has a default value of \code{0.75}, but in normal use this default value should not be relied on and the correlation value should be estimated using the function \code{duplicateCorrelation}.
+The default value is likely to be too high in particular if used with the \code{block} argument.
 
 The actual linear model computations are done by passing the data to one the lower-level functions \code{lm.series}, \code{gls.series} or \code{rlm.series}.
 The function \code{rlm.series} is used if \code{method="robust"}.

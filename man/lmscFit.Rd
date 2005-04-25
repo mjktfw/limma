@@ -33,6 +33,9 @@ The single channel functions are still somewhat experimental.
 
 An overview of methods for single channel analysis in limma is given by \link{6.SingleChannel}.
 }
+\references{
+Smyth, G. K. (2005). Individual channel analysis of two-colour microarray data. Invited Session IPM 11: Computational Tools For Microarray Analysis, 55th Session of the International Statistics Institute, Sydney, 12 April 2005. (Four-page paper distributed on CD at the conference.)
+}
 \examples{
 library(sma)
 # Subset of data from ApoAI case study in Limma User's Guide
