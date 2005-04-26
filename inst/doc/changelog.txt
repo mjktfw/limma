@@ -1,3 +1,10 @@
+26 April 2005: limma 1.9.4
+
+- further fix to bibtex references in User's Guide
+- fix to [.MArrayLM when components are vectors rather than matrices
+- added reference to lmscfit.Rd
+- added comments about 'correlation' to lmfit.Rd
+
 25 April 2005: limma 1.9.3
 
 - updates to references in User's Guide
