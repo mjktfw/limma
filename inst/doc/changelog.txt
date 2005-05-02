@@ -1,3 +1,8 @@
+2 May 2005: limma 1.9.5
+
+- fix to regular expression in readGAL(), because R 2.1.0 follows stricter reg expression syntax
+- update reference in User's Guide (within-array paper published 1 May 2005)
+
 26 April 2005: limma 1.9.4
 
 - further fix to bibtex references in User's Guide
