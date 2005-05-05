@@ -1,3 +1,7 @@
+5 May 2005: limma 1.9.6
+
+- updates to arrayWeights() to better handle NAs, no change to API
+
 2 May 2005: limma 1.9.5
 
 - fix to regular expression in readGAL(), because R 2.1.0 follows stricter reg expression syntax
