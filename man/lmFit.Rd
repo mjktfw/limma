@@ -14,7 +14,7 @@ lmFit(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation=0.75,weights=N
   \item{correlation}{the inter-duplicate or inter-technical replicate correlation}
   \item{weights}{optional numeric matrix containing weights for each spot}
   \item{method}{character string, \code{"ls"} for least squares or \code{"robust"} for robust regression}
-  \item{...}{other optional arguments to be passed to \code{lm.series}, \code{gls.series} or \code{rlm.series}}
+  \item{...}{other optional arguments to be passed to \code{lm.series}, \code{gls.series} or \code{mrlm}}
 }
 
 \value{
@@ -48,14 +48,14 @@ It is not possible at this time to fit models with both a block structure and a 
 The \code{correlation} argument has a default value of \code{0.75}, but in normal use this default value should not be relied on and the correlation value should be estimated using the function \code{duplicateCorrelation}.
 The default value is likely to be too high in particular if used with the \code{block} argument.
 
-The actual linear model computations are done by passing the data to one the lower-level functions \code{lm.series}, \code{gls.series} or \code{rlm.series}.
-The function \code{rlm.series} is used if \code{method="robust"}.
+The actual linear model computations are done by passing the data to one the lower-level functions \code{lm.series}, \code{gls.series} or \code{mrlm}.
+The function \code{mrlm} is used if \code{method="robust"}.
 If \code{method="ls"}, then \code{gls.series} is used if a correlation structure has been specified, i.e., if \code{ndups>1} or \code{block} is non-null and \code{correlation} is different from zero.
 If \code{method="ls"} and there is no correlation structure, \code{lm.series} is used.
 }
 
 \seealso{
-An overview of linear model functions in limma is given by \link{5.LinearModels}.
+An overview of linear model functions in limma is given by \link{06.LinearModels}.
 }
 
 \author{Gordon Smyth}
