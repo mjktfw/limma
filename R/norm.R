@@ -180,15 +180,18 @@ RG.MA <- function(object) {
 normalizeWithinArrays <- function(object,layout=object$printer,method="printtiploess",weights=object$weights,span=0.3,iterations=4,controlspots=NULL,df=5,robust="M",bc.method="subtract",offset=0)
 #	Within array normalization
 #	Gordon Smyth
-#	2 March 2003.  Last revised 8 Oct 2004.
+#	2 March 2003.  Last revised 26 August 2005.
 {
 	if(!is(object,"MAList")) object <- MA.RG(object,bc.method=bc.method,offset=offset)
-	choices <- c("none","median","loess","printtiploess","composite","robustspline")
+	choices <- c("none","median","loess","printtiploess","composite","control","robustspline")
 	method <- match.arg(method,choices)
 	if(method=="none") return(object)
 	narrays <- ncol(object$M)
 	if(method=="median") {
-		for (j in 1:narrays) object$M[,j] <- object$M[,j] - median(object$M[,j],na.rm=TRUE)
+		if(is.null(weights))
+			for (j in 1:narrays) object$M[,j] <- object$M[,j] - median(object$M[,j],na.rm=TRUE)
+		else
+			for (j in 1:narrays) object$M[,j] <- object$M[,j] - weighted.median(object$M[,j],weights[,j],na.rm=TRUE)
 		return(object)
 	}
 #	All remaining methods use regression of M-values on A-values
@@ -206,6 +209,9 @@ normalizeWithinArrays <- function(object,layout=object$printer,method="printtipl
 			ngr <- layout$ngrid.r
 			ngc <- layout$ngrid.c
 			nspots <- layout$nspot.r * layout$nspot.c
+			nprobes <- ngr*ngc*nspots
+			if(nprobes != NROW(object$M)) stop("printer layout information does not match M row dimension")
+			if(nprobes != NROW(object$A)) stop("printer layout information does not match A row dimension")
 			for (j in 1:narrays) {
 				spots <- 1:nspots
 				for (gridr in 1:ngr)
@@ -242,6 +248,25 @@ normalizeWithinArrays <- function(object,layout=object$printer,method="printtipl
 					object$M[spots,j] <- object$M[spots,j] - alpha[spots]*global[spots]-(1-alpha[spots])*local
 					spots <- spots + nspots
 				}
+			}
+		},
+		control = {
+			if(is.null(layout)) stop("Layout argument not specified")
+			if(is.null(controlspots)) stop("controlspots argument not specified")
+			ntips <- layout$ngrid.r * layout$ngrid.c
+			nspots <- layout$nspot.r * layout$nspot.c
+			for (j in 1:narrays) {
+				y <- object$M[,j]
+				x <- object$A[,j]
+				f <- is.finite(y) & is.finite(x)
+				if(!is.null(weights)) {
+					w <- weights[,j]
+					f <- f & is.finite(w)
+				}
+				y[!f] <- NA
+				fit <- loess(y~x,weights=w,span=span,subset=controlspots,na.action=na.exclude,degree=1,surface="direct",family="symmetric",trace.hat="approximate",iterations=iterations)
+				y[f] <- y[f]-predict(fit,newdata=x[f])
+				object$M[,j] <- y
 			}
 		},
 		robustspline = {

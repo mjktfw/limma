@@ -1,4 +1,4 @@
-citHeader("Citing limma in publications will usually involve citing the appropriate methodology papers as well as citing the software package itself. To cite the software please use:")
+citHeader("Citing limma in publications will usually involve citing one or more of the methodology papers that the software is based on as well as citing the software package itself. For the methodology papers, see http://bioinf.wehi.edu.au/limma.  The software itself can be cited as:")
 
 citEntry(entry="inbook",
     title = "Limma: linear models for microarray data",
@@ -8,13 +8,13 @@ citEntry(entry="inbook",
 	publisher="Springer",
 	address="New York",
     year = 2005,
-    pages ="Chapter 23",
+    pages ="397--420",
 
     textVersion = 
     paste("Smyth, G. K. (2005). Limma: linear models for microarray",
          "data. In: 'Bioinformatics and Computational Biology Solutions",
          "using R and Bioconductor'. R. Gentleman, V. Carey, S. Dudoit,",
-         "R. Irizarry, W. Huber (eds), Springer, New York, 2005.")
+         "R. Irizarry, W. Huber (eds), Springer, New York, pages 397--420.")
     )
 
 citFooter("We have invested a lot of time and effort in creating limma,",
