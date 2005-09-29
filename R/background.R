@@ -133,15 +133,16 @@ ma3x3.spottedarray <- function(x,printer,FUN=mean,na.rm=TRUE,...)
 normexp.signal <- function(mu,sigma,alpha,foreground)
 #	Expected value of signal given foreground in normal + exponential model
 #	Gordon Smyth
-#	24 Aug 2002. Last modified 18 June 2005.
+#	24 Aug 2002. Last modified 26 Sept 2005.
 {
 	if(alpha <= 0) stop("alpha must be positive")
 	if(sigma <= 0) stop("sigma must be positive")
 	mu.sf <- foreground-mu-sigma^2/alpha
 	signal <- mu.sf + sigma^2 * exp(dnorm(0,mean=mu.sf,sd=sigma,log=TRUE) - pnorm(0,mean=mu.sf,sd=sigma,lower.tail=FALSE,log=TRUE))
-	if(any(signal<0)) {
+	o <- !is.na(signal)
+	if(any(signal[o]<0)) {
 		warning("Limit of numerical accuracy reached with very low intensity or very high background:\nsetting adjusted intensity to small value")
-		signal <- pmax(signal,1e-6)
+		signal[o] <- pmax(signal[o],1e-6)
 	}
 	signal
 }

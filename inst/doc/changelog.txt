@@ -1,3 +1,8 @@
+29 September: limma 2.0.9
+
+- biocViews added to DESCRIPTION
+- fix to normexp.signal to allow NAs in signal
+
 18 September: limma 2.0.8
 
 - readImaGeneHeader entirely re-written: now supports
