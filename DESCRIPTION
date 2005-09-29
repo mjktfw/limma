@@ -10,4 +10,4 @@ LazyLoad: yes
 Description:  Data analysis, linear models and differential expression for microarray data.
 License: LGPL
 URL: http://bioinf.wehi.edu.au/limma
-biocViews: Microarray, OneChannel, TwoChannel, DataImport, QualityControl, Preprocessing, Statistics, DifferentialExpression, MultipleComparisons
+biocViews: Microarray, OneChannel, TwoChannel, DataImport, QualityControl, Preprocessing, Statistics, DifferentialExpression, MultipleComparisons, TimeCourse
