@@ -1,3 +1,9 @@
+30 September: limma 2.0.10
+
+- point size 20 and new path argument added to imageplot3by2
+- fix errors in technical replication section of User's Guide
+- normalizeWithinArrays now checks whether M or A are vectors
+
 29 September: limma 2.0.9
 
 - biocViews added to DESCRIPTION
@@ -310,6 +316,8 @@ Same as limma 1.9.6. Version number bumped for Bioconductor devel repository.
 - bug fixes to decideTests() for method="heirarchical" and method="nestedF"
 
 2 September 2004: limma 1.7.5
+
+This version was first posted to CRAN as well as to Bioconductor
 
 - Now passes R CMD check under R 2.0
 - example into User's Guide of wt.fun arg of read.maimages() using multiple columns

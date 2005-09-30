@@ -180,12 +180,15 @@ RG.MA <- function(object) {
 normalizeWithinArrays <- function(object,layout=object$printer,method="printtiploess",weights=object$weights,span=0.3,iterations=4,controlspots=NULL,df=5,robust="M",bc.method="subtract",offset=0)
 #	Within array normalization
 #	Gordon Smyth
-#	2 March 2003.  Last revised 26 August 2005.
+#	2 March 2003.  Last revised 30 September 2005.
 {
 	if(!is(object,"MAList")) object <- MA.RG(object,bc.method=bc.method,offset=offset)
 	choices <- c("none","median","loess","printtiploess","composite","control","robustspline")
 	method <- match.arg(method,choices)
 	if(method=="none") return(object)
+	if(is.vector(object$M)) object$M <- as.matrix(object$M)
+	if(is.vector(object$A)) object$A <- as.matrix(object$A)
+	if(is.vector(weights)) weights <- as.matrix(weights)
 	narrays <- ncol(object$M)
 	if(method=="median") {
 		if(is.null(weights))
