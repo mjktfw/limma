@@ -1,5 +1,7 @@
 30 September: limma 2.0.10
 
+- "fdr" changed to "BH" throughout as a p.adjust() method
+- default for topTable adjust.method changed to "BH"
 - point size 20 and new path argument added to imageplot3by2
 - fix errors in technical replication section of User's Guide
 - normalizeWithinArrays now checks whether M or A are vectors
