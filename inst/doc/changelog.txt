@@ -1,3 +1,7 @@
+6 October: limma 2.0.12
+
+- formatting changes to User's Guide.  Guide converted to LaTeX report style.
+
 2 October: limma 2.0.11
 
 - update citation, installation and help sections of User's Guide
