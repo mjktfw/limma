@@ -1,3 +1,19 @@
+20 October 2005: limma 2.3.1
+
+- read.maimages() now uses the colClasses argument to read.table, resulting
+  in a several-fold speed improvement.  Changes courtesy of Marcus Davy.
+- new path argument and slightly changed output names for plotMA3by2,
+  to bring into line with imageplot3by2 changes
+- fix to normexp.m2loglik to prevent infinite likelihoods
+- fix to normexp.fit to prevent non-positive alpha
+
+11 October 2005: limma 2.3.0 Bioconductor developmental version
+11 October 2005: limma 2.2.0 Bioconductor release 1.7
+
+- kooperberg() now accepts an RGList object instead of requiring each gpr
+  file to be read into a separate data.frame.  The old function is renamed
+  to kooperberg_old()
+
 6 October: limma 2.0.12
 
 - formatting changes to User's Guide.  Guide converted to LaTeX report style.

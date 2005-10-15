@@ -150,7 +150,7 @@ normexp.signal <- function(mu,sigma,alpha,foreground)
 normexp.fit <- function(foreground,background=0,trace=0)
 #	Fit background=normal + signal=exponential model using BFGS.
 #	Gordon Smyth and Jeremy Silver
-#	24 Aug 2002. Last modified 18 June 2005.
+#	24 Aug 2002. Last modified 6 October 2005.
 {
 	x <- foreground-background
 	isna <- is.na(x)
@@ -171,6 +171,7 @@ normexp.fit <- function(foreground,background=0,trace=0)
 	}
 	sigma <- sqrt(mean((x[x<beta]-beta)^2, na.rm = TRUE))
 	alpha <- mean(x,na.rm = TRUE) - beta
+	if(alpha <= 0) alpha <- 1e-6
 
 	Results <- optim(par=c(beta,log(sigma),log(alpha)), fn=normexp.m2loglik, gr=normexp.grad, method=c("BFGS"), control=list(trace=trace), foreground=x, background=0)
 	list(beta=Results$par[1], sigma=exp(Results$par[2]), alpha=exp(Results$par[3]),m2loglik=Results$value, convergence=Results$convergence)
@@ -197,7 +198,7 @@ normexp.grad <- function(theta,foreground,background=0)
 normexp.m2loglik <- function(theta,foreground,background=0)
 #	Minus twice the norm-exp log-likelihood (summed over all spots)
 #	Jeremy Silver and Gordon Smyth
-#	24 Aug 2002. Last modified 18 June 2005.
+#	24 Aug 2002. Last modified 6 October 2005.
 {
 	beta<-theta[1]
 	logsigma<-theta[2]
@@ -205,6 +206,7 @@ normexp.m2loglik <- function(theta,foreground,background=0)
 	mu <- beta + background
 	mu.sf <- foreground - mu - exp(2*logsigma - logalpha)
 	
-	-2*sum(-logalpha - (foreground - mu)/exp(logalpha) + 0.5*exp(2*logsigma - 2*logalpha) + log(pnorm(0,mu.sf,exp(logsigma),lower.tail = FALSE)))
+	m2loglik <- -2*sum(-logalpha - (foreground - mu)/exp(logalpha) + 0.5*exp(2*logsigma - 2*logalpha) + pnorm(0,mu.sf,exp(logsigma),lower.tail = FALSE, log.p=TRUE))
+	max(min(m2loglik,.Machine$double.xmax),.Machine$double.xmin)
 }
 
