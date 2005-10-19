@@ -1,4 +1,10 @@
-20 October 2005: limma 2.3.1
+19 October 2005: limma 2.3.2
+
+- normalizeMedianDeviations and normalizeMedians replaced by
+  normalizeMedianAbsValues. New function resistant to floating underflow.
+- default method for normalizeBetweenArrays changed to "Aquantile"
+
+15 October 2005: limma 2.3.1
 
 - read.maimages() now uses the colClasses argument to read.table, resulting
   in a several-fold speed improvement.  Changes courtesy of Marcus Davy.
