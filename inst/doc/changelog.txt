@@ -1,3 +1,10 @@
+25 October 2005: limma 2.3.3
+
+- read.maimages(souce="genepix.custom",verbose=TRUE) outputs background
+  correction method again.
+- calls to statmod:randomizedBlockFit changed to statmod:mixedModel2Fit
+- deprectated function dupcor.series() removed
+
 19 October 2005: limma 2.3.2
 
 - normalizeMedianDeviations and normalizeMedians replaced by
