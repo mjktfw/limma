@@ -1,3 +1,8 @@
+27 October 2005: limma 2.3.4
+
+- bug fix to merge.RGList and merge.MAList. These used to break there
+  were any components to the data objects other than intensity matrices.
+
 25 October 2005: limma 2.3.3
 
 - read.maimages(souce="genepix.custom",verbose=TRUE) outputs background
@@ -19,6 +24,7 @@
   to bring into line with imageplot3by2 changes
 - fix to normexp.m2loglik to prevent infinite likelihoods
 - fix to normexp.fit to prevent non-positive alpha
+- kooperberg_old() deleted
 
 11 October 2005: limma 2.3.0 Bioconductor developmental version
 11 October 2005: limma 2.2.0 Bioconductor release 1.7

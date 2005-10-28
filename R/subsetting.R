@@ -249,7 +249,7 @@ makeUnique <- function(x) {
 merge.RGList <- function(x,y,...) {
 #  Merge RGList y into x aligning by row names
 #  Gordon Smyth
-#  11 April 2003
+#  11 April 2003.  Last modified 28 Oct 2005.
 
 	if(!is(y,"RGList")) stop("both x and y must be RGList objects")
 	genes1 <- rownames(x$R)
@@ -265,14 +265,13 @@ merge.RGList <- function(x,y,...) {
 	if(!identical(fields1,fields2)) stop("The two RGLists have different components")
 
 	ord2 <- match(makeUnique(genes1), makeUnique(genes2))
-	for (i in fields1) x[[i]] <- cbind(x[[i]],y[[i]][ord2,])
-	x
+	cbind(x,y[ord2,])
 }
 
 merge.MAList <- function(x,y,...) {
 #  Merge MAList y into x aligning by row names
 #  Gordon Smyth
-#  7 May 2004
+#  7 May 2004.  Last modified 28 Oct 2005.
 
 	if(!is(y,"MAList")) stop("both x and y must be MAList objects")
 	genes1 <- rownames(x$M)
@@ -288,6 +287,6 @@ merge.MAList <- function(x,y,...) {
 	if(!identical(fields1,fields2)) stop("The two MALists have different components")
 
 	ord2 <- match(makeUnique(genes1), makeUnique(genes2))
-	for (i in fields1) x[[i]] <- cbind(x[[i]],y[[i]][ord2,])
-	x
+	cbind(x,y[ord2,])
 }
+
