@@ -1,3 +1,7 @@
+31 October 2005: limma 2.3.5
+
+- kooperberg() now gives informative error message if input not RGList
+
 27 October 2005: limma 2.3.4
 
 - bug fix to merge.RGList and merge.MAList. These used to break there
