@@ -4,7 +4,7 @@ assign("[.RGList",
 function(object, i, j, ...) {
 #  Subsetting for RGList objects
 #  Gordon Smyth
-#  29 June 2003.  Last modified 30 June 2005.
+#  29 June 2003.  Last modified 6 November 2005.
 
 	if(nargs() != 3) stop("Two subscripts required",call.=FALSE)
 	oc <- names(object$other)
@@ -18,7 +18,7 @@ function(object, i, j, ...) {
 			object$Gb <- object$Gb[,j,drop=FALSE]
 			object$weights <- object$weights[,j,drop=FALSE]
 			object$targets <- object$targets[j,,drop=FALSE]
-			if(!is.null(oc)) for(k in oc) object$other[[k]] <- object$other[[k]][,j,drop=FALSE]
+			for(k in oc) object$other[[k]] <- object$other[[k]][,j,drop=FALSE]
 		}
 	else
 		if(missing(j)) {
@@ -28,7 +28,7 @@ function(object, i, j, ...) {
 			object$Gb <- object$Gb[i,,drop=FALSE]
 			object$weights <- object$weights[i,,drop=FALSE]
 			object$genes <- object$genes[i,,drop=FALSE]
-			if(!is.null(oc)) for(k in oc) object$other[[k]] <- object$other[[k]][i,,drop=FALSE]
+			for(k in oc) object$other[[k]] <- object$other[[k]][i,,drop=FALSE]
 		} else {
 			object$R <- object$R[i,j,drop=FALSE]
 			object$G <- object$G[i,j,drop=FALSE]
@@ -37,7 +37,7 @@ function(object, i, j, ...) {
 			object$weights <- object$weights[i,j,drop=FALSE]
 			object$genes <- object$genes[i,,drop=FALSE]
 			object$targets <- object$targets[j,,drop=FALSE]
-			if(!is.null(oc)) for(k in oc) object$other[[k]] <- object$other[[k]][i,j,drop=FALSE]
+			for(k in oc) object$other[[k]] <- object$other[[k]][i,j,drop=FALSE]
 		}
 	object
 })
@@ -46,9 +46,10 @@ assign("[.MAList",
 function(object, i, j, ...) {
 #  Subsetting for MAList objects
 #  Gordon Smyth
-#  29 June 2003.  Last modified 29 Oct 2003.
+#  29 June 2003.  Last modified 6 Nov 2005.
 
 	if(nargs() != 3) stop("Two subscripts required",call.=FALSE)
+	other <- names(object$other)
 	if(missing(i))
 		if(missing(j))
 			return(object)
@@ -61,6 +62,7 @@ function(object, i, j, ...) {
 				object$design <- as.matrix(object$design)[j,,drop=FALSE]
 				if(!is.fullrank(object$design)) warning("design matrix is singular",call.=FALSE)
 			}
+			for(a in other) object$other[[a]] <- object$other[[a]][,j,drop=FALSE]
 		}
 	else
 		if(missing(j)) {
@@ -68,6 +70,7 @@ function(object, i, j, ...) {
 			object$A <- object$A[i,,drop=FALSE]
 			object$weights <- object$weights[i,,drop=FALSE]
 			object$genes <- object$genes[i,,drop=FALSE]
+			for(a in other) object$other[[a]] <- object$other[[a]][i,,drop=FALSE]
 		} else {
 			object$M <- object$M[i,j,drop=FALSE]
 			object$A <- object$A[i,j,drop=FALSE]
@@ -78,6 +81,7 @@ function(object, i, j, ...) {
 				object$design <- as.matrix(object$design)[j,,drop=FALSE]
 				if(!is.fullrank(object$design)) warning("design matrix is singular",call.=FALSE)
 			}
+			for(a in other) object$other[[a]] <- object$other[[a]][i,j,drop=FALSE]
 		}
 	object
 })

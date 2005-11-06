@@ -1,5 +1,6 @@
 6 November 2005: limma 2.3.6
 
+- MAList subsetting now supports 'other' component
 - cbind and rbind now support 'other' component in RGList and MAList objects
 - limma now formally depends on R >= 2.2.0 (because of allowEscapes in read.table)
 - editing of help files to clarify difference between decideTests() and classifyTests
