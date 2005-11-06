@@ -154,11 +154,12 @@ function(object, i, j, ...) {
 cbind.RGList <- function(..., deparse.level=1) {
 #  Combine RGList objects assuming same genelists
 #  Gordon Smyth
-#  27 June 2003
+#  27 June 2003. Last modified 6 Nov 2005.
 
 	objects <- list(...)
 	nobjects <- length(objects)
 	out <- objects[[1]]
+	other <- names(objects[[1]]$other)
 	if(nobjects > 1)
 	for (i in 2:nobjects) {
 		out$R <- cbind(out$R,objects[[i]]$R)
@@ -167,6 +168,7 @@ cbind.RGList <- function(..., deparse.level=1) {
 		out$Gb <- cbind(out$Gb,objects[[i]]$Gb)
 		out$weights <- cbind(out$weights,objects[[i]]$weights)
 		out$targets <- rbind(out$targets,objects[[i]]$targets)
+		for (a in other) out$other[[a]] <- cbind(out$other[[a]],objects[[i]]$other[[a]])
 	}
 	out
 }
@@ -174,17 +176,19 @@ cbind.RGList <- function(..., deparse.level=1) {
 cbind.MAList <- function(..., deparse.level=1) {
 #  Combine MAList objects assuming same genelists
 #  Gordon Smyth
-#  27 June 2003
+#  27 June 2003. Last modified 6 Nov 2005.
 
 	objects <- list(...)
 	nobjects <- length(objects)
 	out <- objects[[1]]
+	other <- names(objects[[1]]$other)
 	if(nobjects > 1)
 	for (i in 2:nobjects) {
 		out$M <- cbind(out$M,objects[[i]]$M)
 		out$A <- cbind(out$A,objects[[i]]$A)
 		out$weights <- cbind(out$weights,objects[[i]]$weights)
 		out$targets <- rbind(out$targets,objects[[i]]$targets)
+		for (a in other) out$other[[a]] <- cbind(out$other[[a]],objects[[i]]$other[[a]])
 	}
 	out
 }
@@ -192,11 +196,12 @@ cbind.MAList <- function(..., deparse.level=1) {
 rbind.RGList <- function(..., deparse.level=1) {
 #  Combine RGList objects assuming same array lists
 #  Gordon Smyth
-#  6 Dec 2003
+#  6 Dec 2003. Last modified 6 Nov 2005.
 
 	objects <- list(...)
 	nobjects <- length(objects)
 	out <- objects[[1]]
+	other <- names(objects[[1]]$other)
 	if(nobjects > 1)
 	for (i in 2:nobjects) {
 		out$R <- rbind(out$R,objects[[i]]$R)
@@ -205,6 +210,7 @@ rbind.RGList <- function(..., deparse.level=1) {
 		out$Gb <- rbind(out$Gb,objects[[i]]$Gb)
 		out$weights <- rbind(out$weights,objects[[i]]$weights)
 		out$genes <- rbind(out$genes,objects[[i]]$genes)
+		for (a in other) out$other[[a]] <- rbind(out$other[[a]],objects[[i]]$other[[a]])
 	}
 	out
 }
@@ -212,17 +218,19 @@ rbind.RGList <- function(..., deparse.level=1) {
 rbind.MAList <- function(..., deparse.level=1) {
 #  Combine MAList objects assuming same array lists
 #  Gordon Smyth
-#  7 Dec 2003
+#  7 Dec 2003. Last modified 6 Nov 2005.
 
 	objects <- list(...)
 	nobjects <- length(objects)
 	out <- objects[[1]]
+	other <- names(objects[[1]]$other)
 	if(nobjects > 1)
 	for (i in 2:nobjects) {
 		out$M <- rbind(out$M,objects[[i]]$M)
 		out$A <- rbind(out$A,objects[[i]]$A)
 		out$weights <- rbind(out$weights,objects[[i]]$weights)
 		out$genes <- rbind(out$genes,objects[[i]]$genes)
+		for (a in other) out$other[[a]] <- rbind(out$other[[a]],objects[[i]]$other[[a]])
 	}
 	out
 }
