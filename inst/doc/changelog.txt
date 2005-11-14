@@ -1,3 +1,14 @@
+14 November 2005: limma 2.4.1
+
+- examples for lmFit expanded and those for lm.series, gls.series
+  and mrlm removed
+- instraspotCorrelation() output all.correlations renamed to
+  atanh.correlations
+- duplicateCorrelation() now returns atanh-correlations, output
+  components renamed to atanh.correlations
+- read.maimages(source="genepix") now uses X position column to 
+  determine printer layout information
+
 11 November 2005: limma 2.4.0
 
 - fitFDist() now treats very small and zero variances in a unified

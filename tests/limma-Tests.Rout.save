@@ -729,8 +729,8 @@ Attaching package: 'statmod'
 
 > cor.out$consensus.correlation
 [1] -0.1300222
-> cor.out$all.correlations
-[1] -0.3360831 -0.3389238  0.1312570 -0.6616356  0.6122000
+> cor.out$atanh.correlations
+[1] -0.3496702 -0.3528761  0.1320187 -0.7957172  0.7124326
 > 
 > ### gls.series
 > 
