@@ -1,3 +1,9 @@
+29 November 2005: limma 2.4.4
+
+- bug fix for decideTests() which still didn't work with
+  adjust.method="BH"
+- new S3 methods fitted() and residuals() for class MArrayLM
+
 22 November 2005: limma 2.4.3
 
 - bug fix: read.maimages(source="genepix.*") was failing when there
