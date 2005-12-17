@@ -73,6 +73,7 @@ arrayWeights <- function(object, design = NULL, weights = NULL, method="genebyge
 				out <- lm.wfit(X, y, w[obs])
 				d <- rep(0, narrays)
 				d[obs] <- w[obs]*out$residuals^2
+				s2 <- sum(d[obs])/out$df.residual
 				Q <- qr.Q(out$qr)
 				nparams <- dim(Q)[2]
 				h <- rep(1, narrays)
@@ -84,7 +85,7 @@ arrayWeights <- function(object, design = NULL, weights = NULL, method="genebyge
 					Zinfo <- Zinfo + Agene.gam
 					R <- chol(Zinfo)
 					Zinfoinv <- chol2inv(R)
-					zd <- d - 1 + h
+					zd <- d/s2 - 1 + h
 					Zzd <- crossprod(Z, zd)
 					gammas.iter <- Zinfoinv%*%Zzd
 					arraygammas <- arraygammas + gammas.iter
@@ -95,7 +96,7 @@ arrayWeights <- function(object, design = NULL, weights = NULL, method="genebyge
 					A1 <- A1[-sum(obs),] # remove last row
 					R <- chol(Zinfo)
 					Zinfoinv <- chol2inv(R)
-					zd <- d - 1 + h
+					zd <- d/s2 - 1 + h
 					Zzd <- A1%*%crossprod(Z, zd)
 					Zinfoinv.A1 <- A1%*%Zinfoinv%*%t(A1)
 					alphas.old <- A1%*%arraygammas
