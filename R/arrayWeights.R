@@ -1,7 +1,7 @@
 arrayWeights <- function(object, design = NULL, weights = NULL, method="genebygene", maxiter=50, tol = 1e-10, trace = FALSE)
 #	Compute array quality weights
 #	Matt Ritchie
-#	7 Feb 2005. Last revised 23 August 2005.
+#	7 Feb 2005. Last revised 17 Dec 2005.
 {
 	M <- NULL
 	if (is(object, "MAList") || is(object, "list")) {
@@ -161,16 +161,17 @@ arrayWeights <- function(object, design = NULL, weights = NULL, method="genebyge
 				}
 			}
 			Zzd <- crossprod(Z, zd)
+#			GKS: Zinfo doesn't seem to give exactly correct values
 			Zinfo <- diag(sum1minush[1:(narrays-1)]) + sum1minush[narrays] - crossprod(K[,1:(narrays-1)])/(narrays-dim(design)[2])
 			R <- chol(Zinfo)
 			Zinfoinv <- chol2inv(R)
 			gammas.iter <- Zinfoinv%*%Zzd
 			arraygammas <- arraygammas + gammas.iter
-			arrayw <- drop(exp(Z %*% (-arraygammas)))
+#			arrayw <- drop(exp(Z %*% (-arraygammas)))
 			x2 <- crossprod(Zzd, gammas.iter) / narrays
 
 			if(trace)
-			cat("Iter =", iter, " X2 =", x2, " Array gammas", arrayw, "\n")
+			cat("Iter =", iter, " X2 =", x2, " Array gammas", arraygammas, "\n")
 
 #			if (dev < devold - 1e-50)
 #				break
@@ -178,13 +179,13 @@ arrayWeights <- function(object, design = NULL, weights = NULL, method="genebyge
 			if (x2  < tol)
 				break
 
-			if (iter > maxiter)	{
-				warning("Maximum iterations ", maxiter, " exceeded", sep="")
+			if (iter == maxiter)	{
+				warning("Maximum iterations ", maxiter, " reached", sep="")
 				break
 			}
 		}
 
 	})
 #	matrix(rep(1/exp(Z%*%arraygammas), each=ngenes), ngenes, narrays)
-	arrayw
+	drop(exp(Z %*% (-arraygammas)))
 }
