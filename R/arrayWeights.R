@@ -1,4 +1,4 @@
-arrayWeights <- function(object, design = NULL, weights = NULL, method="genebygene", maxiter=50, tol = 1e-15, trace = FALSE)
+arrayWeights <- function(object, design = NULL, weights = NULL, method="genebygene", maxiter=50, tol = 1e-10, trace = FALSE)
 #	Compute array quality weights
 #	Matt Ritchie
 #	7 Feb 2005. Last revised 23 August 2005.
@@ -39,10 +39,7 @@ arrayWeights <- function(object, design = NULL, weights = NULL, method="genebyge
 	narrays <- dim(M)[2]
 
 	# Set up design matrix for array variance model
-	arrays <- as.factor(1:narrays)
-	contrasts(arrays) <- contr.sum(levels(arrays))
-	Z <- model.matrix(~as.factor(arrays))
-	Z <- Z[,-1]
+	Z <- contr.sum(narrays)
 
 	# Intialise array variances to zero
 	arraygammas <- rep(0, (narrays-1))
@@ -79,7 +76,7 @@ arrayWeights <- function(object, design = NULL, weights = NULL, method="genebyge
 				Q <- qr.Q(out$qr)
 				nparams <- dim(Q)[2]
 				h <- rep(1, narrays)
-				h[obs] <- as.vector(Q^2 %*% array(1, c(nparams, 1)))
+				h[obs] <- rowSums(Q^2)
 				Agam <- crossprod(Z, (1-h)*Z)
 				Agam.del <- crossprod(t(rep(h[narrays], narrays-1)-h[1:(length(narrays)-1)]))
 				Agene.gam <- (Agam - 1/(narrays-params)*Agam.del)
@@ -112,13 +109,13 @@ arrayWeights <- function(object, design = NULL, weights = NULL, method="genebyge
 				}
 			}
 		}
-	}, reml = {  # Estimate array variances via full scoring iterations
-		const <- narrays * log(2 * pi)
+	}, reml = {  # Estimate array variances via reml
+#		const <- narrays * log(2 * pi)
 		iter <- 0
 		dev <- 0
 		repeat {
-			devold <- dev
-			dev <- 0
+#			devold <- dev
+#			dev <- 0
 			iter <- iter + 1
 			zd <- matrix(0, narrays, 1)
 			sum1minush <- matrix(0, narrays, 1)
@@ -138,10 +135,10 @@ arrayWeights <- function(object, design = NULL, weights = NULL, method="genebyge
 
 				y <- as.vector(M[i,])
 				obs <- is.finite(y) & w!=0
-				if (sum(obs) > 0) {		
+				if (sum(obs) > 0) {
 					if(sum(obs) == narrays)	{
-					X <- design
-					#Z2 <- Z
+						X <- design
+						#Z2 <- Z
 					} else {  # remove missing/infinite values
 						X <- design[obs, , drop = FALSE]
 						y <- y[obs]
@@ -153,13 +150,14 @@ arrayWeights <- function(object, design = NULL, weights = NULL, method="genebyge
 					out <- lm.wfit(X, y, w)
 					d <- rep(0, narrays)
 					d[obs] <- w*out$residuals^2
+					s2 <- sum(d[obs])/out$df.residual
 					Q <- qr.Q(out$qr)
 					nparams <- dim(Q)[2]
-					h <- as.vector(Q^2 %*% array(1, c(nparams, 1)))	
-					zd[obs] <- zd[obs] + d[obs] - 1 + h
+					h <- rowSums(Q^2)
+					zd[obs] <- zd[obs] + d[obs]/s2 - 1 + h
 					sum1minush[obs,1] <- sum1minush[obs,1] + 1-h
 					K[i,][obs] <- as.vector(1-h)
-					dev <- dev + sum(d[obs]/vary) + sum(log(vary)) + const + 2 * log(prod(abs(diag(out$qr$qr))))
+#					dev <- dev + sum(d[obs]/vary) + sum(log(vary)) + const + 2 * log(prod(abs(diag(out$qr$qr))))
 				}
 			}
 			Zzd <- crossprod(Z, zd)
@@ -168,14 +166,16 @@ arrayWeights <- function(object, design = NULL, weights = NULL, method="genebyge
 			Zinfoinv <- chol2inv(R)
 			gammas.iter <- Zinfoinv%*%Zzd
 			arraygammas <- arraygammas + gammas.iter
+			arrayw <- drop(exp(Z %*% (-arraygammas)))
+			x2 <- crossprod(Zzd, gammas.iter) / narrays
 
 			if(trace)
-			cat("Iter =", iter, ", Dev =", dev, " Array gammas", arraygammas, "\n")
+			cat("Iter =", iter, " X2 =", x2, " Array gammas", arrayw, "\n")
 
-			if (dev < devold - 1e-50)
-				break
+#			if (dev < devold - 1e-50)
+#				break
 
-			if (crossprod(Zzd, gammas.iter)  < tol)
+			if (x2  < tol)
 				break
 
 			if (iter > maxiter)	{
@@ -185,5 +185,6 @@ arrayWeights <- function(object, design = NULL, weights = NULL, method="genebyge
 		}
 
 	})
-	matrix(rep(1/exp(Z%*%arraygammas), each=ngenes), ngenes, narrays)
+#	matrix(rep(1/exp(Z%*%arraygammas), each=ngenes), ngenes, narrays)
+	arrayw
 }
