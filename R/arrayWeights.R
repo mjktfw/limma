@@ -1,7 +1,7 @@
 arrayWeights <- function(object, design = NULL, weights = NULL, method="genebygene", maxiter=50, tol = 1e-10, trace = FALSE)
 #	Compute array quality weights
 #	Matt Ritchie
-#	7 Feb 2005. Last revised 17 Dec 2005.
+#	7 Feb 2005. Last revised 18 Dec 2005.
 {
 	M <- NULL
 	if (is(object, "MAList") || is(object, "list")) {
@@ -136,8 +136,9 @@ arrayWeights <- function(object, design = NULL, weights = NULL, method="genebyge
 
 				y <- as.vector(M[i,])
 				obs <- is.finite(y) & w!=0
-				if (sum(obs) > 0) {
-					if(sum(obs) == narrays)	{
+				n <- sum(obs)
+				if (n > 0) {
+					if(n == narrays)	{
 						X <- design
 						#Z2 <- Z
 					} else {  # remove missing/infinite values
@@ -157,13 +158,12 @@ arrayWeights <- function(object, design = NULL, weights = NULL, method="genebyge
 					h <- rowSums(Q^2)
 					zd[obs] <- zd[obs] + d[obs]/s2 - 1 + h
 					sum1minush[obs,1] <- sum1minush[obs,1] + 1-h
-					K[i,][obs] <- as.vector(1-h)
+					K[i,][obs] <- as.vector(h[n]-h)
 #					dev <- dev + sum(d[obs]/vary) + sum(log(vary)) + const + 2 * log(prod(abs(diag(out$qr$qr))))
 				}
 			}
 			Zzd <- crossprod(Z, zd)
-#			GKS: Zinfo doesn't seem to give exactly correct values
-			Zinfo <- diag(sum1minush[1:(narrays-1)]) + sum1minush[narrays] - crossprod(K[,1:(narrays-1)])/(narrays-dim(design)[2])
+			Zinfo <- diag(sum1minush[1:(narrays-1)]) + sum1minush[narrays] - crossprod(K[,-narrays])/(narrays-params)
 			R <- chol(Zinfo)
 			Zinfoinv <- chol2inv(R)
 			gammas.iter <- Zinfoinv%*%Zzd
