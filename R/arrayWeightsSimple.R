@@ -46,7 +46,7 @@ arrayWeightsSimple <- function(object,design=NULL,maxiter=100,tol=1e-10,trace=FA
 		fitvald <- matrix(1/w,narrays,1)%*%s2
 		dl1 <- crossprod(Z1, rowMeans(fitm$residuals^2/fitvald - (1-h)) )
 #		print(cbind(info1,dl1))
-		cat(iter,drop(crossprod(ngenes*dl1)),"\n")
+#		cat(iter,drop(crossprod(ngenes*dl1)),"\n")
 		gamstep <- solve(info1,dl1)
 		gam <- gam + gamstep
 		w <- drop(exp(Z1 %*% (-gam)))
