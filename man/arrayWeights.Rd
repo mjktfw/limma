@@ -47,7 +47,7 @@ arrayWeights(object, design = NULL, weights = NULL, method = "genebygene", maxit
      be computed.
 }
 \value{
-	A matrix of array weights, suitable for use in the \code{weights} argument of \code{lmFit}.
+	A vector of array weights.
  }
 \seealso{
 An overview of linear model functions in limma is given by \link{06.LinearModels}.
@@ -55,7 +55,10 @@ An overview of linear model functions in limma is given by \link{06.LinearModels
 \examples{
 \dontrun{
 array.wts <- arrayWeights(MA, design)
-fit.wts <- lmFit(MA, design, weights=array.wts)}
+w <- MA$weights
+if(is.null(w)) w <- array(1,dim(MA))
+w <- matvec(w,array.wts)
+fit.wts <- lmFit(MA, design, weights=w)}
 }
 
 \author{Matthew Ritchie}
