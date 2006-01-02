@@ -3,7 +3,7 @@
 read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=NULL,columns=NULL,other.columns=NULL,annotation=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote=NULL,DEBUG=FALSE,...)
 #	Extracts an RG list from a series of image analysis output files
 #	Gordon Smyth. 
-#	1 Nov 2002.  Last revised 22 October 2005.
+#	1 Nov 2002.  Last revised 17 Dec 2005.
 #	Use of colClasses added by Marcus Davy, 14 October 2005.
 {
 #	For checking colClasses setup
@@ -18,7 +18,7 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 
 #	Begin check input arguments
 
-	if(missing(files)) {
+	if(is.null(files)) {
 		if(is.null(ext))
 			stop("Must specify input files")
 		else {
@@ -26,6 +26,10 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 			files <- dir(path=ifelse(is.null(path),".",path),pattern=extregex)
 			files <- sub(extregex,"",files)
 		}
+	}
+	if(is.data.frame(files)) {
+		files <- files$FileName
+		if(is.null(files)) stop("targets frame doesn't contain FileName column")
 	}
 
 	source <- match.arg(source,c("generic","agilent","arrayvision","bluefuse","genepix","genepix.median","genepix.custom","imagene","quantarray","smd.old","smd","spot","spot.close.open"))
@@ -37,7 +41,13 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 	if(!is.null(ext)) slides <- paste(slides,ext,sep=".")
 	nslides <- length(slides)
 
-	if(is.null(names)) names <- removeExt(files)
+	if(is.null(names)) {
+		if(!is.null(targets$Label)) {
+			names <- targets$Label
+		} else {
+			names <- removeExt(files)
+		}
+	}
 
 	if(is.null(columns)) {
 		if(source2=="generic") stop("must specify columns for generic input")
@@ -142,7 +152,11 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 	RG <- columns
 	for (a in cnames) RG[[a]] <- Y
 	if(!is.null(wt.fun)) RG$weights <- Y
-	RG$targets <- data.frame(FileName=I(files),row.names=names)
+	if(is.data.frame(targets)) {
+		RG$targets <- targets
+	} else {
+		RG$targets <- data.frame(FileName=I(files),row.names=names)
+	}
 
 #	Set annotation columns
 	if(!is.null(annotation)) {

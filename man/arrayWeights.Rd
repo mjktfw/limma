@@ -1,12 +1,14 @@
 \name{arrayWeights}
 \alias{arrayWeights}
+\alias{arrayWeightsSimple}
 \title{Array Quality Weights}
 \description{
   Estimates relative quality weights for each array in a multi-array
   experiment with replication.
 }
 \usage{
-arrayWeights(object, design = NULL, weights = NULL, method = "genebygene", maxiter = 50, tol = 1e-15, trace=FALSE)
+arrayWeights(object, design = NULL, weights = NULL, method = "genebygene", maxiter = 50, tol = 1e-10, trace=FALSE)
+arrayWeightsSimple(object, design = NULL, maxiter = 100, tol = 1e-10, trace=FALSE)
 }
 \arguments{
  \item{object}{object of class \code{numeric}, \code{matrix}, \code{MAList}, \code{marrayNorm},
@@ -45,6 +47,8 @@ arrayWeights(object, design = NULL, weights = NULL, method = "genebygene", maxit
      \code{se.chip.coefs}. If \code{object} is an \code{exprSet}, then expression
      values will be taken from the \code{exprs} slot, but weights will not
      be computed.
+
+\code{arrayWeightsSimple} is a fast version of \code{arrayWeights} with \code{method="reml"}, no prior weights and no missing values.
 }
 \value{
 	A vector of array weights.
