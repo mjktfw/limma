@@ -28,8 +28,12 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 		}
 	}
 	if(is.data.frame(files)) {
+		targets <- files
 		files <- files$FileName
 		if(is.null(files)) stop("targets frame doesn't contain FileName column")
+		if(is.null(names)) names <- targets$Label
+	} else {
+		targets <- NULL
 	}
 
 	source <- match.arg(source,c("generic","agilent","arrayvision","bluefuse","genepix","genepix.median","genepix.custom","imagene","quantarray","smd.old","smd","spot","spot.close.open"))
@@ -41,13 +45,7 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 	if(!is.null(ext)) slides <- paste(slides,ext,sep=".")
 	nslides <- length(slides)
 
-	if(is.null(names)) {
-		if(!is.null(targets$Label)) {
-			names <- targets$Label
-		} else {
-			names <- removeExt(files)
-		}
-	}
+	if(is.null(names)) names <- removeExt(files)
 
 	if(is.null(columns)) {
 		if(source2=="generic") stop("must specify columns for generic input")
@@ -245,47 +243,38 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 }
 
 wtVariables <- function(x,fun)
-# Extracts variable names from weight functions such as wtarea, wtflags, 
-# wtIgnore.Filter and user defined functions
-# Gordon Smyth
-# 11 Apr 2004 (Renamed from variablesinfunction)
+#	Finds variable names in user-defined functions
+#	Gordon Smyth
+#	3 Nov 2004. Last modified 2 Jan 2006.
 {
-         x <- as.character(x)
-         a <- deparse(fun)
-         n <- length(x)
-         ind <- logical(n)
-         for (i in 1:n) {
-                 ind[i] <- as.logical(length(grep(x[i],a)))
-         }
-         x[ind]
+	x <- as.character(x)
+	a <- deparse(fun)
+	n <- length(x)
+	ind <- logical(n)
+	for (i in 1:n) {
+		ind[i] <- as.logical(length(grep(protectMetachar(x[i]),a)))
+	}
+	x[ind]
 }
 
 getColClasses <- function(cols, ...)
-# Construct a colClasses vector for read.table from a vector of possible columns 'cols' 
-# Uses wtVariables and ellipsis vectors and lists of character string variable names
-# to match against 'cols'
-# Marcus Davy 
-# 20 Apr 2004 Last revised 3 October 2005.
+#	Construct a colClasses vector for read.table from a vector of possible columns 'cols' 
+#	Uses wtVariables and ellipsis vectors and lists of character string variable names
+#	to match against 'cols'
+#	Marcus Davy 
+#	16 Nov 2004. Last revised 2 Jan 2006.
 {
-	if(is.list(cols)){
-        stop("arg 'cols' must be a vector")
-    }
-    cols     <- as.character(cols)
-  x        <- rep("NULL", length(cols))
-  names(x) <- cols
-  wanted   <- list(...)
-  for(i in 1:length(wanted)) {
-    if(is.null(wanted[[i]]))
-      next
-    if(is.function(wanted[[i]])) {
-      include <- wtVariables(cols, wanted[[i]])
-    } 
-    if(is.list(wanted[[i]])) 
-      wanted[[i]] <- unlist(wanted[[i]])
-    if(is.character(wanted[[i]])) 
-      include <- wanted[[i]]
-    ind <- match(include, cols, nomatch=0)
-    x[ind] <- NA
-  }
-  x
+	cols <- as.character(cols)
+	x <- rep("NULL", length(cols))
+	names(x) <- cols
+	wanted <- list(...)
+	for(i in 1:length(wanted)) {
+		if(is.null(wanted[[i]])) next
+		if(is.function(wanted[[i]])) include <- wtVariables(cols, wanted[[i]])
+		if(is.list(wanted[[i]])) wanted[[i]] <- unlist(wanted[[i]])
+		if(is.character(wanted[[i]])) include <- wanted[[i]]
+		ind <- match(include, cols, nomatch=0)
+		x[ind] <- NA
+	}
+	x
 }

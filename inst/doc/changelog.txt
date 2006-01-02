@@ -1,3 +1,8 @@
+3 January 2006: limma 2.4.7
+
+- wtVariables() didn't work correctly when the variable names
+  contained meta characters, now fixed.
+
 2 January 2006: limma 2.4.5
 
 - All functions normexp.*() now use simpler arguments:
@@ -15,7 +20,8 @@
   now works correctly even if not all components have rownames
 - S3 methods for dimnames<- now defined for RGList and MAList objects
 - readTargets() now checks that Labels are unique before making row.names
-- files argument of read.maimages() can now be a data.frame
+- files argument of read.maimages() can now be a data.frame, assumed
+  to be the targets frame.
 
 29 November 2005: limma 2.4.4
 
