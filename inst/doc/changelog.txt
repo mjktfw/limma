@@ -1,3 +1,13 @@
+20 January 2006: limma 2.4.8
+
+- Use of parent=NULL in new.env() removed from makeContrasts(), because
+  this use is deprecated in R 2.3.0.
+- topTable now includes separate columns for raw and adjusted p-values
+- when an MArrayLM object is subsetted, the targets frame no longer
+  subsets and the design matrix subsets only on columns. Previously
+  the design matrix was incorrectly using j to subset rows.
+- bug fix to as.data.frame.MArrayLM when row subset is of length 1
+
 3 January 2006: limma 2.4.7
 
 - wtVariables() didn't work correctly when the variable names
