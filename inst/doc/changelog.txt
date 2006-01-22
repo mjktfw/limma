@@ -1,3 +1,15 @@
+22 January 2006: limma 2.4.9
+
+- New example using the sma mouse.data for arrayWeights()
+- All the linear model functions now use asMatrixWeights(), so that
+  they will accept vectors of probe or array weights in place of the
+  full matrix of weights.
+- new function asMatrixWeights() which will convert vectors of probe
+  weights or array weights to a full matrix of weights.
+- new argument 'maxratio' for arrayWeightsSimple().  This causes the
+  iteration to stop when the ratio of largest to smallest weights
+  becomes large.  The default tol also changed for arrayWeightsSimple().
+
 20 January 2006: limma 2.4.8
 
 - Use of parent=NULL in new.env() removed from makeContrasts(), because

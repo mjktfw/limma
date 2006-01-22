@@ -106,7 +106,7 @@ lm.series <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL)
 {
 #	Fit linear model for each gene to a series of arrays
 #	Gordon Smyth
-#	18 Apr 2002. Revised 13 January 2005.
+#	18 Apr 2002. Revised 22 January 2006.
 
 	M <- as.matrix(M)
 	narrays <- ncol(M)
@@ -114,8 +114,7 @@ lm.series <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL)
 	design <- as.matrix(design)
 	nbeta <- ncol(design)
 	if(!is.null(weights)) {
-		weights <- as.matrix(weights)
-		if(any(dim(weights) != dim(M))) weights <- array(weights,dim(M))
+		weights <- asMatrixWeights(weights,dim(M))
 		weights[weights <= 0] <- NA
 		M[!is.finite(weights)] <- NA
 	}
@@ -198,8 +197,7 @@ mrlm <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL,...)
 	design <- as.matrix(design)
 	nbeta <- ncol(design)
 	if(!is.null(weights)) {
-		weights <- as.matrix(weights)
-		if(any(dim(weights) != dim(M))) weights <- array(weights,dim(M))
+		weights <- asMatrixWeights(weights,dim(M))
 		weights[weights <= 0] <- NA
 		M[!is.finite(weights)] <- NA
 	}
@@ -239,7 +237,7 @@ gls.series <- function(M,design=NULL,ndups=2,spacing=1,block=NULL,correlation=NU
 #	Fit linear model for each gene to a series of microarrays.
 #	Fit is by generalized least squares allowing for correlation between duplicate spots.
 #	Gordon Smyth
-#	11 May 2002.  Last revised 21 April 2005.
+#	11 May 2002.  Last revised 22 January 2006.
 
 	M <- as.matrix(M)
 	narrays <- ncol(M)
@@ -270,8 +268,7 @@ gls.series <- function(M,design=NULL,ndups=2,spacing=1,block=NULL,correlation=NU
 	}
 	diag(cormatrix) <- 1
 	if(!is.null(weights)) {
-		weights <- as.matrix(weights)
-		if(any(dim(weights) != dim(M))) weights <- array(weights,dim(M))
+		weights <- asMatrixWeights(weights,dim(M))
 		M[weights < 1e-15 ] <- NA
 		weights[weights < 1e-15] <- NA
 	}
@@ -317,6 +314,31 @@ gls.series <- function(M,design=NULL,ndups=2,spacing=1,block=NULL,correlation=NU
 	QR <- qr(backsolve(cholV,design,transpose=TRUE))
 	cov.coef <- chol2inv(QR$qr,size=QR$rank)
 	list(coefficients=drop(beta),stdev.unscaled=drop(stdev.unscaled),sigma=sigma,df.residual=df.residual,ndups=ndups,spacing=spacing,block=block,correlation=correlation,cov.coefficients=cov.coef,pivot=QR$pivot)
+}
+
+asMatrixWeights <- function(weights,dim=NULL)
+#	Convert probe-weights or array-weights to weight matrix
+#	Gordon Smyth
+#	22 Jan 2006.
+{
+	weights <- as.matrix(weights)
+	if(is.null(dim)) return(weights)
+	if(length(dim)<2) stop("dim must be numeric vector of length 2")
+	dim <- round(dim[1:2])
+	if(any(dim<1)) stop("zero or negative dimensions not allowed")
+	dw <- dim(weights)
+#	Full matrix already
+	if(all(dw==dim)) return(weights)
+	if(min(dw)!=1) stop("weights is of unexpected shape")
+#	Row matrix of array weights
+	if(dw[2]>1 && dw[2]==dim[2]) return(matrix(weights,dim[1],dim[2],byrow=TRUE))
+	lw <- prod(dw)
+#	Probe weights
+	if(lw==1 || lw==dim[1]) return(matrix(weights,dim[1],dim[2]))
+#	Array weights
+	if(lw==dim[2]) return(matrix(weights,dim[1],dim[2],byrow=TRUE))
+#	All other cases
+	stop("weights is of unexpected size")
 }
 
 contrasts.fit <- function(fit,contrasts) {
