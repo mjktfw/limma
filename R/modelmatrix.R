@@ -78,6 +78,7 @@ makeContrasts <- function(..., levels)
 		if(is.character(ej)) ej <- parse(text=ej)
 		ej <- eval(ej, envir=levelsenv)
 #		was original argument a variable?
+#		Problem: if variable, the previous line is not appropriate
 		if(!is.numeric(ej)) {
 			colnames(cm)[j] <- as.character(ej)
 			if(is.character(ej)) ej <- parse(text=ej)

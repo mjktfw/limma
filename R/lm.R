@@ -3,7 +3,7 @@
 lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation,weights=NULL,method="ls",...) {
 #	Fit linear model
 #	Gordon Smyth
-#	30 June 2003.  Last modified 7 Nov 2005.
+#	30 June 2003.  Last modified 26 Feb 2006.
 
 	M <- NULL
 #	Method intended for MAList objects but allow unclassed lists as well
@@ -37,8 +37,10 @@ lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation,we
 
 	if(is.null(design)) design <- matrix(1,ncol(M),1)
 	design <- as.matrix(design)
+	if(mode(design) != "numeric") stop("design must be a numeric matrix")
 	ne <- nonEstimable(design)
 	if(!is.null(ne)) cat("Coefficients not estimable:",paste(ne,collapse=" "),"\n")
+
 	method <- match.arg(method,c("ls","robust"))
 	if(method=="robust")
 		fit <- mrlm(M,design=design,ndups=ndups,spacing=spacing,weights=weights,...)
@@ -49,6 +51,7 @@ lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation,we
 			if(missing(correlation)) stop("the correlation must be set, see duplicateCorrelation")
 			fit <- gls.series(M,design=design,ndups=ndups,spacing=spacing,block=block,correlation=correlation,weights=weights,...)
 		}
+
 	fit$method <- method
 	fit$design <- design
 	if(is(object,"MAList")) {
@@ -376,14 +379,14 @@ contrasts.fit <- function(fit,contrasts) {
 	}
 
 #	Contrast correlation matrix
-	R <- La.chol(fit$cov.coefficients)
+	R <- chol(fit$cov.coefficients)
 	fit$cov.coefficients <- crossprod(R %*% contrasts)
 	fit$pivot <- NULL
 
 	if(orthog)
 		fit$stdev.unscaled <- sqrt(fit$stdev.unscaled^2 %*% contrasts^2)
 	else {
-		R <- La.chol(cormatrix)
+		R <- chol(cormatrix)
 		ngenes <- NROW(fit$stdev.unscaled)
 		ncont <- NCOL(contrasts)
 		U <- matrix(1,ngenes,ncont,dimnames=list(rownames(fit$stdev.unscaled),colnames(contrasts)))
@@ -413,9 +416,9 @@ contrasts.fit <- function(fit,contrasts) {
 #	if(is.null(design) || ncoef==1 || orthog)
 #		fit$stdev.unscaled <- sqrt(fit$stdev.unscaled^2 %*% contrasts^2)
 #	else {
-#		A <- La.chol2inv(La.chol(crossprod(design)))
+#		A <- chol2inv(chol(crossprod(design)))
 #		s <- sqrt(diag(A))
-#		R <- La.chol(t(A/s)/s)
+#		R <- chol(t(A/s)/s)
 #		ngenes <- NROW(fit$stdev.unscaled)
 #		ncont <- NCOL(contrasts)
 #		U <- matrix(1,ngenes,ncont,dimnames=list(rownames(fit$stdev.unscaled),colnames(contrasts)))

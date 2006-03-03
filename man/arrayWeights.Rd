@@ -49,7 +49,7 @@ the slots or components in the data \code{object}.
 \value{
 	A vector of array weights.
  }
-\reference{
+\references{
 Ritchie, M. E., Diyagama, D., Neilson, van Laar, R., J., Dobrovic, A., Holloway, A., and Smyth, G. K. (2006). Empirical array quality weights for microarray data.
 }
 \seealso{

@@ -285,11 +285,7 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 		B=order(B,decreasing=TRUE)
 	)
 	top <- ord[1:number]
-	i <- is.na(P.Value)
-	if(any(i))
-		adj.P.Value[!i] <- p.adjust(P.Value[!i],method=adjust.method)
-	else
-		adj.P.Value <- p.adjust(P.Value,method=adjust.method)
+	adj.P.Value <- p.adjust(P.Value,method=adjust.method)
 	if(is.null(genelist))
 		tab <- data.frame(M=M[top])
 	else {

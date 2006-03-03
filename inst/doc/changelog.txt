@@ -1,3 +1,14 @@
+3 March 2006: limma 2.4.10
+
+- limma now passes R CMD check in R 2.3.0dev
+- usage of La.chol() in replaced by chol() in lm.R
+- bug fix to topTable: separate raw and adjusted p-values (introduced 2.4.8)
+  was failing when some p-values were missing.
+- bug fix: in read.maimages(source="imagene") was confusing
+  a data.frame of file names with a targets file
+- editing and expansion of normalizeWithinArrays.Rd
+- support for ScanArray Express added to read.maimages()
+
 22 January 2006: limma 2.4.9
 
 - New example using the sma mouse.data for arrayWeights()
