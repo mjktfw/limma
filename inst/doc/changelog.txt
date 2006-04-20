@@ -1,3 +1,8 @@
+20 April 2006: limma 2.4.15
+
+- correction in User's Guide: definition of interaction in
+  Weaver case study was incorrect.
+
 13 April 2006: limma 2.4.14
 
 - improved topTable.Rd to better explain differences between
