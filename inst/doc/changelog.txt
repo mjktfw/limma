@@ -1,3 +1,29 @@
+3 August 2006: limma 2.7.8
+
+- CARMAweb reference added to User's Guide
+- In read.maimages(), flush=TRUE added to all instances of read.table().
+  This makes read.maimages() tolerant to spurious columns added to the
+  end of data lines.
+
+30 July 2006: limma 2.7.7
+
+- wtflags() has new argument cutoff.  Argument w renamed to weight.
+- new section Fitted Model Objects in User's Guide
+- table of image analysis programs added to Section 4.4 of User's Guide
+- read.imagene() now uses mean background instead of median if the auto
+  segmentation method has been set.
+
+27 July 2006: limma 2.7.6
+
+- readImaGeneHeader() updated to allow for extraneous trailing white space
+  in the lines of the data files.
+- In geneSetTest() values "two.sided", "less" or "greater" are now
+  permitted as synonyms for "either", "down" or "up".
+- geneSetTest() now longer issues warning with type="t" and
+  all positive values for statistic.
+- new function as.matrix.PLMset. This allows lmFit() to work correctly on PLMset objects.
+- Bob case study updated in Limma User's Guide.
+
 22 June 2006: limma 2.7.5
 
 - bug fix to read.maimages: remove mention of readBlueFuseHeader(),
