@@ -1,3 +1,9 @@
+30 August 2006: limma 2.7.11
+
+- new argument ... added to write.fit()
+- new function exprs.MA() to extract log-expression matrix from MAList
+- array2channel() previously deprecated now removed
+
 27 August 2006: limma 2.7.10
 
 - new argument 'coefficients' for contrasts.fit(). This provides a
@@ -744,7 +750,7 @@ This version was the first posted to CRAN as well as to Bioconductor
 19 April 2004: limma 1.6.2
 
 - new documentation entry on single channel analysis
-= new function intraspotCorrelation()
+- new function intraspotCorrelation()
 - lmsc.series() renamed to lmscFit(), now produces an MArrayLM object
 
 7 April 2004: limma 1.6.1
