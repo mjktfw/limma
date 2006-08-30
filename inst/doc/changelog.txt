@@ -2,12 +2,16 @@
 
 - subsetting for MArrayLM revised so that contrast matrix is subsetted
   rather than design matrix.
+- revision to writefit.Rd to clarify that p-value adjustment is by
+  columns
+- bug fix to plotlines()
 
 30 August 2006: limma 2.7.11
 
 - new argument ... added to write.fit()
 - new function exprs.MA() to extract log-expression matrix from MAList
 - array2channel() previously deprecated now removed
+- new function plotlines()
 
 27 August 2006: limma 2.7.10
 
