@@ -23,6 +23,9 @@ write.fit(fit, results=NULL, file, digits=2, adjust="none", sep="\t", ...)
 
 \value{
 No value is produced but a file is written to the current working directory.
+
+The p-value adjustment is done separately for each column.
+This is equivalent to \code{decideTests} with \code{method="separate"}.
 }
 
 \details{
