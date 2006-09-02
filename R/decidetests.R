@@ -20,7 +20,7 @@ setMethod("show","TestResults",function(object) {
 	printHead(object@.Data)
 })
 
-decideTests <- function(object,method="separate",adjust.method="BH",p.value=0.05)
+decideTests <- function(object,method="separate",adjust.method="BH",p.value=0.05,lfc=0)
 #	Accept or reject hypothesis tests across genes and contrasts
 #	Gordon Smyth
 #	17 Aug 2004. Last modified 1 June 2006.
@@ -75,6 +75,12 @@ decideTests <- function(object,method="separate",adjust.method="BH",p.value=0.05
 		dimnames(results) <- dimnames(object$coefficients)
 		if(any(sel)) results[sel,] <- classifyTestsF(object[sel,],p.value=p.value*a)
 	})
+	if(lfc>0) {
+		if(is.null(object$coefficients))
+			warning("lfc ignored because coefficients not found")
+		else
+			results@.Data <- results@.Data * (abs(object$coefficients)>lfc)
+	}
 	results
 }
 

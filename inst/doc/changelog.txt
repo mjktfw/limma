@@ -1,3 +1,7 @@
+2 September 2006: limma 2.7.13
+
+- new argument lfc for decideTests() to require a minimum fold-change
+
 30 August 2006: limma 2.7.12
 
 - subsetting for MArrayLM revised so that contrast matrix is subsetted
