@@ -23,7 +23,7 @@ setMethod("show","TestResults",function(object) {
 decideTests <- function(object,method="separate",adjust.method="BH",p.value=0.05,lfc=0)
 #	Accept or reject hypothesis tests across genes and contrasts
 #	Gordon Smyth
-#	17 Aug 2004. Last modified 1 June 2006.
+#	17 Aug 2004. Last modified 2 September 2006.
 {
 	if(!is(object,"MArrayLM")) stop("Need MArrayLM object")
 	if(is.null(object$t)) object <- eBayes(object)

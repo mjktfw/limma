@@ -290,31 +290,6 @@ gls.series <- function(M,design=NULL,ndups=2,spacing=1,block=NULL,correlation=NU
 	list(coefficients=drop(beta),stdev.unscaled=drop(stdev.unscaled),sigma=sigma,df.residual=df.residual,ndups=ndups,spacing=spacing,block=block,correlation=correlation,cov.coefficients=cov.coef,pivot=QR$pivot)
 }
 
-asMatrixWeights <- function(weights,dim=NULL)
-#	Convert probe-weights or array-weights to weight matrix
-#	Gordon Smyth
-#	22 Jan 2006.
-{
-	weights <- as.matrix(weights)
-	if(is.null(dim)) return(weights)
-	if(length(dim)<2) stop("dim must be numeric vector of length 2")
-	dim <- round(dim[1:2])
-	if(any(dim<1)) stop("zero or negative dimensions not allowed")
-	dw <- dim(weights)
-#	Full matrix already
-	if(all(dw==dim)) return(weights)
-	if(min(dw)!=1) stop("weights is of unexpected shape")
-#	Row matrix of array weights
-	if(dw[2]>1 && dw[2]==dim[2]) return(matrix(weights,dim[1],dim[2],byrow=TRUE))
-	lw <- prod(dw)
-#	Probe weights
-	if(lw==1 || lw==dim[1]) return(matrix(weights,dim[1],dim[2]))
-#	Array weights
-	if(lw==dim[2]) return(matrix(weights,dim[1],dim[2],byrow=TRUE))
-#	All other cases
-	stop("weights is of unexpected size")
-}
-
 is.fullrank <- function(x)
 #	Check whether a numeric matrix has full column rank
 #	Gordon Smyth
