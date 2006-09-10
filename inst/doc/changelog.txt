@@ -1,3 +1,9 @@
+11 September 2006: limma 2.7.15
+
+- topTable() now accepts vector argument coef.  If length(coef)>1,
+  topTableF() is called to produce a ranking by F-statistic.
+- new arguments col and lwd for plotlines()
+
 2 September 2006: limma 2.7.14
 
 - normalizeWithinArrays() now uses asMatrixWeights() to process weights
