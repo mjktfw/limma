@@ -1,3 +1,10 @@
+14 September 2006: limma 2.7.16
+
+- improvements to lm.series, gls.series and rlm.series to better preserve
+  column names.
+- topTable() with coef=NULL now ranks genes by F-statistic for all the
+  contrasts.
+
 11 September 2006: limma 2.7.15
 
 - topTable() now accepts vector argument coef.  If length(coef)>1,

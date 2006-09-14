@@ -7,7 +7,7 @@
 Extract a table of the top-ranked genes from a linear model fit.
 }
 \usage{
-topTable(fit,coef=1,number=10,genelist=fit$genes,adjust.method="BH",sort.by="B",resort.by=NULL)
+topTable(fit,coef=NULL,number=10,genelist=fit$genes,adjust.method="BH",sort.by="B",resort.by=NULL)
 toptable(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.method="BH",sort.by="B",resort.by=NULL,...)
 topTableF(fit,number=10,genelist=fit$genes,adjust.method="BH")
 }
@@ -61,6 +61,7 @@ Or \code{topTable(fit, sort.by="M", resort.by="M")} would select the genes by ab
 
 \code{topTableF} ranks genes on the basis of the moderated F-statistic rather than t-statistics.
 If \code{topTable} is called with \code{coef} has length greater than 1, then the specified columns will be extracted from \code{fit} and \code{topTableF} called on the result.
+\code{topTable} with \code{coef=NULL} is the same as \code{topTableF}, unless the fitted model \code{fit} has only one column.
 }
 \note{
 This is not the right function to use to create summary statistics for all the probes on an array.
