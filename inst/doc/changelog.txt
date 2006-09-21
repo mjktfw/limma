@@ -1,3 +1,9 @@
+21 September 2006: limma 2.7.17
+
+- new arguments for vennDiagram() to allow colors and printing of
+  multiple tests of counts on the same diagram.
+- warning about lmscFit being "experimental" removed from lmscFit.Rd
+
 14 September 2006: limma 2.7.16
 
 - improvements to lm.series, gls.series and rlm.series to better preserve
