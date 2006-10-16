@@ -1,4 +1,11 @@
+16 October 2006: limma 2.9.2
+
+- NAMESPACE introduced to package. Funtion matvec() and vecmat() renamed
+  to .matvec and .vecmat and are not exported. All objects with names
+  not starting with "." are exported.
+
  4 October 2006: limma 2.9.1
+ 4 October 2006: limma 2.8.1
 
 - read.maimages() with source="quantarray" now sets annotation columns.
 - bug fix to read.maimages() with source="quantarray". Searching for

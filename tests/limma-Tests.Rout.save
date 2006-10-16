@@ -1,5 +1,5 @@
 
-R version 2.4.0 alpha (2006-09-05 r39134)
+R version 2.4.0 (2006-10-03)
 Copyright (C) 2006 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
@@ -722,14 +722,6 @@ Loading required package: splines
 > 
 > cor.out <- duplicateCorrelation(M)
 Loading required package: statmod
-
-Attaching package: 'statmod'
-
-
-	The following object(s) are masked from package:limma :
-
-	 matvec vecmat 
-
 > cor.out$consensus.correlation
 [1] -0.1300222
 > cor.out$atanh.correlations
