@@ -37,11 +37,28 @@ readGAL <- function(galfile=NULL,path=NULL,header=TRUE,sep="\t",quote="\"",skip=
 	gal
 }
 
+strsplit2 <- function(x, split, extended = TRUE, fixed = FALSE, perl = FALSE) {
+#	Split vector of composite names into matrix of simple names
+#	Gordon Smyth
+#	8 May 2003 (originally called splitName).  Last modified 18 October 2006.
+
+	x <- as.character(x)
+	n <- length(x)
+	s <- strsplit(x=x,split=split,extended=extended,fixed=fixed,perl=perl)
+	nc <- unlist(lapply(s,length))
+	out <- matrix("",n,max(nc))
+	for (i in 1:n) {
+		if(nc[i]) out[i,1:nc[i]] <- s[[i]]
+	}
+	out
+}
+
 splitName <- function(x, split=";", extended=TRUE) {
 #	Split composite gene names into short names and annotation information
 #	Gordon Smyth
 #	8 May 2003.  Last modified 29 May 2003.
 
+	.Deprecated("strsplit2")
 	s <- strsplit(x,split,extended)
 	function1 <- function(x) {
 		n <- length(x)

@@ -1,3 +1,12 @@
+27 October 2006: limma 2.9.3
+
+- Changes to column headings from topTable: M is now logFC,
+  A is now AveExpr
+- lmFit() now supports ExpressionSet objects
+- volcanoplot() now allows NULL value for 'names' argument
+- new function strsplit2() replaces splitName().
+- splitName() deprecated.
+
 16 October 2006: limma 2.9.2
 
 - NAMESPACE introduced to package. Funtion matvec() and vecmat() renamed
