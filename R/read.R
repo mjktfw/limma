@@ -426,7 +426,7 @@ trimWhiteSpace <- function(x)
 
 protectMetachar <- function(x)
 #	Insert backslashs before an metacharacters (to allow them to be included in search strings)
-#	Note that backslashs themselves not handled
+#	Note that backslashs themselves are not handled
 #	Gordon Smyth
 #	9 June 2004
 {

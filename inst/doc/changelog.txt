@@ -1,3 +1,7 @@
+5 November 2006: limma 2.9.4
+
+- function .onAttach() replaces the old .First.lib()
+
 27 October 2006: limma 2.9.3
 
 - Changes to column headings from topTable: M is now logFC,
