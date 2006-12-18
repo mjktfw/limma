@@ -1,3 +1,8 @@
+19 Dec 2006: limma 2.9.6
+
+- new function as.matrix.ExpressionSet
+- section on array quality weights added to User's Guide
+
 17 Nov 2006: limma 2.9.5
 
 - correction of several minor typos.
