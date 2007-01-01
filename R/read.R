@@ -249,6 +249,7 @@ read.matrix <- function(file,nrows=0,skip=0,...) {
 #	Gordon Smyth
 #	9 Mar 2003.
 
+	.Deprecated("read.maimages")  # 31 Dec 2006
 	h <- scan(file,what="character",skip=skip,nlines=1,quote="\"",quiet=TRUE,...)
 	x <- matrix(scan(file,skip=skip+1,nlines=nrows,quiet=TRUE,...),byrow=TRUE,ncol=length(h))
 	colnames(x) <- h
@@ -260,6 +261,7 @@ rg.series.spot <- function(slides,path=NULL,names.slides=names(slides),suffix="s
 #	Gordon Smyth
 #	1 Nov 2002.  Last revised 23 Mar 2003.
 
+	.Deprecated("read.maimages")  # 31 Dec 2006
 	slides <- as.vector(as.character(slides))
 	if(is.null(names.slides)) names.slides <- slides
 	nslides <- length(slides)
@@ -299,6 +301,7 @@ read.series <- function(slides,path=NULL,suffix="spot",...) {
 #	Gordon Smyth
 #	11 Mar 2002.  Last revised 2 Mar 2003.
 
+	.Deprecated("read.maimages")  # 31 Dec 2006
 	slides <- as.vector(as.character(slides))
 	nslides <- length(slides)
 	for (i in 1:nslides) {
@@ -318,6 +321,7 @@ m.spot <- function(spot) {
 #	Gordon Smyth
 #	18 Nov 2001.  Last revised 2 Mar 2003.
 
+	.Deprecated("read.maimages")  # 31 Dec 2006
 	R <- spot[,"Rmean"] - spot[,"morphR"]
 	G <- spot[,"Gmean"] - spot[,"morphG"]
 	log(R,2) - log(G,2)
@@ -328,6 +332,7 @@ a.spot <- function(spot) {
 #	Gordon Smyth
 #	18 Nov 2001.  Last revised 2 Mar 2003.
 
+	.Deprecated("read.maimages")  # 31 Dec 2006
 	R <- spot[,"Rmean"] - spot[,"morphR"]
 	G <- spot[,"Gmean"] - spot[,"morphG"]
 	(log(R,2) + log(G,2))/2
@@ -338,6 +343,7 @@ rg.spot <- function(slides,names.slides=names(slides),suffix="spot",area=FALSE) 
 #	Gordon Smyth
 #	17 Jan 2002. Last revised 1 Nov 2002.
 
+	.Deprecated("read.maimages")  # 31 Dec 2006
 	slides <- as.vector(as.character(slides))
 	if(is.null(names.slides)) names.slides <- slides
 	nslides <- length(slides)
@@ -362,6 +368,7 @@ rg.quantarray <- function(slides,names.slides=names(slides),suffix="qta") {
 #	Gordon Smyth
 #	23 July 2002
 
+	.Deprecated("read.maimages")  # 31 Dec 2006
 	slides <- as.vector(as.character(slides))
 	if(is.null(names.slides)) names.slides <- slides
 	nslides <- length(slides)
@@ -384,6 +391,7 @@ rg.genepix <- function(slides,names.slides=names(slides),suffix="gpr") {
 #	Gordon Smyth
 #	23 July 2002. Last revised 13 Feb 2003.
 
+	.Deprecated("read.maimages")  # 31 Dec 2006
 	slides <- as.vector(as.character(slides))
 	if(is.null(names.slides)) names.slides <- slides
 	nslides <- length(slides)
