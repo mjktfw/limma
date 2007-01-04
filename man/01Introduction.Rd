@@ -1,5 +1,6 @@
 \name{01.Introduction}
 \alias{01.Introduction}
+\alias{limma}
 \title{Introduction to the LIMMA Package}
 \description{
 LIMMA is a library for the analysis of gene expression microarray data, especially the use of linear models for analysing designed experiments and the assessment of differential expression.

@@ -1,3 +1,11 @@
+5 Jan 2007: limma 2.9.8
+
+- User's Guide sections on spot quality weights and quality assessment
+  expanded.
+- unnecessary backlashs removed from gsub() calls in protectMetachar()
+- normalizeForPrintorder(plot=TRUE) now produces no output to agree with
+  the documentation.
+
 1 Jan 2007: limma 2.9.7
 
 - old functions designed to read image data files into data.frames
