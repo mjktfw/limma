@@ -86,6 +86,13 @@ eb$var.prior
 
 toptable(fit)
 
+### marray object
+
+library(marray)
+data(swirl)
+snorm = maNorm(swirl)
+lmFit(snorm, design = c(1,-1,-1,1))
+
 ### duplicateCorrelation
 
 cor.out <- duplicateCorrelation(M)
