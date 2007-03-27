@@ -1,4 +1,11 @@
-27 Mar 207: limma 2.9.15
+27 Mar 2007: limma 2.9.16
+
+- new tests for topTable() added to limma-Tests.R
+- bug fix to topTable(). sort="M" and resort.by="M" needed to be
+  updated to sort="logFC" and resort.by="logFC". Also sort="AveExpr"
+  and resort.by="AveExpr" are now allowed.
+
+26 Mar 2007: limma 2.9.15
 
 - bug fix to read.columns, to read SPOT files with a leading column
   of row numbers. Was failing because the number of headers was
