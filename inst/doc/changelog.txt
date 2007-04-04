@@ -1,3 +1,8 @@
+4 Apr 2007: limma 2.9.17
+
+- bug fix to read.maimages() for source="arrayvision". Now reads
+  arrayvision files again for the first time since version 2.3.1.
+
 27 Mar 2007: limma 2.9.16
 
 - new tests for topTable() added to limma-Tests.R
