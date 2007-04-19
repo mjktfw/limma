@@ -1,3 +1,9 @@
+18 Apr 2007: limma 2.9.18
+
+- User's Guide case studies updated for current version of limma.
+  A couple of changes to Weaver case study: multiple testing method
+  is now "global" instead of "nestedF", and heat diagram is removed. 
+
 4 Apr 2007: limma 2.9.17
 
 - bug fix to read.maimages() for source="arrayvision". Now reads
