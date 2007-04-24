@@ -1,3 +1,7 @@
+24 Apr 2007: limma 2.9.18
+
+- Minor documentation bug fix: 'F.stat' to 'F' in MArrayLM.Rd
+
 18 Apr 2007: limma 2.9.18
 
 - User's Guide case studies updated for current version of limma.
