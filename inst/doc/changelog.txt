@@ -1,4 +1,7 @@
-24 Apr 2007: limma 2.9.18
+Bioconductor Developmental Version 2.1: limma 2.11.0
+Bioconductor Release 2.0: limma 2.10.0
+
+24 Apr 2007: limma 2.9.19
 
 - Minor documentation bug fix: 'F.stat' to 'F' in MArrayLM.Rd
 
