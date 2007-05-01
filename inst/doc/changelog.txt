@@ -1,3 +1,8 @@
+1 May 2007: limma 2.11.1
+
+- Bug fix to read.columns() to stop spurious warning message
+  when text.to.search has length greater than one.
+
 Bioconductor Developmental Version 2.1: limma 2.11.0
 Bioconductor Release 2.0: limma 2.10.0
 
