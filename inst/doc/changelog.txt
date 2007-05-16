@@ -1,3 +1,7 @@
+16 May 2007: limma 2.11.2
+
+- fixed some non-matching braces '}' in .Rd files. (Not user-visible.)
+
 1 May 2007: limma 2.11.1
 
 - Bug fix to read.columns() to stop spurious warning message
