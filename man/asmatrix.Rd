@@ -4,8 +4,9 @@
 \alias{as.matrix.MArrayLM}
 \alias{as.matrix.marrayNorm}
 \alias{as.matrix.exprSet}
-\alias{as.matrix.ExpressionSet}
 \alias{as.matrix.PLMset}
+\alias{as.matrix.ExpressionSet}
+\alias{as.matrix.LumiBatch}
 \title{Turn a Microarray Data Object into a Matrix}
 \description{
 Turn a microarray data object into a numeric matrix by extracting the expression values.
@@ -14,7 +15,7 @@ Turn a microarray data object into a numeric matrix by extracting the expression
 \method{as.matrix}{MAList}(x,\dots)
 }
 \arguments{
-  \item{x}{an object of class \code{RGList}, \code{MAList}, \code{MArrayLM}, \code{marrayNorm}, \code{exprSet}, \code{ExpressionSet} or \code{PLMset}.}
+  \item{x}{an object of class \code{RGList}, \code{MAList}, \code{MArrayLM}, \code{marrayNorm}, \code{exprSet}, \code{PLMset}, \code{ExpressionSet} or \code{LumiBatch}.}
   \item{\dots}{additional arguments, not used for these methods.}
 }
 \details{
