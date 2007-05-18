@@ -1,4 +1,9 @@
-18 May 2007: limma 2.11.3
+18 May 2007: limma 2.10.4 and 2.11.4
+
+- as.matrix methods for ExpressionSet and LumiBatch added to the
+  limma NAMESPACE.
+
+17 May 2007: limma 2.10.3 and 2.11.3
 
 - added as.matrix method for LumiBatch class
 - corrected as.matrix method for ExpressionSet class to allow that
