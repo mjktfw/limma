@@ -1,3 +1,7 @@
+30 May 2007: limma 2.10.5 and 2.11.5
+
+- as.matrix method for vsn objects added.
+
 18 May 2007: limma 2.10.4 and 2.11.4
 
 - as.matrix methods for ExpressionSet and LumiBatch added to the
