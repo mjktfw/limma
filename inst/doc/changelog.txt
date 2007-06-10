@@ -1,3 +1,10 @@
+8 June 207: limma 2.11.6
+
+- new argument n.pts for normexp.fit.  n.pts=2^10 becomes the default
+  for method="normexp" in backgroundCorrect().  This decreases
+  computation time and introduces some robustness.
+- backgroundCorrect() now accepts a matrix argument.
+
 30 May 2007: limma 2.10.5 and 2.11.5
 
 - as.matrix method for vsn objects added.

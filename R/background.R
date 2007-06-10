@@ -5,7 +5,25 @@
 backgroundCorrect <- function(RG, method="subtract", offset=0, printer=RG$printer, verbose=TRUE) {
 #	Apply background correction to microarray data
 #	Gordon Smyth
-#	12 April 2003.  Last modified 26 December 2005.
+#	12 April 2003.  Last modified 10 June 2007.
+
+	if(is.matrix(RG)) {
+		method <- match.arg(method, c("none","normexp","rma"))
+		switch(method,
+		normexp={
+		for (j in 1:ncol(RG)) {
+			x <- RG[,j]
+			out <- normexp.fit(x)
+			RG[,j] <- normexp.signal(out$par,x)
+			if(verbose) cat("Corrected array",j,"\n")
+		}},
+		rma={
+			require("affy")
+			RG <- apply(RG,2,bg.adjust)
+		})
+		if(offset) RG <- RG+offset
+		return(RG)
+	}
 
 	if(is.null(RG$Rb) != is.null(RG$Gb)) stop("Background values exist for one channel but not the other")
 	method <- match.arg(method, c("none","subtract","half","minimum","movingmin","edwards","normexp","rma"))
@@ -158,10 +176,10 @@ normexp.signal <- function(par,x)
 	signal
 }
 
-normexp.fit <- function(x,trace=FALSE)
+normexp.fit <- function(x, n.pts=2^10, trace=FALSE)
 #	Fit background=normal + signal=exponential model using BFGS.
 #	Gordon Smyth and Jeremy Silver
-#	24 Aug 2002. Last modified 26 December 2005.
+#	24 Aug 2002. Last modified 10 June 2007.
 {
 	isna <- is.na(x)
 	if(any(isna)) x <- x[!isna]
@@ -183,6 +201,9 @@ normexp.fit <- function(x,trace=FALSE)
 	alpha <- mean(x,na.rm = TRUE) - beta
 	if(alpha <= 0) alpha <- 1e-6
 #	if(trace) cat("Starting values\n",beta,sigma,alpha,"\n")
+
+#	Use a maximum of n.pts points for the fit
+	if(!is.null(n.pts) & !is.na(n.pts) & n.pts >= 4 & n.pts < length(x)) x <- quantile(x,ppoints(n.pts))
 
 	Results <- optim(par=c(beta,log(sigma),log(alpha)), fn=normexp.m2loglik, control=list(trace=as.integer(trace)), x=x)
 #	print(Results)

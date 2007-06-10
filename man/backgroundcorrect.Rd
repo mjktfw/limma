@@ -8,8 +8,9 @@ Background correct microarray expression intensities.
 backgroundCorrect(RG, method="subtract", offset=0, printer=RG$printer, verbose=TRUE)
 }
 \arguments{
-  \item{RG}{an \code{\link[limma:rglist]{RGList}} object or a unclassed list containing the same components as an \code{RGList}}
-  \item{method}{character string specifying correction method.  Possible values are \code{"none"}, \code{"subtract"}, \code{"half"}, \code{"minimum"}, \code{"movingmin"}, \code{"edwards"}, \code{"normexp"} or \code{"rma"}.}
+  \item{RG}{an \code{\link[limma:rglist]{RGList}} object, an unclassed list containing the same components as an \code{RGList}, or a numeric matrix.}
+  \item{method}{character string specifying correction method.  Possible values are \code{"none"}, \code{"subtract"}, \code{"half"}, \code{"minimum"}, \code{"movingmin"}, \code{"edwards"}, \code{"normexp"} or \code{"rma"}.
+  If \code{RG} is a matrix, possible values are restricted to \code{"none"}, \code{"normexp"} or \code{"rma"}.}
   \item{offset}{numeric value to add to intensities}
   \item{printer}{a list containing printer layout information, see \code{\link{PrintLayout-class}}}
   \item{verbose}{logical, should progress be reported to standard output}
@@ -40,6 +41,10 @@ and components \code{Rb} and \code{Gb} are removed.
 \references{
 Edwards, D. E. (2003). Non-linear normalization and background correction in one-channel cDNA microarray studies
 \emph{Bioinformatics} 19, 825-833. 
+
+Ritchie, M. E., Silver, J., Oshlack, A., Silver, J., Holmes, M., Diyagama, D., Holloway, A., and Smyth, G. K. (2007).
+A comparison of background correction methods for two-colour microarrays.
+Submitted.
 
 Smyth, G. K. (2005). Limma: linear models for microarray data. In:  \emph{Bioinformatics and Computational Biology Solutions using R and Bioconductor}, R. Gentleman, V. Carey, S. Dudoit, R. Irizarry, W. Huber (eds.), Springer, New York, pages 397-420. 
 

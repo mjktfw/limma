@@ -7,10 +7,11 @@ The normal part represents the background and the exponential represents the sig
 This function is called by \code{backgroundCorrect} and is not normally called directly by the user.
 }
 \usage{
-normexp.fit(x, trace=FALSE)
+normexp.fit(x, n.pts=2^10, trace=FALSE)
 }
 \arguments{
   \item{x}{numeric vector of (background corrected) intensities}
+  \item{n.pts}{number of quantiles of \code{x} to use for the fit. If \code{NA} then all values of \code{x} will be used.}
   \item{trace}{logical, if \code{TRUE}, tracing information on the progress of the optimization is given.}
 }
 \details{
@@ -19,6 +20,11 @@ The model is a $normal(\mu,\sigma^2)+exponential(\alpha)$ convolution model for 
 
 This is essentially the same model which is used by \code{bg.correct.rma} in the affy package.
 The difference is that the parameters are estimated by maximum likelihood and that the estimated background is subtracted before applying the model-based background.
+
+For speed and numerical stability, the likelihood function is approximated using a saddle-point approximation.
+
+By default, about 1000 quantiles of \code{x} are used of the fit.
+This limits computation time, and also allows a few outliers to be ignored at the top and bottom of the distribution if the length of \code{n.pts} is less than \code{length(x)}.
 }
 \value{
 A list containing the components
@@ -26,7 +32,14 @@ A list containing the components
   \item{m2loglik}{numeric scalar giving minus twice the log-likelihood}
   \item{convergence}{integer code indicating successful convergence or otherwise of the optimization. See \code{optim}.}
 }
-\author{Jeremy Silver and Gordon Smyth}
+\author{Gordon Smyth and Jeremy Silver}
+
+\references{
+Ritchie, M. E., Silver, J., Oshlack, A., Silver, J., Holmes, M., Diyagama, D., Holloway, A., and Smyth, G. K. (2007).
+A comparison of background correction methods for two-colour microarrays.
+Submitted.
+}
+
 \seealso{
 \code{\link{normexp.signal}}
 
