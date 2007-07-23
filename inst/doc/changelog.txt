@@ -1,3 +1,20 @@
+22 July 2007: limma 2.11.9
+
+- improvements to the numeric computations of dnormexp.saddle(), which
+  is used by backgroundCorrect(method="normexp")
+- new function normexp.m2loglik.saddle(), which is the same as
+  normexp.m2loglik() but using the saddle-point approximation.
+- normexp.fit() has a new argument 'methods'
+- default for n.pts in normexp.fit() changed to NULL, meaning use all
+  the points.  The rule used to choose the quantiles if n.pts is
+  improved to give more nearly unbiased parameter estimators.
+
+9 July 2007: limma 2.11.8
+
+- contrasts.fit() now warns if row names of contrast matrix don't
+  match column names of contrasts.
+- plotMA3by2 has a new argument 'device' to specify the graphic format.
+
 24 June 2007: limma 2.11.7
 
 - decideTests(method="hierarchical") now passes the adjust.method down

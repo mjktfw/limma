@@ -144,7 +144,7 @@ ymat <- matrix(rep(yvec,ngenes),ncol=narrays,byrow=T)+epsilon
 ymat[5,1:2] <- NA
 fit <- lmFit(ymat,design=X)
 test.contr <- cbind(c(0,1,-1),c(1,1,0),c(1,0,1))
-dimnames(test.contr) <- list(1:3,c("alpha-beta","mu+alpha","mu+beta"))
+dimnames(test.contr) <- list(c("mu","alpha","beta"),c("alpha-beta","mu+alpha","mu+beta"))
 fit2 <- contrasts.fit(fit,contrasts=test.contr)
 eBayes(fit2)
 

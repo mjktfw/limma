@@ -3,10 +3,15 @@
 contrasts.fit <- function(fit,contrasts=NULL,coefficients=NULL) {
 #	Convert coefficients and std deviations in fit object to reflect contrasts of interest
 #	Gordon Smyth
-#	13 Oct 2002.  Last modified 27 August 2006.
+#	13 Oct 2002.  Last modified 8 June 2007.
 
 	ncoef <- NCOL(fit$coefficients)
 	if(is.null(contrasts) == is.null(coefficients)) stop("Must specify only one of contrasts or coefficients")
+	if(!is.null(contrasts)) {
+		rn <- rownames(contrasts)
+		cn <- colnames(fit$coefficients)
+		if(!is.null(rn) && !is.null(cn) && any(rn != cn)) warning("row names of contrasts don't match col names of coefficients")
+	}
 	if(!is.null(coefficients)) {
 		ncont <- length(coefficients)
 		contrasts <- diag(ncoef)

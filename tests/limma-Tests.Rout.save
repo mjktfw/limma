@@ -1,6 +1,6 @@
 
-R version 2.4.1 (2006-12-18)
-Copyright (C) 2006 The R Foundation for Statistical Computing
+R version 2.5.0 (2007-04-23)
+Copyright (C) 2007 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -894,7 +894,7 @@ Loading required package: statmod
 > ymat[5,1:2] <- NA
 > fit <- lmFit(ymat,design=X)
 > test.contr <- cbind(c(0,1,-1),c(1,1,0),c(1,0,1))
-> dimnames(test.contr) <- list(1:3,c("alpha-beta","mu+alpha","mu+beta"))
+> dimnames(test.contr) <- list(c("mu","alpha","beta"),c("alpha-beta","mu+alpha","mu+beta"))
 > fit2 <- contrasts.fit(fit,contrasts=test.contr)
 > eBayes(fit2)
 An object of class "MArrayLM"
@@ -942,10 +942,10 @@ $design
 9  1     0    1
 
 $contrasts
-  alpha-beta mu+alpha mu+beta
-1          0        1       1
-2          1        1       0
-3         -1        0       1
+      alpha-beta mu+alpha mu+beta
+mu             0        1       1
+alpha          1        1       0
+beta          -1        0       1
 
 $df.prior
 [1] 9.306153

@@ -5,28 +5,30 @@
 backgroundCorrect <- function(RG, method="subtract", offset=0, printer=RG$printer, verbose=TRUE) {
 #	Apply background correction to microarray data
 #	Gordon Smyth
-#	12 April 2003.  Last modified 10 June 2007.
+#	12 April 2003.  Last modified 22 July 2007.
 
+	if(!is.list(RG) && is.vector(RG)) RG <- as.matrix(RG)
 	if(is.matrix(RG)) {
-		method <- match.arg(method, c("none","normexp","rma"))
-		switch(method,
-		normexp={
-		for (j in 1:ncol(RG)) {
-			x <- RG[,j]
-			out <- normexp.fit(x)
-			RG[,j] <- normexp.signal(out$par,x)
-			if(verbose) cat("Corrected array",j,"\n")
-		}},
-		rma={
-			require("affy")
-			RG <- apply(RG,2,bg.adjust)
-		})
+		method <- match.arg(method, c("none","normexp","saddle","neldermean","bfgs","rma","mcgee"))
+		if(method=="normexp") method="saddle"
+		if(method!="none") {
+			for (j in 1:ncol(RG)) {
+				x <- RG[,j]
+				out <- normexp.fit(x,method=method)
+				RG[,j] <- normexp.signal(out$par,x)
+				if(verbose) cat("Corrected array",j,"\n")
+			}
+		}
+#		rma={
+#			require("affy")
+#			RG <- apply(RG,2,bg.adjust)
+#		})
 		if(offset) RG <- RG+offset
 		return(RG)
 	}
 
 	if(is.null(RG$Rb) != is.null(RG$Gb)) stop("Background values exist for one channel but not the other")
-	method <- match.arg(method, c("none","subtract","half","minimum","movingmin","edwards","normexp","rma"))
+	method <- match.arg(method, c("none","subtract","half","minimum","movingmin","edwards","normexp","saddle","neldermean","bfgs","rma","mcgee"))
 	if(is.null(RG$Rb) && is.null(RG$Gb)) method <- "none"
 	switch(method,
 	subtract={
@@ -74,23 +76,13 @@ backgroundCorrect <- function(RG, method="subtract", offset=0, printer=RG$printe
 		delta <- one %*% apply(sub, 2, delta.vec)
 		RG$G <- ifelse(sub < delta, delta*exp(1-(RG$Gb+delta)/RG$G), sub)
 	},
-	normexp={
-	for (j in 1:ncol(RG$R)) {
-		x <- RG$G[,j]-RG$Gb[,j]
-		out <- normexp.fit(x)
-#		if(verbose) cat("G: bg.bias=",out$par[1]," bg.sd=",exp(out$par[2])," fg.mean=",exp(out$par[3]),"\n",sep="")
-		RG$G[,j] <- normexp.signal(out$par,x)
-		x <- RG$R[,j]-RG$Rb[,j]
-		out <- normexp.fit(x)
-#		if(verbose) cat("R: bg.bias=",out$par[1]," bg.log2sd=",out$par[2]," fg.mean=",exp(out$par[3]),"\n",sep="")
-		RG$R[,j] <- normexp.signal(out$par,x)
-		if(verbose) cat("Corrected array",j,"\n")
-	}},
-	rma={
-		require("affy")
-		RG$R <- apply(RG$R-RG$Rb,2,bg.adjust)
-		RG$G <- apply(RG$G-RG$Gb,2,bg.adjust)
-	})
+	normexp=,saddle=,neldermean=,bfgs=,rma=,mcgee={
+		if(verbose) cat("Green channel\n")
+		RG$G <- backgroundCorrect(RG$G-RG$Gb,method=method,verbose=verbose)
+		if(verbose) cat("Red channel\n")
+		RG$R <- backgroundCorrect(RG$R-RG$Rb,method=method,verbose=verbose)
+	}
+	)
 	RG$Rb <- NULL
 	RG$Gb <- NULL
 	if(offset) {
@@ -152,131 +144,5 @@ ma3x3.spottedarray <- function(x,printer,FUN=mean,na.rm=TRUE,...)
 	x <- aperm(x, perm = c(3, 1, 4, 2, 5))
 	dim(x) <- c(sc*sr*gc*gr, narrays)
 	x
-}
-
-#  NORMAL + EXPONENTIAL ADAPTIVE MODEL
-
-normexp.signal <- function(par,x)
-#	Expected value of signal given foreground in normal + exponential model
-#	Gordon Smyth
-#	24 Aug 2002. Last modified 26 December 2005.
-{
-	mu <- par[1]
-	sigma <- exp(par[2])
-	alpha <- exp(par[3])
-	if(alpha <= 0) stop("alpha must be positive")
-	if(sigma <= 0) stop("sigma must be positive")
-	mu.sf <- x-mu-sigma^2/alpha
-	signal <- mu.sf + sigma^2 * exp(dnorm(0,mean=mu.sf,sd=sigma,log=TRUE) - pnorm(0,mean=mu.sf,sd=sigma,lower.tail=FALSE,log=TRUE))
-	o <- !is.na(signal)
-	if(any(signal[o]<0)) {
-		warning("Limit of numerical accuracy reached with very low intensity or very high background:\nsetting adjusted intensity to small value")
-		signal[o] <- pmax(signal[o],1e-6)
-	}
-	signal
-}
-
-normexp.fit <- function(x, n.pts=2^10, trace=FALSE)
-#	Fit background=normal + signal=exponential model using BFGS.
-#	Gordon Smyth and Jeremy Silver
-#	24 Aug 2002. Last modified 10 June 2007.
-{
-	isna <- is.na(x)
-	if(any(isna)) x <- x[!isna]
-	if(length(x)<4) stop("Not enough data: need at least 4 non-missing corrected intensities")
-	
-#	Starting values for parameters beta, alpha and sigma
-	q <- quantile(x, c(0,0.05,0.1,1), na.rm = TRUE, names = FALSE)
-	if(q[1]==q[4]) return(list(beta=q[1],sigma=1,alpha=1,m2loglik=NA,convergence=0))
-	if(q[2] > q[1]) {
-		beta <- q[2]
-	} else {
-		if(q[3] > q[1]) {
-			beta <- q[3]
-		} else {
-			beta <- q[1] + 0.05*(q[4]-q[1])
-		}
-	}
-	sigma <- sqrt(mean((x[x<beta]-beta)^2, na.rm = TRUE))
-	alpha <- mean(x,na.rm = TRUE) - beta
-	if(alpha <= 0) alpha <- 1e-6
-#	if(trace) cat("Starting values\n",beta,sigma,alpha,"\n")
-
-#	Use a maximum of n.pts points for the fit
-	if(!is.null(n.pts) & !is.na(n.pts) & n.pts >= 4 & n.pts < length(x)) x <- quantile(x,ppoints(n.pts))
-
-	Results <- optim(par=c(beta,log(sigma),log(alpha)), fn=normexp.m2loglik, control=list(trace=as.integer(trace)), x=x)
-#	print(Results)
-#
-#	Results <- optim(par=c(beta,log(sigma),log(alpha)), fn=normexp.m2loglik, gr=normexp.grad, method=c("BFGS"), control=list(trace=as.integer(trace)), x=x)
-#	print(Results)
-#	cat(Results$par[1],exp(Results$par[2]),exp(Results$par[3]),"\n")
-	list(par=Results$par,m2loglik=Results$value,convergence=Results$convergence)
-}
-
-normexp.grad <- function(par,x)
-#	Gradient of norm-exp log-likelihood (summed over all spots)
-#	Jeremy Silver.
-#	21 Jan 2005. Last modified 26 December 2005.
-{
-	mu <- par[1]
-	logsigma <- par[2]
-	logalpha <- par[3]
-	e <- x-mu
-	mu.sf <- e - exp(2*logsigma - logalpha)
-
-	dlogdbeta <- -2 * sum(exp(-logalpha) - exp(dnorm(0,mu.sf,exp(logsigma),log = TRUE) - pnorm(0,mu.sf,exp(logsigma),lower.tail = FALSE,log.p = TRUE)))
-	dlogdlogsigma <- -2 * sum(exp(2*logsigma - 2*logalpha) - (2*exp(2*logsigma - logalpha) + mu.sf)*exp( dnorm(0,mu.sf,exp(logsigma),log = TRUE) - pnorm(0,mu.sf,exp(logsigma),lower.tail = FALSE,log.p = TRUE)))
-	dlogdlogalpha <- -2 * sum(-1 + e * exp( -logalpha) - exp(2*logsigma - 2*logalpha) + exp(2*logsigma - logalpha+dnorm(0,mu.sf,exp(logsigma),log = TRUE) - pnorm(0,mu.sf,exp(logsigma),lower.tail = FALSE,log.p = TRUE)))
-
-	c(dlogdbeta,dlogdlogsigma,dlogdlogalpha)
-}
-
-dnormexp <- function(x,normmean,normsd,expmean,log=FALSE)
-#	Density of normal+exponential convolution
-#	Gordon Smyth and Jeremy Silver
-#	24 Aug 2002. Last modified 26 Dec 2005.
-{
-	e <- (x-normmean)/normsd
-	a2 <- expmean/normsd
-	mu.sf <- e-1/a2
-	logf <- -log(expmean) + (0.5/a2-e)/a2 + pnorm(0,mu.sf,1,lower.tail=FALSE,log.p=TRUE)
-	if(log) logf else exp(logf) 
-}
-
-dnormexp.saddle <- function(x,normmean,normsd,expmean,log=FALSE,secondorder=TRUE)
-#	Saddlepoint approximation to normal+exponential density
-#	Gordon Smyth
-#	26 December 2005
-{
-	mu <- normmean
-	sigma <- normsd
-	alpha <- expmean
-#	e <- x-mu
-#	c2 <- sigma^2*alpha
-#	c1 <- -sigma^2-e*alpha
-#	c0 <- -alpha+e
-#	theta <- (-c1-sqrt(c1^2-4*c0*c2))/2/c2
-#	saddle <- mu*theta+sigma^2*theta^2/2-log(1-alpha*theta)-x*theta-0.5*log(2*pi*(sigma^2+alpha^2/(1-alpha*theta)^2))
-	x2 <- (x-mu)/sigma
-	a2 <- alpha/sigma
-	t2 <- (2+x2*a2-1-sqrt((x2*a2-1)^2+4*a2^2))/2/a2
-#	saddle <- t2*(t2/2-x2)-0.5*log(2*pi*sigma^2)-0.5*log((1-a2*t2)^2+a2^2)
-	theta <- t2/sigma
-	k <- mu*theta+0.5*sigma^2*theta^2-log(1-alpha*theta)
-	k2 <- sigma^2+alpha^2/(1-alpha*theta)^2
-	k3 <- 2*alpha^3/(1-alpha*theta)^3
-	k4 <- 6*alpha^4/(1-alpha*theta)^4
-	logf <- -0.5*log(2*pi*k2)-x*theta+k
-	if(secondorder) logf <- logf+1/8*k4/k2^2-5/24*k3^2/k2^3
-	if(log) logf else exp(logf)
-}
-
-normexp.m2loglik <- function(par,x)
-#	Minus twice the norm-exp log-likelihood (summed over all spots)
-#	Jeremy Silver and Gordon Smyth
-#	24 Aug 2002. Last modified 26 December 2005.
-{
-	-2*sum(dnormexp.saddle(x,normmean=par[1],normsd=exp(par[2]),expmean=exp(par[3]),log=TRUE,second=TRUE))
 }
 
