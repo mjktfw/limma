@@ -1,3 +1,9 @@
+17 Aug 2007: limma 2.11.10
+
+- topTable() and toptable() have new arguments p.value and lfc, allowing
+  users to cut the gene list on adjusted p.value and fold change, rather
+  than just taking a set number of genes as before.
+
 22 July 2007: limma 2.11.9
 
 - improvements to the numeric computations of dnormexp.saddle(), which

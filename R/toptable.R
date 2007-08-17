@@ -1,6 +1,6 @@
 #  TOPTABLE.R
 
-topTable <- function(fit,coef=NULL,number=10,genelist=fit$genes,adjust.method="BH",sort.by="B",resort.by=NULL)
+topTable <- function(fit,coef=NULL,number=10,genelist=fit$genes,adjust.method="BH",sort.by="B",resort.by=NULL,p.value=1,lfc=0)
 #	Summary table of top genes, object-orientated version
 #	Gordon Smyth
 #	4 August 2003.  Last modified 27 Oct 2006.
@@ -21,7 +21,9 @@ topTable <- function(fit,coef=NULL,number=10,genelist=fit$genes,adjust.method="B
 		eb=fit[c("t","p.value","lods")],
 		adjust.method=adjust.method,
 		sort.by=sort.by,
-		resort.by=resort.by)
+		resort.by=resort.by,
+		p.value=p.value,
+		lfc=lfc)
 }
 
 topTableF <- function(fit,number=10,genelist=fit$genes,adjust.method="BH")
@@ -46,7 +48,7 @@ topTableF <- function(fit,number=10,genelist=fit$genes,adjust.method="BH")
 	tab
 }
 
-toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.method="BH",sort.by="B",resort.by=NULL,...)
+toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.method="BH",sort.by="B",resort.by=NULL,p.value=1,lfc=0,...)
 #	Summary table of top genes
 #	Gordon Smyth
 #	21 Nov 2002. Last revised 27 Mar 2007.
@@ -80,8 +82,20 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 		t=order(abs(tstat),decreasing=TRUE),
 		B=order(B,decreasing=TRUE)
 	)
-	top <- ord[1:number]
 	adj.P.Value <- p.adjust(P.Value,method=adjust.method)
+
+#	Select genes by significance criterion or just list set number?	
+	if(p.value < 1 | lfc > 0) {
+		sig <- (adj.P.Value < p.value) & (abs(M) > lfc)
+		if(any(is.na(sig))) sig[is.na(sig)] <- FALSE
+		nsig <- sum(sig)
+		if(nsig==0) return(data.frame())
+		top <- ord[sig[ord]]
+		if(number<nsig) top <- top[1:number]
+	} else {
+		top <- ord[1:number]
+	}
+
 	if(is.null(genelist))
 		tab <- data.frame(logFC=M[top])
 	else {
