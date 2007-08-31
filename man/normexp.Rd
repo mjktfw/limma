@@ -29,6 +29,13 @@ The elements of \code{par} are $\mu$, $\log(\sigma)$ and $\log(\alpha)$.
 \code{normexp.grad} returns a numeric vector holding the derivatives with respect to the elements of \code{par}.
 }
 \author{Jeremy Silver and Gordon Smyth}
+\references{
+Ritchie, M. E., Silver, J., Oshlack, A., Silver, J., Holmes, M., Diyagama, D., Holloway, A., and Smyth, G. K. (2007).
+A comparison of background correction methods for two-colour microarrays.
+\emph{Bioinformatics}
+\url{http://bioinformatics.oxfordjournals.org/cgi/content/abstract/btm412}
+}
+
 \seealso{
 An overview of background correction functions is given in \code{\link{04.Background}}.
 }

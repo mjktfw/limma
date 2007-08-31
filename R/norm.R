@@ -75,7 +75,7 @@ loessFit <- function(y, x, weights=NULL, span=0.3, bin=0.01/(2-is.null(weights))
 		delta = bin * diff(range(xobs)) 
 		smoothy <- .C("lowess", x = as.double(xobs[o]), as.double(yobs[o]), 
 			nobs, as.double(span), as.integer(iter), as.double(delta), 
-			y = double(nobs), double(nobs), double(nobs), PACKAGE = "base")$y[oo]
+			y = double(nobs), double(nobs), double(nobs), PACKAGE = "stats")$y[oo]
 		out$fitted[obs] <- smoothy
 		out$residuals[obs] <- yobs-smoothy
 	} else {

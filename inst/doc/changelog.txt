@@ -1,3 +1,11 @@
+31 Aug 2007: limma 2.11.11
+
+- correction to loessFit() because lowess() function now in stats
+  instead of base.
+- other documentation fixes to pass package check in R 2.6.0
+- Ritchie et al (2007) reference added to User's Guide and to the
+  backgroundCorrect and normexp help pages.
+
 17 Aug 2007: limma 2.11.10
 
 - topTable() and toptable() have new arguments p.value and lfc, allowing

@@ -38,14 +38,14 @@ A list containing the components
 \author{Gordon Smyth and Jeremy Silver}
 
 \references{
-
 McGee, M., and Chen, Z. (2006).
 Parameter estimation for the exponential-normal convolution model for background correction of Affymetrix GeneChip data.
 \emph{Stat Appl Genet Mol Biol}, 5(1), Article 24.
 
 Ritchie, M. E., Silver, J., Oshlack, A., Silver, J., Holmes, M., Diyagama, D., Holloway, A., and Smyth, G. K. (2007).
 A comparison of background correction methods for two-colour microarrays.
-Submitted.
+\emph{Bioinformatics}
+\url{http://bioinformatics.oxfordjournals.org/cgi/content/abstract/btm412}
 }
 
 \seealso{

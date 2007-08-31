@@ -26,7 +26,7 @@ If \code{method="minimum"} then any intensity which is zero or negative after ba
 If \code{method="edwards"} a log-linear interpolation method is used to adjust lower intensities as in Edwards (2003).
 If \code{method="normexp"} a convolution of normal and exponential distributions is fitted to the foreground intensities using the background intensities as a covariate, and the expected signal given the observed foreground becomes the corrected intensity.
 This results in a smooth monotonic transformation of the background subtracted intensities such that all the corrected intensities are positive.
-See Smyth (2005) and \code{\link{normexp.fit}} for more details.
+See Ritchie et al (2007) and \code{\link{normexp.fit}} for more details.
 
 The \code{offset} can be used to add a constant to the intensities before log-transforming, so that the log-ratios are shrunk towards zero at the lower intensities.
 This may eliminate or reverse the usual 'fanning' of log-ratios at low intensities associated with local background subtraction.
@@ -44,9 +44,8 @@ Edwards, D. E. (2003). Non-linear normalization and background correction in one
 
 Ritchie, M. E., Silver, J., Oshlack, A., Silver, J., Holmes, M., Diyagama, D., Holloway, A., and Smyth, G. K. (2007).
 A comparison of background correction methods for two-colour microarrays.
-Submitted.
-
-Smyth, G. K. (2005). Limma: linear models for microarray data. In:  \emph{Bioinformatics and Computational Biology Solutions using R and Bioconductor}, R. Gentleman, V. Carey, S. Dudoit, R. Irizarry, W. Huber (eds.), Springer, New York, pages 397-420. 
+\emph{Bioinformatics}
+\url{http://bioinformatics.oxfordjournals.org/cgi/content/abstract/btm412}
 
 Yang, Y. H., Buckley, M. J., Dudoit, S., and Speed, T. P. (2002). Comparison of methods for image analysis on cDNA microarray data. \emph{Journal of Computational and Graphical Statistics} 11, 108-136.
 
