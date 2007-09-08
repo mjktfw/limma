@@ -1,62 +1,25 @@
-#	LOESS FUNCTIONS
-
-#loessFitnew <- function(y, x, weights=NULL, span=0.3, bin=0.01/(2-is.null(weights)), iterations=4) {
-##	Fast loess fit for simple x and y
-##	This function uses lowess if no weights and loess otherwise.
-##	It is intended to give a streamlined common interface to the two functions.
-##	Gordon Smyth
-##	28 June 2003.  Last revised 27 Feb 2005.
+#  File limma/R/norm.R
+#  Part of the limma package for R, http://www.bioconductor.org
 #
-#	n <- length(y)
-#	out <- list(fitted=rep(NA,n),residuals=rep(NA,n))
-#	obs <- is.finite(y) & is.finite(x)
-#	xobs <- x[obs]
-#	yobs <- y[obs]
-#	nobs <- length(yobs)
-#	if(nobs==0) return(out)
-#	if(is.null(weights)) {
-#		o <- order(xobs)
-#		oo <- order(o)
-#		iter <- iterations-1
-#		delta = bin * diff(range(xobs)) 
-#		smoothy <- .C("lowess", x = as.double(xobs[o]), as.double(yobs[o]), 
-#			nobs, as.double(span), as.integer(iter), as.double(delta), 
-#			y = double(nobs), double(nobs), double(nobs), PACKAGE = "base")$y[oo]
-#		out$fitted[obs] <- smoothy
-#		out$residuals[obs] <- yobs-smoothy
-#	} else {
-#		weights[is.na(weights) | weights<0] <- 0
-#		wt0 <- obs & weights==0
-#		if(any(wt0)) {
-#			obs[wt0] <- FALSE
-#			xobs <- x[obs]
-#			yobs <- y[obs]
-#			nobs <- length(yobs)
-#			if(nobs==0) return(out)
-#		}
-#		wobs <- weights[obs]
-#		if(nobs < 4+1/span) {
-#			fit <- lm.wfit(cbind(1,xobs),yobs,wobs)
-#		} else {
-##			Suppress warning "k-d tree limited by memory"
-#			oldopt <- options(warn=-1)
-#			on.exit(options(oldopt))
-# This is now quite fast
-#			fit <- loess(yobs~xobs,weights=wobs,span=span,degree=1,family="symmetric",cell=bin/span,iterations=iterations,trace.hat="approximate")
-#		}
-#		out$fitted[obs] <- fitted(fit)
-#		out$residuals[obs] <- residuals(fit)
-#		if(any(wt0)) {
-#			out$fitted[wt0] <- predict(fit,newdata=x[wt0])
-#			out$residuals[wt0] <- y[wt0]-out$fitted(
-#		}
-#	}
-#	out
-#}
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  A copy of the GNU General Public License is available at
+#  http://www.r-project.org/Licenses/
+
+
+#	LOESS FUNCTIONS
 
 loessFit <- function(y, x, weights=NULL, span=0.3, bin=0.01/(2-is.null(weights)), iterations=4) {
 #	Fast loess fit for simple x and y
-#	This function uses lowess if no weights and loess otherwise.
+#	This function uses stats:::lowess if no weights and stats:::loess otherwise.
 #	It is intended to give a streamlined common interface to the two functions.
 #	Gordon Smyth
 #	28 June 2003.  Last revised 16 Feb 2004.
@@ -72,7 +35,8 @@ loessFit <- function(y, x, weights=NULL, span=0.3, bin=0.01/(2-is.null(weights))
 		o <- order(xobs)
 		oo <- order(o)
 		iter <- iterations-1
-		delta = bin * diff(range(xobs)) 
+		delta = bin * diff(range(xobs))
+#		The .C("lowess" call is copied from stats:::lowess
 		smoothy <- .C("lowess", x = as.double(xobs[o]), as.double(yobs[o]), 
 			nobs, as.double(span), as.integer(iter), as.double(delta), 
 			y = double(nobs), double(nobs), double(nobs), PACKAGE = "stats")$y[oo]
@@ -98,7 +62,8 @@ loessFit <- function(y, x, weights=NULL, span=0.3, bin=0.01/(2-is.null(weights))
 }
 
 .vsimpleLoess <- function (y, x, weights, span=0.75, degree=2, cell=0.2, iterations=1)
-#	Cut-down version of simpleLoess from modreg package
+#	This function is an edited copy, with some steps removed that are not needed here,
+#  of the R function stats:::simpleLoess by BD Ripley
 #	Gordon Smyth
 #	28 June 2003.  Last modified 7 March 2004.
 {

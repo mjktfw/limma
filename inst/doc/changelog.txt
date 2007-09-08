@@ -1,3 +1,7 @@
+8 Sep 2007: limma 2.11.12
+
+- edits to loessfit.Rd to better acknowledge lowess and loess authors.
+
 31 Aug 2007: limma 2.11.11
 
 - correction to loessFit() because lowess() function now in stats
