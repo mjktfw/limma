@@ -1,3 +1,8 @@
+19 Sep 2007: limma 2.11.13
+
+- bug fix for as.matrix.vsn.  This allows vsn objects from vsn2() to
+  be used directly in lmFit.
+
 8 Sep 2007: limma 2.11.12
 
 - edits to loessfit.Rd to better acknowledge lowess and loess authors.
