@@ -38,7 +38,10 @@ backgroundCorrect(RG, offset=5)
 
 library(sma)
 data(MouseArray)
-MA <- normalizeWithinArrays(mouse.data, mouse.setup, method="robustspline")
+RG <- new("RGList",mouse.data)
+RGb <- backgroundCorrect(RG[,1:2],method="normexp")
+RGb
+MA <- normalizeWithinArrays(RG[,1:2], mouse.setup, method="robustspline")
 MA$M[1:5,]
 MA <- normalizeWithinArrays(mouse.data, mouse.setup)
 MA$M[1:5,]

@@ -1,5 +1,5 @@
 
-R version 2.5.0 (2007-04-23)
+R version 2.6.0 beta (2007-09-21 r42938)
 Copyright (C) 2007 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
@@ -563,16 +563,44 @@ $G
 Warning message:
 file 'MouseArray.RData' has magic number 'RDX1'
    Use of save versions prior to 2 is deprecated 
-> MA <- normalizeWithinArrays(mouse.data, mouse.setup, method="robustspline")
+> RG <- new("RGList",mouse.data)
+> RGb <- backgroundCorrect(RG[,1:2],method="normexp")
+Green channel
+Corrected array 1 
+Corrected array 2 
+Red channel
+Corrected array 1 
+Corrected array 2 
+> RGb
+An object of class "RGList"
+$R
+          [,1]      [,2]
+[1,] 2526.7037 1393.7729
+[2,] 2629.5537 1902.7329
+[3,]  997.4437 1172.3929
+[4,]  151.0764  163.3706
+[5,]  145.8138  157.2796
+6379 more rows ...
+
+$G
+          [,1]      [,2]
+[1,] 5332.4833 4343.8832
+[2,] 4486.2833 2682.1132
+[3,] 1848.3833 3263.5232
+[4,]  288.7807  302.4411
+[5,]  596.3833  309.8584
+6379 more rows ...
+
+> MA <- normalizeWithinArrays(RG[,1:2], mouse.setup, method="robustspline")
 Loading required package: MASS
 Loading required package: splines
 > MA$M[1:5,]
-            [,1]        [,2]        [,3]        [,4]       [,5]        [,6]
-[1,] -0.21539109 -0.79670669 -0.55011008  0.14243756 -0.3933328  0.86741957
-[2,]  0.06449435  0.16873653  0.26020426  0.92440874  0.6640048  1.30672583
-[3,] -0.23149571 -0.66662065 -0.68092134 -0.09651125 -0.4205728 -0.31124721
-[4,] -0.20090146 -0.09709476 -0.28354313  0.32830186  0.1916112 -0.09738907
-[5,] -0.86822005 -0.13192148 -0.08634807 -0.01017014  0.2763200 -0.22570480
+            [,1]        [,2]
+[1,] -0.21539109 -0.79670669
+[2,]  0.06449435  0.16873653
+[3,] -0.23149571 -0.66662065
+[4,] -0.20090146 -0.09709476
+[5,] -0.86822005 -0.13192148
 > MA <- normalizeWithinArrays(mouse.data, mouse.setup)
 > MA$M[1:5,]
             [,1]        [,2]        [,3]        [,4]       [,5]       [,6]

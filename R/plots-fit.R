@@ -1,15 +1,15 @@
 #  PRESENTATION PLOTS
 
-volcanoplot <- function(fit, coef=1, highlight=0, names=fit$genes$ID, ...)
+volcanoplot <- function(fit,coef=1,highlight=0,names=fit$genes$ID,xlab="Log Fold Change",ylab="Log Odds",pch=16,cex=0.35, ...)
 #	Volcano plot of log-fold-change and B-statistic
 #	Gordon Smyth
-#	27 Oct 2006.
+#	27 Oct 2006.  Last modified 26 Sep 2007.
 {
 	if(!is(fit,"MArrayLM")) stop("fit must be an MArrayLM")
 	if(is.null(fit$lods)) stop("No B-statistics found, perhaps eBayes() not yet run")
 	x <- as.matrix(fit$coef)[,coef]
 	y <- as.matrix(fit$lods)[,coef]
-	plot(x,y,xlab="Log Fold Change",ylab="Log Odds",pch=16,cex=0.2,...)
+	plot(x,y,xlab=xlab,ylab=ylab,pch=pch,cex=cex,...)
 	if(highlight>0) {
 		if(is.null(names)) names <- 1:length(x)
 		names <- as.character(names)

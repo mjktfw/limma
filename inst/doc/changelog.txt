@@ -1,3 +1,10 @@
+25 Sep 2007: limma 2.11.14
+
+- plot character and size can now be passed to volcanoplot()
+  as arguments
+- add backgroundCorrect(method="normexp") to automatic test
+  suite (not user visible)
+
 19 Sep 2007: limma 2.11.13
 
 - bug fix for as.matrix.vsn.  This allows vsn objects from vsn2() to

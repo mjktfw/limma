@@ -20,7 +20,7 @@ plotMA(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, yli
   If omitted, all points are plotted in the default color, symbol and size.}
   \item{values}{character vector giving values of \code{status} to be highlighted on the plot. Defaults to unique values of \code{status}.
   Ignored if there is no \code{status} vector.}
-  \item{pch}{vector or list of plotting characters. Default to integer code 16.
+  \item{pch}{vector or list of plotting characters. Default is integer code 16 which gives a solid circle.
   Ignored is there is no \code{status} vector.}
   \item{col}{numeric or character vector of colors, of the same length as \code{values}. Defaults to \code{1:length(values)}.
   Ignored if there is no \code{status} vector.}
