@@ -1,3 +1,19 @@
+27 October 2007: limma 2.13.1
+
+- lmFit() now tries to guess whether a data matrix contains log-ratios
+  or log-intensities.
+  When the input data object is a matrix, it is not possible to know
+  for certain whether the data are log-ratios or log-intensities, and
+  so lmFit() did not set the component Amean in the MArrayLM output
+  object.  lmFit() now sets Amean if the input data values are all
+  positive, because the data are almost certainly log-ratios in that
+  case.
+
+8 October 2007:
+
+Bioconductor Developmental Version 2.2: limma 2.13.0
+Bioconductor Release 2.1: limma 2.12.0
+
 25 Sep 2007: limma 2.11.14
 
 - plot character and size can now be passed to volcanoplot()
@@ -82,6 +98,8 @@
 
 - Bug fix to read.columns() to stop spurious warning message
   when text.to.search has length greater than one.
+
+26 April 2007:
 
 Bioconductor Developmental Version 2.1: limma 2.11.0
 Bioconductor Release 2.0: limma 2.10.0

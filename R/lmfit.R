@@ -3,7 +3,7 @@
 lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation,weights=NULL,method="ls",...)
 #	Fit linear model
 #	Gordon Smyth
-#	30 June 2003.  Last modified 10 March 2007.
+#	30 June 2003.  Last modified 26 September 2007.
 {
 	y <- NULL
 	Amean <- NULL
@@ -60,6 +60,7 @@ lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation,we
 #	Default method
 	if(is.null(y)) {
 		y <- as.matrix(object)
+		if(all(y>=0)) Amean <- rowMeans(unwrapdups(y,ndups=ndups,spacing=spacing),na.rm=TRUE)
 		if(!is.null(rownames(y))) ProbeAnn <- data.frame(ID=I(rownames(y)))
 	}
 
