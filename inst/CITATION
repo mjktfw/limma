@@ -1,10 +1,10 @@
 citHeader("Citing limma in publications will usually involve citing one or more of the methodology papers that the software is based on as well as citing the software package itself. For the methodology papers, see Section 2.1 of the limma User's Guide.  The software itself can be cited as:")
 
-citEntry(entry="inbook",
+citEntry(entry="incollection",
     title = "Limma: linear models for microarray data",
-    author = person(first="Gordon",middle="K",last="Smyth"),
+    author = person(first="Gordon",middle="K.",last="Smyth"),
 	booktitle="Bioinformatics and Computational Biology Solutions using R and Bioconductor",
-	editor="R. Gentleman, V. Carey, S. Dudoit, R. Irizarry, W. Huber",
+	editor="R. Gentleman and V. Carey and S. Dudoit and R. Irizarry, W. Huber",
 	publisher="Springer",
 	address="New York",
     year = 2005,
