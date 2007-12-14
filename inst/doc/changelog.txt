@@ -1,3 +1,10 @@
+14 December 2007: limma 2.13.2
+
+- update normalizeBetweenArrays(method="vsn") to reflect
+  changes in the vsn package version 3.4.1.
+
+- additions to the help file for MArrayLM-class objects
+
 27 October 2007: limma 2.13.1
 
 - lmFit() now tries to guess whether a data matrix contains log-ratios

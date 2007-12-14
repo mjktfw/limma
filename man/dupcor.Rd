@@ -44,7 +44,7 @@ This is not a serious concern providing that there are only a few such warnings 
 The consensus estimator computed by this function will not be materially affected by a small number of genes.
 }
 \seealso{
-These functions use \code{\link[statmod]{randomizedBlockFit}} from the statmod package.
+These functions use \code{\link[statmod]{mixedModel2Fit}} from the statmod package.
 
 An overview of linear model functions in limma is given by \link{06.LinearModels}.
 }

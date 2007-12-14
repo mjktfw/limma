@@ -29,8 +29,11 @@ Objects are normally created by \code{\link{lmFit}}.
     \item{\code{df.prior}:}{\code{numeric} vector giving empirical Bayes estimated degrees of freedom associated with \code{s2.prior} for each gene}
     \item{\code{s2.post}:}{\code{numeric} vector giving posterior residual variances}
     \item{\code{t}:}{\code{matrix} containing empirical Bayes t-statistics}
-    \item{\code{var.prior}:}{\code{numeric} vector giving empirical Bayes estimated variance for each true coefficient}
+    \item{\code{var.prior}:}{\code{numeric} vector giving empirical Bayes estimated prior variance for each true coefficient}
+    \item{\code{cov.coefficients}:}{numeric \code{matrix} giving the unscaled covariance matrix of the estimable coefficients}
+    \item{\code{pivot}:}{\code{integer} vector giving the order of coefficients in \code{cov.coefficients}. Is computed by the QR-decomposition of the design matrix.}  
   }
+  If there are no weights and no missing values, then the \code{MArrayLM} objects returned by \code{lmFit} will also contain the QR-decomposition of the design matrix, and any other components returned by \code{lm.fit}.
 }
 
 \section{Methods}{
