@@ -1,8 +1,14 @@
+2 January 2008: limma 2.13.3
+
+- Section on Mutiple Testing Across Contrasts added to the 
+  User's Guide.
+- The bibTeX entry returned by citatation("limma") now uses
+  @incollection styole instead of @inbook, thanks to Joern Toedling.
+
 14 December 2007: limma 2.13.2
 
 - update normalizeBetweenArrays(method="vsn") to reflect
   changes in the vsn package version 3.4.1.
-
 - additions to the help file for MArrayLM-class objects
 
 27 October 2007: limma 2.13.1
