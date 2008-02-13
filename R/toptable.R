@@ -29,10 +29,10 @@ topTable <- function(fit,coef=NULL,number=10,genelist=fit$genes,adjust.method="B
 topTableF <- function(fit,number=10,genelist=fit$genes,adjust.method="BH")
 #	Summary table of top genes by F-statistic
 #	Gordon Smyth
-#	27 August 2006. Last modified 27 Oct 2006.
+#	27 August 2006. Last modified 13 Feb 2008.
 {
 #	Check input
-	if(!is.null(genelist) && is.null(dim(genelist))) genelist <- data.frame(ProbeID=I(genelist))
+	if(!is.null(genelist) && is.null(dim(genelist))) genelist <- data.frame(ProbeID=genelist,stringsAsFactors=FALSE)
 	M <- as.matrix(fit$coefficients)
 	if(is.null(colnames(M))) colnames(M) <- paste("Coef",1:ncol(M),sep="")
 
@@ -51,7 +51,7 @@ topTableF <- function(fit,number=10,genelist=fit$genes,adjust.method="BH")
 toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.method="BH",sort.by="B",resort.by=NULL,p.value=1,lfc=0,...)
 #	Summary table of top genes
 #	Gordon Smyth
-#	21 Nov 2002. Last revised 27 Mar 2007.
+#	21 Nov 2002. Last revised 13 Feb 2008.
 {
 	if(is.null(eb)) {
 		fit$coefficients <- as.matrix(fit$coefficients)[,coef]
@@ -100,7 +100,7 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 		tab <- data.frame(logFC=M[top])
 	else {
 		if(is.null(dim(genelist)))
-			tab <- data.frame(ID=I(genelist[top]),logFC=M[top])
+			tab <- data.frame(ID=genelist[top],logFC=M[top],stringsAsFactors=FALSE)
 		else
 			tab <- data.frame(genelist[top,,drop=FALSE],logFC=M[top])
 	}

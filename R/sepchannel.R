@@ -101,7 +101,7 @@ targetsA2C <- function(targets,channel.codes=c(1,2),channel.columns=list(Target=
 #	Convert data.frame with one row for each two-color array
 #	into data.frame with one row for each channel
 #	Gordon Smyth
-#	16 March 2004.  Last modified 25 May 2004.
+#	16 March 2004.  Last modified 8 Feb 2008.
 {
 	targets <- as.data.frame(targets)
 	narrays <- nrow(targets)
@@ -132,7 +132,7 @@ targetsA2C <- function(targets,channel.codes=c(1,2),channel.columns=list(Target=
 		}
 	}
 	channel.col <- rep(channel.codes,each=narrays)
-	out <- data.frame(channel.col=I(channel.col),row.names=paste(row.names(targets),channel.col,sep="."))
+	out <- data.frame(channel.col=channel.col,row.names=paste(row.names(targets),channel.col,sep="."),stringsAsFactors=FALSE)
 	if(nothercol) out <- cbind(out,rbind(targets,targets))
 	if(nchannelcol) out <- cbind(out,hyb)
 	o <- as.vector(t(matrix(1:(2*narrays),narrays,2)))

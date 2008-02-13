@@ -1,3 +1,12 @@
+13 February 2008: limma 2.13.4
+
+- all uses of I() in data.frame() arguments removed and replaced
+  with stringsAsFactors=FALSE.  This ensures that the appropriate
+  columns in data.frames will have class "character" instead of
+  "AsIs".
+- arrayWeights() now gives nice error message if the number of
+  arrays is too few to give statistically useful results.
+
 2 January 2008: limma 2.13.3
 
 - Section on Mutiple Testing Across Contrasts added to the 

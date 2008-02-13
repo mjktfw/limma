@@ -1,7 +1,7 @@
 arrayWeights <- function(object, design = NULL, weights = NULL, method="genebygene", maxiter=50, tol = 1e-10, trace = FALSE)
 #	Compute array quality weights
 #	Matt Ritchie
-#	7 Feb 2005. Last revised 4 Dec 2006.
+#	7 Feb 2005. Last revised 16 Jan 2008.
 {
 	M <- NULL
 	if (is(object, "MAList") || is(object, "list")) {
@@ -41,8 +41,10 @@ arrayWeights <- function(object, design = NULL, weights = NULL, method="genebyge
 #        cols <- seq(1:p)
         QR <- qr(design)
         nparams <- QR$rank # ncol(design)
-	ngenes <- dim(M)[1]
-	narrays <- dim(M)[2]
+	ngenes <- nrow(M)
+	narrays <- ncol(M)
+	if(narrays < 3) stop("too few arrays")
+	if(ngenes < narrays) stop("too few probes")
 
 	# Set up design matrix for array variance model
 	Z <- contr.sum(narrays)

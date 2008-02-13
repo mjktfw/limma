@@ -3,7 +3,7 @@
 read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=NULL,columns=NULL,other.columns=NULL,annotation=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote=NULL,...)
 #	Extracts an RG list from a series of image analysis output files
 #	Gordon Smyth. 
-#	1 Nov 2002.  Last revised 3 Feb 2007.
+#	1 Nov 2002.  Last revised 13 Feb 2008.
 {
 #	Begin checking input arguments
 
@@ -134,7 +134,7 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 	if(is.data.frame(targets)) {
 		RG$targets <- targets
 	} else {
-		RG$targets <- data.frame(FileName=I(files),row.names=names)
+		RG$targets <- data.frame(FileName=files,row.names=names,stringsAsFactors=FALSE)
 	}
 
 #	Set annotation columns

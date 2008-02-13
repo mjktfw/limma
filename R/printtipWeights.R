@@ -1,7 +1,7 @@
 printtipWeights <- function(object, design = NULL, weights = NULL, method="genebygene", layout = object$printer, maxiter=50, tol = 1e-10, trace = FALSE)
 #	Compute print-tip quality weights
 #	Matt Ritchie
-#	21 Sep 2006. Last revised 4 Dec 2006.
+#	21 Sep 2006. Last revised 16 Jan 2008.
 {
 	M <- NULL
 	if (is(object, "MAList") || is(object, "list")) {
@@ -28,17 +28,18 @@ printtipWeights <- function(object, design = NULL, weights = NULL, method="geneb
 	design <- as.matrix(design)
 
 	if(mode(design) != "numeric") stop("design must be a numeric matrix")
-	    ne <- nonEstimable(design)
-	if(!is.null(ne))
-            cat("Coefficients not estimable:",paste(ne,collapse=" "),"\n")
-        p <- ncol(design)
-#        cols <- seq(1:p)
-        QR <- qr(design)
-        nparams <- QR$rank # ncol(design)
-        nprobes <- nrow(M)
+	ne <- nonEstimable(design)
+	if(!is.null(ne)) cat("Coefficients not estimable:",paste(ne,collapse=" "),"\n")
+	p <- ncol(design)
+#	cols <- seq(1:p)
+	QR <- qr(design)
+	nparams <- QR$rank # ncol(design)
+	nprobes <- nrow(M)
 	narrays <- ncol(M)
-        if(is.null(layout)) stop("printer layout information must be specified")
-        ngr <- layout$ngrid.r
+	if(narrays < 3) stop("too few arrays")
+	if(nprobes < narrays) stop("too few probes")
+	if(is.null(layout)) stop("printer layout information must be specified")
+	ngr <- layout$ngrid.r
 	ngc <- layout$ngrid.c
 	nspots <- layout$nspot.r * layout$nspot.c
 	nprobes2 <- ngr*ngc*nspots
