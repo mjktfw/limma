@@ -5,7 +5,7 @@
 
 \description{
 A class for storing intensity values from microarray experiments.
-This class is similar to \code{\link[Biobase:exprSet-class]{exprSet}}.
+This class is similar to \code{\link[Biobase:ExpressionSet-class]{ExpressionSet}}.
 
 This class is not currently used in the limma package.
 It is an experimental class to investigate the possibility of a unified data class structure for single-channel and log-ratio analyses of spotted microarray data.
@@ -33,7 +33,7 @@ It is an experimental class to investigate the possibility of a unified data cla
 \seealso{
   \link{02.Classes} gives an overview of all the classes defined by this package.
   
-  \code{\link[Biobase:exprSet-class]{exprSet}} is the corresponding class in the Biobase package.
+  \code{\link[Biobase:ExpressionSet-class]{ExpressionSet}} is the corresponding class in the Biobase package.
 }
 
 \keyword{classes}

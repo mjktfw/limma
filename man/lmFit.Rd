@@ -6,7 +6,7 @@
 lmFit(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation,weights=NULL,method="ls",...) 
 }
 \arguments{
-  \item{object}{object of class \code{numeric}, \code{matrix}, \code{MAList}, \code{marrayNorm}, \code{exprSet}, \code{ExpressionSet} or \code{PLMset} containing log-ratios or log-values of expression for a series of microarrays}
+  \item{object}{object of class \code{numeric}, \code{matrix}, \code{MAList}, \code{marrayNorm}, \code{ExpressionSet} or \code{PLMset} containing log-ratios or log-values of expression for a series of microarrays}
   \item{design}{the design matrix of the microarray experiment, with rows corresponding to arrays and columns to coefficients to be estimated.  Defaults to the unit vector meaning that the arrays are treated as replicates.} 
   \item{ndups}{positive integer giving the number of times each gene is printed on an array}
   \item{spacing}{positive integer giving the spacing between duplicate spots, \code{spacing=1} for consecutive spots}
@@ -40,14 +40,14 @@ If \code{object} is a matrix then it should contain log-ratios or log-expression
 (A numeric vector is treated the same as a matrix with one column.)
 For objects of other classes, a matrix of expression values is taken from the appropriate component or slot of the object.
 If \code{object} is of class \code{MAList} or \code{marrayNorm}, then the matrix of log-ratios (M-values) is extracted.
-If \code{object} is of class \code{exprSet} then the \code{exprs} slot is extracted.
+If \code{object} is of class \code{ExpressionSet}, then the expression matrix is extracted.
 (This may contain log-expression or log-ratio values, depending on the platform.)
 If \code{object} is of class \code{PLMset} then the matrix of chip coefficients \code{chip.coefs} is extracted.
 
 The arguments \code{design}, \code{ndups}, \code{spacing} and \code{weights} will be extracted from the data \code{object} if available and do not normally need to set explicitly in the call.
 On the other hand, if any of these are set in the function call then they will over-ride the slots or components in the data \code{object}.
 If \code{object} is an \code{PLMset}, then weights are computed as \code{1/pmax(object@se.chip.coefs, 1e-05)^2}.
-If \code{object} is an \code{exprSet} object, then weights are not computed.
+If \code{object} is an \code{ExpressionSet} object, then weights are not computed.
 
 If the argument \code{block} is used, then it is assumed that \code{ndups=1}.
 

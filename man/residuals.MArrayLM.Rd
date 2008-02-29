@@ -7,7 +7,7 @@
 \arguments{
   \item{object}{a fitted model object inheriting from class \code{MarrayLM}.}
   \item{y}{a data object containing the response data used to compute the fit.
-  This can be of any class for which \code{as.matrix} is defined, including \code{MAList}, \code{exprSet}, \code{marrayNorm} etc.}
+  This can be of any class for which \code{as.matrix} is defined, including \code{MAList}, \code{ExpressionSet}, \code{marrayNorm} etc.}
   \item{\dots}{other arguments are not used}
 }
 \description{

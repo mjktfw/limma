@@ -3,7 +3,7 @@
 #  All functions exported other than those starting with "."
 exportPattern("^[^\\.]")
 
-#importClassesFrom(Biobase,exprSet)
+#importClassesFrom(Biobase,ExpressionSet)
 #importClassesFrom(marray,marrayNorm)
 #importClassesFrom(affyPLM,PLMset)
 
@@ -15,7 +15,6 @@ S3method("[",MArrayLM)
 S3method("[",RGList)
 S3method(anova,MAList)
 S3method(as.data.frame,MArrayLM)
-S3method(as.matrix,exprSet)
 S3method(as.matrix,MAList)
 S3method(as.matrix,MArrayLM)
 S3method(as.matrix,marrayNorm)
@@ -48,5 +47,3 @@ S3method(summary,MAList)
 S3method(summary,MArrayLM)
 S3method(summary,RGList)
 S3method(summary,TestResults)
-    
-

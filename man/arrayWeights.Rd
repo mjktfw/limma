@@ -12,7 +12,7 @@ arrayWeightsSimple(object, design = NULL, maxiter = 100, tol = 1e-6, maxratio = 
 }
 \arguments{
  \item{object}{object of class \code{numeric}, \code{matrix}, \code{MAList}, \code{marrayNorm},
-           \code{exprSet} or \code{PLMset} containing log-ratios or log-values of
+           \code{ExpressionSet} or \code{PLMset} containing log-ratios or log-values of
             expression for a series of microarrays.}
  \item{design}{the design matrix of the microarray experiment, with rows
            corresponding to arrays and columns to coefficients to be

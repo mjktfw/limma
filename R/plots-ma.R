@@ -3,7 +3,7 @@
 plotMA <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
 #	MA-plot with color coding for controls
 #	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.
-#	Last modified 8 July 2004.
+#	Last modified 27 Feb 2008.
 {
 	switch(class(MA),
 	"RGList" = {
@@ -39,16 +39,16 @@ plotMA <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xl
 		y <- MA[,array]-x
 		w <- NULL
 	},
-	"exprSet" = {
-		narrays <- ncol(MA@exprs)
+	"ExpressionSet" = {
+		narrays <- ncol(exprs(MA))
 		if(narrays < 2) stop("Need at least two arrays")
 		if(narrays > 5)
-			x <- apply(MA@exprs,1,median,na.rm=TRUE)
+			x <- apply(exprs(MA),1,median,na.rm=TRUE)
 		else
-			x <- rowMeans(MA@exprs,na.rm=TRUE)
-		y <- MA@exprs[,array]-x
+			x <- rowMeans(exprs(MA),na.rm=TRUE)
+		y <- exprs(MA)[,array]-x
 		w <- NULL
-		if(missing(main)) main <- colnames(MA@exprs)[array]
+		if(missing(main)) main <- colnames(exprs(MA))[array]
 	},
 	stop("MA is invalid object")
 	)

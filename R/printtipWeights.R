@@ -1,7 +1,7 @@
 printtipWeights <- function(object, design = NULL, weights = NULL, method="genebygene", layout = object$printer, maxiter=50, tol = 1e-10, trace = FALSE)
 #	Compute print-tip quality weights
 #	Matt Ritchie
-#	21 Sep 2006. Last revised 16 Jan 2008.
+#	21 Sep 2006. Last revised 27 Feb 2008.
 {
 	M <- NULL
 	if (is(object, "MAList") || is(object, "list")) {
@@ -16,8 +16,8 @@ printtipWeights <- function(object, design = NULL, weights = NULL, method="geneb
 			if (missing(weights) && length(object@maW))
 				weights <- object@maW
 		} else {
-			if (is(object, "exprSet"))
-				M <- object@exprs
+			if (is(object, "ExpressionSet"))
+				M <- exprs(object)
 		}
 	}
 

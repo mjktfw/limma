@@ -9,7 +9,7 @@ arrayWeightsQuick(y, fit)
 }
 \arguments{
   \item{y}{the data object used to estimate \code{fit}.
-  Can be of any class which can be coerced to matrix, including \code{matrix}, \code{MAList}, \code{marrayNorm} or \code{exprSet}.}
+  Can be of any class which can be coerced to matrix, including \code{matrix}, \code{MAList}, \code{marrayNorm} or \code{ExpressionSet}.}
   \item{fit}{\code{MArrayLM} fitted model object}
 }
 \details{

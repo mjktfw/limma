@@ -9,7 +9,7 @@ plotMA(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, yli
 }
 \arguments{
   \item{MA}{an \code{RGList}, \code{MAList} or \code{MArrayLM} object, or any list with components \code{M} containing log-ratios and \code{A} containing average intensities.
-  Alternatively a \code{matrix} or \code{exprSet} object.}
+  Alternatively a \code{matrix} or \code{ExpressionSet} object.}
   \item{array}{integer giving the array to be plotted. Corresponds to columns of \code{M} and \code{A}.}
   \item{xlab}{character string giving label for x-axis}
   \item{ylab}{character string giving label for y-axis}
@@ -37,7 +37,7 @@ An MA-plot is a plot of log-intensity ratios (M-values) versus log-intensity ave
 If \code{MA} is an \code{RGList} or \code{MAList} then this function produces an ordinary within-array MA-plot.
 If \code{MA} is an \code{MArrayLM} object, then the plot is an fitted model MA-plot in which the estimated coefficient is on the y-axis and the average A-value is on the x-axis.
 
-If \code{MA} is a \code{matrix} or \code{exprSet} object, then this function produces a between-array MA-plot.
+If \code{MA} is a \code{matrix} or \code{ExpressionSet} object, then this function produces a between-array MA-plot.
 In this case the A-values in the plot are the average log-intensities across the arrays and the M-values are the deviations of the log-intensities for the specified array from the average.
 If there are more than five arays, then the average is computed robustly using medians.
 With five or fewer arrays, it is computed by means.

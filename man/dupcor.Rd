@@ -8,7 +8,7 @@ Estimate the correlation between duplicate spots (regularly spaced replicate spo
 duplicateCorrelation(object,design=rep(1,ncol(as.matrix(object))),ndups=2,spacing=1,block=NULL,trim=0.15,weights=NULL)
 }
 \arguments{
-  \item{object}{a numeric matrix of expression values, or any data object from which \code{as.matrix} will extract a suitable matrix such as an \code{\link[limma:malist]{MAList}}, \code{marrayNorm} or \code{exprSet} object.
+  \item{object}{a numeric matrix of expression values, or any data object from which \code{as.matrix} will extract a suitable matrix such as an \code{\link[limma:malist]{MAList}}, \code{marrayNorm} or \code{ExpressionSet} object.
   If \code{object} is an \code{MAList} object then the arguments \code{design}, \code{ndups}, \code{spacing} and \code{weights} will be extracted from it if available and do not have to be specified as arguments.
   Specifying these arguments explicitly will over-rule any components found in the data object.}
   \item{design}{the design matrix of the microarray experiment, with rows corresponding to arrays and columns to comparisons to be estimated. The number of rows must match the number of columns of \code{object}. Defaults to the unit vector meaning that the arrays are treated as replicates.} 

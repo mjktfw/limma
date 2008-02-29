@@ -12,7 +12,7 @@ printtipWeights(object, design = NULL, weights = NULL, method = "genebygene", la
 }
 \arguments{
  \item{object}{object of class \code{numeric}, \code{matrix}, \code{MAList}, \code{marrayNorm},
-           or \code{exprSet} containing log-ratios or log-values of
+           or \code{ExpressionSet} containing log-ratios or log-values of
            expression for a series of spotted microarrays.}
  \item{design}{the design matrix of the microarray experiment, with rows
            corresponding to arrays and columns to coefficients to be

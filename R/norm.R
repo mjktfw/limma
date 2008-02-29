@@ -65,7 +65,7 @@ loessFit <- function(y, x, weights=NULL, span=0.3, bin=0.01/(2-is.null(weights))
 #	This function is an edited copy, with some steps removed that are not needed here,
 #  of the R function stats:::simpleLoess by BD Ripley
 #	Gordon Smyth
-#	28 June 2003.  Last modified 7 March 2004.
+#	28 June 2003.  Last modified 27 Feb 2008.
 {
 	statistics <- "none"
 	surface <- "interpolate"
@@ -99,7 +99,7 @@ loessFit <- function(y, x, weights=NULL, span=0.3, bin=0.01/(2-is.null(weights))
 			fitted.residuals <- y - z$fitted.values
 			if (j < iterations) 
 				robust <- .Fortran("lowesw", as.double(fitted.residuals), 
-				as.integer(N), robust = double(N), double(N), 
+				as.integer(N), robust = double(N), integer(N), 
 				PACKAGE = "stats")$robust
 		}
 	list(fitted = z$fitted.values, residuals = fitted.residuals)

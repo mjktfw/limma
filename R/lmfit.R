@@ -3,7 +3,7 @@
 lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation,weights=NULL,method="ls",...)
 #	Fit linear model
 #	Gordon Smyth
-#	30 June 2003.  Last modified 13 Feb 2008.
+#	30 June 2003.  Last modified 27 Feb 2008.
 {
 	y <- NULL
 	Amean <- NULL
@@ -38,14 +38,6 @@ lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation,we
 		if(missing(weights) && length(object@se.chip.coefs)) weights <- 1/pmax(object@se.chip.coefs,1e-5)^2
 		Amean <- rowMeans(unwrapdups(y,ndups=ndups,spacing=spacing),na.rm=TRUE)
 	} else {
-	if(is(object,"exprSet")) {
-#		don't use accessor function so don't have to require Biobase
-		y <- object@exprs
-		if(!is.null(rownames(y))) ProbeAnn <- data.frame(ID=rownames(y),stringsAsFactors=FALSE)
-#		don't use weights until this is more thoroughly tested
-#		if(missing(weights) && length(object@se.exprs)) weights <- 1/pmax(object@se.exprs,1e-5)^2
-		Amean <- rowMeans(unwrapdups(y,ndups=ndups,spacing=spacing),na.rm=TRUE)
-	} else {
 	if(is(object,"ExpressionSet")) {
 		y <- get("exprs",env=object@assayData)
 		if(length(object@featureData@data)) ProbeAnn <- object@featureData@data
@@ -56,7 +48,7 @@ lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation,we
 				ProbeAnn$ID <- rownames(y)
 		}
 		Amean <- rowMeans(unwrapdups(y,ndups=ndups,spacing=spacing),na.rm=TRUE)
-	}}}}}
+	}}}}
 #	Default method
 	if(is.null(y)) {
 		y <- as.matrix(object)

@@ -1,7 +1,7 @@
 arrayWeights <- function(object, design = NULL, weights = NULL, method="genebygene", maxiter=50, tol = 1e-10, trace = FALSE)
 #	Compute array quality weights
 #	Matt Ritchie
-#	7 Feb 2005. Last revised 16 Jan 2008.
+#	7 Feb 2005. Last revised 27 Feb 2008.
 {
 	M <- NULL
 	if (is(object, "MAList") || is(object, "list")) {
@@ -23,8 +23,8 @@ arrayWeights <- function(object, design = NULL, weights = NULL, method="genebyge
 				if (missing(weights) && length(object@se.chip.coefs))
 					weights <- 1/pmax(object@se.chip.coefs, 1e-05)^2
 			} else {
-				if (is(object, "exprSet"))
-					M <- object@exprs
+				if (is(object, "ExpressionSet"))
+					M <- exprs(object)
 			}
 		}
 	}
