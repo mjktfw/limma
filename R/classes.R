@@ -15,24 +15,6 @@ setClass("MArrayLM",
 representation("list")
 )
 
-setClass("exprSet2",representation(
-	expressions="matrix",
-	weights="matrix",
-	targets="data.frame",
-	probes="data.frame",
-	printer="list",
-	notes="character"
-))
-
-setAs("RGList", "exprSet2", function(from, to) {
-	y <- new(to)
-	if(length(from$G)) y@expressions <- cbind(from$G,from$R)
-	if(length(from$weights)) y@weights <- cbind(from$weights,from$weights)
-	if(length(from$genes)) y@probes <- from$genes
-	if(length(from$printer)) y@printer <- unclass(from$printer)
-	y
-})
-
 printHead <- function(x)
 #  Print leading 5 elements or rows of atomic object
 #  Gordon Smyth
@@ -89,7 +71,6 @@ setClass("LargeDataObject")
 setIs("RGList","LargeDataObject")
 setIs("MAList","LargeDataObject")
 setIs("MArrayLM","LargeDataObject")
-setIs("exprSet2","LargeDataObject")
 
 setMethod("show","LargeDataObject",
 #  Print and show method large data objects

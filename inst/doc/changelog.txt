@@ -1,5 +1,20 @@
+8 March 2008: limma 2.13.6
+
+- Bug fix when matrix data object passed to lmFit() containing
+  missing values.  The check for log-intensities vs log-ratios
+  introduced 27 Oct 2007 did not remove missing values and
+  hence produced an error.
+- New function getEAWP() introduced to unify the treatment of
+  different classes of microarray data objects as input to linear
+  model functions such as lmFit(), arrayWeights() and
+  printtipWeights().
+- Class exprSet2 removed.
+
 27 February 2008: limma 2.13.5
-- Replaced usage of Biobase's exprSet class with ExpressionSet
+
+- All usage of Biobase's exprSet class removed or replaced with
+  ExpressionSet.
+- Fortran call in .vsimpleLoess() function updated.
 
 13 February 2008: limma 2.13.4
 

@@ -1,46 +1,25 @@
-arrayWeights <- function(object, design = NULL, weights = NULL, method="genebygene", maxiter=50, tol = 1e-10, trace = FALSE)
+arrayWeights <- function(object, design=NULL, weights=NULL, method="genebygene", maxiter=50, tol = 1e-10, trace = FALSE)
 #	Compute array quality weights
 #	Matt Ritchie
-#	7 Feb 2005. Last revised 27 Feb 2008.
+#	7 Feb 2005. Last revised 16 Jan 2008.
+#	Gordon Smyth simplified argument checking to use getEAWP, 9 Mar 2008.
 {
-	M <- NULL
-	if (is(object, "MAList") || is(object, "list")) {
-		M <- object$M
-		if (missing(design) && !is.null(object$design))
-			design <- object$design
-		if (missing(weights) && !is.null(object$weights))
-			weights <- object$weights
-	} else {
-		if (is(object, "marrayNorm")) {
-			M <- object@maM
-			if (missing(weights) && length(object@maW))
-				weights <- object@maW
-		} else {
-			if (is(object, "PLMset")) {
-				M <- object@chip.coefs
-				if (length(M) == 0)
-					stop("chip.coefs has length zero")
-				if (missing(weights) && length(object@se.chip.coefs))
-					weights <- 1/pmax(object@se.chip.coefs, 1e-05)^2
-			} else {
-				if (is(object, "ExpressionSet"))
-					M <- exprs(object)
-			}
-		}
-	}
-	if (is.null(M))
-		M <- as.matrix(object)
-	if (is.null(design))
-		design <- matrix(1, ncol(M), 1)
-	design <- as.matrix(design)
+#	Check arguments
+	y <- getEAWP(object)
+	if(is.null(design))
+		design <- matrix(1,ncol(y$exprs),1)
+	else
+		design <- as.matrix(design)
 	if(mode(design) != "numeric") stop("design must be a numeric matrix")
-	    ne <- nonEstimable(design)
-	if(!is.null(ne))
-            cat("Coefficients not estimable:",paste(ne,collapse=" "),"\n")
-        p <- ncol(design)
-#        cols <- seq(1:p)
-        QR <- qr(design)
-        nparams <- QR$rank # ncol(design)
+	ne <- nonEstimable(design)
+	if(!is.null(ne)) cat("Coefficients not estimable:",paste(ne,collapse=" "),"\n")
+	if(missing(weights) && !is.null(y$weights)) weights <- y$weights
+	method <- match.arg(method,c("genebygene","reml"))
+
+	M <- y$exprs
+	p <- ncol(design)
+   QR <- qr(design)
+   nparams <- QR$rank # ncol(design)
 	ngenes <- nrow(M)
 	narrays <- ncol(M)
 	if(narrays < 3) stop("too few arrays")
@@ -52,7 +31,6 @@ arrayWeights <- function(object, design = NULL, weights = NULL, method="genebyge
 	# Intialise array variances to zero
 	arraygammas <- rep(0, (narrays-1))
 
-	method <- match.arg(method,c("genebygene","reml"))
 	switch(method, genebygene = {  # Estimate array variances via gene-by-gene update algorithm
 		Zinfo <- 10*(narrays-nparams)/narrays*crossprod(Z, Z)
 		for(i in 1:ngenes) {

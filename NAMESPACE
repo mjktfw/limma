@@ -3,10 +3,6 @@
 #  All functions exported other than those starting with "."
 exportPattern("^[^\\.]")
 
-#importClassesFrom(Biobase,ExpressionSet)
-#importClassesFrom(marray,marrayNorm)
-#importClassesFrom(affyPLM,PLMset)
-
 exportClasses("RGList","MAList","MArrayLM","TestResults","LargeDataObject")
 exportMethods("show")
 

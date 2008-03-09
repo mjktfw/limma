@@ -1,35 +1,22 @@
 printtipWeights <- function(object, design = NULL, weights = NULL, method="genebygene", layout = object$printer, maxiter=50, tol = 1e-10, trace = FALSE)
 #	Compute print-tip quality weights
 #	Matt Ritchie
-#	21 Sep 2006. Last revised 27 Feb 2008.
+#	21 Sep 2006. Last revised 16 Jan 2008.
+#	Gordon Smyth simplified argument checking to use getEAWP, 9 Mar 2008.
 {
-	M <- NULL
-	if (is(object, "MAList") || is(object, "list")) {
-		M <- object$M
-		if (missing(design) && !is.null(object$design))
-			design <- object$design
-		if (missing(weights) && !is.null(object$weights))
-			weights <- object$weights
-	} else {
-		if (is(object, "marrayNorm")) {
-			M <- object@maM
-			if (missing(weights) && length(object@maW))
-				weights <- object@maW
-		} else {
-			if (is(object, "ExpressionSet"))
-				M <- exprs(object)
-		}
-	}
-
-	if (is.null(M))
-		M <- as.matrix(object)
-	if (is.null(design))
-		design <- matrix(1, ncol(M), 1)
-	design <- as.matrix(design)
-
+#	Check arguments
+	y <- getEAWP(object)
+	if(is.null(design))
+		design <- matrix(1,ncol(y$exprs),1)
+	else
+		design <- as.matrix(design)
 	if(mode(design) != "numeric") stop("design must be a numeric matrix")
 	ne <- nonEstimable(design)
 	if(!is.null(ne)) cat("Coefficients not estimable:",paste(ne,collapse=" "),"\n")
+	if(missing(weights) && !is.null(y$weights)) weights <- y$weights
+	method <- match.arg(method,c("genebygene","reml"))
+
+	M <- y$exprs
 	p <- ncol(design)
 #	cols <- seq(1:p)
 	QR <- qr(design)

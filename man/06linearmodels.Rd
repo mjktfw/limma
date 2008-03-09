@@ -31,7 +31,7 @@ This is recommended interface for most users.
 	The function \code{\link{duplicateCorrelation}} is used to estimate the inter-duplicate or inter-block correlation before using \code{gls.series}.}
 }
 
-All the functions which fit linear models use \code{\link{unwrapdups}} which provides an unified method for handling duplicate spots.
+All the functions which fit linear models use \code{link{getEAW}} to extract data from microarray data objects, and \code{\link{unwrapdups}} which provides an unified method for handling duplicate spots.
 }
 
 \section{Forming the Design Matrix}{

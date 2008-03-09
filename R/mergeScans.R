@@ -144,7 +144,6 @@
 #-------------------------------------------------------------------------------------------handle missing when merging
 
 mergeScansRG <- function(RGlow, RGhigh, AboveNoiseLowG=NULL,AboveNoiseLowR=NULL,outlierp=0.01){
-require(limma)
 Glow<-RGlow$G
 Rlow<-RGlow$R
 Ghigh<-RGhigh$G
