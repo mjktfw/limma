@@ -1,5 +1,7 @@
 8 March 2008: limma 2.13.6
 
+- lmFit() now warns if coefficients become inestimable due to
+  missing values.
 - Bug fix when matrix data object passed to lmFit() containing
   missing values.  The check for log-intensities vs log-ratios
   introduced 27 Oct 2007 did not remove missing values and
@@ -29,7 +31,7 @@
 
 - Section on Mutiple Testing Across Contrasts added to the 
   User's Guide.
-- The bibTeX entry returned by citatation("limma") now uses
+- The bibTeX entry returned by citation("limma") now uses
   @incollection styole instead of @inbook, thanks to Joern Toedling.
 
 14 December 2007: limma 2.13.2
