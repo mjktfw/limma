@@ -3,6 +3,7 @@
 \title{Gene Set Test}
 \description{
 Test whether a set of genes is enriched for differential expression.
+Genes are assumed to be independent.
 }
 \usage{
 geneSetTest(selected,statistics,alternative="mixed",type="auto",ranks.only=TRUE,nsim=10000)
@@ -20,8 +21,18 @@ geneSetTest(selected,statistics,alternative="mixed",type="auto",ranks.only=TRUE,
 Numeric value giving the estimated p-value.
 }
 \details{
-This function computes a p-value to test the hypothesis that the selected genes tend to be differentially expressed.
-The aim here is the same as for Gene Set Enrichment Analysis introduced by Mootha et al (2003), but the statistical tests used are different.
+This function computes a p-value to test the hypothesis that the selected set of genes tends to be more highly ranked in differential expression compared to randomly selected genes.
+This function can be used to detect differential expression for a group of genes, even when the effects are too small or there is too little data to detect the genes individually.
+It is also provides a means to compare the results between different experiments.
+
+The aim here is the same as for Gene Set Enrichment Analysis (GSEA) introduced by Mootha et al (2003) and Subramanian et al (2005), but the statistical tests used are different.
+There are two key differences.
+Firstly, \code{geneSetTest} assumes that the different genes (or probes) are independent.
+(Strictly speaking, it assumes that the genes in the set are no more correlated on average than randomly selected genes.)
+This assumption may be reasonable if the gene set is relatively small and if there is relatively little genotypic variation in the data, for example if the data is obtained from genetically identical inbred mice.
+The independence assumption may be misleading if the gene set is large or if the data contains a lot of genotypic variation, for example for human cancer samples.
+Secondly, the \code{geneSetTest} is purely competitive in that the gene set is compared to other genes, rather than a self-contained test of differential expressed for the genes in the gene set (Goeman and Buhlmann, 2007).
+These assumptions, when valid, permit a much quicker and more powerful significance test to be conducted.
 
 The \code{statistics} are usually a set of probe-wise statistics arising for some comparison from a microarray experiment.
 They may be t-statistics, meaning that the genewise null hypotheses would be rejected for large positive or negative values, or they may be F-statistics, meaning that only large values are significant.
@@ -46,15 +57,15 @@ In this case the p-value is obtained from a Wilcoxon test.
 If \code{ranks.only} is \code{FALSE}, then the p-value is obtained by simulation using \code{nsim} random selected sets of genes.
 }
 
-\note{
-This function can be used to detect differential expression for a group of genes, even when the effects are too small or there is too little data to detect the genes individually.
-It is also provides a means to compare the results between different experiments.
-}
-
 \seealso{\code{\link[stats]{wilcox.test}}}
 \author{Gordon Smyth}
 
 \references{
+Goeman, JJ, and Buhlmann P 
+(2007)
+Analyzing gene expression data in terms of gene sets: methodological issues.
+\emph{Bioinformatics} 23, 980-987. 
+
 Mootha, V. K.,
 Lindgren, C. M.,
 Eriksson, K. F.,
@@ -79,6 +90,11 @@ Groop, L. C.
 (2003). 
 PGC-1alpha-responsive genes involved in oxidative phosphorylation are coordinately downregulated in human diabetes.
 \emph{Nature Genetics} 34, 267-273.
+
+Subramanian A, Tamayo P, Mootha VK, Mukherjee S, Ebert BL, Gillette MA, Paulovich A, Pomeroy SL, Golub TR, Lander ES, Mesirov JP.
+(2005).
+Gene set enrichment analysis: a knowledge-based approach for interpreting genome-wide expression profiles.
+\emph{Proc Natl Acad Sci USA} 102, 15545-15550.
 }
 
 \examples{

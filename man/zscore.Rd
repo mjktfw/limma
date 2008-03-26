@@ -20,7 +20,7 @@ tZscore(x, df)
 \item{shape}{gamma shape parameter (>0)}
 \item{rate}{gamma rate parameter (>0)}
 \item{scale}{gamma scale parameter (>0)}
-\item{df}{degrees of freedom (>0 for \code{zscore} or >=1 for \code{tZscore})}
+\item{df}{degrees of freedom (>0 for \code{zscoreT} or >=1 for \code{tZscore})}
 }
 
 \value{

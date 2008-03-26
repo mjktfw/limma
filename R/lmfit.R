@@ -120,17 +120,6 @@ lm.series <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL)
 	list(coefficients=drop(beta),stdev.unscaled=drop(stdev.unscaled),sigma=sigma,df.residual=df.residual,cov.coefficients=cov.coef,pivot=QR$pivot)
 }
 
-rlm.series <- function(x,...)
-#	Gordon Smyth
-#	Deprecated 1 Sep 2004
-{
-	.Deprecated("mrlm")
-	m <- match.call()
-	m[[1]] <- as.name("mrlm")
-	names(m)[2] <- "M"
-	eval(m)
-}
-
 mrlm <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL,...)
 #	Robustly fit linear model for each gene to a series of arrays
 #	Gordon Smyth
