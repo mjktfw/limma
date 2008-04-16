@@ -53,27 +53,6 @@ strsplit2 <- function(x, split, extended = TRUE, fixed = FALSE, perl = FALSE) {
 	out
 }
 
-splitName <- function(x, split=";", extended=TRUE) {
-#	Split composite gene names into short names and annotation information
-#	Gordon Smyth
-#	8 May 2003.  Last modified 29 May 2003.
-
-	.Deprecated("strsplit2")
-	s <- strsplit(x,split,extended)
-	function1 <- function(x) {
-		n <- length(x)
-		if(n > 0)
-			if(n > 2) paste(x[1:(n-1)],collapse=split) else x[1]
-		else
-			""
-	}
-	function2 <- function(x) {
-		n <- length(x)
-		if(n > 1) x[n] else ""
-	}
-	list(Name=unlist(lapply(s,function1)), Annotation=unlist(lapply(s,function2)))
-}
-
 getLayout <- function(gal,guessdups=FALSE)
 #	Guess print layout from a gene list including Block, Row and Column indices
 #	as for a GenePix Allocation List (GAL)

@@ -1,3 +1,17 @@
+16 April 2008: limma 2.13.8
+
+- bug fix to normalizeBetweenArrays(method="vsn").  When the
+  function was updated on 14 December 2007 to use vsnMatrix,
+  it had not been noticed that vsnMatrix returns log2 results
+  whereas the older vsn function returned loge results.  The
+  results returned by normalizeBetweenArrays(method="vsn") are
+  again now log2, similar to before 14 December 2007.
+- method option "neldermean" for normexp.fit() corrected
+  to "neldermead"
+- deprecated function splitName() removed
+- the help page for backgroundCorrect edited for improved
+  readability
+
 26 March 2008: limma 2.13.7
 
 - the function rlm.series(), deprecated in 2004, is now removed

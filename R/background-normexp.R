@@ -32,7 +32,7 @@ normexp.fit <- function(x, method="saddle", n.pts=NULL, trace=FALSE)
 	if(any(isna)) x <- x[!isna]
 	if(length(x)<4) stop("Not enough data: need at least 4 non-missing corrected intensities")
 
-	method <- match.arg(method,c("saddle","neldermean","bfgs","rma","mcgee"))
+	method <- match.arg(method,c("saddle","neldermead","bfgs","rma","mcgee"))
 
 	if(method=="rma") {
 		require(affy)

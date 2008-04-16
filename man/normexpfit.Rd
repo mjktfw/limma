@@ -11,7 +11,7 @@ normexp.fit(x, method="saddle", n.pts=NULL, trace=FALSE)
 }
 \arguments{
   \item{x}{numeric vector of (background corrected) intensities}
-  \item{method}{method used to estimate the three parameters, choices are \code{"saddle"}, \code{"neldermean"}, \code{"bfgs"}, \code{"rma"} and \code{"mcgee"}.}
+  \item{method}{method used to estimate the three parameters, choices are \code{"saddle"}, \code{"neldermead"}, \code{"bfgs"}, \code{"rma"} and \code{"mcgee"}.}
   \item{n.pts}{number of quantiles of \code{x} to use for the fit. If \code{NA} then all values of \code{x} will be used.}
   \item{trace}{logical, if \code{TRUE}, tracing information on the progress of the optimization is given.}
 }
@@ -23,7 +23,7 @@ This is essentially the same model which is used by \code{bg.correct.rma} in the
 The difference is that the parameters are estimated by maximum likelihood and that the estimated background is subtracted before applying the model-based background.
 
 For speed and numerical stability, the likelihood function is approximated by default using a saddle-point approximation.
-Other choices are \code{"neldermean"} or \code{"bfgs"} which attempt to maximize the exact log-likelihood, which may be numerically unstable.
+Other choices are \code{"neldermead"} or \code{"bfgs"} which attempt to maximize the exact log-likelihood, which may be numerically unstable.
 \code{"rma"} uses the kernel estimation method from the RMA algorithm of affy package.
 \code{"mcgee"} uses the RMA-75 method from McGee and Chen (2006).
 

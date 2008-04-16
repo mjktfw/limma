@@ -434,7 +434,7 @@ plotPrintorder <- function(object,layout,start="topleft",slide=1,method="loess",
 normalizeBetweenArrays <- function(object, method="Aquantile", targets=NULL, ...) {
 #	Normalize between arrays
 #	Gordon Smyth
-#	12 Apri 2003.  Last revised 14 December 2007.
+#	12 Apri 2003.  Last revised 16 April 2008.
 
 	choices <- c("none","scale","quantile","Aquantile","Gquantile","Rquantile","Tquantile","vsn")
 	method <- match.arg(method,choices)
@@ -458,8 +458,8 @@ normalizeBetweenArrays <- function(object, method="Aquantile", targets=NULL, ...
 		if(is.null(y)) stop("object doesn't appear to be RGList or MAList")
 		y <- vsnMatrix(x=y,...)
 		n2 <- ncol(y@hx)/2
-		G <- y@hx[,1:n2]/log(2)
-		R <- y@hx[,n2+(1:n2)]/log(2)
+		G <- y@hx[,1:n2]
+		R <- y@hx[,n2+(1:n2)]
 		object$M <- R-G
 		object$A <- (R+G)/2
 		if(!is(object,"MAList")) object <- new("MAList",unclass(object))
