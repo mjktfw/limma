@@ -1,3 +1,10 @@
+24 April 2008: limma 2.13.9
+
+- normalizeBetweenArrays(method="vsn") now gives an error
+  if object is an MAList.
+- normalizeBetweenArrays(method="vsn") now uses vsnMatrix()
+  when the data object is a matrix.
+
 16 April 2008: limma 2.13.8
 
 - bug fix to normalizeBetweenArrays(method="vsn").  When the

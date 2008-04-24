@@ -434,7 +434,7 @@ plotPrintorder <- function(object,layout,start="topleft",slide=1,method="loess",
 normalizeBetweenArrays <- function(object, method="Aquantile", targets=NULL, ...) {
 #	Normalize between arrays
 #	Gordon Smyth
-#	12 Apri 2003.  Last revised 16 April 2008.
+#	12 Apri 2003.  Last revised 24 April 2008.
 
 	choices <- c("none","scale","quantile","Aquantile","Gquantile","Rquantile","Tquantile","vsn")
 	method <- match.arg(method,choices)
@@ -445,24 +445,22 @@ normalizeBetweenArrays <- function(object, method="Aquantile", targets=NULL, ...
 			none = object,
 			scale = normalizeMedianAbsValues(object),
 			quantile = normalizeQuantiles(object, ...),
-			vsn = vsn(intensities=object,...)@exprs/log(2)
+			vsn = exprs(vsnMatrix(x=object,...))
 		))
 	}
 	if(method=="vsn") {
-		y <- NULL
 		if(!is.null(object$G) && !is.null(object$R)) {
 			y <- cbind(object$G,object$R)
 			object$G <- object$R <- NULL
-		}
-		if(!is.null(object$M) && !is.null(object$A)) y <- 2^cbind(object$A-object$M/2,object$A+object$M/2)
-		if(is.null(y)) stop("object doesn't appear to be RGList or MAList")
-		y <- vsnMatrix(x=y,...)
-		n2 <- ncol(y@hx)/2
-		G <- y@hx[,1:n2]
-		R <- y@hx[,n2+(1:n2)]
+		} else
+			stop("vsn works only on RGList objects or matrices")
+		y <- exprs(vsnMatrix(x=y,...))
+		n2 <- ncol(y)/2
+		G <- y[,1:n2]
+		R <- y[,n2+(1:n2)]
 		object$M <- R-G
 		object$A <- (R+G)/2
-		if(!is(object,"MAList")) object <- new("MAList",unclass(object))
+		object <- new("MAList",unclass(object))
 		return(object)
 	}
 	if(is(object,"RGList")) object <- MA.RG(object)

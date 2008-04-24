@@ -61,7 +61,7 @@ Otherwise, \code{normalizeBetweenArrays} produces an \code{\link[limma:malist]{M
 \references{
 Bolstad, B. M., Irizarry R. A., Astrand, M., and Speed, T. P. (2003), A comparison of normalization methods for high density oligonucleotide array data based on bias and variance. \emph{Bioinformatics} \bold{19}, 185-193.
 
-Smyth, G. K., and Speed, T. P. (2003). Normalization of cDNA microarray data. In: \emph{METHODS: Selecting Candidate Genes from DNA Array Screens: Application to Neuroscience}, D. Carter (ed.). Methods Volume 31, Issue 4, December 2003, pages 265-273.
+Smyth, G. K., and Speed, T. P. (2003). Normalization of cDNA microarray data. \emph{Methods} \bold{31}, 265-273. 
 
 Yang, Y. H., Dudoit, S., Luu, P., and Speed, T. P. (2001). Normalization for cDNA microarray data. In \emph{Microarrays: Optical Technologies and Informatics}, M. L. Bittner, Y. Chen, A. N. Dorsel, and E. R. Dougherty (eds), Proceedings of SPIE, Volume 4266, pp. 141-152. 
 
