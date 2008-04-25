@@ -3,7 +3,7 @@
 lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation,weights=NULL,method="ls",...)
 #	Fit linear model
 #	Gordon Smyth
-#	30 June 2003.  Last modified 9 Mar 2008.
+#	30 June 2003.  Last modified 25 Apr 2008.
 {
 #	Check arguments
 	y <- getEAWP(object)
@@ -344,7 +344,7 @@ getEAWP <- function(object)
 	} else {
 #		Default method for matrices, data.frames, vsn objects etc.
 		y$exprs <- as.matrix(object)
-		if(!is.null(rownames(y$exprs))) y$probes <- data.frame(ID=rownames(y),stringsAsFactors=FALSE)
+		if(!is.null(rownames(y$exprs))) y$probes <- data.frame(ID=rownames(y$exprs),stringsAsFactors=FALSE)
 #		If exprs are positive, assume they are log-intensities rather than log-ratios
 		if(all(y$exprs>=0,na.rm=TRUE)) y$Amean <- rowMeans(y$exprs,na.rm=TRUE)
 	}}}}

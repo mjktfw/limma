@@ -1,3 +1,8 @@
+25 April 2008: limma 2.13.10
+
+- getEAWP() now gets probe names correctly from the rownames of 
+  object when object is a matrix.
+
 24 April 2008: limma 2.13.9
 
 - normalizeBetweenArrays(method="vsn") now gives an error
