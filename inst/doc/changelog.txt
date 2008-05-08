@@ -1,3 +1,14 @@
+8 May 2008: limma 2.15.1
+
+- bug fix to restore function of plotMA() when object is of
+  MArrayLM class.
+- getEAWP() now gets probe names correctly from the rownames of
+  exprs when object is of PLMset class.
+- edits to read.columns help page to explain that some arguments
+  cannot be passed to read.table through ... because they are
+  already used by read.columns.
+
+30 April 2008: limma 2.15.0 (Bioconductor 2.3 Branch)
 25 April 2008: limma 2.13.10
 
 - getEAWP() now gets probe names correctly from the rownames of 
@@ -32,6 +43,9 @@
 
 8 March 2008: limma 2.13.6
 
+- Streamlining of plotMA() code.  plotMA() should now work correctly
+  for any object class that can be coerced to a matrix, for example
+  LumiBatch objects.
 - lmFit() now warns if coefficients become inestimable due to
   missing values.
 - Bug fix when matrix data object passed to lmFit() containing

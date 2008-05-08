@@ -18,12 +18,18 @@ read.columns(file,required.col=NULL,text.to.search="",sep="\t",quote="\"",skip=0
   \item{blank.lines.skip}{logical: if \code{TRUE} blank lines in the input are ignored.}
   \item{comment.char}{character: a character vector of length one containing a single character or an empty string.}
   \item{allowEscapes}{logical. Should C-style escapes such as \code{\n} be processed or read verbatim (the default)?} 
-  \item{\dots}{any other arguments are passed to \code{read.table}}
+  \item{\dots}{other arguments are passed to \code{read.table}, excluding the following
+  which are reserved and cannot be set by the user:
+  \code{header}, \code{col.names}, \code{check.names} and \code{colClasses}.}
 }
 
 \details{
 This function is an interface to \code{read.table} in the base package.
 It uses \code{required.col} and \code{text.to.search} to set up the \code{colClasses} argument of \code{read.table}.
+
+Note the following arguments of \code{read.table} are used by \code{read.columns}
+and therefore cannot be set by the user:
+\code{header}, \code{col.names}, \code{check.names} and \code{colClasses}.
 
 This function is used by \code{\link{read.maimages}}.
 }
