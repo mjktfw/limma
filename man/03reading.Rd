@@ -17,13 +17,7 @@ This is done using the function \code{\link{read.maimages}}.
 \code{\link{read.maimages}} optionally constructs quality weights for each spot using quality functions listed in \link{QualityWeights}.
 
 \code{read.maimages} produces an \code{RGList} object and stores only the information required from each image analysis output file.
-If you wish to read all the image analysis output files into R as individual data frames preserving all the original columns found in the files, you may use \code{\link{read.series}}.
-An \code{RGList} object can be extracted from the data frames at a later stage using the functions \code{\link{rg.spot}}, \code{\link{rg.genepix}} or \code{\link{rg.quantarray}}.
-
-Another function, \code{\link{rg.series.spot}} is very similar to \code{\link{read.maimages}} with \code{source="spot"}.
-This function will be removed in future versions of LIMMA.
-
-\code{\link{read.maimages}} uses utility functions \code{\link{removeExt}}, \code{\link{read.matrix}}, \code{\link{read.imagene}} and \code{\link{read.columns}}.
+\code{\link{read.maimages}} uses utility functions \code{\link{removeExt}}, \code{\link{read.imagene}} and \code{\link{read.columns}}.
 There are also a series of utility functions which read the header information from image output files including \code{\link{readGPRHeader}}, \code{\link{readImaGeneHeader}} and \code{\link{readGenericHeader}}.
 
 The function \link{as.MAList} can be used to convert a \code{marrayNorm} object to an \code{MAList} object if the data was read and normalized using the marray and marrayNorm packages.

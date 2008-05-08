@@ -1,3 +1,9 @@
+8 May 2008: limma 2.15.2
+
+- the following obsolete functions (deprecated Dec 2006 in favour
+  of read.maimages) are now removed: m.spot, a.spot, read.matrix,
+  read.series, rg.series.spot, rg.genepix, rg.quantarray, rg.spot
+
 8 May 2008: limma 2.15.1
 
 - bug fix to restore function of plotMA() when object is of
