@@ -2,8 +2,10 @@
 
 - The optimisation step of normexp.fit is now done in C, making
   a new function normexp.fit.C, speeding up the computation several
-  fold.  backgroundCorrect(method="normexp") now calls the new
-  function.
+  fold.  normexp.fit.C() has two new methods available "nlminb"
+  and "nlminblog" which compute maximum likelihood estimates.
+  backgroundCorrect(method="normexp") now calls normexp.fit.C()
+  with method="saddle".
 
 8 May 2008: limma 2.15.2
 

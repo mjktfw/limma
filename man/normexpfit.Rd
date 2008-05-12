@@ -13,7 +13,8 @@ normexp.fit.C(x, method="saddle", n.pts=NULL, trace=FALSE)
 }
 \arguments{
   \item{x}{numeric vector of (background corrected) intensities}
-  \item{method}{method used to estimate the three parameters, choices are \code{"saddle"}, \code{"neldermead"}, \code{"bfgs"}, \code{"rma"} and \code{"mcgee"}.}
+  \item{method}{method used to estimate the three parameters. Choices for \code{normexp.fit} are \code{"saddle"}, \code{"neldermead"}, \code{"bfgs"}, \code{"rma"} and \code{"mcgee"}.
+  Additional choices for \code{normexp.fit.C} are \code{"nlminb"} and \code{"nlminblog"}.}
   \item{n.pts}{number of quantiles of \code{x} to use for the fit. If \code{NA} then all values of \code{x} will be used.}
   \item{trace}{logical, if \code{TRUE}, tracing information on the progress of the optimization is given.}
 }
@@ -31,6 +32,7 @@ For speed and numerical stability, the likelihood function is approximated by de
 Other choices are \code{"neldermead"} or \code{"bfgs"} which attempt to maximize the exact log-likelihood, which may be numerically unstable.
 \code{"rma"} uses the kernel estimation method from the RMA algorithm of affy package.
 \code{"mcgee"} uses the RMA-75 method from McGee and Chen (2006).
+\code{"nlminb"} and \code{"nlminblog"} compute the maximum likelihood estimates.
 
 If the number of rows of \code{x} is large, computation time can be saved by setting \code{n.pts} to a value less than the total number of probes, for example \code{n.pts=2^14}.
 }
