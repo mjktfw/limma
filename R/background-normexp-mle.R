@@ -8,7 +8,7 @@ normexp.fit.C <- function(x, method="saddle", n.pts=NULL, trace=FALSE)
 	if(any(isna)) x <- x[!isna]
 	if(length(x)<4) stop("Not enough data: need at least 4 non-missing corrected intensities")
 
-	method <- match.arg(method,c("saddle","neldermean","bfgs","rma","mcgee","nlminb","nlminblog"))
+	method <- match.arg(method,c("saddle","neldermead","bfgs","rma","mcgee","nlminb","nlminblog"))
 
 	if(method=="rma") {
 		require(affy)
@@ -47,7 +47,7 @@ normexp.fit.C <- function(x, method="saddle", n.pts=NULL, trace=FALSE)
 
 	Results <- switch(method,
 		"saddle"= .nelderMeanSaddleInC(Pars = c(mu, log(sigma), log(alpha)),X = x),
-		"neldermean"= optim(par=c(mu,log(sigma),log(alpha)), fn=normexp.m2loglik, control=list(trace=as.integer(trace)), x=x),
+		"neldermead"= optim(par=c(mu,log(sigma),log(alpha)), fn=normexp.m2loglik, control=list(trace=as.integer(trace)), x=x),
 		"bfgs"= optim(par=c(mu,log(sigma),log(alpha)), fn=normexp.m2loglik, gr=normexp.grad, method=c("BFGS"), control=list(trace=as.integer(trace)), x=x),
 		"nlminb" = nlminb(start = c(mu,alpha,s2),objective = .normexp.m2sumloglik.alternate,gradient = .normexp.gm2sumloglik.alternate, hessian = .normexp.hm2sumloglik.alternate, f = x,bg = rep(0,length(x)),control = list(trace = as.integer(trace)),scale = median(c(mu,alpha,s2))/c(mu,alpha,s2)),
 		"nlminblog" = .nlminbLog(Pars = c(mu, log(sigma), log(alpha)),X = x)
