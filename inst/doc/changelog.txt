@@ -1,3 +1,10 @@
+12 May 2008: limma 2.15.3
+
+- The optimisation step of normexp.fit is now done in C, making
+  a new function normexp.fit.C, speeding up the computation several
+  fold.  backgroundCorrect(method="normexp") now calls the new
+  function.
+
 8 May 2008: limma 2.15.2
 
 - the following obsolete functions (deprecated Dec 2006 in favour

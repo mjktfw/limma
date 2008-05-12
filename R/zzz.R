@@ -16,4 +16,5 @@
 #	23 Jan 2004. Last revised 23 Oct 2004.
 {
 	if( .Platform$OS.type == "windows" && .Platform$GUI == "Rgui" ) winMenuAddItem("Vignettes","limma","limmaUsersGuide()")
+	library.dynam('limma', pkgname, libname)
 }

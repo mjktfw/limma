@@ -5,7 +5,7 @@
 backgroundCorrect <- function(RG, method="subtract", offset=0, printer=RG$printer, verbose=TRUE) {
 #	Apply background correction to microarray data
 #	Gordon Smyth
-#	12 April 2003.  Last modified 22 July 2007.
+#	12 April 2003.  Last modified 12 May 2008.
 
 	if(!is.list(RG) && is.vector(RG)) RG <- as.matrix(RG)
 	if(is.matrix(RG)) {
@@ -14,7 +14,7 @@ backgroundCorrect <- function(RG, method="subtract", offset=0, printer=RG$printe
 		if(method!="none") {
 			for (j in 1:ncol(RG)) {
 				x <- RG[,j]
-				out <- normexp.fit(x,method=method)
+				out <- normexp.fit.C(x,method=method)
 				RG[,j] <- normexp.signal(out$par,x)
 				if(verbose) cat("Corrected array",j,"\n")
 			}

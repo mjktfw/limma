@@ -1,5 +1,6 @@
 \name{normexp.fit}
 \alias{normexp.fit}
+\alias{normexp.fit.C}
 \title{Fit Normal+Exp Convolution Model to Observed Intensities}
 \description{
 Fit normal+exponential convolution model to observed intensities.
@@ -8,6 +9,7 @@ This function is called by \code{backgroundCorrect} and is not normally called d
 }
 \usage{
 normexp.fit(x, method="saddle", n.pts=NULL, trace=FALSE)
+normexp.fit.C(x, method="saddle", n.pts=NULL, trace=FALSE)
 }
 \arguments{
   \item{x}{numeric vector of (background corrected) intensities}
@@ -16,6 +18,9 @@ normexp.fit(x, method="saddle", n.pts=NULL, trace=FALSE)
   \item{trace}{logical, if \code{TRUE}, tracing information on the progress of the optimization is given.}
 }
 \details{
+\code{normexp.fit} is a pure R function while \code{normexp.fit.C} call C source code.
+The two functions should give identical values but the latter is several times as fast.
+
 This function uses maximum likelihood estimation to fit a model to the background-corrected intensities.
 The model is a $normal(\mu,\sigma^2)+exponential(\alpha)$ convolution model for the background corrected intensities.
 
