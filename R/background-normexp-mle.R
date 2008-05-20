@@ -165,21 +165,6 @@ normexp.fit.C <- function(x, method="saddle", n.pts=NULL, trace=FALSE)
   c(d2L.dbtdal,d2L.dalds2,d2L.daldal))
 }
 
-.normexp.m2sumloglik.alternate2 <- function(theta,f,bg)
-#  Jeremy Silver
-#  29 Oct 2007.
-#	Last modified 9 May 2008.
-{
-  bt <- theta[1]
-  s2 <- exp(theta[2])
-  al <- exp(theta[3])
-  mu <- bt + bg
-  e <- f - mu
-  mu.sf <- e - s2/al
-
-  -2*sum(-log(al) - e/al + 0.5*s2/(al^2) + pnorm(0,mu.sf,sqrt(s2),lower.tail = FALSE,log.p = TRUE))
-}
-
 .normexp.m2sumloglik.alternate3 <- function(theta,f,bg)
 #  Jeremy Silver
 #  29 Oct 2007.
@@ -199,25 +184,6 @@ normexp.fit.C <- function(x, method="saddle", n.pts=NULL, trace=FALSE)
     m2LL = double(1),
     PACKAGE="limma"
   )$m2LL
-}
-
-.normexp.gm2sumloglik.alternate2 <- function(theta,f,bg)
-#  Jeremy Silver
-#  29 Oct 2007.
-#	Last modified 9 May 2008.
-{
-  bt <- theta[1]
-  s2 <- exp(theta[2])
-  al <- exp(theta[3])
-  mu <- bt + bg
-  e <- f - mu
-  mu.sf <- e - s2/al
-  psionPsi <- dnorm(0,mu.sf,sqrt(s2))/pnorm(0,mu.sf,sqrt(s2),lower.tail = FALSE)
-
-  dL.dbt <- sum(1/al - psionPsi)
-  dL.ds2 <- sum(0.5/(al^2) - (1/al + 0.5*mu.sf/s2) * psionPsi)
-  dL.dal <- sum(e/(al^2) - 1/al - s2/(al^3) + psionPsi*s2/(al^2))
-  -2*c(dL.dbt,dL.ds2*s2,dL.dal*al)
 }
 
 .normexp.gm2sumloglik.alternate3 <- function(theta,f,bg)
@@ -240,38 +206,6 @@ normexp.fit.C <- function(x, method="saddle", n.pts=NULL, trace=FALSE)
     PACKAGE = "limma"
   )$dm2LL
 
-}
-
-.normexp.hm2sumloglik.alternate2 <- function(theta,f,bg)
-#  Jeremy Silver
-#  29 Oct 2007.
-#	Last modified 9 May 2008.
-{
-  bt <- theta[1]
-  s2 <- exp(theta[2])
-  al <- exp(theta[3])
-  mu <- bt + bg
-  e <- f - mu
-  s2onal <- s2/al
-  mu.sf <- e - s2onal
-  psionPsi <- dnorm(0,mu.sf,sqrt(s2),log = TRUE) - pnorm(0,mu.sf,sqrt(s2),lower.tail = FALSE,log = TRUE)
-  psionPsi2 <- 2*psionPsi
-  psionPsi <- exp(psionPsi)
-  psionPsi2 <- exp(psionPsi2)
-
-  dL.dal <- sum(e/(al^2) - 1/al - s2/(al^3) + psionPsi*s2/(al^2))
-  dL.ds2 <- sum(0.5/(al^2) - (1/al + 0.5*mu.sf/s2) * psionPsi)
-
-  d2L.dbtdbt <- sum(-psionPsi2 - psionPsi*mu.sf/s2)
-  d2L.dbtds2 <- sum( -0.5*(e + s2onal)*psionPsi2/s2 + 0.5*(-((e + s2onal)^2) + 2*s2onal*(e + s2onal) + s2)*psionPsi/(s2^2)) # OK TO 3 DP
-  d2L.dbtdal <- sum( -al^-2 + s2onal*psionPsi2/al + mu.sf*psionPsi/(al^2))
-  d2L.ds2ds2 <- sum( -(0.25/(s2^2))*((e + s2onal)^2)*psionPsi2 + psionPsi*(-e^3 + e*(3*al - e)*s2onal + (e + al)*(s2onal^2) + (s2onal^3))/(4*(s2^3)) )
-  d2L.dalds2 <- sum( -1/(al^3) + (al^-2)*0.5*(psionPsi2*(e + s2onal) + (e^2 + s2 - (s2onal^2))*psionPsi/s2))
-  d2L.daldal <- sum( (al^-2) - 2*e/(al^3) + 3*s2/(al^4) - psionPsi2*((s2^2)/(al^4)) - psionPsi*(mu.sf + 2*al)*((s2)/(al^4)))
-  -2*rbind(
-  c(d2L.dbtdbt,    s2*d2L.dbtds2,                 al*d2L.dbtdal),
-  c(s2*d2L.dbtds2, (s2^2)*d2L.ds2ds2 + s2*dL.ds2, al*s2*d2L.dalds2),
-  c(al*d2L.dbtdal, al*s2*d2L.dalds2,              (al^2)*d2L.daldal + al*dL.dal))
 }
 
 .normexp.hm2sumloglik.alternate3 <- function(theta,f,bg)

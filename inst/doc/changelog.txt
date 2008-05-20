@@ -1,3 +1,11 @@
+20 May 2008: limma 2.15.4
+
+- Cleaning up of source code in find_saddle_theta2.c and
+  corresponding calls in background-normexp-mle.R.  No user
+  visible changes.  The C code now passes R CMD check without
+  warnings, and superfluous utility functions are removed from
+  background-normexp-mle.R
+
 12 May 2008: limma 2.15.3
 
 - The optimisation step of normexp.fit is now done in C, making
