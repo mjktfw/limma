@@ -1,3 +1,9 @@
+22 May 2008: limma 2.15.5
+
+- fix bug introduced to plotMA() in version 2.13.6: plotMA()
+  ignored array argument when object was of class RGList.
+  Correct function now restored.
+
 20 May 2008: limma 2.15.4
 
 - Cleaning up of source code in find_saddle_theta2.c and
@@ -23,8 +29,8 @@
 
 8 May 2008: limma 2.15.1
 
-- bug fix to restore function of plotMA() when object is of
-  MArrayLM class.
+- fix bug introduced to plotMA() in version 2.13.6: plotMA()
+  was not working for MArrayLM objects.  Function now restored.
 - getEAWP() now gets probe names correctly from the rownames of
   exprs when object is of PLMset class.
 - edits to read.columns help page to explain that some arguments

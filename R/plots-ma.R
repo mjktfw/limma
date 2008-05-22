@@ -3,13 +3,13 @@
 plotMA <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
 #	MA-plot with color coding for controls
 #	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.
-#	Last modified 8 May 2008.
+#	Last modified 22 May 2008.
 {
 #	Convert to MAList of possible
 	if(class(MA)=="list") MA <- new("MAList",MA)
 	if(is(MA,"RGList")) {
-		array <- 1
 		MA <- MA.RG(MA[,array])
+		array <- 1
 	}
 
 	if(is(MA,"MAList")) {
