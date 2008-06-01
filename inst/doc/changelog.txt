@@ -1,3 +1,10 @@
+1 June 2008: limma 2.15.6
+
+- gls.series() now preserves rownames (probe IDs) of the expression
+  object.  This affects lmFit() when ndups>1 or block is non NULL.
+  This makes gls.series() consistent with other fitting functions
+  lm.series() and mrlm().
+
 22 May 2008: limma 2.15.5
 
 - fix bug introduced to plotMA() in version 2.13.6: plotMA()
