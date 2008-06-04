@@ -147,7 +147,50 @@ avedups.MAList <- function(x,ndups=x$printer$ndups,spacing=x$printer$spacing,wei
 	for (a in other) object$other[[a]] <- avedups(object$other[[a]],ndups=ndups,spacing=spacing,weights=weights)
 	y$weights <- avedups(x$weights,ndups=ndups,spacing=spacing)
 	y$genes <- uniquegenelist(x$genes,ndups=ndups,spacing=spacing)
-    y$printer <- NULL
+	y$printer <- NULL
+	y
+}
+
+avereps <- function(x,ID) UseMethod("avereps")
+#  4 June 2008
+
+avereps.default <- function(x,ID=rownames(x))
+#	Average over irregular replicate spots, for matrices or vectors
+#	Gordon Smyth
+#	3 June 2008.
+{
+	if(is.null(x)) return(NULL)
+	x <- as.matrix(x)
+	nspots <- nrow(x)
+	narrays <- ncol(x)
+	ID <- as.character(ID)
+	iu <- !duplicated(ID)
+	if(mode(x)=="character") return(x[iu,,drop=FALSE])
+	u <- ID[iu]
+	nprobes <- length(u)
+	y <- x[iu,,drop=FALSE]
+	for (i in 1:length(u)) y[i,] <- colMeans(x[ID==u[i],,drop=FALSE],na.rm=TRUE)
+	y
+}
+
+avereps.MAList <- function(x,ID=NULL)
+#	Average over irregular replicate spots for MAList objects
+#	Gordon Smyth
+#	3 June 2008.
+{
+	if(is.null(ID)) {
+		ID <- x$genes$ID
+		if(is.null(ID)) ID <- rownames(x)
+		if(is.null(ID)) stop("Cannot find probe IDs")
+	}
+	y <- x
+	y$M <- avereps(x$M,ID=ID)
+	y$A <- avereps(x$A,ID=ID)
+	other <- names(x$other)
+	for (a in other) object$other[[a]] <- avereps(object$other[[a]],ID=ID)
+	y$weights <- avereps(x$weights,ID=ID)
+	y$genes <- x$genes[!duplicated(ID),]
+   y$printer <- NULL
 	y
 }
 

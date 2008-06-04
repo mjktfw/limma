@@ -1,3 +1,9 @@
+4 June 2008: limma 2.15.7
+
+- new S3 generic function avereps() for averaging over irregularly
+  spaced replicate spots.  A method is defined for MAList objects
+  and a default method intended for matrices.
+
 1 June 2008: limma 2.15.6
 
 - gls.series() now preserves rownames (probe IDs) of the expression
