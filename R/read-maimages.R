@@ -227,7 +227,7 @@ read.columns <- function(file,required.col=NULL,text.to.search="",sep="\t",quote
 	text.to.search <- as.character(text.to.search)
 
 #	Read header to get column names
-    allcnames <- scan(file,what="",sep=sep,quote=quote,nlines=1,quiet=TRUE,skip=skip,strip.white=TRUE,blank.lines.skip=blank.lines.skip,comment.char=comment.char,allowEscapes=allowEscapes)
+	allcnames <- scan(file,what="",sep=sep,quote=quote,nlines=1,quiet=TRUE,skip=skip,strip.white=TRUE,blank.lines.skip=blank.lines.skip,comment.char=comment.char,allowEscapes=allowEscapes)
 	ncn <- length(allcnames)
 	colClasses <- rep("NULL",ncn)
 
@@ -244,7 +244,7 @@ read.columns <- function(file,required.col=NULL,text.to.search="",sep="\t",quote
 	}
 
 #	Is there a leading column of row.names without a header?
-    secondline <- scan(file,what="",sep=sep,quote=quote,nlines=1,quiet=TRUE,skip=skip+1,strip.white=TRUE,blank.lines.skip=blank.lines.skip,comment.char=comment.char,allowEscapes=allowEscapes)
+	secondline <- scan(file,what="",sep=sep,quote=quote,nlines=1,quiet=TRUE,skip=skip+1,strip.white=TRUE,blank.lines.skip=blank.lines.skip,comment.char=comment.char,allowEscapes=allowEscapes)
 	if(length(secondline) > ncn) colClasses <- c(NA,colClasses)
 
 #	Read specified columns
