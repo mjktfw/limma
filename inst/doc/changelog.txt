@@ -1,3 +1,8 @@
+11 June 2008: limma 2.15.8
+
+- further bug fixes to getEAWP() when object is of PLMset class:
+  weights and Amean components were not being set.
+
 4 June 2008: limma 2.15.7
 
 - new S3 generic function avereps() for averaging over irregularly
