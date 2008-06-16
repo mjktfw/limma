@@ -1,3 +1,10 @@
+16 June 2008: limma 2.15.9
+
+- new capabilities and arguments for write.fit().  The argument
+  method allows p-values to be adjusted globally instead of
+  separately, and the argument F.adjust allows the F-statistic
+  P-values to be adjusted.
+
 11 June 2008: limma 2.15.8
 
 - further bug fixes to getEAWP() when object is of PLMset class:
