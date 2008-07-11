@@ -2,6 +2,8 @@
 
 contrasts.fit <- function(fit,contrasts=NULL,coefficients=NULL) {
 #	Convert coefficients and std deviations in fit object to reflect contrasts of interest
+#	Note: does not completely take probe-wise weights into account
+#	because this would require refitting the linear model for each probe
 #	Gordon Smyth
 #	13 Oct 2002.  Last modified 8 June 2007.
 

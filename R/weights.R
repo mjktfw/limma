@@ -53,7 +53,7 @@ modifyWeights <- function(weights=rep(1,length(status)), status, values, multipl
 asMatrixWeights <- function(weights,dim=NULL)
 #	Convert probe-weights or array-weights to weight matrix
 #	Gordon Smyth
-#	22 Jan 2006.
+#	22 Jan 2006.  Last modified 10 July 2008.
 {
 	weights <- as.matrix(weights)
 	if(is.null(dim)) return(weights)
@@ -65,14 +65,21 @@ asMatrixWeights <- function(weights,dim=NULL)
 	if(all(dw==dim)) return(weights)
 	if(min(dw)!=1) stop("weights is of unexpected shape")
 #	Row matrix of array weights
-	if(dw[2]>1 && dw[2]==dim[2]) return(matrix(weights,dim[1],dim[2],byrow=TRUE))
+	if(dw[2]>1 && dw[2]==dim[2]) {
+		weights <- matrix(weights,dim[1],dim[2],byrow=TRUE)
+		attr(weights,"arrayweights") <- TRUE
+		return(weights)
+	}
 	lw <- prod(dw)
 #	Probe weights
 	if(lw==1 || lw==dim[1]) return(matrix(weights,dim[1],dim[2]))
 #	Array weights
-	if(lw==dim[2]) return(matrix(weights,dim[1],dim[2],byrow=TRUE))
+	if(lw==dim[2]) {
+		weights <- matrix(weights,dim[1],dim[2],byrow=TRUE)
+		attr(weights,"arrayweights") <- TRUE
+		return(weights)
+	}
 #	All other cases
 	stop("weights is of unexpected size")
 }
-
 

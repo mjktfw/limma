@@ -1,3 +1,13 @@
+11 July 2008: limma 2.15.10
+
+- lm.series() and gls.series() now treat array weights as a
+  special case, when there are no missing values in the expression
+  data and now probe-specific weights.  This means that the array
+  weights are now incorporated into fit$cov.coefficients, meaning
+  that constrasts.fit() will correctly take array weights into
+  account when computing contrasts standard errors.  It also means
+  that lmFit() is much faster when array weighting is used.
+
 16 June 2008: limma 2.15.9
 
 - new capabilities and arguments for write.fit().  The argument
