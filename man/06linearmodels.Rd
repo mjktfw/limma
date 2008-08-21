@@ -54,10 +54,12 @@ This is a way to compute all possible pairwise comparisons between treatments fo
 
 \section{Assessing Differential Expression}{
 
-After fitting a linear model, the standard errors are moderated using a simple empirical Bayes model using \code{\link{ebayes}} or \code{\link{eBayes}}.
+After fitting a linear model, the standard errors are moderated using a simple empirical Bayes model using \code{\link{eBayes}} or \code{\link{treat}}.
+\code{\link{ebayes}} is an older version of \code{eBayes}.
 A moderated t-statistic and a log-odds of differential expression is computed for each contrast for each gene.
+\code{treat} tests whether log-fold-changes are greater than a threshold rather than merely different to zero.
 
-\code{\link{ebayes}} and \code{\link{eBayes}} use internal functions \code{\link{fitFDist}}, \code{\link{tmixture.matrix}} and \code{\link{tmixture.vector}}.
+\code{\link{eBayes}} and \code{\link{eBayes}} use internal functions \code{squeezeVar}, \code{\link{fitFDist}}, \code{\link{tmixture.matrix}} and \code{\link{tmixture.vector}}.
 
 The function \code{\link{zscoreT}} is sometimes used for computing z-score equivalents for t-statistics so as to place t-statistics with different degrees of freedom on the same scale.
 \code{\link{zscoreGamma}} is used the same way with standard deviations instead of t-statistics.

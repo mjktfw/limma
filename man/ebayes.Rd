@@ -1,20 +1,24 @@
 \name{ebayes}
 \alias{ebayes}
 \alias{eBayes}
+\alias{treat}
 \title{Empirical Bayes Statistics for Differential Expression}
 \description{Given a series of related parameter estimates and standard errors, compute moderated t-statistics, moderated F-statistic, and log-odds of differential expression by empirical Bayes shrinkage of the standard errors towards a common value.}
 \usage{
-ebayes(fit,proportion=0.01,stdev.coef.lim=c(0.1,4))
-eBayes(fit,proportion=0.01,stdev.coef.lim=c(0.1,4))
+ebayes(fit, proportion=0.01, stdev.coef.lim=c(0.1,4))
+eBayes(fit, proportion=0.01, stdev.coef.lim=c(0.1,4))
+treat(fit, lfc=0)
 }
 \arguments{
   \item{fit}{an \code{MArrayLM} fitted model object produced by \code{lmFit} or \code{contrasts.fit}, or an unclassed list produced by \code{lm.series}, \code{gls.series} or \code{mrlm} containing components \code{coefficients}, \code{stdev.unscaled}, \code{sigma} and \code{df.residual}}
   \item{proportion}{numeric value between 0 and 1, assumed proportion of genes which are differentially expressed}
-  \item{stdev.coef.lim}{numeric vector of length 2, assumed lower and upper limits for the standard deviation of log2 fold changes for differentially expressed genes}
+  \item{stdev.coef.lim}{numeric vector of length 2, assumed lower and upper limits for the standard deviation of log2-fold-changes for differentially expressed genes}
+  \item{lfc}{the minimum log2-fold-change which is considered material}
 }
 \value{
-\code{ebayes} produces an ordinary list with the following components.
-\code{eBayes} adds the following components to \code{fit} to produce an augmented object, usually of class \code{MArrayLM}.
+\code{eBayes} produces an object of class \code{MArrayLM} with the following components, see \code{\link{MArrayLM-class}}.
+\code{ebayes} produces an ordinary list without \code{F} or \code{F.p.value}.
+\code{treat} produces an \code{MArrayLM} object, but without \code{lods}, \code{var.prior}, \code{F} or \code{F.p.value}.
   \item{t}{numeric vector or matrix of moderated t-statistics}
   \item{p.value}{numeric vector of p-values corresponding to the t-statistics}
   \item{s2.prior}{estimated prior value for \code{sigma^2}}
@@ -47,6 +51,11 @@ the linear model output, see the example below.
 
 \code{ebayes} is the earlier and leaner function.
 \code{eBayes} is intended to have a more object-orientated flavor as it produces objects containing all the necessary components for downstream analysis.
+
+\code{treat} computes empirical Bayes moderated-t p-values relative to a minimum required fold-change threshold.
+Instead of testing for genes which have log-fold-changes different from zero, it tests whether the log2-fold-change is greater than \code{lfc} in absolute value (McCarthy and Smyth, 2008).
+\code{treat} is concerned with p-values rather than posterior odds, so it does not compute the B-statistic \code{lods}.
+The idea of thresholding doesn't apply to F-statistics in a straightforward way, so moderated F-statistics are also not computed.
 }
 \seealso{
 \code{\link{squeezeVar}}, \code{\link{fitFDist}}, \code{\link{tmixture.matrix}}.
@@ -55,7 +64,10 @@ An overview of linear model functions in limma is given by \link{06.LinearModels
 }
 \author{Gordon Smyth}
 \references{
-Loennstedt, I. and Speed, T. P. (2002). Replicated microarray data. \emph{Statistica Sinica} \bold{12}, 31-46.
+McCarthy, D. J., and Smyth, G. K. (2008). treat: t-tests relative to a threshold for microarray experiments.
+Bioinformatics Division, Walter and Eliza Hall Institute of Medical Research, Australia.
+
+Loennstedt, I., and Speed, T. P. (2002). Replicated microarray data. \emph{Statistica Sinica} \bold{12}, 31-46.
 
 Smyth, G. K. (2004). Linear models and empirical Bayes methods for assessing differential expression in microarray experiments.
 \emph{Statistical Applications in Genetics and Molecular Biology}, \bold{3}, No. 1, Article 3. \url{"http://www.bepress.com/sagmb/vol3/iss1/art3"}

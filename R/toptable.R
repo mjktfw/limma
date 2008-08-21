@@ -29,9 +29,10 @@ topTable <- function(fit,coef=NULL,number=10,genelist=fit$genes,adjust.method="B
 topTableF <- function(fit,number=10,genelist=fit$genes,adjust.method="BH")
 #	Summary table of top genes by F-statistic
 #	Gordon Smyth
-#	27 August 2006. Last modified 13 Feb 2008.
+#	27 August 2006. Last modified 31 July 2008.
 {
 #	Check input
+	if(is.null(fit$F)) stop("F-statistics not available. Try topTable for individual coef instead.")
 	if(!is.null(genelist) && is.null(dim(genelist))) genelist <- data.frame(ProbeID=genelist,stringsAsFactors=FALSE)
 	M <- as.matrix(fit$coefficients)
 	if(is.null(colnames(M))) colnames(M) <- paste("Coef",1:ncol(M),sep="")
@@ -51,7 +52,7 @@ topTableF <- function(fit,number=10,genelist=fit$genes,adjust.method="BH")
 toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.method="BH",sort.by="B",resort.by=NULL,p.value=1,lfc=0,...)
 #	Summary table of top genes
 #	Gordon Smyth
-#	21 Nov 2002. Last revised 13 Feb 2008.
+#	21 Nov 2002. Last revised 14 Aug 2008.
 {
 	if(is.null(eb)) {
 		fit$coefficients <- as.matrix(fit$coefficients)[,coef]
@@ -70,7 +71,7 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 	tstat <- as.matrix(eb$t)[,coef]
 	P.Value <- as.matrix(eb$p.value)[,coef]
 	B <- as.matrix(eb$lods)[,coef]
-	sort.by <- match.arg(sort.by,c("logFC","M","A","Amean","AveExpr","P","p","T","t","B"))
+	sort.by <- match.arg(sort.by,c("logFC","M","A","Amean","AveExpr","P","p","T","t","B","none"))
 	if(sort.by=="M") sort.by="logFC"
 	if(sort.by=="A" || sort.by=="Amean") sort.by <- "AveExpr"
 	ord <- switch(sort.by,
@@ -80,7 +81,8 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 		p=order(P.Value,decreasing=FALSE),
 		T=order(abs(tstat),decreasing=TRUE),
 		t=order(abs(tstat),decreasing=TRUE),
-		B=order(B,decreasing=TRUE)
+		B=order(B,decreasing=TRUE),
+		none=1:length(M)
 	)
 	adj.P.Value <- p.adjust(P.Value,method=adjust.method)
 

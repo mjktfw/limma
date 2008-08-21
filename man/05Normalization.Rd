@@ -20,6 +20,8 @@ For more details see the \emph{\link[limma:../doc/usersguide]{LIMMA User's Guide
 
 \code{normalizeWithinArrays} uses utility functions \code{\link{MA.RG}}, \code{\link{loessFit}} and \code{\link{normalizeRobustSpline}}.
 \code{normalizeBetweenArrays} uses utility functions \code{\link{normalizeMedianAbsValues}} and \code{\link{normalizeQuantiles}}, none of which need to be called directly by users.
+
+\code{removeBatchEffect} can be used to remove a batch effect, associated with hybridization time or some other technical variable, prior to unsupervised analysis.
 }
 
 \author{Gordon Smyth}

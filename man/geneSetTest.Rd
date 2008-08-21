@@ -1,5 +1,6 @@
 \name{geneSetTest}
 \alias{geneSetTest}
+\alias{compGST}
 \title{Gene Set Test}
 \description{
 Test whether a set of genes is enriched for differential expression.
@@ -24,14 +25,15 @@ Numeric value giving the estimated p-value.
 This function computes a p-value to test the hypothesis that the selected set of genes tends to be more highly ranked in differential expression compared to randomly selected genes.
 This function can be used to detect differential expression for a group of genes, even when the effects are too small or there is too little data to detect the genes individually.
 It is also provides a means to compare the results between different experiments.
+This test was used by Michaud et al (2008).
 
-The aim here is the same as for Gene Set Enrichment Analysis (GSEA) introduced by Mootha et al (2003) and Subramanian et al (2005), but the statistical tests used are different.
-There are two key differences.
-Firstly, \code{geneSetTest} assumes that the different genes (or probes) are independent.
+\code{geneSetTest} is a competitive test in the sense that genes in the set are compared to other genes (Goeman and Buhlmann, 2007).
+A self-contained gene set test is performed by \code{\link{roast}}.
+
+Because it is based on permuting genes, \code{geneSetTest} assumes that the different genes (or probes) are independent.
 (Strictly speaking, it assumes that the genes in the set are no more correlated on average than randomly selected genes.)
 This assumption may be reasonable if the gene set is relatively small and if there is relatively little genotypic variation in the data, for example if the data is obtained from genetically identical inbred mice.
 The independence assumption may be misleading if the gene set is large or if the data contains a lot of genotypic variation, for example for human cancer samples.
-Secondly, the \code{geneSetTest} is purely competitive in that the gene set is compared to other genes, rather than a self-contained test of differential expressed for the genes in the gene set (Goeman and Buhlmann, 2007).
 These assumptions, when valid, permit a much quicker and more powerful significance test to be conducted.
 
 The \code{statistics} are usually a set of probe-wise statistics arising for some comparison from a microarray experiment.
@@ -47,8 +49,8 @@ There are four possible alternatives to test for.
 \code{alternative=="mixed"} test whether the genes in the set tend to be differentially expressed, without regard for direction.
 In this case, the test will be significant if the set contains mostly large test statistics, even if some are positive and some are negative.
 
-The first three alternativea appropriate if you have a prior expection that all the genes in the set will react in the same direction.
-The \code{"mixed"} alternative is appropriate if you know only that the genes are involved in the relevant pathways, without knowing the direction of effect for each gene.
+The latter three alternatives are appropriate if you have a prior expection that all the genes in the set will react in the same direction.
+The \code{"mixed"} alternative is appropriate if you know only that the genes are involved in the relevant pathways, possibly in different directions.
 The \code{"mixed"} alternative is the only one possible with F-like statistics.
 
 The test statistic used for the gene-set-test is the mean of the statistics in the set.
@@ -57,44 +59,17 @@ In this case the p-value is obtained from a Wilcoxon test.
 If \code{ranks.only} is \code{FALSE}, then the p-value is obtained by simulation using \code{nsim} random selected sets of genes.
 }
 
-\seealso{\code{\link[stats]{wilcox.test}}}
+\seealso{\code{\link{roast}}, \code{\link[stats]{wilcox.test}}}
 \author{Gordon Smyth}
 
 \references{
-Goeman, JJ, and Buhlmann P 
-(2007)
+Goeman, JJ, and Buhlmann P (2007).
 Analyzing gene expression data in terms of gene sets: methodological issues.
 \emph{Bioinformatics} 23, 980-987. 
 
-Mootha, V. K.,
-Lindgren, C. M.,
-Eriksson, K. F.,
-Subramanian, A.,
-Sihag, S.,
-Lehar, J.,
-Puigserver, P.,
-Carlsson, E.,
-Ridderstrale, M.,
-Laurila, E.,
-Houstis, N.,
-Daly, M. J.,
-Patterson, N.,
-Mesirov, J. P.,
-Golub, T. R.,
-Tamayo, P.,
-Spiegelman, B.,
-Lander, E. S.,
-Hirschhorn, J. N.,
-Altshuler, D.,
-Groop, L. C.
-(2003). 
-PGC-1alpha-responsive genes involved in oxidative phosphorylation are coordinately downregulated in human diabetes.
-\emph{Nature Genetics} 34, 267-273.
-
-Subramanian A, Tamayo P, Mootha VK, Mukherjee S, Ebert BL, Gillette MA, Paulovich A, Pomeroy SL, Golub TR, Lander ES, Mesirov JP.
-(2005).
-Gene set enrichment analysis: a knowledge-based approach for interpreting genome-wide expression profiles.
-\emph{Proc Natl Acad Sci USA} 102, 15545-15550.
+Michaud, J, Simpson, KM, Escher, R, Buchet-Poyau, K, Beissbarth, T, Carmichael, C, Ritchie, ME, Schutz, F, Cannon, P, Liu, M, Shen, X, Ito, Y, Raskind, WH, Horwitz, MS, Osato, M, Turner, DR, Speed, TP, Kavallaris, M, Smyth, GK, and Scott, HS (2008). Integrative analysis of RUNX1 downstream pathways and target genes.
+\emph{BMC Genomics} 9, 363.
+\url{http://www.biomedcentral.com/1471-2164/9/363}
 }
 
 \examples{

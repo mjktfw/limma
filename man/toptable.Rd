@@ -25,7 +25,7 @@ topTableF(fit,number=10,genelist=fit$genes,adjust.method="BH")
   \item{adjust.method}{method used to adjust the p-values for multiple testing.  Options, in increasing conservatism, include \code{"none"}, \code{"BH"}, \code{"BY"} and \code{"holm"}.
   See \code{\link{p.adjust}} for the complete list of options. A \code{NULL} value will result in the default adjustment method, which is \code{"BH"}.}
   \item{sort.by}{character string specifying statistic to rank genes by.  Possibilities are \code{"logFC"}, \code{"A"}, \code{"T"}, \code{"t"}, \code{"P"}, \code{"p"} or \code{"B"}. \code{"M"} is allowed as a synonym for \code{"logFC"} for backward compatibility.}
-  \item{resort.by}{character string specifying statistic to sort the selected genes by in the output data.frame.  Possibilities are \code{"logFC"}, \code{"A"}, \code{"T"}, \code{"t"}, \code{"P"}, \code{"p"} or \code{"B"}. \code{"M"} is allowed as a synonym for \code{"logFC"} for backward compatibility.}
+  \item{resort.by}{character string specifying statistic to sort the selected genes by in the output data.frame.  Possibilities are \code{"logFC"}, \code{"A"}, \code{"T"}, \code{"t"}, \code{"P"}, \code{"p"}, \code{"B"} or \code{"none"}. \code{"M"} is allowed as a synonym for \code{"logFC"} for backward compatibility.}
   \item{p.value}{cutoff value for adjusted p-values. Only genes with lower p-values are listed.}
   \item{lfc}{cutoff value for log2-fold-change. Only genes with larger fold changes are listed.}
   \item{...}{any other arguments are passed to \code{ebayes} if \code{eb} is \code{NULL}}
@@ -66,10 +66,10 @@ Or \code{topTable(fit, sort.by="logFC", resort.by="logFC")} would select the gen
 \code{topTableF} ranks genes on the basis of the moderated F-statistic rather than t-statistics.
 If \code{topTable} is called with \code{coef} has length greater than 1, then the specified columns will be extracted from \code{fit} and \code{topTableF} called on the result.
 \code{topTable} with \code{coef=NULL} is the same as \code{topTableF}, unless the fitted model \code{fit} has only one column.
-}
-\note{
-This is not the right function to use to create summary statistics for all the probes on an array.
-Please consider using \code{write.fit} or \code{write} for this purpose, rather than using \code{topTable} with \code{number=nrow(fit)}.
+
+A toptable-style data.frame of all probes on the arrays in original (unsorted) order can be obtained by \code{topTable(fit,sort="none",n=Inf)}.
+However \code{write.fit} or \code{write} are often preferable for outputing results for the entire array.
+Another related method is \code{as.data.frame(fit)} which coerces an \code{MArrayLM} object to a data.frame.
 }
 \seealso{
 An overview of linear model and testing functions is given in \link{06.LinearModels}.

@@ -1,12 +1,28 @@
+21 August 2008: limma 2.15.11
+
+- new option "none" for the sort argument of topTable().
+- new function roast() which does rotation gene set testing for
+  linear models.
+- new function treat() which computes empirical Bayes moderated-t
+  p-values relative to a minimum required fold change threshold.
+- new function removeBatchEffects() which removes batch effects
+  from microarray data.
+- tableF() now gives a friendlier error message when the fitted
+  model object doesn't contain F-statistics.
+
 11 July 2008: limma 2.15.10
 
-- lm.series() and gls.series() now treat array weights as a
+- Better treatment of array weights in linear modelling.
+  lm.series() and gls.series() now treat array weights as a
   special case, when there are no missing values in the expression
   data and now probe-specific weights.  This means that the array
   weights are now incorporated into fit$cov.coefficients, meaning
-  that constrasts.fit() will correctly take array weights into
-  account when computing contrasts standard errors.  It also means
-  that lmFit() is much faster when array weighting is used.
+  that contrasts.fit() will correctly take array weights into
+  account when computing the contrast standard errors, which it
+  did not do previously.  It also means that lmFit() is much faster
+  when array weighting is used.
+- Speed improvement to gls.series() when there are no missing
+  values and no probe-specific weights.
 
 16 June 2008: limma 2.15.9
 
