@@ -9,7 +9,7 @@ This function is called by \code{backgroundCorrect} and is not normally called d
 normexp.signal(par, x)
 }
 \arguments{
-  \item{par}{numeric vector containing the parameters of the Normal+Exp distribution, see \code{normexp.fit}}
+  \item{par}{numeric vector containing the parameters of the Normal+Exp distribution, see \code{\link{normexp.fit}} for details.}
   \item{x}{numeric vector of (background corrected) intensities}
 }
 \details{

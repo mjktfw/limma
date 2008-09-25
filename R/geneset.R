@@ -201,3 +201,20 @@ roast <- function(iset=NULL,y,design,contrast=ncol(design),gene.weights=NULL,arr
 	row.names(out) <- c("mixed","up","down","either")
 	out
 }
+
+alias2Symbol <- function(alias,species="Hs")
+#  Convert a set of alias names to official gene symbols
+#  via Entrez Gene identifiers
+#  Di Wu and Gordon Smyth, 4 Sep 2008
+{
+	alias <- as.character(alias)
+	species <- match.arg(species,c("Dm","Hs","Mm","Rn"))
+	DB <- paste("org",species,"eg","db",sep=".")
+	ALIAS2EG <- paste("org",species,"egALIAS2EG",sep=".")
+	SYMBOL <- paste("org",species,"egSYMBOL",sep=".")
+	require(DB,character.only=TRUE)
+	alias <- intersect(alias,Rkeys(get(ALIAS2EG)))
+	eg <- mappedLkeys(get(ALIAS2EG)[alias])
+	mappedRkeys(get(SYMBOL)[eg])
+}
+

@@ -1,3 +1,9 @@
+/*
+normexp fitting
+Jeremy Silver, Dec 2007
+Minor modifications by Gordon Smyth, Sep 2008
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <Rmath.h>
@@ -10,14 +16,17 @@ int *n;
 void ex(){}
 
 double normexp_m2loglik_saddle(int m, double *par, void *ex){
+// normexp minus-twice log-likelihood
+// Function of mu, log(sigma) and log(alpha)
 
   extern int *n;
   extern double *x;
 
   double mu;
   mu = par[0];
-  double sigma;
+  double sigma, sigma2;
   sigma = exp(par[1]);
+  sigma2 = sigma*sigma;
   double alpha;
   alpha = exp(par[2]);
 
@@ -41,7 +50,6 @@ double normexp_m2loglik_saddle(int m, double *par, void *ex){
   // hasConverged[i] = 0 if theta[i] has not yet converged,
   // hasConverged[i] = 1 if theta[i] has converged,
   int nConverged = 0;   // the sum of hasConverged
-  double sigma2 = sigma * sigma;
   double alpha2 = alpha * alpha;
   double alpha3 = alpha * alpha2;
   double alpha4 = alpha2 * alpha2;
@@ -125,12 +133,14 @@ double normexp_m2loglik_saddle(int m, double *par, void *ex){
     }
 */
 
-void fit_saddle_nelder_mead(double *parsIn, double *X, int *N, int *fail, int *fncount, double *Fmin){
+void fit_saddle_nelder_mead(double *par, double *X, int *N, int *fail, int *fncount, double *Fmin){
+// Minimize normexp m2loglik by Nelder-Mead
+// as a function of mu, log(sigma) and log(alpha)
 
   double parsOut[3];
-  parsOut[0] = parsIn[0];
-  parsOut[1] = parsIn[1];
-  parsOut[2] = parsIn[2];
+  parsOut[0] = par[0];
+  parsOut[1] = par[1];
+  parsOut[2] = par[2];
   double abstol = -1e500; // infinity
   double intol = 1.490116e-08; // square root of machine precision
   void ex();
@@ -145,15 +155,17 @@ void fit_saddle_nelder_mead(double *parsIn, double *X, int *N, int *fail, int *f
   n = N;
   x = X;
 
-  nmmin(3, parsIn, parsOut, Fmin, normexp_m2loglik_saddle, fail, abstol, intol, &ex, alpha, beta, gamma, trace, fncount, maxit);
+  nmmin(3, par, parsOut, Fmin, normexp_m2loglik_saddle, fail, abstol, intol, &ex, alpha, beta, gamma, trace, fncount, maxit);
 
-  parsIn[0] = parsOut[0];
-  parsIn[1] = parsOut[1];
-  parsIn[2] = parsOut[2];
+  par[0] = parsOut[0];
+  par[1] = parsOut[1];
+  par[2] = parsOut[2];
 
 }
 
-void normexp_m2sumloglik_alternate(double *mu, double *s2, double *al, int *n, double *f, double *m2LL){
+void normexp_m2loglik(double *mu, double *s2, double *al, int *n, double *f, double *m2LL){
+// normexp minus-twice log-likelihood
+// as a function of mu, sigma^2 and alpha
 
   double e;
   double mu_sf;
@@ -175,7 +187,9 @@ void normexp_m2sumloglik_alternate(double *mu, double *s2, double *al, int *n, d
 
 }
 
-void normexp_gm2sumloglik_alternate(double *mu, double *s2, double *al, int *n, double *f, double *dm2LL){
+void normexp_gm2loglik(double *mu, double *s2, double *al, int *n, double *f, double *dm2LL){
+// gradient of normexp m2loglik
+// with respect to mu, log(sigma^2) and log(alpha)
 
   double e;
   double mu_sf;
@@ -212,7 +226,9 @@ void normexp_gm2sumloglik_alternate(double *mu, double *s2, double *al, int *n, 
 
 }
 
-void normexp_hm2sumloglik_alternate(double *mu, double *s2, double *al, int *n, double *f, double *d2m2LL){
+void normexp_hm2loglik(double *mu, double *s2, double *al, int *n, double *f, double *d2m2LL){
+// Hessian of normexp m2loglik
+// with respect to mu, log(sigma^2) and log(alpha)
 
   double e;
   double mu_sf;

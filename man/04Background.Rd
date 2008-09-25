@@ -13,7 +13,7 @@ The function \code{backgroundCorrect} is used to correct the \code{RGList} befor
 
 The \code{movingmin} method of \code{backgroundCorrect} uses utility functions \code{\link{ma3x3.matrix}} and \code{\link{ma3x3.spottedarray}}.
 
-The \code{normexp} method of \code{backgroundCorrect} uses ulility functions \code{\link{normexp.fit}}, \code{\link{normexp.signal}}, \code{\link{normexp.m2loglik}}, \code{\link{normexp.grad}}, \code{\link{dnormexp}} and \code{\link{dnormexp.saddle}}.
+The \code{normexp} method of \code{backgroundCorrect} uses utility functions \code{\link{normexp.fit}} and \code{\link{normexp.signal}}.
 
 \code{\link{kooperberg}} is a Bayesian background correction tool designed specifically for GenePix data.
 \code{kooperberg} is not currently used as the default method for GenePix data because it is computationally intensive.

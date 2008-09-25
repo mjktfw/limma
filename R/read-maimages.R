@@ -3,7 +3,7 @@
 read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=NULL,columns=NULL,other.columns=NULL,annotation=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote=NULL,...)
 #	Extracts an RG list from a series of image analysis output files
 #	Gordon Smyth. 
-#	1 Nov 2002.  Last revised 13 Feb 2008.
+#	1 Nov 2002.  Last revised 19 Sep 2008.
 {
 #	Begin checking input arguments
 
@@ -17,7 +17,7 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 		}
 	}
 
-	source <- match.arg(source,c("generic","agilent","arrayvision","bluefuse","genepix","genepix.median","genepix.custom","imagene","quantarray","scanarrayexpress","smd.old","smd","spot","spot.close.open"))
+	source <- match.arg(source,c("generic","agilent","arrayvision","arrayvision.ARM","arrayvision.MTM","bluefuse","genepix","genepix.mean","genepix.median","genepix.custom","imagene","quantarray","scanarrayexpress","smd.old","smd","spot","spot.close.open"))
 #	source2 is the source type with qualifications removed
 	source2 <- strsplit(source,split=".",fixed=TRUE)[[1]][1]
 	if(is.null(quote)) if(source=="agilent") quote <- "" else quote <- "\""
@@ -42,9 +42,12 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 		if(source2=="generic") stop("must specify columns for generic input")
 		columns <- switch(source,
 			agilent = list(G="gMeanSignal",Gb="gBGMedianSignal",R="rMeanSignal",Rb="rBGMedianSignal"),
-			arrayvision = list(G="MTM Dens - Levels",Gb="Bkgd",R="MTM Dens - Levels",Rb="Bkgd"),
+			arrayvision=,
+			arrayvision.ARM = list(G="ARM Dens - Levels",Gb="Bkgd",R="ARM Dens - Levels",Rb="Bkgd"),
+			arrayvision.MTM = list(G="MTM Dens - Levels",Gb="Bkgd",R="MTM Dens - Levels",Rb="Bkgd"),
 			bluefuse = list(G="AMPCH1",R="AMPCH2"),
-			genepix = list(R="F635 Mean",G="F532 Mean",Rb="B635 Median",Gb="B532 Median"),
+			genepix =,
+			genepix.mean= list(R="F635 Mean",G="F532 Mean",Rb="B635 Median",Gb="B532 Median"),
 			genepix.median = list(R="F635 Median",G="F532 Median",Rb="B635 Median",Gb="B532 Median"),
 			genepix.custom = list(R="F635 Mean",G="F532 Mean",Rb="B635",Gb="B532"),
 			quantarray = list(R="ch2 Intensity",G="ch1 Intensity",Rb="ch2 Background",Gb="ch1 Background"),
@@ -66,7 +69,7 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 	
 	if(is.null(annotation)) annotation <- switch(source,
 		agilent = c("Row","Col","Start","Sequence","SwissProt","GenBank","Primate","GenPept","ProbeUID","ControlType","ProbeName","GeneName","SystematicName","Description"),
-		arrayvision = "Spot labels",
+		arrayvision=,arrayvision.ARM=,arrayvision.MTM = c("Spot labels","ID"),
 		bluefuse = c("ROW","COL","SUBGRIDROW","SUBGRIDCOL","BLOCK","NAME","ID"),   
 		genepix=,genepix.median=,genepix.custom = c("Block","Row","Column","ID","Name"),
 		quantarray= c("Array Row","Array Column","Row","Column","Name"),

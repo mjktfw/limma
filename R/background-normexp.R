@@ -1,23 +1,22 @@
 #  BACKGROUND-NORMEXP.R
 
-#  NORMAL + EXPONENTIAL ADAPTIVE MODEL
-
 normexp.signal <- function(par,x)
 #	Expected value of signal given foreground in normal + exponential model
 #	Gordon Smyth
-#	24 Aug 2002. Last modified 26 December 2005.
+#	24 Aug 2002. Last modified 24 September 2008.
 {
 	mu <- par[1]
 	sigma <- exp(par[2])
+	sigma2 <- sigma*sigma
 	alpha <- exp(par[3])
 #	cat(c(mu,sigma,alpha),"\n")
 	if(alpha <= 0) stop("alpha must be positive")
 	if(sigma <= 0) stop("sigma must be positive")
-	mu.sf <- x-mu-sigma^2/alpha
-	signal <- mu.sf + sigma^2 * exp(dnorm(0,mean=mu.sf,sd=sigma,log=TRUE) - pnorm(0,mean=mu.sf,sd=sigma,lower.tail=FALSE,log=TRUE))
+	mu.sf <- x-mu-sigma2/alpha
+	signal <- mu.sf + sigma2 * exp(dnorm(0,mean=mu.sf,sd=sigma,log=TRUE) - pnorm(0,mean=mu.sf,sd=sigma,lower.tail=FALSE,log=TRUE))
 	o <- !is.na(signal)
 	if(any(signal[o]<0)) {
-		warning("Limit of numerical accuracy reached with very low intensity or very high background:\nsetting adjusted intensity to small value")
+		warning("Limit of numerical accuracy reached with very low intensity or very high background:\nsetting adjusted intensities to small value")
 		signal[o] <- pmax(signal[o],1e-6)
 	}
 	signal
@@ -25,29 +24,35 @@ normexp.signal <- function(par,x)
 
 normexp.fit <- function(x, method="saddle", n.pts=NULL, trace=FALSE)
 #	Estimate parameters of normal+exponential convolution model
-#	Gordon Smyth and Jeremy Silver
-#	24 Aug 2002. Last modified 22 July 2007.
+#	Pure R Version Gordon Smyth 24 Aug 2002.
+#	Version with C by Jeremy Silver 29 Oct 2007.
+#	Last modified 25 Sept 2008.
 {
 	isna <- is.na(x)
 	if(any(isna)) x <- x[!isna]
 	if(length(x)<4) stop("Not enough data: need at least 4 non-missing corrected intensities")
+	if(trace) cat("trace not currently implemented\n")
 
-	method <- match.arg(method,c("saddle","neldermead","bfgs","rma","mcgee"))
+	method <- match.arg(method,c("mle","saddle","rma","rma75","mcgee","nlminb","nlminblog"))
+#	Backward compatility with old names
+	if(method=="mcgee") method <- "rma75"
+	if(method=="nlminb") method <- "mle"
+	if(method=="nlminblog") method <- "mle"
 
 	if(method=="rma") {
 		require(affy)
-		Results <- bg.parameters(x)
-		return(list(par=c(Results$mu,log(Results$sigma),-log(Results$alpha))))
+		out <- bg.parameters(x)
+		return(list(par=c(out$mu,log(out$sigma),-log(out$alpha))))
 	}
 
-	if(method=="mcgee") {
-		Results <- .bg.parameters.rma75(x)
-		return(list(par=c(Results$mu,log(Results$sigma),-log(Results$alpha))))
+	if(method=="rma75") {
+		out <- .bg.parameters.rma75(x)
+		return(list(par=c(out$mu,log(out$sigma),-log(out$alpha))))
 	}
 
 #	Starting values for parameters mu, alpha and sigma
 	q <- quantile(x, c(0,0.05,0.1,1), na.rm = TRUE, names = FALSE)
-	if(q[1]==q[4]) return(list(par=c(q[1],0,0),m2loglik=NA,convergence=0))
+	if(q[1]==q[4]) return(list(par=c(q[1],-Inf,-Inf),m2loglik=NA,convergence=0))
 	if(q[2] > q[1]) {
 		mu <- q[2]
 	} else {
@@ -57,10 +62,10 @@ normexp.fit <- function(x, method="saddle", n.pts=NULL, trace=FALSE)
 			mu <- q[1] + 0.05*(q[4]-q[1])
 		}
 	}
-	sigma <- sqrt(mean((x[x<mu]-mu)^2, na.rm = TRUE))
+	sigma2 <- mean((x[x<mu]-mu)^2, na.rm = TRUE)
 	alpha <- mean(x,na.rm = TRUE) - mu
 	if(alpha <= 0) alpha <- 1e-6
-#	if(trace) cat("Starting values\n",mu,sigma,alpha,"\n")
+	Par0 <- c(mu,log(sigma2)/2,log(alpha))
 
 #	Use a maximum of n.pts points for the fit
 	if(!is.null(n.pts)) if(n.pts >= 4 & n.pts < length(x)) {
@@ -68,133 +73,113 @@ normexp.fit <- function(x, method="saddle", n.pts=NULL, trace=FALSE)
 		x <- quantile(x,((1:n.pts)-a)/n.pts,type=5)
 	}
 
-	Results <- switch(method,
-		"saddle"= optim(par=c(mu,log(sigma),log(alpha)), fn=normexp.m2loglik.saddle, control=list(trace=as.integer(trace)), x=x),
-		"neldermean"= optim(par=c(mu,log(sigma),log(alpha)), fn=normexp.m2loglik, control=list(trace=as.integer(trace)), x=x),
-		"bfgs"= optim(par=c(mu,log(sigma),log(alpha)), fn=normexp.m2loglik, gr=normexp.grad, method=c("BFGS"), control=list(trace=as.integer(trace)), x=x)
-	)
-	if(trace) cat("normexp par:",Results$par[1],exp(Results$par[2]),exp(Results$par[3]),"\n")
-	list(par=Results$par,m2loglik=Results$value,convergence=Results$convergence)
+#	Maximize saddlepoint approximation to likelihood
+	out1 <- .C("fit_saddle_nelder_mead",
+		par = as.double(Par0), 
+		X = as.double(x), 
+		N = as.integer(length(x)), 
+		convergence = as.integer(0), 
+		fncount = as.integer(0), 
+		m2loglik = as.double(0),
+		PACKAGE="limma")
+	out1$X <- out1$N <- NULL
+
+	if(method=="saddle") return(out1)
+	
+	Par1 <- out1$par
+#	Convert from log-sd to log-var parametrization
+	Par1[2] <- 2*Par1[2]
+	LL1 <- .normexp.m2loglik(Par1, f = x, bg = rep(0,length(x)))
+	out2 <- nlminb(start = Par1,
+		objective = .normexp.m2loglik,
+		gradient = .normexp.gm2loglik,
+		hessian = .normexp.hm2loglik,
+		f = x,
+		bg = rep(0,length(x)),
+		scale = median(abs(Par1))/abs(Par1))
+#	Convert back to log-sd parametrization
+	out2$par[2] <- out2$par[2]/2
+	out2$m2loglik <- out2$objective
+	out2$objective <- NULL
+
+#	Check whether nlminb helped
+	if(out2$m2loglik >= LL1) return(out1)
+	out2
 }
 
-normexp.grad <- function(par,x)
-#	Gradient of norm-exp log-likelihood (summed over all spots)
-#	Jeremy Silver.
-#	21 Jan 2005. Last modified 26 December 2005.
+.normexp.m2loglik <- function(theta,f,bg)
+#	normexp minus-twice log-likelihood
+#  Jeremy Silver
+#  29 Oct 2007.
+#	Last modified 25 Sept 2008.
 {
-	mu <- par[1]
-	logsigma <- par[2]
-	logalpha <- par[3]
-	e <- x-mu
-	mu.sf <- e - exp(2*logsigma - logalpha)
-
-	dlogdbeta <- -2 * sum(exp(-logalpha) - exp(dnorm(0,mu.sf,exp(logsigma),log = TRUE) - pnorm(0,mu.sf,exp(logsigma),lower.tail = FALSE,log.p = TRUE)))
-	dlogdlogsigma <- -2 * sum(exp(2*logsigma - 2*logalpha) - (2*exp(2*logsigma - logalpha) + mu.sf)*exp( dnorm(0,mu.sf,exp(logsigma),log = TRUE) - pnorm(0,mu.sf,exp(logsigma),lower.tail = FALSE,log.p = TRUE)))
-	dlogdlogalpha <- -2 * sum(-1 + e * exp( -logalpha) - exp(2*logsigma - 2*logalpha) + exp(2*logsigma - logalpha+dnorm(0,mu.sf,exp(logsigma),log = TRUE) - pnorm(0,mu.sf,exp(logsigma),lower.tail = FALSE,log.p = TRUE)))
-
-	c(dlogdbeta,dlogdlogsigma,dlogdlogalpha)
+  bt <- theta[1]
+  s2 <- exp(theta[2])
+  al <- exp(theta[3])
+  mu <- bt + bg
+  
+  .C("normexp_m2loglik",
+    mu = as.double(mu), 
+    s2 = as.double(s2), 
+    al = as.double(al), 
+    n = as.integer(length(f)), 
+    f = as.double(f), 
+    m2LL = double(1),
+    PACKAGE="limma"
+  )$m2LL
 }
 
-dnormexp <- function(x,normmean,normsd,expmean,log=FALSE)
-#	Density of normal+exponential convolution
-#	Gordon Smyth and Jeremy Silver
-#	24 Aug 2002. Last modified 26 Dec 2005.
+.normexp.gm2loglik <- function(theta,f,bg)
+#	Gradient of normexp m2loglik
+#	with respect to mu, log(sigma^2) and log(alpha)
+#  Jeremy Silver
+#  29 Oct 2007.
+#	Last modified 25 Sept 2008.
 {
-	e <- (x-normmean)/normsd
-	a2 <- expmean/normsd
-	mu.sf <- e-1/a2
-	logf <- -log(expmean) + (0.5/a2-e)/a2 + pnorm(0,mu.sf,1,lower.tail=FALSE,log.p=TRUE)
-	if(log) logf else exp(logf) 
+  bt <- theta[1]
+  s2 <- exp(theta[2])
+  al <- exp(theta[3])
+  mu <- bt + bg
+
+  .C("normexp_gm2loglik",
+    mu = as.double(mu), 
+    s2 = as.double(s2), 
+    al = as.double(al), 
+    n = as.integer(length(f)), 
+    f = as.double(f), 
+    dm2LL = double(3),
+    PACKAGE = "limma"
+  )$dm2LL
+
 }
 
-dnormexp.saddle <- function(x,normmean,normsd,expmean,log=FALSE,secondorder=TRUE)
-#	Saddlepoint approximation to normal+exponential density
-#	Gordon Smyth
-#	26 December 2005.  Revised 19 July 2007.
-
-#	The approx is nearly exact at the low end, and is under about 0.002 at the high end:
-#	> dexp(64000,rate=1/15000,log=TRUE)-dnormexp.saddle(64000,0,1e-8,15000,log=TRUE)
-#	[1] 0.002271867
+.normexp.hm2loglik <- function(theta,f,bg)
+#	Hessian of normexp m2loglik
+#	with respect to mu, log(sigma^2) and log(alpha)
+#  Jeremy Silver
+#  29 Oct 2007.
+#	Last modified 25 Sept 2008.
 {
-	mu <- normmean
-	sigma <- normsd
-	alpha <- expmean
-	theta <- .findSaddleTheta(x,mu,sigma,alpha)
-	k <- mu*theta+0.5*sigma^2*theta^2-log(1-alpha*theta)
-	k2 <- sigma^2+alpha^2/(1-alpha*theta)^2
-	logf <- -0.5*log(2*pi*k2)-x*theta+k
-	if(secondorder) {
-		k3 <- 2*alpha^3/(1-alpha*theta)^3
-		k4 <- 6*alpha^4/(1-alpha*theta)^4
-		logf <- logf+1/8*k4/k2^2-5/24*k3^2/k2^3
-	}
-	if(log) logf else exp(logf)
+  bt <- theta[1]
+  s2 <- exp(theta[2])
+  al <- exp(theta[3])
+  mu <- bt + bg
+
+  matrix(.C("normexp_hm2loglik",
+    mu = as.double(mu), 
+    s2 = as.double(s2), 
+    al = as.double(al), 
+    n = as.integer(length(f)), 
+    f = as.double(f), 
+    d2m2LL = double(9),
+    PACKAGE="limma"
+  )$d2m2LL,3,3)
 }
 
-.findSaddleTheta <- function(x,normmean,normsd,expmean,trace=FALSE)
-#	Find the canonical parameter (theta) for the saddle-point approximation
-#	Gordon Smyth
-#	22 July 2007
-{
-	mu <- normmean
-	sigma <- normsd
-	alpha <- expmean
-	e <- x-mu
-
-#	Sigma small approximation
-	upperbound1 <- pmax(0,(e-alpha)/alpha/abs(e))
-
-#	alpha small approximation
-	upperbound2 <- e/sigma^2
-	upperbound <- pmin(upperbound1,upperbound2)
-
-#	Solve quadratic approximation
-#	Theoretically exact, but subject to subtractive cancellation
-	c2 <- sigma^2*alpha
-	c1 <- -sigma^2-e*alpha
-	c0 <- -alpha+e
-	theta.quadratic <- (-c1-sqrt(c1^2-4*c0*c2))/2/c2
-
-#	Globally convergence Newton iteration
-	theta <- pmin(theta.quadratic,upperbound)
-	i <- 0
-	repeat {
-		i <- i+1
-		dK <- mu+sigma^2*theta+alpha/(1-alpha*theta)
-		if(trace) cat("max dev",max(abs(dK-x)),"\n")
-		ddK <- sigma^2+(alpha/(1-alpha*theta))^2
-		delta <- (x-dK)/ddK
-		theta <- theta + delta
-		if(i==1) theta <- pmin(theta,upperbound)
-		if(all(abs(delta) < 1e-10)) break
-		if(i > 50) break
-	}
-	if(trace) {
-		dK <- mu+sigma^2*theta+alpha/(1-alpha*theta)
-		plot(x,dK-x)
-	}
-	theta
-}
-
-normexp.m2loglik.saddle <- function(par,x)
-#	Minus twice the norm-exp log-likelihood (summed over all spots)
-#	Jeremy Silver and Gordon Smyth
-#	24 Aug 2002. Last modified 26 December 2005.
-{
-	-2*sum(dnormexp.saddle(x,normmean=par[1],normsd=exp(par[2]),expmean=exp(par[3]),log=TRUE,second=TRUE))
-}
-
-normexp.m2loglik <- function(par,x)
-#	Minus twice the norm-exp log-likelihood (summed over all spots)
-#	Jeremy Silver and Gordon Smyth
-#	24 Aug 2002. Last modified 26 December 2005.
-{
-	-2*sum(dnormexp(x,normmean=par[1],normsd=exp(par[2]),expmean=exp(par[3]),log=TRUE))
-}
 
 .bg.parameters.rma75 <- function(pm,n.pts = 2^14)
-#	Estimate estimate normexp parameters
-#	This is extracted from the RMA-75 function of
+#	Estimate normexp parameters
+#	This code is extracted without alteration from the RMA-75 function of
 #	McGee, M. and Chen, Z. (2006). Parameter estimation for the
 #	exponential-normal convolution model for background correction
 #	of Affymetrix GeneChip data.
@@ -236,3 +221,4 @@ normexp.m2loglik <- function(par,x)
 	alpha3<- -(quantile(pm,q75)-mu3)/log(1-q75)
 	list(alpha = 1/alpha3, mu = mu3, sigma = bgsd3)
 }
+

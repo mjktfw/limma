@@ -2,10 +2,10 @@
 
 #  BACKGROUND CORRECTION
 
-backgroundCorrect <- function(RG, method="subtract", offset=0, printer=RG$printer, verbose=TRUE) {
+backgroundCorrect <- function(RG, method="subtract", offset=0, printer=RG$printer, normexp.method="saddle", verbose=TRUE) {
 #	Apply background correction to microarray data
 #	Gordon Smyth
-#	12 April 2003.  Last modified 12 May 2008.
+#	12 April 2003.  Last modified 24 Sept 2008.
 
 	if(!is.list(RG) && is.vector(RG)) RG <- as.matrix(RG)
 	if(is.matrix(RG)) {
@@ -14,7 +14,7 @@ backgroundCorrect <- function(RG, method="subtract", offset=0, printer=RG$printe
 		if(method!="none") {
 			for (j in 1:ncol(RG)) {
 				x <- RG[,j]
-				out <- normexp.fit.C(x,method=method)
+				out <- normexp.fit(x,method=normexp.method)
 				RG[,j] <- normexp.signal(out$par,x)
 				if(verbose) cat("Corrected array",j,"\n")
 			}
@@ -28,7 +28,13 @@ backgroundCorrect <- function(RG, method="subtract", offset=0, printer=RG$printe
 	}
 
 	if(is.null(RG$Rb) != is.null(RG$Gb)) stop("Background values exist for one channel but not the other")
-	method <- match.arg(method, c("none","subtract","half","minimum","movingmin","edwards","normexp","saddle","neldermean","bfgs","rma","mcgee"))
+	method <- match.arg(method, c("none","subtract","half","minimum","movingmin","edwards","normexp","rma"))
+	if(method=="rma") {
+		method <- "normexp"
+		normexp.method <- "rma"
+	}
+	normexp.method <- match.arg(normexp.method, c("mle","saddle","rma","rma75","mcgee"))
+
 	if(is.null(RG$Rb) && is.null(RG$Gb)) method <- "none"
 	switch(method,
 	subtract={
@@ -76,7 +82,7 @@ backgroundCorrect <- function(RG, method="subtract", offset=0, printer=RG$printe
 		delta <- one %*% apply(sub, 2, delta.vec)
 		RG$G <- ifelse(sub < delta, delta*exp(1-(RG$Gb+delta)/RG$G), sub)
 	},
-	normexp=,saddle=,neldermean=,bfgs=,rma=,mcgee={
+	normexp=,rma={
 		if(verbose) cat("Green channel\n")
 		RG$G <- backgroundCorrect(RG$G-RG$Gb,method=method,verbose=verbose)
 		if(verbose) cat("Red channel\n")

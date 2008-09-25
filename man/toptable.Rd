@@ -9,7 +9,7 @@ Extract a table of the top-ranked genes from a linear model fit.
 \usage{
 topTable(fit,coef=NULL,number=10,genelist=fit$genes,adjust.method="BH",sort.by="B",resort.by=NULL,p.value=1,lfc=0)
 toptable(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.method="BH",sort.by="B",resort.by=NULL,p.value=1,lfc=0,...)
-topTableF(fit,number=10,genelist=fit$genes,adjust.method="BH")
+topTableF(fit,number=10,genelist=fit$genes,adjust.method="BH",sort.by="F",p.value=1)
 }
 \arguments{
   \item{fit}{list containing a linear model fit produced by \code{lmFit}, \code{lm.series}, \code{gls.series} or \code{mrlm}.
@@ -24,7 +24,7 @@ topTableF(fit,number=10,genelist=fit$genes,adjust.method="BH")
   If \code{NULL}, this will be automatically generated.}
   \item{adjust.method}{method used to adjust the p-values for multiple testing.  Options, in increasing conservatism, include \code{"none"}, \code{"BH"}, \code{"BY"} and \code{"holm"}.
   See \code{\link{p.adjust}} for the complete list of options. A \code{NULL} value will result in the default adjustment method, which is \code{"BH"}.}
-  \item{sort.by}{character string specifying statistic to rank genes by.  Possibilities are \code{"logFC"}, \code{"A"}, \code{"T"}, \code{"t"}, \code{"P"}, \code{"p"} or \code{"B"}. \code{"M"} is allowed as a synonym for \code{"logFC"} for backward compatibility.}
+  \item{sort.by}{character string specifying statistic to rank genes by.  Possibilities for \code{topTable} and \code{toptable} are \code{"logFC"}, \code{"A"}, \code{"T"}, \code{"t"}, \code{"P"}, \code{"p"} or \code{"B"}. \code{"M"} is allowed as a synonym for \code{"logFC"} for backward compatibility.  Possibilities for \code{topTableF} are \code{"F"} or \code{"none"}.}
   \item{resort.by}{character string specifying statistic to sort the selected genes by in the output data.frame.  Possibilities are \code{"logFC"}, \code{"A"}, \code{"T"}, \code{"t"}, \code{"P"}, \code{"p"}, \code{"B"} or \code{"none"}. \code{"M"} is allowed as a synonym for \code{"logFC"} for backward compatibility.}
   \item{p.value}{cutoff value for adjusted p-values. Only genes with lower p-values are listed.}
   \item{lfc}{cutoff value for log2-fold-change. Only genes with larger fold changes are listed.}

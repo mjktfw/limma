@@ -5,18 +5,21 @@
 Background correct microarray expression intensities.
 }
 \usage{
-backgroundCorrect(RG, method="subtract", offset=0, printer=RG$printer, verbose=TRUE)
+backgroundCorrect(RG, method="subtract", offset=0, printer=RG$printer, normexp.method="saddle", verbose=TRUE)
 }
 \arguments{
   \item{RG}{an \code{\link[limma:rglist]{RGList}} object or a numeric matrix.}
-  \item{method}{character string specifying correction method.  Possible values are \code{"none"}, \code{"subtract"}, \code{"half"}, \code{"minimum"}, \code{"movingmin"}, \code{"edwards"}, \code{"normexp"} or \code{"rma"}.
-  If \code{RG} is a matrix, possible values are restricted to \code{"none"}, \code{"normexp"} or \code{"rma"}.}
+  \item{method}{character string specifying correction method.  Possible values are \code{"none"}, \code{"subtract"}, \code{"half"}, \code{"minimum"}, \code{"movingmin"}, \code{"edwards"} or \code{"normexp"}.
+  If \code{RG} is a matrix, possible values are restricted to \code{"none"} or \code{"normexp"}.}
   \item{offset}{numeric value to add to intensities}
   \item{printer}{a list containing printer layout information, see \code{\link{PrintLayout-class}}. Ignored if \code{RG} is a matrix.}
+  \item{normexp.method}{character string specifying parameter estimation strategy used by normexp, ignored for other methods.}
   \item{verbose}{logical. If \code{TRUE}, progress messages are sent to standard output}
 }
 \details{
 This function implements the background correction methods reviewed in Ritchie et al (2007).
+Ritchie et al (2007) recommend \code{method="normexp"} whenever \code{RG} contains local background estimates.
+If \code{RG} contains morphological background estimates instead (available from SPOT or GenePix image analysis software), then \code{method="subtract"} performs well.
 
 If \code{method="none"} then no correction is done, i.e., the background intensities are treated as zero.
 If \code{method="subtract"} then the background intensities are subtracted from the foreground intensities.
@@ -29,9 +32,10 @@ If \code{method="minimum"} then any intensity which is zero or negative after ba
 If \code{method="edwards"} a log-linear interpolation method is used to adjust lower intensities as in Edwards (2003).
 If \code{method="normexp"} a convolution of normal and exponential distributions is fitted to the foreground intensities using the background intensities as a covariate, and the expected signal given the observed foreground becomes the corrected intensity.
 This results in a smooth monotonic transformation of the background subtracted intensities such that all the corrected intensities are positive.
-See Ritchie et al (2007) and \code{\link{normexp.fit}} for more details.
-If \code{method="rma"}, then the background correction method of the RMA-algorithm for Affymetrix microarray data is used.
-This is similar to \code{"normexp"} but with different parameter estimates.
+
+The normexp method is available in a number of variants depending on how the model parameters are estimated, and these are selected by \code{normexp.method}.
+Here \code{"saddle"} gives the saddle-point approximation to maximum likelihood from Ritchie et al (2007), \code{"mle"} gives exact maximum likelihood, \code{"rma"} gives the background correction algorithm from the RMA-algorithm for Affymetrix microarray data, and \code{rma75} gives the RMA-75 method from McGee and Chen (2006).
+See \code{\link{normexp.fit}} for more details.
 
 The \code{offset} can be used to add a constant to the intensities before log-transforming, so that the log-ratios are shrunk towards zero at the lower intensities.
 This may eliminate or reverse the usual 'fanning' of log-ratios at low intensities associated with local background subtraction.
@@ -39,10 +43,7 @@ This may eliminate or reverse the usual 'fanning' of log-ratios at low intensiti
 Background correction (background subtraction) is also performed by the \code{\link{normalizeWithinArrays}} method for \code{RGList} objects, so it is not necessary to call \code{backgroundCorrect} directly unless one wants to use a method other than simple subtraction.
 Calling \code{backgroundCorrect} before \code{normalizeWithinArrays} will over-ride the default background correction.
 }
-\note{
-Ritchie et al (2007) recommend \code{method="normexp"} whenever \code{RG} contains local background estimates.
-If \code{RG} contains morphological background estimates instead, then \code{method="subtract"} performs well.
-}
+
 \value{
 An \code{RGList} object in which components \code{R} and \code{G} are background corrected
 and components \code{Rb} and \code{Gb} are removed.
@@ -51,10 +52,17 @@ and components \code{Rb} and \code{Gb} are removed.
 Edwards, D. E. (2003). Non-linear normalization and background correction in one-channel cDNA microarray studies
 \emph{Bioinformatics} 19, 825-833. 
 
+McGee, M., and Chen, Z. (2006).
+Parameter estimation for the exponential-normal convolution model for background correction of Affymetrix GeneChip data.
+\emph{Stat Appl Genet Mol Biol}, 5(1), Article 24.
+
 Ritchie, M. E., Silver, J., Oshlack, A., Silver, J., Holmes, M., Diyagama, D., Holloway, A., and Smyth, G. K. (2007).
 A comparison of background correction methods for two-colour microarrays.
 \emph{Bioinformatics}
 \url{http://bioinformatics.oxfordjournals.org/cgi/content/abstract/btm412}
+
+Silver, J., Ritchie, M. E., and Smyth, G. K. (2008).
+Microarray background correction: maximum likelihood estimation for the normal-exponential convolution model. Technical Report July 2008, Walter and Eliza Hall Institute of Medical Research, Melbourne, Australia.
 }
 \author{Gordon Smyth}
 \examples{
