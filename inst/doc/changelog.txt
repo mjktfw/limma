@@ -1,3 +1,9 @@
+28 Sept 2008: limma 2.15.13
+
+- more efficient memory management in normexp.c (not user-visible)
+- argument bg removed from internal functions .normexp.m2loglik,
+  .normexp.gm2loglik and .normexp.hm2loglik (not user-visible)
+
 25 Sept 2008: limma 2.15.12
 
 - substantial tidying up of normexp.fit() code, although very little
@@ -9,9 +15,9 @@
 - all user-visible functions previously called by normexp.fit()
   are now removed including: dnormexp(), dnormexp.saddle(),
   normexp.m2loglik() and normexp.m2loglik.saddle().  There are
-  now just 4 utility functions, none of which are exported:
-  .normexp.m2loglik, .normexp.gm2loglik, .normexp.hm2loglik
-  and .bg.parameters.rma75.
+  now just 4 utility functions, none of which are exported from the
+  limma NAMESPACE: .normexp.m2loglik, .normexp.gm2loglik,
+  .normexp.hm2loglik and .bg.parameters.rma75.
 - More comments added to C code supporting normexp.fit().  The
   source code file is renamed from find_saddle_theta2.c to
   normexp.c.
@@ -20,7 +26,7 @@
   background correction.  The options are "mle", "saddle",
   "rma" and "rma75".
 - in read.maimages(), support added for ArrayVision data files
-  with Artifact-removed (ARM) density values.
+  with 'Artifact-removed' (ARM) density values.
 - new function alias2Symbol() to convert gene aliases to
   official symbols.  Uses the data packages org.Hs.eg.db etc.
 - new arguments sort.by and p.value for topTableF().  This makes

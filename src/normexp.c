@@ -2,6 +2,7 @@
 normexp fitting
 Jeremy Silver, Dec 2007
 Minor modifications by Gordon Smyth, Sep 2008
+Minor change to memory allocation by Jeremy Silver, Sep 2008
 */
 
 #include <stdio.h>
@@ -32,8 +33,8 @@ double normexp_m2loglik_saddle(int m, double *par, void *ex){
 
   double upperbound1;
   double upperbound2;
-  double upperbound[*n];
-  double theta[*n];
+  double *upperbound;
+  double *theta;
   double k1,k2,k3,k4;
   double err;
   double c0;
@@ -46,7 +47,7 @@ double normexp_m2loglik_saddle(int m, double *par, void *ex){
   int keepRepeating = 1;
   int j,i;
   double maxDeviation;
-  int hasConverged[*n]; // vector of 0/1 indicators,
+  int *hasConverged; // vector of 0/1 indicators,
   // hasConverged[i] = 0 if theta[i] has not yet converged,
   // hasConverged[i] = 1 if theta[i] has converged,
   int nConverged = 0;   // the sum of hasConverged
@@ -54,6 +55,10 @@ double normexp_m2loglik_saddle(int m, double *par, void *ex){
   double alpha3 = alpha * alpha2;
   double alpha4 = alpha2 * alpha2;
   double dK, ddK, delta;
+
+  upperbound = (double *) Calloc(*n, double);
+  theta = (double *) Calloc(*n, double);
+  hasConverged = (int *) Calloc(*n, int);
 
   c2 = sigma2 * alpha;
 
@@ -118,6 +123,10 @@ double normexp_m2loglik_saddle(int m, double *par, void *ex){
     loglik += logf;
   }
 
+  Free(upperbound);
+  Free(theta);
+  Free(hasConverged);
+
   return -2.0 * loglik;
 
 }
@@ -177,7 +186,7 @@ void normexp_m2loglik(double *mu, double *s2, double *al, int *n, double *f, dou
   *m2LL = 0.0;
 
   for(i = 0; i < *n; i++){
-    e = f[i] - mu[i];
+    e = f[i] - *mu;
     mu_sf = e - s2onal;
     *m2LL += -logal - e/ *al + s2on2al2 + pnorm(0.0,mu_sf,s,0,1);
   }
@@ -209,7 +218,7 @@ void normexp_gm2loglik(double *mu, double *s2, double *al, int *n, double *f, do
   }
   // Calculate derivatives
   for(i = 0; i < *n; i++){
-    e = f[i] - mu[i];
+    e = f[i] - *mu;
     mu_sf = e - s2onal;
     psionPsi = exp(dnorm(0.0,mu_sf,s,1) - pnorm(0.0,mu_sf,s,0,1));
     dm2LL[0] += v1onal - psionPsi;
@@ -270,7 +279,7 @@ void normexp_hm2loglik(double *mu, double *s2, double *al, int *n, double *f, do
   double d2L_daldal = 0.0;
 
   for(i = 0; i < *n; i++){
-    e = f[i] - mu[i];
+    e = f[i] - *mu;
     mu_sf = e - s2onal;
     eps2onal = e + s2onal;
     e2 = e*e;

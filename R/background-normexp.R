@@ -89,13 +89,12 @@ normexp.fit <- function(x, method="saddle", n.pts=NULL, trace=FALSE)
 	Par1 <- out1$par
 #	Convert from log-sd to log-var parametrization
 	Par1[2] <- 2*Par1[2]
-	LL1 <- .normexp.m2loglik(Par1, f = x, bg = rep(0,length(x)))
+	LL1 <- .normexp.m2loglik(Par1, f = x)
 	out2 <- nlminb(start = Par1,
 		objective = .normexp.m2loglik,
 		gradient = .normexp.gm2loglik,
 		hessian = .normexp.hm2loglik,
 		f = x,
-		bg = rep(0,length(x)),
 		scale = median(abs(Par1))/abs(Par1))
 #	Convert back to log-sd parametrization
 	out2$par[2] <- out2$par[2]/2
@@ -107,16 +106,15 @@ normexp.fit <- function(x, method="saddle", n.pts=NULL, trace=FALSE)
 	out2
 }
 
-.normexp.m2loglik <- function(theta,f,bg)
+.normexp.m2loglik <- function(theta,f)
 #	normexp minus-twice log-likelihood
 #  Jeremy Silver
 #  29 Oct 2007.
 #	Last modified 25 Sept 2008.
 {
-  bt <- theta[1]
+  mu <- theta[1]
   s2 <- exp(theta[2])
   al <- exp(theta[3])
-  mu <- bt + bg
   
   .C("normexp_m2loglik",
     mu = as.double(mu), 
@@ -129,17 +127,16 @@ normexp.fit <- function(x, method="saddle", n.pts=NULL, trace=FALSE)
   )$m2LL
 }
 
-.normexp.gm2loglik <- function(theta,f,bg)
+.normexp.gm2loglik <- function(theta,f)
 #	Gradient of normexp m2loglik
 #	with respect to mu, log(sigma^2) and log(alpha)
 #  Jeremy Silver
 #  29 Oct 2007.
 #	Last modified 25 Sept 2008.
 {
-  bt <- theta[1]
+  mu <- theta[1]
   s2 <- exp(theta[2])
   al <- exp(theta[3])
-  mu <- bt + bg
 
   .C("normexp_gm2loglik",
     mu = as.double(mu), 
@@ -153,17 +150,16 @@ normexp.fit <- function(x, method="saddle", n.pts=NULL, trace=FALSE)
 
 }
 
-.normexp.hm2loglik <- function(theta,f,bg)
+.normexp.hm2loglik <- function(theta,f)
 #	Hessian of normexp m2loglik
 #	with respect to mu, log(sigma^2) and log(alpha)
 #  Jeremy Silver
 #  29 Oct 2007.
 #	Last modified 25 Sept 2008.
 {
-  bt <- theta[1]
+  mu <- theta[1]
   s2 <- exp(theta[2])
   al <- exp(theta[3])
-  mu <- bt + bg
 
   matrix(.C("normexp_hm2loglik",
     mu = as.double(mu), 
