@@ -3,14 +3,15 @@
 \title{Select Appropriate Linear Model}
 \description{Select the best fitting linear model for each gene by minimizing an information criterion.}
 \usage{
-selectModel(y, designlist, criterion="bic", var.prior=NULL, df.prior=0, ...)
+selectModel(y, designlist, criterion="aic", var.prior=NULL, df.prior=0, ...)
 }
 \arguments{
-  \item{y}{object of class \code{numeric}, \code{matrix}, \code{MAList}, \code{marrayNorm}, \code{ExpressionSet} or \code{PLMset} containing log-ratios or log-values of expression for a series of microarrays}
+  \item{y}{a matrix-like data object, containing log-ratios or log-values of expression for a series of microarrays.
+  Any object class which can be coerced to matrix is acceptable including \code{numeric}, \code{matrix}, \code{MAList}, \code{marrayNorm}, \code{ExpressionSet} or \code{PLMset}.}
   \item{designlist}{list of design matrices} 
-  \item{criterion}{information criterion to be used, \code{"bic"}, \code{"aic"} or \code{"lik"}.}
-  \item{var.prior}{prior value for residual variances. If not provided, this is estimated from all the data using \code{squeezeVar}.}
-  \item{df.prior}{prior degrees of freedom for residual variances. If not provided, this is estimated using \code{squeezeVar}.}
+  \item{criterion}{information criterion to be used for model selection, \code{"aic"}, \code{"bic"} or \code{"lik"}.}
+  \item{var.prior}{prior value for residual variances, to be used if \code{df.prior}>0.}
+  \item{df.prior}{prior degrees of freedom for residual variances.}
   \item{...}{other optional arguments to be passed to \code{lmFit}}
 }
 
@@ -21,7 +22,11 @@ List with components
 }
 
 \details{
-This function chooses, for each probe, the best fitting model out of a set of models represented by a list of design matrices.
+This function chooses, for each probe, the best fitting model out of a set of alternative models represented by a list of design matrices.
+Selection is by Akaike's Information Criterion (AIC), Bayesian Information Criterion (BIC) or by maximum likelihood (\code{"lik"}).
+
+The criteria have been generalized slightly to accommodate an information prior on the variances represented by \code{var.prior} and \code{df.prior}.
+Suitable values for \code{var.prior} and \code{df.prior} can be estimated using \code{\link{squeezeVar}}.
 }
 
 \seealso{

@@ -101,6 +101,10 @@ topTable(fit2,coef=3,resort.by="p")
 topTable(fit2,coef=3,sort="logFC",resort.by="t")
 topTable(fit2,coef=3,resort.by="B")
 
+designlist <- list(Null=matrix(1,6,1),Two=design,Three=cbind(1,c(0,0,1,1,0,0),c(0,0,0,0,1,1)))
+out <- selectModel(M,designlist)
+table(out$pref)
+
 ### marray object
 
 suppressMessages(suppressWarnings(gotmarray <- require(marray,quietly=TRUE)))

@@ -89,6 +89,10 @@ After the above steps the results may be displayed or further processed using:
 For multiple testing functions which operate on linear model fits, see \link{08.Tests}.
 }
 
+\section{Model Selection}{
+\code{\link{selectModel}} provides a means to choose between alternative linear models using AIC or BIC information criteria.
+}
+
 \author{Gordon Smyth}
 \references{
 Smyth, G. K. (2004). Linear models and empirical Bayes methods for assessing differential expression in microarray experiments.

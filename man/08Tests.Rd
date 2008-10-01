@@ -26,6 +26,10 @@ Summary and \code{show} method exists for objects of class \code{TestResults}.
 The results from \code{decideTests} can also be included when the results of a linear model fit are written to a file using \code{\link{write.fit}}.
 }
 
+\section{Gene Set Tests}{
+Competitive gene set testing is provided by \code{\link{geneSetTest}}, which permutes genes, while self-contained gene set testing is provided by \code{\link{roast}}, which randomly rotates arrays.
+}
+
 \section{Other Functions}{
 Given a set of p-values, the function \code{\link{convest}} can be used to estimate the proportion of true null hypotheses.
 

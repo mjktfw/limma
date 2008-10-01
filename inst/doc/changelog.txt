@@ -1,3 +1,8 @@
+1 October 2008: limma 2.15.14
+
+- minor improvements to several help files
+- correction to the "bic" method of selectModel().
+
 28 Sept 2008: limma 2.15.13
 
 - more efficient memory management in normexp.c (not user-visible)
@@ -16,7 +21,7 @@
   are now removed including: dnormexp(), dnormexp.saddle(),
   normexp.m2loglik() and normexp.m2loglik.saddle().  There are
   now just 4 utility functions, none of which are exported from the
-  limma NAMESPACE: .normexp.m2loglik, .normexp.gm2loglik,
+  limma NAMESPACE, namely .normexp.m2loglik, .normexp.gm2loglik,
   .normexp.hm2loglik and .bg.parameters.rma75.
 - More comments added to C code supporting normexp.fit().  The
   source code file is renamed from find_saddle_theta2.c to
@@ -27,6 +32,9 @@
   "rma" and "rma75".
 - in read.maimages(), support added for ArrayVision data files
   with 'Artifact-removed' (ARM) density values.
+- new function selectModel() which implements Akaike Information
+  Criterion (AIC) or Bayesian Information Criterion model (BIC)
+  selection between alternative linear models.
 - new function alias2Symbol() to convert gene aliases to
   official symbols.  Uses the data packages org.Hs.eg.db etc.
 - new arguments sort.by and p.value for topTableF().  This makes
