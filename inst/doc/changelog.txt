@@ -1,3 +1,9 @@
+9 October 2008: limma 2.15.15
+
+- the criterion for the "Active" column output by roast()
+  is changed to be more discriminating.
+- new method "mallowscp" for selectModel().
+
 1 October 2008: limma 2.15.14
 
 - minor improvements to several help files

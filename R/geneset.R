@@ -71,7 +71,7 @@ geneSetTest <- function(selected,statistics,alternative="mixed",type="auto",rank
 roast <- function(iset=NULL,y,design,contrast=ncol(design),gene.weights=NULL,array.weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,nrot=1000)
 # rotation gene set testing for linear models
 # Gordon Smyth and Di Wu
-# 24 Apr 2008. Last revised 7 Aug 2008.
+# 24 Apr 2008. Last revised 9 Oct 2008.
 {
 	if(is.null(iset)) iset <- rep(TRUE,nrow(y))
 	y <- as.matrix(y)
@@ -195,8 +195,8 @@ roast <- function(iset=NULL,y,design,contrast=ncol(design),gene.weights=NULL,arr
 	p <- rowMeans(t(stati) >= statobs)
 
 #	Output
-	r1 <- mean(modt > 1)
-	r2 <- mean(modt < -1)
+	r1 <- mean(modt > sqrt(2))
+	r2 <- mean(modt < -sqrt(2))
 	out <- data.frame(Z=sqrt(statobs),Active=c(r1+r2,r1,r2,max(r1,r2)),P.Value=p)
 	row.names(out) <- c("mixed","up","down","either")
 	out

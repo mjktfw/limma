@@ -23,7 +23,7 @@ roast(iset=NULL,y,design,contrast=ncol(design),gene.weights=NULL,array.weights=N
 \value{
 data.frame with columns \code{Z}, \code{Active} and \code{P.Value}.
 The \code{Z} column gives average (root mean square) z-statistics for the genes in the set.
-The \code{Active} gives the proportion of genes in the set contributing meaningfully to significance.
+The \code{Active} gives the proportion of genes in the set contributing meaningfully to significance, defined as those with squared z-values greater than 2.
 The \code{P.Value} gives estimated p-values.
 The rows correspond to the alternative hypotheses mixed, up, down or either.
 }

@@ -22,6 +22,9 @@ The scale and degrees of freedom for the prior distribution are estimated from t
 
 The effect of this function is to smooth or shrink the variances towards a common value.
 The smoothed variances have a smaller expected mean square error to the true variances than do the sample variances themselves.
+
+This function is called by \code{eBayes}, but beware a possible confusion with the output from that function.
+The values \code{var.prior} and \var{var.post} output by \code{squeezeVar} correspond to the quantities \code{s2.prior} and \code{s2.post} output by \code{eBayes}, whereas \code{var.prior} output by \code{eBayes} relates to a different parameter.
 }
 
 \value{
