@@ -1,3 +1,15 @@
+15 October 2008: limma 2.15.16
+
+- getLayout() with guessdups=TRUE can now handle values
+  for ndups greater than 2.
+- new function getDupSpacing() which determines duplicate
+  spacing from a vector of gene IDs.
+- getSpacing() now recognizes a new value "subarrays" which
+  means that all the probes on an array are repeated in two
+  or more subarrays.
+- bug fix to removeBatchEffect(), which previously returned
+  an error.
+
 9 October 2008: limma 2.15.15
 
 - the criterion for the "Active" column output by roast()

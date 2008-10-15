@@ -77,18 +77,34 @@ getLayout <- function(gal,guessdups=FALSE)
 	)
 	if(guessdups) {
 		ID <- paste(gal$ID,gal$Name)
-		nspots <- length(ID)
-		firsti <- (1:nspots)[!duplicated(ID)]
-		ndups <- floor(nspots/length(firsti))
-		spacing <- NA
-		if(ndups==1) spacing <- 1
-		if(ndups==2 && (max(firsti)<(nspots+1)/2)) spacing <- "topbottom"
-		if(is.na(spacing) && all((firsti%%ndups)==1)) spacing <- as.integer(1)
-		if(is.na(spacing) && all((firsti%%(ndups*nspot.c))==1)) spacing <- as.integer(nspot.c)
-		printer$ndups <- ndups
-		printer$spacing <- spacing
+		printer <- c(printer,getDupSpacing(ID))
 	}
 	structure(printer,class="PrintLayout")
+}
+
+getDupSpacing <- function(ID)
+#  Find the valid ndups and spacing values for a set of IDs
+#	Assumes at least one probe with a unique ID, from which
+#  spacing can be determined.
+#  Gordon Smyth
+#  15 Oct 2008
+{
+	if(any(is.na(ID))) return(list(ndups=NA,spacing=NA))
+	ID <- as.factor(ID)
+	nspots <- length(ID)
+
+	tab <- table(ID)
+	wm <- which.min(tab)
+	ndups <- as.vector(tab[wm])
+	if(any(tab %% ndups !=0)) ndups <- 1
+
+	if(ndups==1) return(list(ndups=ndups,spacing=1))
+
+	d <- diff(which(ID==names(tab)[wm]))
+	if(diff(range(d))==0)
+		return(list(ndups=ndups,spacing=d[1]))
+	else
+		return(list(ndups=1,spacing=1))
 }
 
 getLayout2 <- function(galfile)
@@ -390,16 +406,17 @@ printorder <- function(layout, ndups=1, spacing="columns", npins, start="topleft
 	list(printorder=po, plate=plate, plate.r=plate.r, plate.c=plate.c, plateposition=platepos)
 }
 
-getSpacing <- function(spacing, layout) {
+getSpacing <- function(spacing, layout)
 #	Convert character to integer duplicating spacing
 #	Gordon Smyth
-#	15 Dec 2003
-
+#	15 Dec 2003.  Last revised 15 Oct 2008.
+{
 	if(is(spacing,"numeric")) return(spacing)
-	spacing <- match.arg(spacing, c("columns","rows","topbottom"))
+	spacing <- match.arg(spacing, c("columns","rows","subarrays","topbottom"))
 	switch(spacing,
 		columns=1,
 		rows=layout$nspot.c,
+		subarrays=layout$ngrid.r/layout$ndups*layout$ngrid.c*layout$nspot.r*layout$nspot.c,
 		topbottom=layout$ngrid.r/2*layout$ngrid.c*layout$nspot.r*layout$nspot.c
 	)
 }

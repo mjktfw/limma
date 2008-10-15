@@ -18,7 +18,7 @@ A numeric matrix of log-expression values with batch effects removed.
 \details{
 This function is useful for removing batch effects, associated with hybridization time or other technical variables, prior to clustering or unsupervised analysis.
 
-This function is not intended to use prior to linear modelling.
+This function is intended for use with clustering or PCA, not for use prior to linear modelling.
 If linear modelling is intended, it is better to include the batch effect as part of the linear model.
 }
 
