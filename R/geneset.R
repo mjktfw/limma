@@ -218,3 +218,44 @@ alias2Symbol <- function(alias,species="Hs")
 	mappedRkeys(get(SYMBOL)[eg])
 }
 
+barcodeplot <- function(selected,statistics,type="auto",...)
+{
+	statistics <- as.numeric(statistics)
+	isna <- is.na(statistics)
+	if(any(isna)) {
+		if(length(selected)==length(statistics)) {
+			selected <- selected[!isna]
+		} else {
+			selected <- as.integer(selected)
+			selected <- selected[!isna[selected]]
+		}
+		statistics <- statistics[!isna]
+	}
+	n <- length(statistics)
+	type <- match.arg(type, c("t","f","auto"))
+	allsamesign <- all(statistics >= 0) || all(statistics <= 0)
+	if(type=="auto") {
+		if(allsamesign)
+			type <- "f"
+		else
+			type <- "t"
+	}
+	plot(1:n,xlim=c(0,n),ylim=c(0,1),type="n",axes=FALSE,xlab="",ylab="",...)
+	if(type=="t") {
+		npos <- sum(statistics > 1)
+		if(npos) rect(0.5,0,npos+0.5,1,col="pink",border=NA)
+		nneg <- sum(statistics < -1)
+		if(nneg) rect(n-nneg-0.5,0,n+0.5,1,col="lightblue",border=NA)
+	}
+	r <- n+1-rank(statistics)[selected]
+	segments(r,0,r,1,lwd=2)
+	rect(0.5,0,n+0.5,1,border="blue")
+	if(type=="t") {
+		mtext("Positive",side=2,line=-1,col="blue")
+		mtext("Negative",side=4,line=-1,col="blue")
+	} else {
+		mtext("Largest",side=2,line=-1,col="blue")
+		mtext("Smallest",side=4,line=-1,col="blue")
+	}
+	invisible()
+}

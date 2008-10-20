@@ -35,7 +35,7 @@ and negative values and otherwise will be taken to be F-like.
 
 This is a self-contained test is the sense that genes outside the test do not play a role
 (Goeman, JJ, and Buhlmann P, 2007).
-A competitive gene set test is performed by \code{\link{compGST}}.
+A competitive gene set test is performed by \code{\link{geneSetTest}}.
 
 p-values are given for four possible alternative hypotheses.
 \code{alternative=="up"} means the genes in the set tend to be up-regulated, with positive t-statistics.

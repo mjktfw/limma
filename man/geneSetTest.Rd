@@ -1,6 +1,6 @@
 \name{geneSetTest}
 \alias{geneSetTest}
-\alias{compGST}
+\alias{barcodeplot}
 \title{Gene Set Test}
 \description{
 Test whether a set of genes is enriched for differential expression.
@@ -8,6 +8,7 @@ Genes are assumed to be independent.
 }
 \usage{
 geneSetTest(selected,statistics,alternative="mixed",type="auto",ranks.only=TRUE,nsim=10000)
+barcodeplot(selected,statistics,type="auto",...)
 }
 \arguments{
   \item{selected}{vector specifying the elements of \code{statistic} in the test group.  This can be a vector of indices, or a logical vector of the same length as \code{statistics}, or any vector such as \code{statistic[selected]} contains the statistic values for the selected group.}
@@ -17,6 +18,7 @@ geneSetTest(selected,statistics,alternative="mixed",type="auto",ranks.only=TRUE,
   \item{ranks.only}{logical, if \code{TRUE} only the ranks of the \code{statistics} are used.} 
   \item{nsim}{number of random samples to take in computing the p-value.
   Not used if \code{ranks.only=TRUE}.}
+  \item{\ldots}{other arguments are passed to \code{plot}.}
 }
 \value{
 Numeric value giving the estimated p-value.
@@ -57,6 +59,8 @@ The test statistic used for the gene-set-test is the mean of the statistics in t
 If \code{ranks.only} is \code{TRUE} the only the ranks of the statistics are used.
 In this case the p-value is obtained from a Wilcoxon test.
 If \code{ranks.only} is \code{FALSE}, then the p-value is obtained by simulation using \code{nsim} random selected sets of genes.
+
+The \code{barcodeplot} is a graphical representation of the gene set test using ranks.
 }
 
 \seealso{\code{\link{roast}}, \code{\link[stats]{wilcox.test}}}
