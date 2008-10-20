@@ -219,6 +219,8 @@ alias2Symbol <- function(alias,species="Hs")
 }
 
 barcodeplot <- function(selected,statistics,type="auto",...)
+#	Barcode plot for gene set test
+#	Gordon Smyth, 20 October 2008
 {
 	statistics <- as.numeric(statistics)
 	isna <- is.na(statistics)
