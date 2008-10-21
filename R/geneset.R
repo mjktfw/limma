@@ -220,7 +220,8 @@ alias2Symbol <- function(alias,species="Hs")
 
 barcodeplot <- function(selected,statistics,type="auto",...)
 #	Barcode plot for gene set test
-#	Gordon Smyth, 20 October 2008
+#	Gordon Smyth and Di Wu
+#  20 October 2008. Last revised 21 Oct 2008.
 {
 	statistics <- as.numeric(statistics)
 	isna <- is.na(statistics)
@@ -243,21 +244,23 @@ barcodeplot <- function(selected,statistics,type="auto",...)
 			type <- "t"
 	}
 	plot(1:n,xlim=c(0,n),ylim=c(0,1),type="n",axes=FALSE,xlab="",ylab="",...)
-	if(type=="t") {
-		npos <- sum(statistics > 1)
-		if(npos) rect(0.5,0,npos+0.5,1,col="pink",border=NA)
-		nneg <- sum(statistics < -1)
-		if(nneg) rect(n-nneg-0.5,0,n+0.5,1,col="lightblue",border=NA)
-	}
+	npos <- sum(statistics > 1)
+	nneg <- sum(statistics < -1)
+	rect(npos+0.5,0,n-nneg+0.5,1,col="lightgray",border=NA)
+	if(npos) rect(0.5,0,npos+0.5,1,col="pink",border=NA)
+	if(nneg) rect(n-nneg+0.5,0,n+0.5,1,col="lightgreen",border=NA)
 	r <- n+1-rank(statistics)[selected]
-	segments(r,0,r,1,lwd=2)
-	rect(0.5,0,n+0.5,1,border="blue")
+	lwd <- 50/length(r)
+	lwd <- min(2,lwd)
+	lwd <- max(0.1,lwd)
+	segments(r,0,r,1,lwd=lwd)
+#	rect(0.5,0,n+0.5,1,border="blue")
 	if(type=="t") {
-		mtext("Positive",side=2,line=-1,col="blue")
-		mtext("Negative",side=4,line=-1,col="blue")
+		mtext("Positive",side=2,line=-1,col="gray")
+		mtext("Negative",side=4,line=-1,col="gray")
 	} else {
-		mtext("Largest",side=2,line=-1,col="blue")
-		mtext("Smallest",side=4,line=-1,col="blue")
+		mtext("Largest",side=2,line=-1,col="gray")
+		mtext("Smallest",side=4,line=-1,col="gray")
 	}
 	invisible()
 }

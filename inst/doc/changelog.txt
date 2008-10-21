@@ -1,3 +1,7 @@
+21 October 2008: limma 2.15.18
+
+- refinements to barcodeplot() to make the graphic a bit prettier
+
 20 October 2008: limma 2.15.17
 
 - new function barcodeplot(), which gives a graphical
