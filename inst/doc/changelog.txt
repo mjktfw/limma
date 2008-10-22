@@ -1,3 +1,10 @@
+22 October 2008: limma 2.17.1
+
+- minor updates to the User's Guide
+
+22 October 2008: limma 2.17.0 (Bioconductor 2.4 Developmental Branch)
+22 October 2008: limma 2.16.0 (Bioconductor 2.3 Release Branch)
+
 21 October 2008: limma 2.15.18
 
 - refinements to barcodeplot() to make the graphic a bit prettier
