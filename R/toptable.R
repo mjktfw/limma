@@ -3,15 +3,15 @@
 topTable <- function(fit,coef=NULL,number=10,genelist=fit$genes,adjust.method="BH",sort.by="B",resort.by=NULL,p.value=1,lfc=0)
 #	Summary table of top genes, object-orientated version
 #	Gordon Smyth
-#	4 August 2003.  Last modified 27 Oct 2006.
+#	4 August 2003.  Last modified 23 Oct 2008.
 {
-	if(is.null(coef)) {
-		if(ncol(fit)>1)
-			return(topTableF(fit,number=number,genelist=genelist,adjust.method=adjust.method,p.value=p.value))
-		else
-			coef=1
+	if(is.null(coef)) coef <- 1:ncol(fit)
+	if(length(coef)>1) {
+		coef <- unique(coef)
+		if(length(fit$coef[1,coef]) < ncol(fit)) fit <- eBayes(fit[,coef])
+		if(sort.by=="B") sort.by <- "F"
+		return(topTableF(fit,number=number,genelist=genelist,adjust.method=adjust.method,sort.by=sort.by,p.value=p.value))
 	}
-	if(length(coef)>1) return(topTableF(eBayes(fit[,coef]),number=number,genelist=genelist,adjust.method=adjust.method))
 	fit <- unclass(fit)
 	toptable(fit=fit[c("coefficients","stdev.unscaled")],
 		coef=coef,
@@ -61,7 +61,7 @@ topTableF <- function(fit,number=10,genelist=fit$genes,adjust.method="BH",sort.b
 toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.method="BH",sort.by="B",resort.by=NULL,p.value=1,lfc=0,...)
 #	Summary table of top genes
 #	Gordon Smyth
-#	21 Nov 2002. Last revised 23 Aug 2008.
+#	21 Nov 2002. Last revised 23 Oct 2008.
 {
 #	Check input
 	if(length(coef)>1) coef <- coef[1]
@@ -84,6 +84,8 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 	sort.by <- match.arg(sort.by,c("logFC","M","A","Amean","AveExpr","P","p","T","t","B","none"))
 	if(sort.by=="M") sort.by="logFC"
 	if(sort.by=="A" || sort.by=="Amean") sort.by <- "AveExpr"
+	if(sort.by=="T") sort.by <- "t"
+	if(sort.by=="p") sort.by <- "P"
 
 #	Apply multiple testing adjustment
 	adj.P.Value <- p.adjust(P.Value,method=adjust.method)
@@ -104,8 +106,6 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 		logFC=order(abs(M),decreasing=TRUE),
 		AveExpr=order(A,decreasing=TRUE),
 		P=order(P.Value,decreasing=FALSE),
-		p=order(P.Value,decreasing=FALSE),
-		T=order(abs(tstat),decreasing=TRUE),
 		t=order(abs(tstat),decreasing=TRUE),
 		B=order(B,decreasing=TRUE),
 		none=1:length(M)

@@ -14,7 +14,7 @@ topTableF(fit,number=10,genelist=fit$genes,adjust.method="BH",sort.by="F",p.valu
 \arguments{
   \item{fit}{list containing a linear model fit produced by \code{lmFit}, \code{lm.series}, \code{gls.series} or \code{mrlm}.
   For \code{topTable}, \code{fit} should be an object of class \code{MArrayLM} as produced by \code{lmFit} and \code{eBayes}.}
-  \item{coef}{column number or column name specifying which coefficient or contrast of the linear model is of interest. Can also be a vector of column subscripts, in which case the gene ranking is by F-statistic for that set of contrasts.}
+  \item{coef}{column number or column name specifying which coefficient or contrast of the linear model is of interest. For \code{topTable}, can also be a vector of column subscripts, in which case the gene ranking is by F-statistic for that set of contrasts.}
   \item{number}{maximum number of genes to list}
   \item{genelist}{data frame or character vector containing gene information.
   For \code{topTable} only, this defaults to \code{fit$genes}.}
@@ -24,15 +24,15 @@ topTableF(fit,number=10,genelist=fit$genes,adjust.method="BH",sort.by="F",p.valu
   If \code{NULL}, this will be automatically generated.}
   \item{adjust.method}{method used to adjust the p-values for multiple testing.  Options, in increasing conservatism, include \code{"none"}, \code{"BH"}, \code{"BY"} and \code{"holm"}.
   See \code{\link{p.adjust}} for the complete list of options. A \code{NULL} value will result in the default adjustment method, which is \code{"BH"}.}
-  \item{sort.by}{character string specifying statistic to rank genes by.  Possibilities for \code{topTable} and \code{toptable} are \code{"logFC"}, \code{"A"}, \code{"T"}, \code{"t"}, \code{"P"}, \code{"p"} or \code{"B"}. \code{"M"} is allowed as a synonym for \code{"logFC"} for backward compatibility.  Possibilities for \code{topTableF} are \code{"F"} or \code{"none"}.}
-  \item{resort.by}{character string specifying statistic to sort the selected genes by in the output data.frame.  Possibilities are \code{"logFC"}, \code{"A"}, \code{"T"}, \code{"t"}, \code{"P"}, \code{"p"}, \code{"B"} or \code{"none"}. \code{"M"} is allowed as a synonym for \code{"logFC"} for backward compatibility.}
+  \item{sort.by}{character string specifying statistic to rank genes by.  Possibilities for \code{topTable} and \code{toptable} are \code{"logFC"}, \code{"AveExpr"}, \code{"t"}, \code{"P"}, \code{"p"}, \code{"B"} or \code{"none"}. \code{"M"} is allowed as a synonym for \code{"logFC"} for backward compatibility.  Other permitted synonyms are \code{"A"} or \code{"Amean"} for \code{"AveExpr"}, \code{"T"} for \code{"t"} and \code{"p"} for \code{"P"}.  Possibilities for \code{topTableF} are \code{"F"} or \code{"none"}.}
+  \item{resort.by}{character string specifying statistic to sort the selected genes by in the output data.frame.  Possibilities are the same as for \code{sort.by}.}
   \item{p.value}{cutoff value for adjusted p-values. Only genes with lower p-values are listed.}
   \item{lfc}{cutoff value for log2-fold-change. Only genes with larger fold changes are listed.}
   \item{...}{any other arguments are passed to \code{ebayes} if \code{eb} is \code{NULL}}
 }
 \value{
   A dataframe with a row for the \code{number} top genes and the following columns:
-  \item{genelist}{if genelist was included as input}
+  \item{genelist}{one or more columns of probe annotation, if genelist was included as input}
   \item{logFC}{estimate of the log2-fold-change corresponding to the effect or contrast}
   \item{AveExpr}{average log2-expression for the probe over all arrays and channels, same as \code{Amean} in the \code{MarrayLM} object}
   \item{t}{moderated t-statistic}
@@ -41,10 +41,10 @@ topTableF(fit,number=10,genelist=fit$genes,adjust.method="BH",sort.by="F",p.valu
   \item{B}{log odds that the gene is differentially expressed}
 }
 \details{
-Note that \code{toptable} is an earlier interface and is retained only for backward compatibility.
+\code{toptable} is an earlier interface and is retained only for backward compatibility.
 
 This function summarizes a linear model fit object produced by \code{lmFit}, \code{lm.series}, \code{gls.series} or \code{mrlm} by selecting the top-ranked genes for any given contrast.
-\code{topTable()} assumes that the linear model fit has already been processed by \code{eBayes()}.
+\code{topTable} assumes that the linear model fit has already been processed by \code{eBayes}.
 
 The p-values for the coefficient/contrast of interest are adjusted for multiple testing by a call to \code{\link[stats]{p.adjust}}.
 The \code{"BH"} method, which controls the expected false discovery rate (FDR) below the specified value, is the default adjustment method because it is the most likely to be appropriate for microarray studies.
@@ -59,17 +59,17 @@ The \code{sort.by} argument specifies the criterion used to select the top genes
 The choices are: \code{"logFC"} to sort by the (absolute) coefficient representing the log-fold-change; \code{"A"} to sort by average expression level (over all arrays) in descending order; \code{"T"} or \code{"t"} for absolute t-statistic; \code{"P"} or \code{"p"} for p-values; or \code{"B"} for the \code{lods} or B-statistic.
 
 Normally the genes appear in order of selection in the output table.
-If one wants the table to be in a different order, the \code{resort.by} argument may be used.
-For example, \code{topTable(fit, sort.by="B", resort.by="logFC")} selects the top genes according to log-odds of differential expression and then orders the resulting genes by log-ratio in decreasing order.
-Or \code{topTable(fit, sort.by="logFC", resort.by="logFC")} would select the genes by absolute log-ratio and then sort then by signed log-ratio from must positive to most negative.
+If a different order is wanted, then the \code{resort.by} argument may be useful.
+For example, \code{topTable(fit, sort.by="B", resort.by="logFC")} selects the top genes according to log-odds of differential expression and then orders the selected genes by log-ratio in decreasing order.
+Or \code{topTable(fit, sort.by="logFC", resort.by="logFC")} would select the genes by absolute log-fold-change and then sort them from most positive to most negative.
 
-\code{topTableF} ranks genes on the basis of the moderated F-statistic rather than t-statistics.
+\code{topTableF} ranks genes on the basis of moderated F-statistics for one or more coefficients.
 If \code{topTable} is called with \code{coef} has length greater than 1, then the specified columns will be extracted from \code{fit} and \code{topTableF} called on the result.
 \code{topTable} with \code{coef=NULL} is the same as \code{topTableF}, unless the fitted model \code{fit} has only one column.
 
-A toptable-style data.frame of all probes on the arrays in original (unsorted) order can be obtained by \code{topTable(fit,sort="none",n=Inf)}.
-However \code{write.fit} or \code{write} are often preferable for outputing results for the entire array.
-Another related method is \code{as.data.frame(fit)} which coerces an \code{MArrayLM} object to a data.frame.
+Toptable output for all probes in original (unsorted) order can be obtained by \code{topTable(fit,sort="none",n=Inf)}.
+However \code{\link{write.fit}} or \code{\link{write}} may be preferable if the intention is to write the results to a file.
+A related method is \code{as.data.frame(fit)} which coerces an \code{MArrayLM} object to a data.frame.
 }
 \seealso{
 An overview of linear model and testing functions is given in \link{06.LinearModels}.
