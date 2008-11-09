@@ -1,6 +1,6 @@
 Package: limma
-Version: 2.17.2
-Date: 2008/10/23
+Version: 2.17.3
+Date: 2008/11/10
 Title: Linear Models for Microarray Data
 Author: Gordon Smyth with contributions from Matthew Ritchie, Jeremy Silver, James Wettenhall, Natalie Thorne, Mette Langaas, Egil Ferkingstad, Marcus Davy, Francois Pepin, Dongseok Choi, Di Wu, Alicia Oshlack and Carolyn de Graaf.
 Maintainer: Gordon Smyth <smyth@wehi.edu.au>
