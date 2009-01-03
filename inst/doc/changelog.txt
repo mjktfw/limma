@@ -1,3 +1,10 @@
+4 Jan 2009: limma 2.17.4
+
+- C code dynamic library is loaded when package is loaded
+  rather than when it is attached, to enable other packages
+  to import limma.  (Not user visible)
+- minor edits to geneSetTest and roast help files.
+
 10 Nov 2008: limma 2.17.3
 
 - fix to toptable() bug which caused an error when user

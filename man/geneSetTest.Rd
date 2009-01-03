@@ -27,9 +27,10 @@ Numeric value giving the estimated p-value.
 This function computes a p-value to test the hypothesis that the selected set of genes tends to be more highly ranked in differential expression compared to randomly selected genes.
 This function can be used to detect differential expression for a group of genes, even when the effects are too small or there is too little data to detect the genes individually.
 It is also provides a means to compare the results between different experiments.
-This test was used by Michaud et al (2008).
 
-\code{geneSetTest} is a competitive test in the sense that genes in the set are compared to other genes (Goeman and Buhlmann, 2007).
+The mean-rank gene set test of Michaud et al (2008) corresponds to \code{geneSetTest} with \code{ranks.only=TRUE}.
+
+\code{geneSetTest} is a competitive test in the sense that genes in the test set are compared to other genes (Goeman and Buhlmann, 2007).
 A self-contained gene set test is performed by \code{\link{roast}}.
 
 Because it is based on permuting genes, \code{geneSetTest} assumes that the different genes (or probes) are independent.
