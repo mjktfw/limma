@@ -1,3 +1,8 @@
+13 Jan 2009: limma 2.17.5
+
+- paragraph added to details section of roast() help file
+  to explain simulation method used to estimate p-values.
+
 4 Jan 2009: limma 2.17.4
 
 - C code dynamic library is loaded when package is loaded
