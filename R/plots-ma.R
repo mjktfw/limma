@@ -165,3 +165,22 @@ mdplot <- function(x,...)
 	m <- (x[,1]+x[,2])/2
 	plot(m,d,xlab="Mean",ylab="Difference",...)
 }
+
+plotSA <- function(fit, xlab="Average log-expression", ylab="log2(sigma)", zero.weights=FALSE, pch=16, cex=0.2, ...)
+#	Plot log-residual variance vs intensity
+#	Gordon Smyth 14 Jan 2009
+{
+	if(!is(fit,"MArrayLM")) stop("fit must be a MArrayLM object")
+	x <- fit$Amean
+	y <- log2(fit$sigma)
+	if(!is.null(fit$weights) && !zero.weights) {
+		w <- fit$weights
+		w[is.na(w)] <- 0
+		w[w<0] <- 0
+		allzero <- apply(w==0,1,all)
+		y[allzero] <- NA
+	}
+	plot(x,y,xlab=xlab,ylab=ylab,pch=pch,cex=cex,...)
+	lines(lowess(x,y,f=0.4))
+	invisible()
+}
