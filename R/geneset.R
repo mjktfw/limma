@@ -202,10 +202,11 @@ roast <- function(iset=NULL,y,design,contrast=ncol(design),gene.weights=NULL,arr
 	out
 }
 
-alias2Symbol <- function(alias,species="Hs")
+alias2Symbol <- function(alias,species="Hs",expand.symbols=FALSE)
 #  Convert a set of alias names to official gene symbols
 #  via Entrez Gene identifiers
-#  Di Wu and Gordon Smyth, 4 Sep 2008
+#  Di Wu, Gordon Smyth and Yifang Hu
+#  4 Sep 2008. Last revised 15 Jan 2009
 {
 	alias <- as.character(alias)
 	species <- match.arg(species,c("Dm","Hs","Mm","Rn"))
@@ -213,9 +214,20 @@ alias2Symbol <- function(alias,species="Hs")
 	ALIAS2EG <- paste("org",species,"egALIAS2EG",sep=".")
 	SYMBOL <- paste("org",species,"egSYMBOL",sep=".")
 	require(DB,character.only=TRUE)
-	alias <- intersect(alias,Rkeys(get(ALIAS2EG)))
-	eg <- mappedLkeys(get(ALIAS2EG)[alias])
-	mappedRkeys(get(SYMBOL)[eg])
+	if(expand.symbols)
+	{
+		alias <- intersect(alias,Rkeys(get(ALIAS2EG)))
+		eg <- mappedLkeys(get(ALIAS2EG)[alias])
+		mappedRkeys(get(SYMBOL)[eg])
+	}
+	else
+	{
+		isSymbol <- alias %in% Rkeys(get(SYMBOL)) 
+		alias2 <- intersect(alias[!isSymbol],Rkeys(get(ALIAS2EG)))
+		eg <- mappedLkeys(get(ALIAS2EG)[alias2])
+		c(alias[isSymbol],mappedRkeys(get(SYMBOL)[eg]))
+
+	}
 }
 
 barcodeplot <- function(selected,statistics,type="auto",...)
