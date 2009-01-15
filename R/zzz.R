@@ -15,7 +15,15 @@
 #	Gordon Smyth
 #	4 Jan 2009.
 {
-	library.dynam('limma', pkgname, libname)
+	library.dynam("limma", pkgname, libname)
+}
+
+.onUnload <- function(libpath)
+#	Unload normexp C code
+#	Gordon Smyth
+#	15 Jan 2009.
+{
+	library.dynam.unload("limma", libpath)
 }
 
 .onAttach <- function(libname, pkgname)

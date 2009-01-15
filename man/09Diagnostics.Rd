@@ -38,6 +38,10 @@ For an array, produces a scatter plot of log-ratios or log-intensities by print 
 \item{ \code{\link{plotDensities}} }{
 Individual channel densities for one or more arrays.
 An essential plot to accompany between array normalization, especially quantile normalization.}
+
+\item{ \code{\link{plotSA}} }{
+Sigma vs A plot.
+After a linear model is fitted, this checks constancy of the variance with respect to intensity level.}
 }
 
 \code{plotPrintTipLoess} uses utility functions \code{\link{gridr}} and \code{\link{gridc}}.

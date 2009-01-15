@@ -213,7 +213,7 @@ alias2Symbol <- function(alias,species="Hs",expand.symbols=FALSE)
 	DB <- paste("org",species,"eg","db",sep=".")
 	ALIAS2EG <- paste("org",species,"egALIAS2EG",sep=".")
 	SYMBOL <- paste("org",species,"egSYMBOL",sep=".")
-	require(DB,character.only=TRUE)
+	suppressPackageStartupMessages(require(DB,character.only=TRUE))
 	if(expand.symbols)
 	{
 		alias <- intersect(alias,Rkeys(get(ALIAS2EG)))

@@ -28,6 +28,8 @@ The results from \code{decideTests} can also be included when the results of a l
 
 \section{Gene Set Tests}{
 Competitive gene set testing is provided by \code{\link{geneSetTest}}, which permutes genes, while self-contained gene set testing is provided by \code{\link{roast}}, which randomly rotates arrays.
+
+The function \code{\link{alias2Symbol}} is provided to help match gene sets with microarray probes by way of official gene symbols.
 }
 
 \section{Other Functions}{
