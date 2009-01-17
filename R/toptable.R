@@ -61,7 +61,7 @@ topTableF <- function(fit,number=10,genelist=fit$genes,adjust.method="BH",sort.b
 toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.method="BH",sort.by="B",resort.by=NULL,p.value=1,lfc=0,...)
 #	Summary table of top genes
 #	Gordon Smyth
-#	21 Nov 2002. Last revised 10 Nov 2008.
+#	21 Nov 2002. Last revised 19 Jan 2009.
 {
 #	Check input
 	if(length(coef)>1) coef <- coef[1]
@@ -98,6 +98,7 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 		genelist <- genelist[sig,,drop=FALSE]
 		M <- M[sig]
 		A <- A[sig]
+		tstat <- tstat[sig]
 		P.Value <- P.Value[sig]
 		adj.P.Value <- adj.P.Value[sig]
 		B <- B[sig]

@@ -1,6 +1,6 @@
 
-R version 2.8.0 (2008-10-20)
-Copyright (C) 2008 The R Foundation for Statistical Computing
+R version 2.9.0 Under development (unstable) (2009-01-15 r47607)
+Copyright (C) 2009 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -823,17 +823,17 @@ Loading required package: splines
       logFC         t      P.Value    adj.P.Val        B
 1 -1.935994 -8.629635 6.154813e-18 6.154813e-17 29.86371
 > topTable(fit2,coef=3,p=0.2)
-       logFC          t      P.Value    adj.P.Val         B
-1 -1.9359941 -8.6296349 6.154813e-18 6.154813e-17 29.863710
-2  0.5957428 -0.1183662 7.918965e-03 3.959483e-02 -3.639805
+       logFC         t      P.Value    adj.P.Val         B
+1 -1.9359941 -8.629635 6.154813e-18 6.154813e-17 29.863710
+2  0.5957428  2.655505 7.918965e-03 3.959483e-02 -3.639805
 > topTable(fit2,coef=3,p=0.2,lfc=0.5)
-       logFC          t      P.Value    adj.P.Val         B
-1 -1.9359941 -8.6296349 6.154813e-18 6.154813e-17 29.863710
-2  0.5957428 -0.1183662 7.918965e-03 3.959483e-02 -3.639805
+       logFC         t      P.Value    adj.P.Val         B
+1 -1.9359941 -8.629635 6.154813e-18 6.154813e-17 29.863710
+2  0.5957428  2.655505 7.918965e-03 3.959483e-02 -3.639805
 > topTable(fit2,coef=3,p=0.2,lfc=0.5,sort="none")
-       logFC          t      P.Value    adj.P.Val         B
-1 -1.9359941 -8.6296349 6.154813e-18 6.154813e-17 29.863710
-2  0.5957428 -0.1183662 7.918965e-03 3.959483e-02 -3.639805
+       logFC         t      P.Value    adj.P.Val         B
+1 -1.9359941 -8.629635 6.154813e-18 6.154813e-17 29.863710
+2  0.5957428  2.655505 7.918965e-03 3.959483e-02 -3.639805
 > 
 > designlist <- list(Null=matrix(1,6,1),Two=design,Three=cbind(1,c(0,0,1,1,0,0),c(0,0,0,0,1,1)))
 > out <- selectModel(M,designlist)

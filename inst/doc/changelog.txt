@@ -1,3 +1,9 @@
+19 Jan 2009: limma 2.17.9
+
+- fix to a toptable() bug, which caused t-statistics to be out of
+  order when p<1 or lfc>0.
+- color of the trend line drawn by plotSA() changed to red.
+
 15 Jan 2009: limma 2.17.8
 
 - C code dynamic library is not unloaded when package
@@ -29,7 +35,7 @@
 
 10 Nov 2008: limma 2.17.3
 
-- fix to toptable() bug which caused an error when user
+- fix to a toptable() bug which caused an error when user
   selected p<1 and lfc>0
 
 23 October 2008: limma 2.17.2
