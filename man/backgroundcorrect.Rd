@@ -13,12 +13,13 @@ backgroundCorrect(RG, method="subtract", offset=0, printer=RG$printer, normexp.m
   If \code{RG} is a matrix, possible values are restricted to \code{"none"} or \code{"normexp"}.}
   \item{offset}{numeric value to add to intensities}
   \item{printer}{a list containing printer layout information, see \code{\link{PrintLayout-class}}. Ignored if \code{RG} is a matrix.}
-  \item{normexp.method}{character string specifying parameter estimation strategy used by normexp, ignored for other methods.}
+  \item{normexp.method}{character string specifying parameter estimation strategy used by normexp, ignored for other methods. Possible values are \code{"saddle"}, \code{"mle"} or \code{"rma"}.}
   \item{verbose}{logical. If \code{TRUE}, progress messages are sent to standard output}
 }
 \details{
-This function implements the background correction methods reviewed in Ritchie et al (2007).
+This function implements the background correction methods reviewed or developed in Ritchie et al (2007) and Silver at al (2009).
 Ritchie et al (2007) recommend \code{method="normexp"} whenever \code{RG} contains local background estimates.
+Silver et al (2009) shows that either \code{normexp.method="mle"} or \code{normexp.method="saddle"} are excellent options for normexp.
 If \code{RG} contains morphological background estimates instead (available from SPOT or GenePix image analysis software), then \code{method="subtract"} performs well.
 
 If \code{method="none"} then no correction is done, i.e., the background intensities are treated as zero.
@@ -34,7 +35,8 @@ If \code{method="normexp"} a convolution of normal and exponential distributions
 This results in a smooth monotonic transformation of the background subtracted intensities such that all the corrected intensities are positive.
 
 The normexp method is available in a number of variants depending on how the model parameters are estimated, and these are selected by \code{normexp.method}.
-Here \code{"saddle"} gives the saddle-point approximation to maximum likelihood from Ritchie et al (2007), \code{"mle"} gives exact maximum likelihood, \code{"rma"} gives the background correction algorithm from the RMA-algorithm for Affymetrix microarray data, and \code{rma75} gives the RMA-75 method from McGee and Chen (2006).
+Here \code{"saddle"} gives the saddle-point approximation to maximum likelihood from Ritchie et al (2007), \code{"mle"} gives exact maximum likelihood from Silver at al (2009), \code{"rma"} gives the background correction algorithm from the RMA-algorithm for Affymetrix microarray data as implemented in the affy package, and \code{"rma75"} gives the RMA-75 method from McGee and Chen (2006).
+In practice \code{"mle"} performs well and is nearly as fast as \code{"saddle"}, but \code{"saddle"} is the default for backward compatibility.
 See \code{\link{normexp.fit}} for more details.
 
 The \code{offset} can be used to add a constant to the intensities before log-transforming, so that the log-ratios are shrunk towards zero at the lower intensities.
@@ -54,15 +56,17 @@ Edwards, D. E. (2003). Non-linear normalization and background correction in one
 
 McGee, M., and Chen, Z. (2006).
 Parameter estimation for the exponential-normal convolution model for background correction of Affymetrix GeneChip data.
-\emph{Stat Appl Genet Mol Biol}, 5(1), Article 24.
+\emph{Stat Appl Genet Mol Biol}, Volume 5, Article 24.
 
 Ritchie, M. E., Silver, J., Oshlack, A., Silver, J., Holmes, M., Diyagama, D., Holloway, A., and Smyth, G. K. (2007).
 A comparison of background correction methods for two-colour microarrays.
-\emph{Bioinformatics}
+\emph{Bioinformatics} 23, 2700-2707.
 \url{http://bioinformatics.oxfordjournals.org/cgi/content/abstract/btm412}
 
-Silver, J., Ritchie, M. E., and Smyth, G. K. (2008).
-Microarray background correction: maximum likelihood estimation for the normal-exponential convolution model. Technical Report July 2008, Walter and Eliza Hall Institute of Medical Research, Melbourne, Australia.
+Silver, J., Ritchie, M. E., and Smyth, G. K. (2009).
+Microarray background correction: maximum likelihood estimation for the normal-exponential convolution model.
+\emph{Biostatistics}.
+\url{http://biostatistics.oxfordjournals.org/cgi/content/abstract/kxn042}
 }
 \author{Gordon Smyth}
 \examples{

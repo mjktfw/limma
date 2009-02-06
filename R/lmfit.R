@@ -3,12 +3,15 @@
 lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation,weights=NULL,method="ls",...)
 #	Fit linear model
 #	Gordon Smyth
-#	30 June 2003.  Last modified 25 Apr 2008.
+#	30 June 2003.  Last modified 30 January 2009.
 {
 #	Check arguments
 	y <- getEAWP(object)
 	if(is.null(design))
-		design <- matrix(1,ncol(y$exprs),1)
+		if(is.null(y$design))
+			design <- matrix(1,ncol(y$exprs),1)
+		else
+			design <- as.matrix(object$design)
 	else
 		design <- as.matrix(design)
 	if(mode(design) != "numeric") stop("design must be a numeric matrix")
@@ -348,7 +351,7 @@ getEAWP <- function(object)
 #	Given any microarray data object, extract basic information needed for
 #	linear modelling.
 #	Gordon Smyth
-#  9 March 2008. Last modified 11 June 2008.
+#  9 March 2008. Last modified 30 January 2009.
 {
 	y <- list()
 	
@@ -358,6 +361,7 @@ getEAWP <- function(object)
 		y$exprs <- object$M
 		y$weights <- object$weights
 		y$probes <- object$genes
+		y$design <- object$design
 		if(!is.null(object$A)) y$Amean <- rowMeans(as.matrix(object$A),na.rm=TRUE)
 	} else {
 	if(is(object,"ExpressionSet")) {

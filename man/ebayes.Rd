@@ -53,7 +53,7 @@ the linear model output, see the example below.
 \code{eBayes} is intended to have a more object-orientated flavor as it produces objects containing all the necessary components for downstream analysis.
 
 \code{treat} computes empirical Bayes moderated-t p-values relative to a minimum required fold-change threshold.
-Instead of testing for genes which have log-fold-changes different from zero, it tests whether the log2-fold-change is greater than \code{lfc} in absolute value (McCarthy and Smyth, 2008).
+Instead of testing for genes which have log-fold-changes different from zero, it tests whether the log2-fold-change is greater than \code{lfc} in absolute value (McCarthy and Smyth, 2009).
 \code{treat} is concerned with p-values rather than posterior odds, so it does not compute the B-statistic \code{lods}.
 The idea of thresholding doesn't apply to F-statistics in a straightforward way, so moderated F-statistics are also not computed.
 }
@@ -64,13 +64,13 @@ An overview of linear model functions in limma is given by \link{06.LinearModels
 }
 \author{Gordon Smyth}
 \references{
-McCarthy, D. J., and Smyth, G. K. (2008). treat: t-tests relative to a threshold for microarray experiments.
-Bioinformatics Division, Walter and Eliza Hall Institute of Medical Research, Australia.
+McCarthy, D. J., and Smyth, G. K. (2009). Testing significance relative to a fold-change threshold is a TREAT. \emph{Bioinformatics}.
+\url{http://bioinformatics.oxfordjournals.org/cgi/content/abstract/btp053}
 
 Loennstedt, I., and Speed, T. P. (2002). Replicated microarray data. \emph{Statistica Sinica} \bold{12}, 31-46.
 
 Smyth, G. K. (2004). Linear models and empirical Bayes methods for assessing differential expression in microarray experiments.
-\emph{Statistical Applications in Genetics and Molecular Biology}, \bold{3}, No. 1, Article 3. \url{"http://www.bepress.com/sagmb/vol3/iss1/art3"}
+\emph{Statistical Applications in Genetics and Molecular Biology}, Volume \bold{3}, Article 3. \url{http://www.bepress.com/sagmb/vol3/iss1/art3}
 }
 \examples{
 #  See also lmFit examples

@@ -1,3 +1,11 @@
+5 February 2009: limma 2.17.10
+
+- update to backgroundCorrect help page to reflect published
+  papers.
+- update to treat help page to reflect published paper.
+- lmFit now looks for a design matrix in an MAList data object,
+  if one exists.
+
 19 Jan 2009: limma 2.17.9
 
 - fix to a toptable() bug, which caused t-statistics to be out of
