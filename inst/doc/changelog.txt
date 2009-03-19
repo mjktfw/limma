@@ -1,3 +1,17 @@
+20 March 2009: limma 2.17.12
+
+- Bug fix to rowname assignment for MAList and RGList objects
+  containing matrices in 'other' component
+- lmFit() warning message on NA coefficients is now more
+  refined.  It now appears only when the coef vector is
+  partially NA for some probes.
+- Fix to gls.series() so that it does not fail when the
+  weight matrix contains NA values.
+
+20 March 2009: limma 2.17.11
+
+- biocViews entry of Statistics changed to Bioinformatics
+
 5 February 2009: limma 2.17.10
 
 - update to backgroundCorrect help page to reflect published

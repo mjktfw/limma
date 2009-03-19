@@ -105,11 +105,11 @@ dimnames.MArrayLM <- function(x) dimnames(x$coefficients)
 .setdimnames <- function(x, value)
 #  Dimension names for RGList-like objects
 #  Gordon Smyth
-#  17 Dec 2005.
+#  17 Dec 2005. Last modified 20 March 2009.
 {
 	exprmatrices <- c("R","G","Rb","Gb","M","A","weights")
 	for (a in exprmatrices) if(!is.null(x[[a]])) dimnames(x[[a]]) <- value
-	for(a in names(x$other)) dimnames(object$other[[a]]) <- value
+	for(a in names(x$other)) dimnames(x$other[[a]]) <- value
 	if(!is.null(x$targets)) row.names(x$targets) <- value[[2]]
 	if(!is.null(x$design)) rownames(x$design) <- value[[2]]
 	x
