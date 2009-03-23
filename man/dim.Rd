@@ -1,9 +1,11 @@
 \name{dim}
 \alias{dim.RGList}
 \alias{dim.MAList}
+\alias{dim.EList}
 \alias{dim.MArrayLM}
 \alias{length.RGList}
 \alias{length.MAList}
+\alias{length.EList}
 \alias{length.MArrayLM}
 \title{Retrieve the Dimensions of an RGList, MAList or MArrayLM Object}
 \description{

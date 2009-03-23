@@ -1,23 +1,25 @@
 \name{cbind}
 \alias{cbind.RGList}
 \alias{cbind.MAList}
+\alias{cbind.EList}
 \alias{rbind.RGList}
 \alias{rbind.MAList}
-\title{Combine RGList or MAList Objects}
+\alias{rbind.EList}
+\title{Combine RGList, MAList or EList Objects}
 \description{
-Combine a series of \code{RGList} objects or combine a series of \code{MAList} objects.
+Combine a set of \code{RGList}, \code{MAList} or \code{EList} objects.
 }
 \usage{
 \method{cbind}{RGList}(\dots, deparse.level=1)
 \method{rbind}{RGList}(\dots, deparse.level=1)
 }
 \arguments{
-  \item{\dots}{\code{RGList} objects or \code{MAList} objects}
+  \item{\dots}{\code{RGList}, \code{MAList} or \code{EList} objects.}
   \item{deparse.level}{not currently used, see \code{\link[base]{cbind}} in the base package}
 }
 \details{
-\code{cbind} combines data objects assuming the same gene lists but different arrays.
-\code{rbind} combines data objects assuming equivalent arrays, i.e., the same RNA targets, but different genes.
+\code{cbind} combines data objects assuming the same probes in the same order but different arrays.
+\code{rbind} combines data objects assuming equivalent arrays, i.e., the same RNA targets, but different probes.
 
 For \code{cbind}, the matrices of expression data from the individual objects are cbinded.
 The data.frames of target information, if they exist, are rbinded.
@@ -25,7 +27,7 @@ The combined data object will preserve any additional components or attributes f
 For \code{rbind}, the matrices of expression data are rbinded while the target information, in any, is unchanged.
 }
 \value{
-An \code{\link[limma:rglist]{RGList}} or \code{\link[limma:malist]{MAList}} object holding data from all the arrays and all genes from the individual objects.
+An \code{\link[limma:rglist]{RGList}}, \code{\link[limma:malist]{MAList}} or \code{\link[limma:EList]{EList}} object holding data from all the arrays and all genes from the individual objects.
 }
 \author{Gordon Smyth}
 \seealso{

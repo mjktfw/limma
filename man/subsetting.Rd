@@ -1,17 +1,18 @@
 \name{subsetting}
 \alias{[.RGList}
 \alias{[.MAList}
+\alias{[.EList}
 \alias{[.MArrayLM}
-\title{Subset RGList, MAList or MArrayLM Objects}
+\title{Subset RGList, MAList, EList or MArrayLM Objects}
 \description{
-Extract a subset of an \code{RGList}, \code{MAList} or \code{MArrayLM} object.
+Extract a subset of an \code{RGList}, \code{MAList}, \code{EList} or \code{MArrayLM} object.
 }
 \usage{
 \method{[}{RGList}(object, i, j, \ldots)
 }
 \arguments{
-  \item{object}{object of class \code{RGList}, \code{MAList} or \code{MArrayLM}}
-  \item{i,j}{elements to extract. \code{i} subsets the genes or spots while \code{j} subsets the arrays}
+  \item{object}{object of class \code{RGList}, \code{MAList}, \code{EList} or \code{MArrayLM}}
+  \item{i,j}{elements to extract. \code{i} subsets the probes or spots while \code{j} subsets the arrays}
   \item{\ldots}{not used}
 }
 \details{

@@ -16,6 +16,11 @@ This package defines the following data classes.
 	Objects of this class contain one row for each spot.
 	There may be more than one spot and therefore more than one row for each probe.}
 
+\item{ \code{\link[limma:EList]{EList}} }{
+	A clas to store raw or normalized intensities for one-channel microarray data.
+	Normalized values are usually on the log2-scale.
+	Usually created by \code{read.maimages}.}
+
 \item{ \code{\link[limma:marraylm]{MArrayLM}} }{
 	Store the result of fitting gene-wise linear models to the normalized intensities or log-ratios.
 	Usually created by \code{lmFit}.
@@ -28,7 +33,7 @@ This package defines the following data classes.
 }
 
 All these data classes obey many analogies with matrices.
-In the case of \code{RGList} and \code{MAList}, rows correspond to spots and columns to arrays.
+In the case of \code{RGList}, \code{MAList} and \code{EList}, rows correspond to spots or probes and columns to arrays.
 In the case of \code{MarrayLM}, rows correspond to unique probes and the columns to parameters or contrasts.
 The functions \code{summary}, \code{dim}, \code{length}, \code{ncol}, \code{nrow}, \code{dimnames}, \code{rownames}, \code{colnames} have methods for these classes.
 Objects of any of these classes may be \link[limma:subsetting]{subsetted}.

@@ -1,12 +1,17 @@
 #	CLASSES.R
 
 setClass("RGList",
-#  Class to hold initial read-in data
+#  Class to hold initial read-in two-color data
 representation("list")
 )
 
 setClass("MAList",
-#  Class to hold normalized, rotated data
+#  Class to hold normalized, rotated two-color data
+representation("list")
+)
+
+setClass("EList",
+#  Class to hold one channel data
 representation("list")
 )
 
@@ -70,6 +75,7 @@ printHead <- function(x)
 setClass("LargeDataObject")
 setIs("RGList","LargeDataObject")
 setIs("MAList","LargeDataObject")
+setIs("EList","LargeDataObject")
 setIs("MArrayLM","LargeDataObject")
 
 setMethod("show","LargeDataObject",
@@ -96,18 +102,20 @@ function(object) {
 
 dim.RGList <- function(x) if(is.null(x$R)) c(0,0) else dim(as.matrix(x$R))
 dim.MAList <- function(x) if(is.null(x$M)) c(0,0) else dim(as.matrix(x$M))
+dim.EList <- function(x) if(is.null(x$E)) c(0,0) else dim(as.matrix(x$E))
 dim.MArrayLM <- function(x) if(is.null(x$coefficients)) c(0,0) else dim(as.matrix(x$coefficients))
-length.RGList <- length.MAList <- length.MArrayLM <- function(x) prod(dim(x))
+length.RGList <- length.MAList <- length.EList <- length.MArrayLM <- function(x) prod(dim(x))
 
 dimnames.RGList <- function(x) dimnames(x$R)
 dimnames.MAList <- function(x) dimnames(x$M)
+dimnames.EList <- function(x) dimnames(x$E)
 dimnames.MArrayLM <- function(x) dimnames(x$coefficients)
 .setdimnames <- function(x, value)
 #  Dimension names for RGList-like objects
 #  Gordon Smyth
-#  17 Dec 2005. Last modified 20 March 2009.
+#  17 Dec 2005. Last modified 23 March 2009.
 {
-	exprmatrices <- c("R","G","Rb","Gb","M","A","weights")
+	exprmatrices <- c("R","G","Rb","Gb","M","A","E","weights")
 	for (a in exprmatrices) if(!is.null(x[[a]])) dimnames(x[[a]]) <- value
 	for(a in names(x$other)) dimnames(x$other[[a]]) <- value
 	if(!is.null(x$targets)) row.names(x$targets) <- value[[2]]
@@ -118,8 +126,9 @@ dimnames.MArrayLM <- function(x) dimnames(x$coefficients)
 #assign("dimnames<-.MAList",.setdimnames)
 "dimnames<-.RGList" <- .setdimnames
 "dimnames<-.MAList" <- .setdimnames
+"dimnames<-.EList" <- .setdimnames
 
-summary.MArrayLM <- summary.MAList <- summary.RGList <- function(object,...) summary(unclass(object))
+summary.MArrayLM <- summary.MAList <- summary.RGList <- summary.EList <- function(object,...) summary(unclass(object))
 
 as.MAList <- function(object) {
 #	Convert marrayNorm object to MAList
@@ -149,9 +158,10 @@ as.MAList <- function(object) {
 	MA
 } 
 
-#  Gordon Smyth, 28 Oct 2004
+#  Gordon Smyth, 28 Oct 2004, 23 March 2009
 as.matrix.RGList <- function(x,...) normalizeWithinArrays(x,method="none")$M
 as.matrix.MAList <- function(x,...) as.matrix(x$M)
+as.matrix.EList <- function(x,...) as.matrix(x$E)
 as.matrix.MArrayLM <- function(x,...) x$coefficients
 as.matrix.marrayNorm <- function(x,...) x@maM
 #  13 July 2006

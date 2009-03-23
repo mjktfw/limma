@@ -20,7 +20,7 @@ Produces a spatial picture of any spot-specific measure from an array image. If 
 \code{\link{imageplot3by2}} will write imageplots to files, six plots to a page.}
 
 \item{ \code{\link{plotFB}} }{
-Plots foreground versus background log-intensies for an array.}
+Plots foreground versus background log-intensies for a two-color array.}
 
 \item{ \code{\link{plotMA}} }{
 MA-plots.
@@ -38,6 +38,10 @@ For an array, produces a scatter plot of log-ratios or log-intensities by print 
 \item{ \code{\link{plotDensities}} }{
 Individual channel densities for one or more arrays.
 An essential plot to accompany between array normalization, especially quantile normalization.}
+
+\item{ \code{\link{plotMDS}} }{
+Multidimensional scaling plot for a set of arrays.
+Useful for visualizing the relationship between the set of samples.}
 
 \item{ \code{\link{plotSA}} }{
 Sigma vs A plot.
