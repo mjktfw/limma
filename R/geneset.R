@@ -276,3 +276,164 @@ barcodeplot <- function(selected,statistics,type="auto",...)
 	}
 	invisible()
 }
+
+
+
+##  ROMER.R
+
+romer <- function(iset=NULL,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,nrot=10000)
+# rotation-mean50-rank version of GSEA (gene set enrichment analysis) for linear models
+# Gordon Smyth and Yifang Hu
+# 25 March 2009.
+{
+	if(is.null(iset)) iset <- rep(TRUE,nrow(y))
+	if(!is.list(iset)) iset <- list(set=iset)
+	nset<-length(iset)
+	y <- as.matrix(y)
+	design <- as.matrix(design)
+	ngenes<-nrow(y)	
+	p <- ncol(design)
+	p0 <- p-1
+	n <- ncol(y)
+	d <- n-p
+
+	if(length(contrast) == 1) {
+		u <- rep.int(0,p)
+		u[contrast] <- 1
+		contrast <- u
+	}
+	if(length(contrast) != p) stop("length of contrast must match column dimension of design")
+	if(all(contrast==0)) stop("contrast all zero")
+	if(nrow(design) != n) stop("row dimension of design matrix must match column dimension of data")
+
+	if(!is.null(array.weights)) {
+		if(any(array.weights <= 0)) stop("array.weights must be positive")
+		if(length(array.weights) != n) stop("Length of array.weights doesn't match number of array")
+		design <- design*sqrt(array.weights)
+		y <- t(t(y)*sqrt(array.weights))
+	}
+
+	if(!is.null(block)) {
+		block <- as.vector(block)
+		if (length(block) != n) stop("Length of block does not match number of arrays")
+		ub <- unique(block)
+		nblocks <- length(ub)
+		Z <- matrix(block,n,nblocks) == matrix(ub,n,nblocks,byrow = TRUE)
+		cormatrix <- Z %*% (correlation * t(Z))
+		diag(cormatrix) <- 1
+		R <- chol(cormatrix)
+		y <- t(backsolve(R, t(y), transpose = TRUE))
+		design <- backsolve(R, design, transpose = TRUE)
+ 	}
+
+	qr <- qr(contrast)
+	Q <- qr.Q(qr,complete=TRUE)
+	sign1 <- sign(qr$qr[1,1])
+	Q <- cbind(Q[,-1],Q[,1])
+	X <- design %*% Q
+	qr <- qr(X)
+	sign2 <- sign(qr$qr[p,p])
+	signc <- sign1 * sign2
+
+# 	Fit model to all genes
+	effects <- qr.qty(qr,t(y))
+# 	Estimate global parameters s0 and d0
+	s2 <- colMeans(effects[-(1:p),,drop=FALSE]^2)
+	sv <- squeezeVar(s2,df=d)
+	d0 <- sv$df.prior
+	s02 <- sv$var.prior
+	sd.post <- sqrt(sv$var.post)
+
+#	From here, all results are for set only
+	Y <- effects[-(1:p0),,drop=FALSE]
+	YY <- colSums(Y^2)
+	B <- Y[1,]
+	modt <- signc*B/sd.post
+	
+	s.r <- rank(modt)
+	s.rank<-rep(0,nset)
+	s.abs.rank<-rep(0,nset)
+
+	modt.abs<-abs(modt)
+	s.abs.r <-rank(modt.abs)
+
+	for(i in 1:nset)
+	{	
+		m <- .mid.idx(iset[[i]])
+		s.rank[i] <- .meanTop(s.r[iset[[i]]],m)
+		s.abs.rank[i]<-.meanTop(s.abs.r[iset[[i]]],m)
+	}
+	
+	s.either.rank<-abs(s.rank-(ngenes+1)/2)
+
+	p.value<-matrix(rep(0,nset*4),nrow=nset,ncol=4)
+
+	for(i in 1:nrot)
+	{
+		R <- matrix(rnorm((d+1)),1,d+1)
+		R <- R/sqrt(rowSums(R^2))
+		Br <- R %*% Y
+		s2r <- (YY-Br^2)/d
+
+		if(is.finite(d0))
+			sdr.post <- sqrt((d0*s02+d*s2r)/(d0+d))
+		else
+			sdr.post <- sqrt(s02)
+
+		modtr <- signc*Br/sdr.post
+		modtr.abs<-abs(modtr)
+	
+		s.r.2<-rank(modtr)
+		s.abs.r.2<-rank(modtr.abs)
+	
+		for(j in 1:nset)
+		{
+			m <- .mid.idx(iset[[j]])
+			if(.meanTop(s.abs.r.2[iset[[j]]],m)>=s.abs.rank[j]) p.value[j,1]<-p.value[j,1]+1
+			if(.meanTop(s.r.2[iset[[j]]],m)>=s.rank[j]) p.value[j,2]<-p.value[j,2]+1
+			if(.meanTop(s.r.2[iset[[j]]],m)<=s.rank[j]) p.value[j,3]<-p.value[j,3]+1
+			if(.meanTop(abs(s.r.2[iset[[j]]]-(ngenes+1)/2),m)>=s.either.rank[j]) p.value[j,4]<-p.value[j,4]+1
+		}
+	}
+
+	
+
+	p.value<-p.value/nrot
+	colnames(p.value)<-c("mixed","up","down","either")
+	rownames(p.value)<-names(iset)
+	p.value
+}
+
+## Return mean of the top half of the ranks for romer
+.meanTop<- function(x,n) mean(sort(x,partial=n)[1:n])
+
+## Return middle index of a vector for romer
+.mid.idx <- function(x)
+{
+	n <- length(x)
+	if(n%%2==0) m<-n/2
+	else m<-(n+1)/2
+	m
+}
+
+## MAKEIDX.R
+symbols2indices <- function(gmtl.official, symbol)
+# Make a list of gene sets symbols into a list of gene sets indices used to create input for romer
+# Gordon Smyth and Yifang Hu
+# 25 March 2009.
+{
+	iset<-list()
+	j<-1
+	for(i in 1:length(gmtl.official))
+	{
+		idx<-match(gmtl.official[[i]],symbol)
+		if(any(is.na(idx)=="FALSE"))
+		{
+			iset[[j]] <-idx[!is.na(idx)]
+			names(iset)[j]<-names(gmtl.official)[i]
+			j<-j+1
+		}
+	}
+
+	iset
+}
