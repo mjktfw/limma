@@ -1,11 +1,11 @@
 \name{roast}
 \alias{roast}
-\title{roast}
+\title{Rotation Gene Set Tests}
 \description{
 Rotation gene set testing for linear models.
 }
 \usage{
-roast(iset=NULL,y,design,contrast=ncol(design),gene.weights=NULL,array.weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,nrot=1000)
+roast(iset=NULL, y, design, contrast=ncol(design), gene.weights=NULL, array.weights=NULL, block=NULL, correlation, var.prior=NULL, df.prior=NULL, nrot=1000)
 }
 \arguments{
   \item{iset}{vector specifying the rows of \code{y} in the test set.  This can be a vector of indices, or a logical vector of the same length as \code{statistics}, or any vector such as \code{y[selected,]} contains the values for the gene set to be tested.}
@@ -54,7 +54,10 @@ To get more precise p-values, increase the number of rotations \code{nrot}.
 The strategy of random rotations is due to Langsrud (2005).
 }
 
-\seealso{\code{\link[limma]{geneSetTest}}}
+\seealso{
+\code{\link{geneSetTest}},
+\code{\link{romer}}
+}
 \author{Gordon Smyth and Di Wu}
 
 \references{

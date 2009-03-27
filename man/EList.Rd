@@ -10,7 +10,7 @@ A simple list-based class for storing expression values (E-values) for a set of 
 
 \section{Slots/List Components}{
 \code{EList} objects can be created by \code{new("EList",E)} where \code{E} is a list.
-This class contains no slots (other than \code{.Data}), but objects should contain the following components:
+This class contains no slots (other than \code{.Data}), but objects should contain a list component \code{E} as follows:
 \tabular{ll}{
   \code{E}:\tab numeric matrix containing the E-values (raw or log-2 expression ratios).  Rows correspond to spots and columns to arrays.
 }

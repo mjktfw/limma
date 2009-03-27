@@ -44,8 +44,11 @@ To get more precise p-values, increase the number of rotations \code{nrot}.
 The strategy of random rotations is due to Langsrud (2005).
 }
 
-\seealso{\code{\link[limma]{roast}}}
-\author{Gordon Smyth and Yifang Hu}
+\seealso{
+\code{\link{roast}},
+\code{\link{geneSetTest}}
+}
+\author{Yifang Hu and Gordon Smyth}
 
 
 \references{

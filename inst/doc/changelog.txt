@@ -1,7 +1,14 @@
+27 March 2009: limma 2.17.15
+
+- further work on plotMDS() to make arguments and help
+  page clearer.
+
 27 March 2009: limma 2.17.14
 
-- New function romer for rotation-mean50-rank version of GSEA (gene set enrichment analysis).
-- New function symbols2indices which returns list of indices.
+- New function romer() for rotation gene set enrichment analysis.
+  This can be viewed as a version of GSEA for linear models.
+- New function symbols2indices() which matches a list of
+  gene sets as symbols against of vector of gene symbols.
 
 23 March 2009: limma 2.17.13
 
