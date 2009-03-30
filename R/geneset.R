@@ -284,7 +284,7 @@ barcodeplot <- function(selected,statistics,type="auto",...)
 romer <- function(iset=NULL,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,nrot=10000)
 # rotation-mean50-rank version of GSEA (gene set enrichment analysis) for linear models
 # Gordon Smyth and Yifang Hu
-# 25 March 2009.
+# 30 March 2009.
 {
 	if(is.null(iset)) iset <- rep(TRUE,nrow(y))
 	if(!is.list(iset)) iset <- list(set=iset)
@@ -353,18 +353,22 @@ romer <- function(iset=NULL,y,design,contrast=ncol(design),array.weights=NULL,bl
 	s.r <- rank(modt)
 	s.rank<-rep(0,nset)
 	s.abs.rank<-rep(0,nset)
+	s.either.rank<-rep(0,nset)
+	s.rank.down<-rep(0,nset)
 
 	modt.abs<-abs(modt)
 	s.abs.r <-rank(modt.abs)
 
+	m<-unlist(lapply(iset,length))
+	m<-floor((m+1)/2)
+
 	for(i in 1:nset)
 	{	
-		m <- .mid.idx(iset[[i]])
-		s.rank[i] <- .meanTop(s.r[iset[[i]]],m)
-		s.abs.rank[i]<-.meanTop(s.abs.r[iset[[i]]],m)
+		s.rank[i] <-.meanHalf(s.r[iset[[i]]],m[i])[1]
+		s.abs.rank[i]<-.meanHalf(s.abs.r[iset[[i]]],m[i])[1]
+		s.either.rank[i]<-.meanHalf(abs(s.r[iset[[i]]]-(ngenes+1)/2),m[i])[1]
+		s.rank.down[i]<-.meanHalf(s.abs.r[iset[[i]]],m[i])[2]
 	}
-	
-	s.either.rank<-abs(s.rank-(ngenes+1)/2)
 
 	p.value<-matrix(rep(0,nset*4),nrow=nset,ncol=4)
 
@@ -388,15 +392,12 @@ romer <- function(iset=NULL,y,design,contrast=ncol(design),array.weights=NULL,bl
 	
 		for(j in 1:nset)
 		{
-			m <- .mid.idx(iset[[j]])
-			if(.meanTop(s.abs.r.2[iset[[j]]],m)>=s.abs.rank[j]) p.value[j,1]<-p.value[j,1]+1
-			if(.meanTop(s.r.2[iset[[j]]],m)>=s.rank[j]) p.value[j,2]<-p.value[j,2]+1
-			if(.meanTop(s.r.2[iset[[j]]],m)<=s.rank[j]) p.value[j,3]<-p.value[j,3]+1
-			if(.meanTop(abs(s.r.2[iset[[j]]]-(ngenes+1)/2),m)>=s.either.rank[j]) p.value[j,4]<-p.value[j,4]+1
+			if(.meanHalf(s.abs.r.2[iset[[j]]],m[j])[1]>=s.abs.rank[j]) p.value[j,1]<-p.value[j,1]+1
+			if(.meanHalf(s.r.2[iset[[j]]],m[j])[1]>=s.rank[j]) p.value[j,2]<-p.value[j,2]+1
+			if(.meanHalf(s.r.2[iset[[j]]],m[j])[2]>=s.rank.down[j]) p.value[j,3]<-p.value[j,3]+1
+			if(.meanHalf(abs(s.r.2[iset[[j]]]-(ngenes+1)/2),m[j])[1]>=s.either.rank[j]) p.value[j,4]<-p.value[j,4]+1
 		}
-	}
-
-	
+	}	
 
 	p.value<-p.value/nrot
 	colnames(p.value)<-c("mixed","up","down","either")
@@ -404,17 +405,17 @@ romer <- function(iset=NULL,y,design,contrast=ncol(design),array.weights=NULL,bl
 	p.value
 }
 
-## Return mean of the top half of the ranks for romer
-.meanTop<- function(x,n) mean(sort(x,partial=n)[1:n])
-
-## Return middle index of a vector for romer
-.mid.idx <- function(x)
+## Return means of top half and bottom half of the ranks for romer
+.meanHalf<- function(x,n)
 {
-	n <- length(x)
-	if(n%%2==0) m<-n/2
-	else m<-(n+1)/2
-	m
+	l<-length(x)
+	a<-sort(x,partial=n)
+	top<-mean(a[1:n])
+	if((l%%2)==0) bottom<-mean(a[(n+1):l])
+	if((l%%2)!=0) bottom<-mean(a[n:l])
+	c(top,bottom)
 }
+
 
 ## MAKEIDX.R
 symbols2indices <- function(gmtl.official, symbol)

@@ -1,3 +1,9 @@
+30 March 2009: limma 2.17.16
+
+- Bug fix to the calculations of either and down p values in romer().
+- Change function .meanTop() to .meanHalf() which gives means of top 
+  half and bottom half of the ranks.
+
 27 March 2009: limma 2.17.15
 
 - further work on plotMDS() to make arguments and help
