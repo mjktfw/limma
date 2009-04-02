@@ -351,10 +351,11 @@ romer <- function(iset=NULL,y,design,contrast=ncol(design),array.weights=NULL,bl
 	modt <- signc*B/sd.post
 	
 	s.r <- rank(modt)
-	s.rank<-rep(0,nset)
-	s.abs.rank<-rep(0,nset)
-	s.either.rank<-rep(0,nset)
+
+	s.rank.mixed<-rep(0,nset)
+	s.rank.up<-rep(0,nset)
 	s.rank.down<-rep(0,nset)
+	s.rank.either<-rep(0,nset)
 
 	modt.abs<-abs(modt)
 	s.abs.r <-rank(modt.abs)
@@ -364,10 +365,12 @@ romer <- function(iset=NULL,y,design,contrast=ncol(design),array.weights=NULL,bl
 
 	for(i in 1:nset)
 	{	
-		s.rank[i] <-.meanHalf(s.r[iset[[i]]],m[i])[1]
-		s.abs.rank[i]<-.meanHalf(s.abs.r[iset[[i]]],m[i])[1]
-		s.either.rank[i]<-.meanHalf(abs(s.r[iset[[i]]]-(ngenes+1)/2),m[i])[1]
-		s.rank.down[i]<-.meanHalf(s.abs.r[iset[[i]]],m[i])[2]
+		mh<-.meanHalf(s.r[iset[[i]]],m[i])
+		s.rank.up[i] <-mh[1]		
+		s.rank.down[i]<-mh[2]
+  		s.rank.either[i]<- max(abs(mh-(ngenes+1)/2))
+  		s.rank.mixed[i]<-.meanHalf(s.abs.r[iset[[i]]],m[i])[1]
+	
 	}
 
 	p.value<-matrix(rep(0,nset*4),nrow=nset,ncol=4)
@@ -392,10 +395,17 @@ romer <- function(iset=NULL,y,design,contrast=ncol(design),array.weights=NULL,bl
 	
 		for(j in 1:nset)
 		{
-			if(.meanHalf(s.abs.r.2[iset[[j]]],m[j])[1]>=s.abs.rank[j]) p.value[j,1]<-p.value[j,1]+1
-			if(.meanHalf(s.r.2[iset[[j]]],m[j])[1]>=s.rank[j]) p.value[j,2]<-p.value[j,2]+1
-			if(.meanHalf(s.r.2[iset[[j]]],m[j])[2]>=s.rank.down[j]) p.value[j,3]<-p.value[j,3]+1
-			if(.meanHalf(abs(s.r.2[iset[[j]]]-(ngenes+1)/2),m[j])[1]>=s.either.rank[j]) p.value[j,4]<-p.value[j,4]+1
+			mh.2<-.meanHalf(s.r.2[iset[[j]]],m[j])
+			
+			s.rank.up.2 <-mh.2[1]		
+			s.rank.down.2 <-mh.2[2]
+  			s.rank.mixed.2 <-.meanHalf(s.abs.r.2[iset[[j]]],m[j])[1]
+			s.rank.either.2 <- max(abs(mh.2-(ngenes+1)/2))
+		
+			if(s.rank.mixed.2>=s.rank.mixed[j]) p.value[j,1]<-p.value[j,1]+1
+			if(s.rank.up.2>=s.rank.up[j]) p.value[j,2]<-p.value[j,2]+1
+			if(s.rank.down.2<=s.rank.down[j]) p.value[j,3]<-p.value[j,3]+1
+			if(s.rank.either.2>=s.rank.either[j]) p.value[j,4]<-p.value[j,4]+1
 		}
 	}	
 
