@@ -284,7 +284,7 @@ barcodeplot <- function(selected,statistics,type="auto",...)
 romer <- function(iset=NULL,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,nrot=10000)
 # rotation-mean50-rank version of GSEA (gene set enrichment analysis) for linear models
 # Gordon Smyth and Yifang Hu
-# 27 March 2009. Last revised 30 March 2009.
+# 27 March 2009. Last revised 03 April 2009.
 {
 	if(is.null(iset)) iset <- rep(TRUE,nrow(y))
 	if(!is.list(iset)) iset <- list(set=iset)
@@ -366,10 +366,10 @@ romer <- function(iset=NULL,y,design,contrast=ncol(design),array.weights=NULL,bl
 	for(i in 1:nset)
 	{	
 		mh<-.meanHalf(s.r[iset[[i]]],m[i])
-		s.rank.up[i] <-mh[1]		
-		s.rank.down[i]<-mh[2]
+		s.rank.up[i] <-mh[2]	
+		s.rank.down[i]<-mh[1]
   		s.rank.either[i]<- max(abs(mh-(ngenes+1)/2))
-  		s.rank.mixed[i]<-.meanHalf(s.abs.r[iset[[i]]],m[i])[1]
+  		s.rank.mixed[i]<-.meanHalf(s.abs.r[iset[[i]]],m[i])[2]
 	
 	}
 
@@ -397,9 +397,9 @@ romer <- function(iset=NULL,y,design,contrast=ncol(design),array.weights=NULL,bl
 		{
 			mh.2<-.meanHalf(s.r.2[iset[[j]]],m[j])
 			
-			s.rank.up.2 <-mh.2[1]		
-			s.rank.down.2 <-mh.2[2]
-  			s.rank.mixed.2 <-.meanHalf(s.abs.r.2[iset[[j]]],m[j])[1]
+			s.rank.up.2 <-mh.2[2]	
+			s.rank.down.2 <-mh.2[1]
+  			s.rank.mixed.2 <-.meanHalf(s.abs.r.2[iset[[j]]],m[j])[2]
 			s.rank.either.2 <- max(abs(mh.2-(ngenes+1)/2))
 		
 			if(s.rank.mixed.2>=s.rank.mixed[j]) p.value[j,1]<-p.value[j,1]+1

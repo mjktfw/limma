@@ -1,3 +1,8 @@
+03 April 2009: limma 2.17.18
+
+- Bug fixes to the calculations of up, mixed and down p values 
+  in romer().
+
 02 April 2009: limma 2.17.17
 
 - Bug fixes to the calcualtions of p values in romer()
