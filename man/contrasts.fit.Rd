@@ -8,15 +8,15 @@ Given a linear model fit to microarray data, compute estimated coefficients and 
 contrasts.fit(fit, contrasts=NULL, coefficients=NULL)
 }
 \arguments{
-  \item{fit}{an \code{MArrayLM} object or a list object produced by the function \code{lm.series} or equivalent. Must contain components \code{coefficients} and \code{stdev.unscaled}.}
+  \item{fit}{an \code{\link[limma:marraylm]{MArrayLM}} object or a list object produced by the function \code{lm.series} or equivalent. Must contain components \code{coefficients} and \code{stdev.unscaled}.}
   \item{contrasts}{numeric matrix with row corresponding to coefficients in \code{fit} and columns containing contrasts. May be a vector if there is only one contrast.}
   \item{coefficients}{vector indicating which coefficients are to be kept in the revised fit object. An alternative way to specify the \code{contrasts}.}
 }
 \value{
-  An list object of the same class as \code{fit}. This is a list with components components
+  An list object of the same class as \code{fit}, usually \code{\link[limma:marraylm]{MArrayLM}}. This is a list with components
   \item{coefficients}{numeric matrix containing the estimated coefficients for each contrast for each probe.}
   \item{stdev.unscaled}{numeric matrix conformal with \code{coef} containing the unscaled standard deviations for the coefficient estimators.}
-  \item{cor.coefficients}{numeric correlation matrix for the estimated coefficients}
+  \item{\code{cov.coefficients}:}{numeric \code{matrix} giving the unscaled covariance matrix of the estimable coefficients}
   \item{...}{any other components input in \code{fit}}
 }
 \details{

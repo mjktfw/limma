@@ -5,13 +5,13 @@
 
 02 April 2009: limma 2.17.17
 
-- Bug fixes to the calcualtions of p values in romer()
+- Bug fixes to the calculations of p values in romer()
 
 30 March 2009: limma 2.17.16
 
 - Bug fix to the calculations of either and down p values in romer().
 - Change function .meanTop() to .meanHalf() which gives means of top 
-  half and bottom half of the ranks.
+  half and bottom half of the ranks (not user visible).
 
 27 March 2009: limma 2.17.15
 
