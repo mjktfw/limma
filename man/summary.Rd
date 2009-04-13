@@ -1,6 +1,7 @@
 \name{summary}
 \alias{summary.RGList}
 \alias{summary.MAList}
+\alias{summary.EListRaw}
 \alias{summary.EList}
 \alias{summary.MArrayLM}
 \title{Summaries of Microarray Data Objects}

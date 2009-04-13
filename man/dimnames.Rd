@@ -1,6 +1,7 @@
 \name{dimnames}
 \alias{dimnames.RGList}
 \alias{dimnames.MAList}
+\alias{dimnames.EListRaw}
 \alias{dimnames.EList}
 \alias{dimnames.MArrayLM}
 \alias{dimnames<-.RGList}

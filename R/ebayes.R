@@ -31,7 +31,7 @@ eBayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4)) {
 ebayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4)) {
 #	Empirical Bayes statistics to select differentially expressed genes
 #	Gordon Smyth
-#	8 Sept 2002.  Last revised 29 May 2004.
+#	8 Sept 2002.  Last revised 13 April 2009.
 
 	coefficients <- fit$coefficients
 	stdev.unscaled <- fit$stdev.unscaled
@@ -64,7 +64,7 @@ ebayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4)) {
 		kernel <- t2*(1-1/r)/2
 	else
 		kernel <- (1+df.total)/2*log((t2+df.total) / (t2/r+df.total))
-	out$lods <- drop( log(proportion/(1-proportion))-log(r)/2+kernel )
+	out$lods <- log(proportion/(1-proportion))-log(r)/2+kernel
 	out
 }
 

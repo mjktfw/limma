@@ -1,9 +1,10 @@
-#	READ IMAGE ANALYSIS FILES INTO RGList
+#	READ IMAGE ANALYSIS FILES INTO RGList or EListRaw
 
-read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=NULL,columns=NULL,other.columns=NULL,annotation=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote=NULL,...)
-#	Extracts an RG list from a series of image analysis output files
+read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=NULL,columns=NULL,other.columns=NULL,annotation=NULL,channels=2,wt.fun=NULL,verbose=TRUE,sep="\t",quote=NULL,...)
+#	Extracts an RG list from a set of two-color image analysis output files
+#  or an EListRaw from a set of one-color files
 #	Gordon Smyth. 
-#	1 Nov 2002.  Last revised 19 Sep 2008.
+#	1 Nov 2002.  Last revised 9 Apr 2009.
 {
 #	Begin checking input arguments
 
@@ -58,11 +59,13 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 			spot.close.open = list(R="Rmean",G="Gmean",Rb="morphR.close.open",Gb="morphG.close.open"),
 			NULL
 		)
+		if(channels==1) columns$R <- columns$Rb <- NULL
 	} else {
 		if(!is.list(columns)) stop("columns must be a list")
 		names(columns)[names(columns)=="Gf"] <- "G"
 		names(columns)[names(columns)=="Rf"] <- "R"
-		if(is.null(columns$G) || is.null(columns$R)) stop("columns must specify foreground G and R")
+		channels <- (!is.null(columns$R))+(!is.null(columns$G))
+		if(channels==0) stop("columns must specify foreground G or R")
 		if(!all(names(columns) %in% c("G","R","Gb","Rb"))) warning("non-standard columns specified")
 	}
 	cnames <- names(columns)
@@ -92,7 +95,7 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 		skip <- grep("Begin Data",firstfield)
 		if(length(skip)==0) stop("Cannot find \"Begin Data\" in image output file")
 		nspots <- grep("End Data",firstfield) - skip -2
-		obj <- read.columns(fullname,required.col,text.to.search,skip=skip,sep=sep,quote=quote,as.is=TRUE,fill=TRUE,nrows=nspots,flush=TRUE,...)
+		obj <- read.columns(fullname,required.col,text.to.search,skip=skip,sep=sep,quote=quote,stringsAsFactors=FALSE,fill=TRUE,nrows=nspots,flush=TRUE,...)
 	}, arrayvision = {
 		skip <- 1
 		cn <- scan(fullname,what="",sep=sep,quote=quote,skip=1,nlines=1,quiet=TRUE,allowEscape=FALSE)
@@ -102,29 +105,29 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 		if(length(bg) != 2) stop(paste("Cannot find background columns in",fullname))
 #		Note that entries for columns for ArrayVision are now numeric
 		columns <- list(R=fg[1],Rb=bg[1],G=fg[2],Gb=bg[2])
-		obj <- read.columns(fullname,required.col,text.to.search,skip=skip,sep=sep,quote=quote,as.is=TRUE,fill=TRUE,flush=TRUE,...)
-#		obj <- read.table(fullname,skip=skip,header=TRUE,sep=sep,quote=quote,as.is=TRUE,check.names=FALSE,fill=TRUE,comment.char="",flush=TRUE,...)
+		obj <- read.columns(fullname,required.col,text.to.search,skip=skip,sep=sep,quote=quote,stringsAsFactors=FALSE,fill=TRUE,flush=TRUE,...)
+#		obj <- read.table(fullname,skip=skip,header=TRUE,sep=sep,quote=quote,stringsAsFactors=FALSE,check.names=FALSE,fill=TRUE,comment.char="",flush=TRUE,...)
 		fg <- grep(" Dens - ",names(obj))
 		bg <- grep("^Bkgd$",names(obj))
 		columns <- list(R=fg[1],Rb=bg[1],G=fg[2],Gb=bg[2])
 		nspots <- nrow(obj)
 	}, bluefuse = {
 		skip <- readGenericHeader(fullname,columns=c(columns$G,columns$R))$NHeaderRecords
-		obj <- read.columns(fullname,required.col,text.to.search,skip=skip,sep=sep,quote=quote,as.is=TRUE,fill=TRUE,flush=TRUE,...)
+		obj <- read.columns(fullname,required.col,text.to.search,skip=skip,sep=sep,quote=quote,stringsAsFactors=FALSE,fill=TRUE,flush=TRUE,...)
 		nspots <- nrow(obj)
 	}, genepix = {
 		h <- readGPRHeader(fullname)
 		if(verbose && source=="genepix.custom") cat("Custom background:",h$Background,"\n")
 		skip <- h$NHeaderRecords
-		obj <- read.columns(fullname,required.col,text.to.search,skip=skip,sep=sep,quote=quote,as.is=TRUE,fill=TRUE,flush=TRUE,...)
+		obj <- read.columns(fullname,required.col,text.to.search,skip=skip,sep=sep,quote=quote,stringsAsFactors=FALSE,fill=TRUE,flush=TRUE,...)
 		nspots <- nrow(obj)
 	}, smd = {
 		skip <- readSMDHeader(fullname)$NHeaderRecords
-		obj <- read.columns(fullname,required.col,text.to.search,skip=skip,sep=sep,quote=quote,as.is=TRUE,fill=TRUE,flush=TRUE,...)
+		obj <- read.columns(fullname,required.col,text.to.search,skip=skip,sep=sep,quote=quote,stringsAsFactors=FALSE,fill=TRUE,flush=TRUE,...)
 		nspots <- nrow(obj)
 	}, {
 		skip <- readGenericHeader(fullname,columns=columns,sep=sep)$NHeaderRecords
-		obj <- read.columns(fullname,required.col,text.to.search,skip=skip,sep=sep,quote=quote,as.is=TRUE,fill=TRUE,flush=TRUE,...)
+		obj <- read.columns(fullname,required.col,text.to.search,skip=skip,sep=sep,quote=quote,stringsAsFactors=FALSE,fill=TRUE,flush=TRUE,...)
 		nspots <- nrow(obj)
 	})
 
@@ -207,7 +210,7 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 					skip <- readGenericHeader(fullname,columns=columns)$NHeaderRecords
 				})
 			if(verbose && source=="genepix.custom") cat("Custom background:",h$Background,"\n")
-			obj <- read.columns(fullname,required.col,text.to.search,skip=skip,sep=sep,as.is=TRUE,quote=quote,fill=TRUE,nrows=nspots,flush=TRUE,...)
+			obj <- read.columns(fullname,required.col,text.to.search,skip=skip,sep=sep,stringsAsFactors=FALSE,quote=quote,fill=TRUE,nrows=nspots,flush=TRUE,...)
 		}
 		for (a in cnames) RG[[a]][,i] <- obj[,columns[[a]]]
 		if(!is.null(wt.fun)) RG$weights[,i] <- wt.fun(obj)
@@ -216,7 +219,14 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 		}
 		if(verbose) cat(paste("Read",fullname,"\n"))
 	}
-	new("RGList",RG)
+	if(channels==1) {
+		n <- names(RG)
+		n[n=="G"] <- "E"
+		n[n=="Gb"] <- "Eb"
+		names(RG) <- n
+		new("EListRaw",RG)
+	} else
+		new("RGList",RG)
 }
 
 read.columns <- function(file,required.col=NULL,text.to.search="",sep="\t",quote="\"",skip=0,fill=TRUE,blank.lines.skip=TRUE,comment.char="",allowEscapes=FALSE,...)

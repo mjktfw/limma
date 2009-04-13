@@ -10,8 +10,13 @@ setClass("MAList",
 representation("list")
 )
 
+setClass("EListRaw",
+#  Class to hold one channel data on raw scale
+representation("list")
+)
+
 setClass("EList",
-#  Class to hold one channel data
+#  Class to hold one channel data on log scale
 representation("list")
 )
 
@@ -23,7 +28,7 @@ representation("list")
 printHead <- function(x)
 #  Print leading 5 elements or rows of atomic object
 #  Gordon Smyth
-#  May 2003.  Last modified 7 April 2004.
+#  May 2003.  Last modified 9 April 2009.
 {
 	if(is.atomic(x)) {
 		d <- dim(x)
@@ -68,13 +73,23 @@ printHead <- function(x)
 		} else
 			print(x)
 	},
-	Recursive=print(x)
-	)
+	Recursive={
+		if(length(x)) {
+			if(is.null(names(x))) names(x) <- 1:length(x)
+			for (what in names(x)) {
+				y <- x[[what]]
+				cat("$",what,"\n",sep="")
+				Recall(y)
+				cat("\n")
+			}
+		}
+	})
 }
 
 setClass("LargeDataObject")
 setIs("RGList","LargeDataObject")
 setIs("MAList","LargeDataObject")
+setIs("EListRaw","LargeDataObject")
 setIs("EList","LargeDataObject")
 setIs("MArrayLM","LargeDataObject")
 
@@ -102,13 +117,13 @@ function(object) {
 
 dim.RGList <- function(x) if(is.null(x$R)) c(0,0) else dim(as.matrix(x$R))
 dim.MAList <- function(x) if(is.null(x$M)) c(0,0) else dim(as.matrix(x$M))
-dim.EList <- function(x) if(is.null(x$E)) c(0,0) else dim(as.matrix(x$E))
+dim.EListRaw <- dim.EList <- function(x) if(is.null(x$E)) c(0,0) else dim(as.matrix(x$E))
 dim.MArrayLM <- function(x) if(is.null(x$coefficients)) c(0,0) else dim(as.matrix(x$coefficients))
-length.RGList <- length.MAList <- length.EList <- length.MArrayLM <- function(x) prod(dim(x))
+length.RGList <- length.MAList <- length.EListRaw <- length.EList <- length.MArrayLM <- function(x) prod(dim(x))
 
 dimnames.RGList <- function(x) dimnames(x$R)
 dimnames.MAList <- function(x) dimnames(x$M)
-dimnames.EList <- function(x) dimnames(x$E)
+dimnames.EListRaw <- dimnames.EList <- function(x) dimnames(x$E)
 dimnames.MArrayLM <- function(x) dimnames(x$coefficients)
 .setdimnames <- function(x, value)
 #  Dimension names for RGList-like objects
@@ -128,7 +143,7 @@ dimnames.MArrayLM <- function(x) dimnames(x$coefficients)
 "dimnames<-.MAList" <- .setdimnames
 "dimnames<-.EList" <- .setdimnames
 
-summary.MArrayLM <- summary.MAList <- summary.RGList <- summary.EList <- function(object,...) summary(unclass(object))
+summary.MArrayLM <- summary.MAList <- summary.RGList <- summary.EListRaw <- summary.EList <- function(object,...) summary(unclass(object))
 
 as.MAList <- function(object) {
 #	Convert marrayNorm object to MAList
@@ -161,7 +176,7 @@ as.MAList <- function(object) {
 #  Gordon Smyth, 28 Oct 2004, 23 March 2009
 as.matrix.RGList <- function(x,...) normalizeWithinArrays(x,method="none")$M
 as.matrix.MAList <- function(x,...) as.matrix(x$M)
-as.matrix.EList <- function(x,...) as.matrix(x$E)
+as.matrix.EListRaw <- as.matrix.EList <- function(x,...) as.matrix(x$E)
 as.matrix.MArrayLM <- function(x,...) x$coefficients
 as.matrix.marrayNorm <- function(x,...) x@maM
 #  13 July 2006

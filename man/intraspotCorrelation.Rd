@@ -36,7 +36,7 @@ An overview of methods for single channel analysis in limma is given by \link{07
 \examples{
 #  See lmscFit
 \dontrun{
-corfit <- dupclicateCorrelation(MA, design)
+corfit <- intraspotCorrelation(MA, design)
 all.correlations <- tanh(corfit$atanh.correlations)
 boxplot(all.correlations)
 }

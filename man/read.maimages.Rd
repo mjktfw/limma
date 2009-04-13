@@ -1,12 +1,13 @@
 \name{read.maimages}
 \alias{read.maimages}
 \alias{read.imagene}
-\title{Read RGList from Image Analysis Output Files}
+\title{Read RGList or EListRaw from Image Analysis Output Files}
 \description{
-Reads an RGList from a series of two-color microarray image analysis output files
+Reads an RGList from a set of two-color microarray image analysis output files,
+or an EListRaw from a set of one-color files.
 }
 \usage{
-read.maimages(files=NULL,source="generic",path=NULL,ext=NULL,names=NULL,columns=NULL,other.columns=NULL,annotation=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote=NULL,\dots)
+read.maimages(files=NULL,source="generic",path=NULL,ext=NULL,names=NULL,columns=NULL,other.columns=NULL,annotation=NULL,channels=2,wt.fun=NULL,verbose=TRUE,sep="\t",quote=NULL,\dots)
 read.imagene(files,path=NULL,ext=NULL,names=NULL,columns=NULL,other.columns=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote="\"",\dots)
 }
 \arguments{
@@ -21,6 +22,7 @@ read.imagene(files,path=NULL,ext=NULL,names=NULL,columns=NULL,other.columns=NULL
   \item{columns}{list with fields \code{R}, \code{G}, \code{Rb} and \code{Gb} giving the column names to be used for red and green foreground and background or, in the case of Imagene data, a list with fields \code{f} and \code{b}.  This argument is optional if \code{source} is specified, otherwise it is required.}
   \item{other.columns}{character vector of names of other columns to be read containing spot-specific information}
   \item{annotation}{character vector of names of columns containing annotation information about the probes}
+  \item{channels}{number of channels, \code{channels=2} or two-color and \code{channels=1} for one-color.}
   \item{wt.fun}{function to calculate spot quality weights}
   \item{verbose}{logical, \code{TRUE} to report each time a file is read}
   \item{sep}{the field separator character}
@@ -73,7 +75,8 @@ Probe annotation information is read from the first file only.
 }
 
 \value{
-An \code{\link[limma:rglist]{RGList}} object containing the components
+For one-color data, an \code{\link[limma:EList]{EListRaw}} object.
+For two-color data, an \code{\link[limma:rglist]{RGList}} object containing the components
   \item{R}{matrix containing the red channel foreground intensities for each spot for each array.}
   \item{Rb}{matrix containing the red channel background intensities for each spot for each array.}
   \item{G}{matrix containing the green channel foreground intensities for each spot for each array.}

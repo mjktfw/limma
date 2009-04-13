@@ -16,10 +16,14 @@ This package defines the following data classes.
 	Objects of this class contain one row for each spot.
 	There may be more than one spot and therefore more than one row for each probe.}
 
-\item{ \code{\link[limma:EList]{EList}} }{
-	A clas to store raw or normalized intensities for one-channel microarray data.
-	Normalized values are usually on the log2-scale.
+\item{ \code{\link[limma:EList]{EListRaw}} }{
+	A class to store raw intensities for one-channel microarray data.
+	May or may not be background corrected.
 	Usually created by \code{read.maimages}.}
+
+\item{ \code{\link[limma:EList]{EList}} }{
+	A class to store normalized log2 expression values for one-channel microarray data.
+	Usually created by \code{normalizeBetweenArrays}.}
 
 \item{ \code{\link[limma:marraylm]{MArrayLM}} }{
 	Store the result of fitting gene-wise linear models to the normalized intensities or log-ratios.

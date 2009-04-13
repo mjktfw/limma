@@ -1,6 +1,7 @@
 \name{subsetting}
 \alias{[.RGList}
 \alias{[.MAList}
+\alias{[.EListRaw}
 \alias{[.EList}
 \alias{[.MArrayLM}
 \title{Subset RGList, MAList, EList or MArrayLM Objects}

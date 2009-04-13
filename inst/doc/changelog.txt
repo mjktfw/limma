@@ -1,17 +1,30 @@
+13 April 2009: limma 2.17.19
+
+- ebayes() now returns lods as a matrix.  This ensures that
+  MArrayLM objects always be subsetted by column names, even
+  when there is only one column.
+- new argument channels for read.maimages(), which allows the
+  function to read one-channel data.
+- new class EListRaw for non-normalized one-channel data.
+- printHead() now prints compactly for recursive lists of
+  arbitrary depth.
+
 03 April 2009: limma 2.17.18
 
-- Bug fixes to the calculations of up, mixed and down p values 
+- Bug fixes to the calculations of up, mixed and down p-values 
   in romer().
 
 02 April 2009: limma 2.17.17
 
-- Bug fixes to the calculations of p values in romer()
+- Bug fixes to the calculations of p-values in romer()
 
 30 March 2009: limma 2.17.16
 
-- Bug fix to the calculations of either and down p values in romer().
-- Change function .meanTop() to .meanHalf() which gives means of top 
-  half and bottom half of the ranks (not user visible).
+- Bug fix to the calculations of either and down p-values in
+  romer().
+- Utility function .meanTop() removed and replaced with
+  .meanHalf(), which gives means of top and bottom halves of a
+  vector.
 
 27 March 2009: limma 2.17.15
 

@@ -1,6 +1,7 @@
 \name{as.matrix}
 \alias{as.matrix.RGList}
 \alias{as.matrix.MAList}
+\alias{as.matrix.EListRaw}
 \alias{as.matrix.EList}
 \alias{as.matrix.MArrayLM}
 \alias{as.matrix.marrayNorm}

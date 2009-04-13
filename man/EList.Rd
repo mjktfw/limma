@@ -1,16 +1,20 @@
 \name{EList-class}
 \docType{class}
 \alias{EList-class}
+\alias{EListRaw-class}
 \title{Expression List - class}
 
 \description{
-A simple list-based class for storing expression values (E-values) for a set of one-channel microarrays.
-\code{EList} objects are normally created by \code{\link{read.maimages}}.
+Simple list-based classes for storing expression values (E-values) for a set of one-channel microarrays.
+\code{EListRaw} holds expression values on the raw scale.
+\code{EList} holds expression values on the log scale, usually after background correction and normalization.
+\code{EListRaw} objects are normally created by \code{\link{read.maimages}}.
+\code{EList} objects are normally created by \code{\link{normalizeBetweenArrays}}.
 }
 
 \section{Slots/List Components}{
 \code{EList} objects can be created by \code{new("EList",E)} where \code{E} is a list.
-This class contains no slots (other than \code{.Data}), but objects should contain a list component \code{E} as follows:
+These classes contains no slots (other than \code{.Data}), but objects should contain a list component \code{E} as follows:
 \tabular{ll}{
   \code{E}:\tab numeric matrix containing the E-values (raw or log-2 expression ratios).  Rows correspond to spots and columns to arrays.
 }
@@ -21,11 +25,11 @@ Optional components include:
   \code{genes}:\tab data.frame containing probe information. Should have one row for each probe. May have any number of columns.\cr
   \code{targets}:\tab data.frame containing information on the target RNA samples.  Rows correspond to arrays.  May have any number of columns.
 }
-Valid \code{EList} objects may contain other optional components, but all probe or array information should be contained in the above components.
+Valid \code{EList} or \code{EListRaw} objects may contain other optional components, but all probe or array information should be contained in the above components.
 }
 
 \section{Methods}{
-This class inherits directly from class \code{list} so any operation appropriate for lists will work on objects of this class.
+These classes inherit directly from class \code{list} so any operation appropriate for lists will work on objects of this class.
 In addition, \code{EList} objects can be \link[limma:subsetting]{subsetted} and \link[limma:cbind]{combined}.
 \code{EList} objects will return dimensions and hence functions such as \code{\link[limma:dim]{dim}}, \code{\link[base:nrow]{nrow}} and \code{\link[base:nrow]{ncol}} are defined. 
 \code{ELists} also inherit a \code{\link[methods]{show}} method from the virtual class \code{\link[limma:LargeDataObject]{LargeDataObject}}, which means that \code{ELists} will print in a compact way.
