@@ -82,9 +82,11 @@ printHead <- function(x)
 			print(x)
 	},
 	Recursive={
-		if(length(x)) {
-			if(is.null(names(x))) names(x) <- 1:length(x)
-			for (what in names(x)) {
+		n <- length(x)
+		if(n) {
+			i <- names(x)
+			if(is.null(i)) i <- seq_len(n)
+			for (what in i) {
 				y <- x[[what]]
 				cat("$",what,"\n",sep="")
 				Recall(y)
