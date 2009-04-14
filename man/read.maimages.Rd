@@ -93,8 +93,8 @@ For two-color data, an \code{\link[limma:rglist]{RGList}} object containing the 
 Web pages for the image analysis software packages mentioned here are listed at \url{http://www.statsci.org/micrarra/image.html}
 }
 \seealso{
-\code{read.maimages} is based on \code{\link[base]{read.table}} in the base package.
-\code{\link[marray]{read.marrayRaw}} is the corresponding function in the marray package.
+\code{read.maimages} uses \code{\link{read.columns}} for efficient reading of text files.
+As far as possible, it is has similar behavior to \code{\link[base]{read.table}} in the base package.
 
 An overview of LIMMA functions for reading data is given in \link{03.ReadingData}.
 }

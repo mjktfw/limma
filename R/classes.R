@@ -28,7 +28,7 @@ representation("list")
 printHead <- function(x)
 #  Print leading 5 elements or rows of atomic object
 #  Gordon Smyth
-#  May 2003.  Last modified 9 April 2009.
+#  May 2003.  Last modified 14 April 2009.
 {
 	if(is.atomic(x)) {
 		d <- dim(x)
@@ -39,8 +39,16 @@ printHead <- function(x)
 		if(inherits(x,"data.frame")) {
 			d <- dim(x)
 			which <- "TwoD"
-		} else
-			which <- "Recursive"
+		} else {
+			if(is.call(x))
+				which <- "Call"
+			else {
+				if(is.recursive(x))
+					which <- "Recursive"
+				else
+					which <- "Other"
+			}
+		}
 	}
 	switch(which,
 	OneD={
@@ -83,7 +91,9 @@ printHead <- function(x)
 				cat("\n")
 			}
 		}
-	})
+	},
+	Call=,Other=print(x)
+	)
 }
 
 setClass("LargeDataObject")
