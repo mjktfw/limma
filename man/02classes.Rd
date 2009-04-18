@@ -37,7 +37,7 @@ This package defines the following data classes.
 }
 
 All these data classes obey many analogies with matrices.
-In the case of \code{RGList}, \code{MAList} and \code{EList}, rows correspond to spots or probes and columns to arrays.
+In the case of \code{RGList}, \code{MAList}, \code{EListRaw} and \code{EList}, rows correspond to spots or probes and columns to arrays.
 In the case of \code{MarrayLM}, rows correspond to unique probes and the columns to parameters or contrasts.
 The functions \code{summary}, \code{dim}, \code{length}, \code{ncol}, \code{nrow}, \code{dimnames}, \code{rownames}, \code{colnames} have methods for these classes.
 Objects of any of these classes may be \link[limma:subsetting]{subsetted}.

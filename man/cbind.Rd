@@ -2,19 +2,21 @@
 \alias{cbind.RGList}
 \alias{cbind.MAList}
 \alias{cbind.EList}
+\alias{cbind.EListRaw}
 \alias{rbind.RGList}
 \alias{rbind.MAList}
 \alias{rbind.EList}
-\title{Combine RGList, MAList or EList Objects}
+\alias{rbind.EListRaw}
+\title{Combine RGList, MAList, EList or EListRaw Objects}
 \description{
-Combine a set of \code{RGList}, \code{MAList} or \code{EList} objects.
+Combine a set of \code{RGList}, \code{MAList}, \code{EList} or \code{EListRaw} objects.
 }
 \usage{
 \method{cbind}{RGList}(\dots, deparse.level=1)
 \method{rbind}{RGList}(\dots, deparse.level=1)
 }
 \arguments{
-  \item{\dots}{\code{RGList}, \code{MAList} or \code{EList} objects.}
+  \item{\dots}{\code{RGList}, \code{MAList}, \code{EList} or \code{EListRaw} objects.}
   \item{deparse.level}{not currently used, see \code{\link[base]{cbind}} in the base package}
 }
 \details{
@@ -27,7 +29,7 @@ The combined data object will preserve any additional components or attributes f
 For \code{rbind}, the matrices of expression data are rbinded while the target information, in any, is unchanged.
 }
 \value{
-An \code{\link[limma:rglist]{RGList}}, \code{\link[limma:malist]{MAList}} or \code{\link[limma:EList]{EList}} object holding data from all the arrays and all genes from the individual objects.
+An \code{\link[limma:rglist]{RGList}}, \code{\link[limma:malist]{MAList}}, \code{\link[limma:EList]{EList}} or \code{\link[limma:EList]{EListRaw}} object holding data from all the arrays and all genes from the individual objects.
 }
 \author{Gordon Smyth}
 \seealso{

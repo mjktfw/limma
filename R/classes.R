@@ -153,7 +153,7 @@ dimnames.MArrayLM <- function(x) dimnames(x$coefficients)
 #assign("dimnames<-.MAList",.setdimnames)
 "dimnames<-.RGList" <- .setdimnames
 "dimnames<-.MAList" <- .setdimnames
-"dimnames<-.EList" <- .setdimnames
+"dimnames<-.EListRaw" <- "dimnames<-.EList" <- .setdimnames
 
 summary.MArrayLM <- summary.MAList <- summary.RGList <- summary.EListRaw <- summary.EList <- function(object,...) summary(unclass(object))
 

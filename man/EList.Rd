@@ -9,7 +9,7 @@ Simple list-based classes for storing expression values (E-values) for a set of 
 \code{EListRaw} holds expression values on the raw scale.
 \code{EList} holds expression values on the log scale, usually after background correction and normalization.
 \code{EListRaw} objects are normally created by \code{\link{read.maimages}}.
-\code{EList} objects are normally created by \code{\link{normalizeBetweenArrays}}.
+In the future, \code{EList} objects are likely to be created \code{\link{normalizeBetweenArrays}}.
 }
 
 \section{Slots/List Components}{
@@ -33,12 +33,6 @@ These classes inherit directly from class \code{list} so any operation appropria
 In addition, \code{EList} objects can be \link[limma:subsetting]{subsetted} and \link[limma:cbind]{combined}.
 \code{EList} objects will return dimensions and hence functions such as \code{\link[limma:dim]{dim}}, \code{\link[base:nrow]{nrow}} and \code{\link[base:nrow]{ncol}} are defined. 
 \code{ELists} also inherit a \code{\link[methods]{show}} method from the virtual class \code{\link[limma:LargeDataObject]{LargeDataObject}}, which means that \code{ELists} will print in a compact way.
-
-Other functions in LIMMA which operate on \code{EList} objects include
-\code{\link{backgroundCorrect}},
-\code{\link{normalizeBetweenArrays}}.
-\code{\link{plotMA}} and
-\code{\link{lmFit}}.
 }
 
 \author{Gordon Smyth}

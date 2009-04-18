@@ -7,7 +7,8 @@
 \alias{dimnames<-.RGList}
 \alias{dimnames<-.MAList}
 \alias{dimnames<-.EList}
-\title{Retrieve the Dimension Names of an RGList, MAList or MArrayLM Object}
+\alias{dimnames<-.EListRaw}
+\title{Retrieve the Dimension Names of an RGList, MAList, EList, EListRaw or MArrayLM Object}
 \description{
 Retrieve the dimension names of a microarray data object.
 }
@@ -16,7 +17,7 @@ Retrieve the dimension names of a microarray data object.
 \method{dimnames}{RGList}(x) <- value
 }
 \arguments{
-  \item{x}{an object of class \code{RGList}, \code{MAList}, \code{EList} or (not for assignment) \code{MArrayLM}}
+  \item{x}{an object of class \code{RGList}, \code{MAList}, \code{EList}, \code{EListRaw} or (not for assignment) \code{MArrayLM}}
   \item{value}{a possible value for \code{dimnames(x)}: see \code{\link{dimnames}}}
 }
 \details{

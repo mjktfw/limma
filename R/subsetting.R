@@ -142,6 +142,8 @@ function(object, i, j, ...) {
 	object
 })
 
+assign("[.EListRaw", get("[.EList"))
+
 assign("[.MArrayLM",
 function(object, i, j, ...)
 #  Subsetting for MArrayLM objects
@@ -253,7 +255,7 @@ cbind.MAList <- function(..., deparse.level=1) {
 	out
 }
 
-cbind.EList <- function(..., deparse.level=1) {
+cbind.EListRaw <- cbind.EList <- function(..., deparse.level=1) {
 #  Combine EList objects assuming same genelists
 #  Gordon Smyth
 #  23 March 2009.
@@ -314,7 +316,7 @@ rbind.MAList <- function(..., deparse.level=1) {
 	out
 }
 
-rbind.EList <- function(..., deparse.level=1) {
+rbind.EListRaw <- rbind.EList <- function(..., deparse.level=1) {
 #  Combine EList objects assuming same array lists
 #  Gordon Smyth
 #  23 March 2009.
