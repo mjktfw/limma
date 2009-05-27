@@ -5,11 +5,12 @@ contrasts.fit <- function(fit,contrasts=NULL,coefficients=NULL) {
 #	Note: does not completely take probe-wise weights into account
 #	because this would require refitting the linear model for each probe
 #	Gordon Smyth
-#	13 Oct 2002.  Last modified 8 June 2007.
+#	13 Oct 2002.  Last modified 28 May 2009.
 
 	ncoef <- NCOL(fit$coefficients)
 	if(is.null(contrasts) == is.null(coefficients)) stop("Must specify only one of contrasts or coefficients")
 	if(!is.null(contrasts)) {
+		contrasts <- as.matrix(contrasts)
 		rn <- rownames(contrasts)
 		cn <- colnames(fit$coefficients)
 		if(!is.null(rn) && !is.null(cn) && any(rn != cn)) warning("row names of contrasts don't match col names of coefficients")
@@ -33,7 +34,7 @@ contrasts.fit <- function(fit,contrasts=NULL,coefficients=NULL) {
 	if(r < ncoef) {
 		if(is.null(fit$pivot)) stop("cor.coef not full rank but pivot column not found in fit")
 		est <- fit$pivot[1:r]
-		if(any(contrasts[-est,])) stop("trying to take contrast of non-estimable coefficient")
+		if(any(contrasts[-est,]!=0)) stop("trying to take contrast of non-estimable coefficient")
 		contrasts <- contrasts[est,,drop=FALSE]
 		fit$coefficients <- fit$coefficients[,est,drop=FALSE]
 		fit$stdev.unscaled <- fit$stdev.unscaled[,est,drop=FALSE]

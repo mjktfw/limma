@@ -68,10 +68,10 @@ geneSetTest <- function(selected,statistics,alternative="mixed",type="auto",rank
 }
 
 
-roast <- function(iset=NULL,y,design,contrast=ncol(design),gene.weights=NULL,array.weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,nrot=1000)
+roast <- function(iset=NULL,y,design,contrast=ncol(design),gene.weights=NULL,array.weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,nrot=999)
 # rotation gene set testing for linear models
 # Gordon Smyth and Di Wu
-# 24 Apr 2008. Last revised 9 Oct 2008.
+# 24 Apr 2008. Last revised 15 May 2009.
 {
 	if(is.null(iset)) iset <- rep(TRUE,nrow(y))
 	y <- as.matrix(y)
@@ -192,7 +192,7 @@ roast <- function(iset=NULL,y,design,contrast=ncol(design),gene.weights=NULL,arr
 	stati[,"either"] <- pmax(mp,mn)
 
 #	p-values
-	p <- rowMeans(t(stati) >= statobs)
+	p <- (rowSums(t(stati) >= statobs)+1)/(nrot+1)
 
 #	Output
 	r1 <- mean(modt > sqrt(2))
@@ -284,7 +284,7 @@ barcodeplot <- function(selected,statistics,type="auto",...)
 romer <- function(iset=NULL,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,nrot=10000)
 # rotation-mean50-rank version of GSEA (gene set enrichment analysis) for linear models
 # Gordon Smyth and Yifang Hu
-# 27 March 2009. Last revised 03 April 2009.
+# 27 March 2009. Last revised 15 May 2009.
 {
 	if(is.null(iset)) iset <- rep(TRUE,nrow(y))
 	if(!is.list(iset)) iset <- list(set=iset)
@@ -409,7 +409,7 @@ romer <- function(iset=NULL,y,design,contrast=ncol(design),array.weights=NULL,bl
 		}
 	}	
 
-	p.value<-p.value/nrot
+	p.value <- (p.value+1)/(nrot+1)
 	colnames(p.value)<-c("mixed","up","down","either")
 	rownames(p.value)<-names(iset)
 	p.value

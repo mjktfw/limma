@@ -1,5 +1,8 @@
 #  removeBatchEffect.R
 
+#  A refinement would be to empirical Bayes shrink
+#  the batch effects before subtracting them.
+
 removeBatchEffect <- function(x,batch,design=NULL)
 #  Remove batch effects from matrix of expression data
 #  Carolyn de Graaf and Gordon Smyth

@@ -1,3 +1,27 @@
+28 May 2009: limma 2.19.1
+
+- Barnard (1963) reference added to roast.Rd.
+- rewording of details in romer.Rd.
+- two fixes to contrasts.fit() when there are non-estimable
+  coefficients in the linear model.  The function previously
+  gave a warning about coercing double to logical, which no
+  longer appears.  The function also failed in this situation
+  when the contrast was a single vector instead of a matrix.
+- convergence criterion for arrayWeightsSimple() is now more
+  lenient for large data sets.  About 5 decimal place accuracy
+  is still achieved.
+- arrayWeightsSimple() now checks for failed convergence
+  from floating point errors and returns a diagnostic message.
+- getEAWP() and lmFit() now return Amean values for EList
+  objects.
+- calculation of rotation p-values in roast() and romer()
+  changed to be (x+1)/(nrot+1) instead of x/nrot, where x is
+  the number of random rotations giving a more extreme statistic
+  than that observed.
+
+21 April 2009: limma 2.19.0 (Bioconductor 2.4 Release Branch)
+21 April 2009: limma 2.18.0 (Bioconductor 2.4 Release Branch)
+
 18 April 2009: limma 2.17.21
 
 - basic (matrix-like) methods added for ElistRaw objects,

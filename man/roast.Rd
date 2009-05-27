@@ -5,7 +5,7 @@
 Rotation gene set testing for linear models.
 }
 \usage{
-roast(iset=NULL, y, design, contrast=ncol(design), gene.weights=NULL, array.weights=NULL, block=NULL, correlation, var.prior=NULL, df.prior=NULL, nrot=1000)
+roast(iset=NULL, y, design, contrast=ncol(design), gene.weights=NULL, array.weights=NULL, block=NULL, correlation, var.prior=NULL, df.prior=NULL, nrot=999)
 }
 \arguments{
   \item{iset}{vector specifying the rows of \code{y} in the test set.  This can be a vector of indices, or a logical vector of the same length as \code{statistics}, or any vector such as \code{y[selected,]} contains the values for the gene set to be tested.}
@@ -33,9 +33,9 @@ It uses rotation, which is a smoothed version of permutation suitable for linear
 It can be used for any linear model with replication.
 and negative values and otherwise will be taken to be F-like.
 
-This is a self-contained test is the sense that genes outside the test set do not play a role
-(Goeman, JJ, and Buhlmann P, 2007).
-A competitive gene set test is performed by \code{\link{geneSetTest}}.
+This is a self-contained test in the sense that genes outside the test set do not play a role
+(Goeman and Buhlmann, 2007).
+A competitive gene set test is performed by \code{\link{geneSetTest}}, for one set, or \code{\link{romer}}, for many sets.
 
 p-values are given for four possible alternative hypotheses.
 \code{alternative=="up"} means the genes in the set tend to be up-regulated, with positive t-statistics.
@@ -52,6 +52,9 @@ Note that \code{roast} estimates p-values by simulation, specifically by random 
 This means that the p-values will vary slightly from run to run.
 To get more precise p-values, increase the number of rotations \code{nrot}.
 The strategy of random rotations is due to Langsrud (2005).
+
+Following Monte Carlo hypothesis testing theory (Barnard, 1963), the p-value is computed as \code{(x+1)/(nrot+1)} where \code{x} is the number of rotations giving a more extreme statistic than that observed.
+This means that the smallest possible p-value is \code{1/(nrot+1)}.
 }
 
 \seealso{
@@ -61,7 +64,10 @@ The strategy of random rotations is due to Langsrud (2005).
 \author{Gordon Smyth and Di Wu}
 
 \references{
-Goeman, JJ, and Buhlmann P, 2007.
+Barnard, GA (1963). Discussion of The spectral analysis of point processes (by MS Bartlett).
+\emph{Journal of the Royal Statistical Society} B 25, 294.
+
+Goeman, JJ, and Buhlmann, P 2007.
 Analyzing gene expression data in terms of gene sets: methodological issues.
 \emph{Bioinformatics} 23, 980-987. 
 

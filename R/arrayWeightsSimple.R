@@ -15,7 +15,7 @@ arrayWeightsSimple <- function(object,design=NULL,maxiter=100,tol=1e-6,maxratio=
 #	Assumes no spot weights
 #	Any probes with missing values are removed
 #	Gordon Smyth, 13 Dec 2005
-#	Last revised 22 Jan 2006.
+#	Last revised 20 May 2009.
 {
 	M <- as.matrix(object)
 	allfin <- apply(is.finite(M),1,all)
@@ -31,12 +31,17 @@ arrayWeightsSimple <- function(object,design=NULL,maxiter=100,tol=1e-6,maxratio=
 	if(is.null(design)) design <- matrix(1,narrays,1)
 	p <- ncol(design)
 
+#	For use with convergence criterion
+#	The sqrt is used to reduce iterations with very large datasets
+	m <- sqrt(ngenes)/narrays
+
 	Z1 <- contr.sum(narrays)
 	Z <- cbind(1,Z1)
 
 #	Starting values
 	gam <- rep(0,narrays-1)
 	w <- drop(exp(Z1 %*% (-gam)))
+	if(trace) cat("iter convcrit w\n")
 
 	iter <- 0
 	p2 <- p*(p+1)/2
@@ -62,8 +67,9 @@ arrayWeightsSimple <- function(object,design=NULL,maxiter=100,tol=1e-6,maxratio=
 		gamstep <- solve(info1,dl1)
 		gam <- gam + gamstep
 		w <- drop(exp(Z1 %*% (-gam)))
-		convcrit <- ngenes/narrays*crossprod(dl1,gamstep)
+		convcrit <- m*crossprod(dl1,gamstep)
 		if(trace) cat(iter,convcrit,w,"\n")
+		if(is.na(convcrit)) stop("tol not achievable, try trace or a larger tol value")
 		if(convcrit < tol) break
 		if(max(w)/min(w) > maxratio) break
 		if(iter==maxiter) {

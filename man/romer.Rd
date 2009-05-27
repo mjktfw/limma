@@ -21,11 +21,11 @@ romer(iset=NULL,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,cor
 Matrix with the rows corresponding to estimated p-values for each gene set and the columns corresponding to the alternative hypotheses mixed, up, down or either.
 }
 \details{
-This function is a rotation-mean50-rank version of GSEA (Subramanian, A, et al., 2005).
-It uses mean50 statistics, which is the mean of the top half of the ranks for genes in the set, to test 
-whether any of the genes in each gene set are differentially expressed.
-It uses rotation, which is a smoothed version of permutation suitable for linear models (Langsrud, 2005).
-It can be used for any linear model with replication.
+This function implements a GSEA of a battery of gene sets similar in motivation to Subramanian et al (2005) but designed for use with linear models.
+In is a competitive test, in that the different gene sets are pitted against one another.
+The genes are ranked by moderated t-statistic, then the mean rank of the top 50% of genes in each set forms the score for that set.
+Instead of permuation, it uses rotation, which is a smoothed version of permutation suitable for linear models (Langsrud, 2005).
+\code{romer} can be used with any linear model with some level of replication.
 
 p-values are given for four possible alternative hypotheses.
 The alternative "up" means the genes in the set tend to be up-regulated, with positive t-statistics.
