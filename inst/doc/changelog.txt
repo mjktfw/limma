@@ -1,3 +1,12 @@
+15 June 2009: limma 2.19.2
+
+- new function topTreat() for listing top results by treat().
+- treat() now outputs thresholded t-statistics.
+- reference added to intraspotCorrelation.Rd.
+- romer() now outputs the number of genes in each gene set.
+- arrayWeights() now displays convergence info when TRACE=TRUE
+  for method="genebygene" (for every 1000th gene).
+
 28 May 2009: limma 2.19.1
 
 - Barnard (1963) reference added to roast.Rd.
@@ -19,7 +28,7 @@
   the number of random rotations giving a more extreme statistic
   than that observed.
 
-21 April 2009: limma 2.19.0 (Bioconductor 2.4 Release Branch)
+21 April 2009: limma 2.19.0 (Bioconductor 2.5 Devel Branch)
 21 April 2009: limma 2.18.0 (Bioconductor 2.4 Release Branch)
 
 18 April 2009: limma 2.17.21

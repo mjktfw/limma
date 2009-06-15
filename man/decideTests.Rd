@@ -31,6 +31,7 @@ The setting \code{method="separate"} is equivalent to using \code{topTable} sepa
 \code{method="global"} will treat the entire matrix of t-statistics as a single vector of unrelated tests.
 \code{method="hierarchical"} adjusts down genes and then across contrasts.
 \code{method="nestedF"} adjusts down genes and then uses \code{classifyTestsF} to classify contrasts as significant or not for the selected genes.
+Please see the limma User's Guide for a discussion of the statistical properties of these methods.
 }
 \seealso{
 An overview of multiple testing functions is given in \link{08.Tests}.

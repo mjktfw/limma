@@ -284,7 +284,7 @@ barcodeplot <- function(selected,statistics,type="auto",...)
 romer <- function(iset=NULL,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,nrot=10000)
 # rotation-mean50-rank version of GSEA (gene set enrichment analysis) for linear models
 # Gordon Smyth and Yifang Hu
-# 27 March 2009. Last revised 15 May 2009.
+# 27 March 2009. Last revised 21 May 2009.
 {
 	if(is.null(iset)) iset <- rep(TRUE,nrow(y))
 	if(!is.list(iset)) iset <- list(set=iset)
@@ -412,7 +412,8 @@ romer <- function(iset=NULL,y,design,contrast=ncol(design),array.weights=NULL,bl
 	p.value <- (p.value+1)/(nrot+1)
 	colnames(p.value)<-c("mixed","up","down","either")
 	rownames(p.value)<-names(iset)
-	p.value
+	len.iset<-as.numeric(lapply(iset,length))
+	cbind(NGenes=len.iset,p.value)
 }
 
 ## Return means of top half and bottom half of the ranks for romer

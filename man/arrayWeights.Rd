@@ -25,7 +25,8 @@ arrayWeightsSimple(object, design = NULL, maxiter = 100, tol = 1e-6, maxratio = 
  \item{tol}{convergence tolerance.}
  \item{maxratio}{maximum ratio between largest and smallest weights before iteration stops}
  \item{trace}{logical variable. If true then output diagnostic information
-          at each iteration of '"reml"' algorithm.}
+          at each iteration of the '"reml"' algorithm, or at every 1000th iteration of the 
+          '"genebygene"' algorithm.}
   }
 \details{
 The relative reliability of each array is estimated by measuring how

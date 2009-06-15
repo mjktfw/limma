@@ -104,6 +104,11 @@ arrayWeights <- function(object, design=NULL, weights=NULL, method="genebygene",
 					Usgammas[obs] <- Usgammas[obs] + Usalphas
 					arraygammas <- Usgammas[1:(narrays-1)]
 				}
+
+                                if(trace && (i==1 || i%%1001==0)) {
+                                        x2 <- crossprod(Zzd, gammas.iter) / narrays
+                                        cat("Iter =", i, " X2 =", x2, " Array gammas", arraygammas, "\n")
+				}
 			}
 		}
 	}, reml = {  # Estimate array variances via reml

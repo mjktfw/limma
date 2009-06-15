@@ -18,7 +18,7 @@ romer(iset=NULL,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,cor
   \item{nrot}{number of rotations used to estimate the p-values.}
 }
 \value{
-Matrix with the rows corresponding to estimated p-values for each gene set and the columns corresponding to the alternative hypotheses mixed, up, down or either.
+Matrix with the rows corresponding to estimated p-values for each gene set and the columns corresponding to the number of genes for each gene set and the alternative hypotheses mixed, up, down or either.
 }
 \details{
 This function implements a GSEA of a battery of gene sets similar in motivation to Subramanian et al (2005) but designed for use with linear models.
@@ -26,6 +26,8 @@ In is a competitive test, in that the different gene sets are pitted against one
 The genes are ranked by moderated t-statistic, then the mean rank of the top 50% of genes in each set forms the score for that set.
 Instead of permuation, it uses rotation, which is a smoothed version of permutation suitable for linear models (Langsrud, 2005).
 \code{romer} can be used with any linear model with some level of replication.
+
+Number of genes is given for each gene set.
 
 p-values are given for four possible alternative hypotheses.
 The alternative "up" means the genes in the set tend to be up-regulated, with positive t-statistics.

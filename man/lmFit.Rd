@@ -113,6 +113,11 @@ fit4 <- lmFit(y,design,ndups=2,correlation=dupcor$consensus)
 fit4 <- eBayes(fit3)
 dim(fit4)
 topTable(fit4,coef=2)
+
+# Fold-change thresholding
+fit <- lmFit(y,design)
+fit <- treat(fit,lfc=0.1)
+topTreat(fit,coef=2)
 }
 \keyword{models}
 \keyword{regression}

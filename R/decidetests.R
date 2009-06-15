@@ -87,7 +87,7 @@ decideTests <- function(object,method="separate",adjust.method="BH",p.value=0.05
 classifyTestsF <- function(object,cor.matrix=NULL,df=Inf,p.value=0.01,fstat.only=FALSE) {
 #	Use F-tests to classify vectors of t-test statistics into outcomes
 #	Gordon Smyth
-#	20 Mar 2003.  Last revised 26 June 2004.
+#	20 Mar 2003.  Last revised 6 June 2009.
 
 #	Method intended for MAList objects but accept unclassed lists as well
 	if(is.list(object)) {
@@ -135,7 +135,6 @@ classifyTestsF <- function(object,cor.matrix=NULL,df=Inf,p.value=0.01,fstat.only
 	qF <- qf(p.value, r, df, lower.tail=FALSE)
 	if(length(qF)==1) qF <- rep(qF,ngenes) 
 	result <- matrix(0,ngenes,ntests,dimnames=dimnames(tstat))
-	if(is.null(colnames(tstat)) && !is.null(colnames(contrasts))) colnames(result) <- colnames(contrasts)
 	for (i in 1:ngenes) {
 		x <- tstat[i,]
 		if(any(is.na(x)))
