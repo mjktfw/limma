@@ -17,7 +17,7 @@ read.columns(file,required.col=NULL,text.to.search="",sep="\t",quote="\"",skip=0
   \item{fill}{logical: if \code{TRUE} then in case the rows have unequal length, blank fields are implicitly added.} 
   \item{blank.lines.skip}{logical: if \code{TRUE} blank lines in the input are ignored.}
   \item{comment.char}{character: a character vector of length one containing a single character or an empty string.}
-  \item{allowEscapes}{logical. Should C-style escapes such as \code{\n} be processed or read verbatim (the default)?} 
+  \item{allowEscapes}{logical. Should C-style escapes such as \samp{\\n} be processed or read verbatim (the default)?} 
   \item{\dots}{other arguments are passed to \code{read.table}, excluding the following
   which are reserved and cannot be set by the user:
   \code{header}, \code{col.names}, \code{check.names} and \code{colClasses}.}
