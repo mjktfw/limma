@@ -158,18 +158,18 @@ avereps.default <- function(x,ID=rownames(x))
 #	Average over irregular replicate spots, for matrices or vectors
 #	Gordon Smyth
 #	3 June 2008.
+#  Revised 19 Aug 2009 following suggestions from Axel Klenk.
 {
 	if(is.null(x)) return(NULL)
 	x <- as.matrix(x)
-	nspots <- nrow(x)
-	narrays <- ncol(x)
 	ID <- as.character(ID)
-	iu <- !duplicated(ID)
-	if(mode(x)=="character") return(x[iu,,drop=FALSE])
-	u <- ID[iu]
-	nprobes <- length(u)
-	y <- x[iu,,drop=FALSE]
-	for (i in 1:length(u)) y[i,] <- colMeans(x[ID==u[i],,drop=FALSE],na.rm=TRUE)
+	d <- duplicated(ID)
+	if(!any(d)) return(x)
+	y <- x[!d,,drop=FALSE]
+	if(mode(x)=="character") return(y)
+	IDu <- ID[!d]
+	IDr <- unique(ID[d])
+	for (i in which(IDu %in% IDr)) y[i,] <- colMeans(x[ID==IDu[i],,drop=FALSE],na.rm=TRUE)
 	y
 }
 

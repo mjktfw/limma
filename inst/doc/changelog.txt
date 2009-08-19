@@ -1,3 +1,8 @@
+19 Aug 2009: limma 2.19.3
+
+- speed improvements to avereps() (following suggestions
+  from Axel Klenk)
+
 15 June 2009: limma 2.19.2
 
 - new function topTreat() for listing top results by treat().
