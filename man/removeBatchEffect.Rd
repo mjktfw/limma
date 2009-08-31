@@ -5,7 +5,7 @@
 Remove a batch effect from expression data.
 }
 \usage{
-removeBatchEffect(x,batch,design=NULL)
+removeBatchEffect(x,batch,design=matrix(1,ncol(x),1))
 }
 \arguments{
   \item{x}{numeric matrix containing log-expression intensity for a series of microarrays. Each column corresponds to an array.}
