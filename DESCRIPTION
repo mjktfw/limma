@@ -1,11 +1,11 @@
 Package: limma
-Version: 2.19.4 
-Date: 2009/08/31
+Version: 3.0.0
+Date: 2009/10/05
 Title: Linear Models for Microarray Data
-Author: Gordon Smyth with contributions from Matthew Ritchie, Jeremy Silver, James Wettenhall, Natalie Thorne, Mette Langaas, Egil Ferkingstad, Marcus Davy, Francois Pepin, Dongseok Choi, Di Wu, Alicia Oshlack, Carolyn de Graaf, Yifang Hu, Wei Shi and Axel Klenk.
+Author: Gordon Smyth with contributions from Matthew Ritchie, Jeremy Silver, James Wettenhall, Natalie Thorne, Mette Langaas, Egil Ferkingstad, Marcus Davy, Francois Pepin, Dongseok Choi, Di Wu, Alicia Oshlack, Carolyn de Graaf, Yifang Hu, Wei Shi and Belinda Phipson.
 Maintainer: Gordon Smyth <smyth@wehi.edu.au>
 Depends: R (>= 2.3.0), methods
-Suggests: affy, marray, MASS, org.Hs.eg.db, splines, sma, statmod (>= 1.2.2), vsn
+Suggests: affy, marray, MASS, org.Hs.eg.db, splines, statmod (>= 1.2.2), vsn
 LazyLoad: yes
 Description:  Data analysis, linear models and differential expression for microarray data.
 License: LGPL

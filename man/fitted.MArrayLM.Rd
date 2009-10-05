@@ -17,7 +17,7 @@
   A numeric matrix of fitted values.
 }
 \seealso{
-  \code{\link[stats]{fitted}}
+  \code{\link{fitted}}
 }
 
 \author{Gordon Smyth}

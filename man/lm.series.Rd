@@ -27,7 +27,7 @@ The linear model is fit for each gene by calling the function \code{lm.fit} or \
 }
 \author{Gordon Smyth}
 \seealso{
-\code{\link[base:lmfit]{lm.fit}}.
+\code{\link[stats:lmfit]{lm.fit}}.
 
 An overview of linear model functions in limma is given by \link{06.LinearModels}.
 }

@@ -41,7 +41,7 @@ A data frame (data.frame) containing a representation of the data in the file.
 \author{Gordon Smyth}
 
 \seealso{
-\code{\link{read.maimages}}, \code{\link[base]{read.table}}.
+\code{\link{read.maimages}}, \code{\link[utils]{read.table}}.
 
 An overview of LIMMA functions for reading data is given in \link{03.ReadingData}.
 }

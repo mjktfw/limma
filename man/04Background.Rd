@@ -15,6 +15,9 @@ The \code{movingmin} method of \code{backgroundCorrect} uses utility functions \
 
 The \code{normexp} method of \code{backgroundCorrect} uses utility functions \code{\link{normexp.fit}} and \code{\link{normexp.signal}}.
 
+\code{\link{neqc}} performs normexp background correction and quantile normalization using control probes.
+This method uses utility functions \code{\link{normexp.fit.control}} to conduct the background correction.
+
 \code{\link{kooperberg}} is a Bayesian background correction tool designed specifically for GenePix data.
 \code{kooperberg} is not currently used as the default method for GenePix data because it is computationally intensive.
 It requires several additional columns from the GenePix data files which can be read in using \code{read.maimages} and specifying the \code{other.columns} argument.

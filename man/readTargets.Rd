@@ -14,7 +14,7 @@ readTargets(file="Targets.txt", path=NULL, sep="\t", row.names=NULL, quote="\"",
   \item{sep}{field separator character}
   \item{row.names}{character string giving the name of a column from which to obtain row names}
   \item{quote}{the set of quoting characters}
-  \item{...}{other arguments are passed to \code{\link[base]{read.table}}}
+  \item{...}{other arguments are passed to \code{\link{read.table}}}
 }
 \details{
 The targets file is a text file containing information about the RNA samples used as targets in the microarray experiment.

@@ -31,7 +31,7 @@ The function has not been heavily used and is somewhat experimental.
 This function does not give valid results in the presence of missing M-values.
 }
 \seealso{
-\code{\link{MAList-class}}, \code{\link{bwss.matrix}}, \code{\link[base:anova]{anova}}.
+\code{\link{MAList-class}}, \code{\link{bwss.matrix}}, \code{\link[stats:anova]{anova}}.
 
 An overview of quality assessment and diagnostic functions in LIMMA is given by \link{09.Diagnostics}.
 }

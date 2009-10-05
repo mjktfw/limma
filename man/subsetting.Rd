@@ -1,4 +1,5 @@
 \name{subsetting}
+\alias{subsetting}
 \alias{[.RGList}
 \alias{[.MAList}
 \alias{[.EListRaw}

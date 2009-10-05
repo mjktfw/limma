@@ -1,3 +1,48 @@
+5 October 2009: limma 3.0.0
+
+- New function genas() which tests for associations between
+  contrasts in a linear model.
+
+- New options and improved power for the romer() function.
+  There are now two versions, romer() and romer2(), which use
+  different test statistics.  Both new versions should give
+  better statistical power than the old version.  The new
+  romer() is also computationally quicker.
+
+- new functions read.ilmn() and read.ilmn.targets() for reading in
+  Illumina Whole Genome Expression BeadChip data.
+
+- new functions normexp.fit.control() and neqc() which perform
+  normexp background correction using negative control information.
+  This is especially useful for Illumina BeadChip data.  neqc()
+  undertakes background correction and quantile normalization in
+  one step for EListRaw data objects with negative control probes.
+
+- new function propexpr() for estimating the proportion of
+  expressed probes in a microarray, using negative control probe
+  information.  Especially useful for Illumina BeadChip data.
+
+- new function barcodeplot2() for displaying directional gene sets
+  with up and down genes shown separately.
+
+- removed sma from list of suggested packages
+
+- update normalizeBetweenArrays help page for changes to vsnMatrix
+  used in method="vsn" option.
+
+- new function alias2SymbolTable() for converting a set of alias 
+  names to a vector of official gene symbols of the same length.
+
+- new function wilcoxGST() introduced as a synonym for
+  geneSetTest() with ranks.only=TRUE.
+
+- backgroundCorrect() and normalizeWithinArrays() now accept
+  EListRaw objects.
+
+- Oshlack et al (2007) reference on normalization of boutique
+  arrays added to normalizeWithinArrays.Rd and to the
+  User's Guide.
+
 31 Aug 2009: limma 2.19.4
 
 - bug fix to removeBatchEffect(), which gave incorrect

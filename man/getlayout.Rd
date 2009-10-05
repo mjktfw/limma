@@ -41,8 +41,6 @@ The last two components are present only if \code{guessdups=TRUE}.
 }
 \author{Gordon Smyth and James Wettenhall}
 \seealso{
-\code{\link[marray:marrayTools]{gpTools}}.
-
 An overview of LIMMA functions for reading data is given in \link{03.ReadingData}.
 }
 \examples{

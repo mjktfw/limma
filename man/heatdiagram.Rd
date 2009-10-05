@@ -43,7 +43,7 @@ A matrix with named rows containing the coefficients used in the plot is also in
 \author{Gordon Smyth}
 \seealso{\code{\link[graphics]{image}}.}
 \examples{
-library(sma)
+if(require("sma")) {
 data(MouseArray)
 MA <- normalizeWithinArrays(mouse.data,layout=mouse.setup)
 design <- cbind(c(1,1,1,0,0,0),c(0,0,0,1,1,1))
@@ -52,5 +52,6 @@ contrasts.mouse <- cbind(Control=c(1,0),Mutant=c(0,1),Difference=c(-1,1))
 fit <- eBayes(contrasts.fit(fit,contrasts=contrasts.mouse))
 results <- decideTests(fit,method="global",p=0.1)
 heatDiagram(results,fit$coef,primary="Difference")
+}
 }
 \keyword{hplot}

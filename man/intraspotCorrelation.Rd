@@ -36,7 +36,7 @@ Smyth, G. K. (2005). Individual channel analysis of two-colour microarray data.
 }
 
 \seealso{
-This function uses \code{\link[statmod]{remlscore}} from the statmod package.
+This function uses \code{\link[statmod:remlscor]{remlscore}} from the statmod package.
 
 An overview of methods for single channel analysis in limma is given by \link{07.SingleChannel}.
 }

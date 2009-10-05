@@ -16,7 +16,7 @@ decideTests(object,method="separate",adjust.method="BH",p.value=0.05,lfc=0)
   \item{lfc}{minimum log2-fold-change required}
 }
 \value{
-An object of class \code{\link[limma:TestResults-class]{TestResults}}.
+An object of class \code{\link[=TestResults-class]{TestResults}}.
 This is essentially a numeric matrix with elements \code{-1}, \code{0} or \code{1} depending on whether each t-statistic is classified as significantly negative, not significant or significantly positive respectively.
 
 If \code{lfc>0} then contrasts are judged significant only when the log2-fold change is at least this large in absolute value.

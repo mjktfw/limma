@@ -58,8 +58,9 @@ Ritchie, M. E., Diyagama, D., Neilson, van Laar, R., J., Dobrovic, A., Holloway,
 An overview of linear model functions in limma is given by \link{06.LinearModels}.
 }
 \examples{
-library(sma)
+if(require("sma")) {
 # Subset of data from ApoAI case study in Limma User's Guide
+# Can be loaded from sma package if it is installed
 data(MouseArray)
 # Avoid non-positive intensities
 RG <- backgroundCorrect(mouse.data, method="half")
@@ -73,6 +74,7 @@ fit2 <- contrasts.fit(fit, contrasts=c(-1,1))
 fit2 <- eBayes(fit2)
 # Use of array weights increases the significance of the top genes
 topTable(fit2)
+}
 }
 
 \author{Matthew Ritchie and Gordon Smyth}

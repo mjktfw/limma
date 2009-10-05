@@ -56,13 +56,16 @@ A comparison of background correction methods for two-colour microarrays.
 \emph{Bioinformatics}
 \url{http://bioinformatics.oxfordjournals.org/cgi/content/abstract/btm412}
 
-Silver, J., Ritchie, M. E., and Smyth, G. K. (2008).
-Microarray background correction: maximum likelihood estimation for the normal-exponential convolution model. \emph{Biostatistics}. To appear.
-\url{http://www.statsci.org/smyth/pubs/normexp_28_Jul_2008.pdf}
+Silver, JD, Ritchie, ME, and Smyth, GK (2009).
+Microarray background correction: maximum likelihood estimation for the normal-exponential convolution.
+\emph{Biostatistics} 10, 352-363.
+\url{http://biostatistics.oxfordjournals.org/cgi/content/abstract/kxn042}
 }
 
 \seealso{
-\code{\link{normexp.signal}, \code{\link[affy]{bg.parameters}}}
+\code{\link{normexp.signal}}.
+Also \code{\link[affy:bg.adjust]{bg.parameters} in the affy package.
+}
 
 An overview of background correction functions is given in \code{\link{04.Background}}.
 }

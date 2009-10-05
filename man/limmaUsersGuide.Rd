@@ -16,7 +16,7 @@ limmaUsersGuide(view=TRUE)
 
 \details{
 The function \code{vignette("limma")} will find the short limma Vignette which describes how to obtain the Limma User's Guide.
-The User's Guide is not itself a true vignette because it is not automatically generated using \code{\link[utils]{Sweave}} during the package build process.
+The User's Guide is not itself a true vignette because it is not automatically generated using \code{\link{Sweave}} during the package build process.
 This means that it cannot be found using \code{vignette}, hence the need for this special function.
 
 If the operating system is other than Windows, then the PDF viewer used is that given by \code{Sys.getenv("R_PDFVIEWER")}.
@@ -26,7 +26,7 @@ This function is used by drop-down Vignettes menu when the Rgui interface for Wi
 }
 
 \seealso{
-\code{\link[utils]{vignette}}, \code{\link[Biobase]{openPDF}}, \code{\link[Biobase]{openVignette}}, \code{\link[base]{Sys.getenv}}, \code{\link[base]{Sys.putenv}}
+\code{\link{vignette}}, \code{\link[Biobase]{openPDF}}, \code{\link[Biobase]{openVignette}}, \code{\link{Sys.getenv}}, \code{\link{Sys.putenv}}
 }
 
 \author{Gordon Smyth}

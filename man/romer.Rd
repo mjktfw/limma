@@ -1,11 +1,13 @@
 \name{romer}
 \alias{romer}
+\alias{romer2}
 \title{Rotation Gene Set Enrichment Analysis}
 \description{
-Rotation-mean50-rank version of GSEA (gene set enrichment analysis) for linear models.
+Rotation-mean-rank version of GSEA (gene set enrichment analysis) for linear models.
 }
 \usage{
-romer(iset=NULL,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,nrot=10000)
+romer(iset,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,floor=FALSE,nrot=9999)
+romer2(iset,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,nrot=9999)
 }
 \arguments{
   \item{iset}{list of indices specifying the rows of \code{y} in the gene sets. The list can be made by \link{symbols2indices} and the gene sets can be retrieved from the molecular signatures database in Broad Institute.}
@@ -16,15 +18,15 @@ romer(iset=NULL,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,cor
   \item{block}{optional vector of blocks.}
   \item{correlation}{correlation between blocks.}
   \item{nrot}{number of rotations used to estimate the p-values.}
+  \item{floor.rank}{logical, if \code{TRUE} use floor-mean statistic instead of mean-rank statistic for summarizing t-statistics}
 }
 \value{
 Matrix with the rows corresponding to estimated p-values for each gene set and the columns corresponding to the number of genes for each gene set and the alternative hypotheses mixed, up, down or either.
 }
 \details{
 This function implements a GSEA of a battery of gene sets similar in motivation to Subramanian et al (2005) but designed for use with linear models.
-In is a competitive test, in that the different gene sets are pitted against one another.
-The genes are ranked by moderated t-statistic, then the mean rank of the top 50% of genes in each set forms the score for that set.
-Instead of permuation, it uses rotation, which is a smoothed version of permutation suitable for linear models (Langsrud, 2005).
+It is a competitive test, in that the different gene sets are pitted against one another.
+Instead of permutation, it uses rotation, a parametric resampling method suitable for linear models (Langsrud, 2005).
 \code{romer} can be used with any linear model with some level of replication.
 
 Number of genes is given for each gene set.
@@ -44,11 +46,20 @@ Note that \code{romer} estimates p-values by simulation, specifically by random 
 This means that the p-values will vary slightly from run to run.
 To get more precise p-values, increase the number of rotations \code{nrot}.
 The strategy of random rotations is due to Langsrud (2005).
+
+\code{romer} and \code{romer2} differ in the way that t-statistics are summarized to form a set-level test statistic.
+The genes are ranked by moderated t-statistic and \code{romer} uses the mean-ranks for each set as the statistic.
+If \code{floor=TRUE} then negative t-statistics are put to zero before ranking for the up test, and vice versa for the down test.
+This improves the power for detecting genes with a subset of responding genes.
+\code{romer2} using the mean rank of the top 50% of genes in each set.
+This statistic performs well in practice but is slightly slower to compute.
 }
 
 \seealso{
 \code{\link{roast}},
-\code{\link{geneSetTest}}
+\code{\link{wilcoxGST}}
+
+An overview of tests in limma is given in \link{08.Tests}.
 }
 \author{Yifang Hu and Gordon Smyth}
 
@@ -71,6 +82,6 @@ y[iset,3:4] <- y[iset,3:4]+3
 
 iset1 <- 1:5
 iset2 <- 6:10
-romer(iset=list(iset1=iset1,iset2=iset2),y=y,design=design,contrast=2)
+romer(iset=list(iset1=iset1,iset2=iset2),y=y,design=design,contrast=2,nrot=99)
 }
 \keyword{htest}

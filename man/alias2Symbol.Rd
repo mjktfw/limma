@@ -1,11 +1,13 @@
 \name{alias2Symbol}
 \alias{alias2Symbol}
+\alias{alias2SymbolTable}
 \title{Convert Gene Alias to Official Gene Symbols}
 \description{
-Map a set of gene alias names to a set of gene symbols.
+Maps gene alias names to official gene symbols.
 }
 \usage{
 alias2Symbol(alias, species = "Hs", expand.symbols = FALSE)
+alias2SymbolTable(alias, species = "Hs")
 }
 \arguments{
   \item{alias}{character vector of gene aliases}
@@ -17,10 +19,18 @@ alias2Symbol(alias, species = "Hs", expand.symbols = FALSE)
 Aliases are mapped via NCBI Entrez Gene identity numbers using Bioconductor organism packages.
 Species are \code{"Dm"} for fly, \code{"Hs"} for human, \code{"Mm"} for mouse and \code{"Rn"} for rat.
 The user needs to have the appropriate Bioconductor organism package installed.
+
+\code{alias2Symbol} maps a set of aliases to a set of symbols, without necessarily preserving order.
+The output vector may be longer or shorter than the original vector, because some aliases might not be found and some aliases may map to more than one symbol.
+\code{alias2SymbolTable} maps each alias to a gene symbol and returns a table with one row for each alias.
+If an alias maps to more than one symbol, then the first one found will be returned.
 }
 \value{
-A character vector of gene symbols.
-May be longer or shorter than the original vector.
+\code{alias2Symbol} returns a character vector of gene symbols.
+
+\code{alias2SymbolTable} returns a data.frame with two columns.
+The first column contains \code{alias}.
+The second column contains the corresponding gene symbol, or \code{NA} if none exists.
 }
 \author{Gordon Smyth and Yifang Hu}
 \seealso{

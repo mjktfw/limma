@@ -1,4 +1,5 @@
 \name{cbind}
+\alias{cbind}
 \alias{cbind.RGList}
 \alias{cbind.MAList}
 \alias{cbind.EList}

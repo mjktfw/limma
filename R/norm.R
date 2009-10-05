@@ -431,14 +431,25 @@ plotPrintorder <- function(object,layout,start="topleft",slide=1,method="loess",
 
 #  BETWEEN ARRAY NORMALIZATION
 
-normalizeBetweenArrays <- function(object, method="Aquantile", targets=NULL, ...) {
+normalizeBetweenArrays <- function(object, method=NULL, targets=NULL, ...) {
 #	Normalize between arrays
 #	Gordon Smyth
-#	12 Apri 2003.  Last revised 24 April 2008.
+#	12 Apri 2003.  Last revised 3 July 2009.
 
+#	Check method
+	if(is.null(method)) {
+		if(is(object,"matrix")) {
+			method="quantile"
+		} else if(is(object,"EListRaw")) {
+			method="quantile"
+		} else {
+			method="Aquantile"
+		}	
+	}
 	choices <- c("none","scale","quantile","Aquantile","Gquantile","Rquantile","Tquantile","vsn")
 	method <- match.arg(method,choices)
-	if(method=="vsn") require("vsn")
+
+#	Method for matrices
 	if(is(object,"matrix")) {
 		if(!(method %in% c("none","scale","quantile","vsn"))) stop("method not applicable to matrix objects")
 		return(switch(method,
@@ -448,7 +459,17 @@ normalizeBetweenArrays <- function(object, method="Aquantile", targets=NULL, ...
 			vsn = exprs(vsnMatrix(x=object,...))
 		))
 	}
+
+#	Treat EListRaw objects as matrices
+	if(is(object,"EListRaw")) {
+		object$E <- log2(Recall(object$E,method=method,...))
+		object <- new("EList",unclass(object))
+		return(object)
+	}
+
+#	vsn needs special treatment
 	if(method=="vsn") {
+		require("vsn")
 		if(!is.null(object$G) && !is.null(object$R)) {
 			y <- cbind(object$G,object$R)
 			object$G <- object$R <- NULL
@@ -463,6 +484,8 @@ normalizeBetweenArrays <- function(object, method="Aquantile", targets=NULL, ...
 		object <- new("MAList",unclass(object))
 		return(object)
 	}
+
+#	From here assume two-color data
 	if(is(object,"RGList")) object <- MA.RG(object)
 	if(is.null(object$M) || is.null(object$A)) stop("object doesn't appear to be RGList or MAList object")
 	switch(method,

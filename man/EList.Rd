@@ -40,7 +40,7 @@ In addition, \code{EList} objects can be \link[limma:subsetting]{subsetted} and 
 \seealso{
   \link{02.Classes} gives an overview of all the classes defined by this package.
   
-  \code{\link[Biobase]{ExpressionSet-class}} is a more formal class in the Biobase package.
+  \code{\link[Biobase:class.ExpressionSet]{ExpressionSet}} is a more formal class in the Biobase package.
 }
 
 \keyword{classes}

@@ -40,7 +40,9 @@ Smyth and Speed (2003) review these methods and describe how the methods are imp
 More information on the loess control parameters \code{span} and \code{iterations} can be found under \code{\link{loessFit}}.
 The default values used here are equivalent to those for the older function \code{stat.ma} in the sma package.
 
-The \code{"control"} method fits a global loess curve through a set of control spots, such as a whole-library titration series, and applies that curve to all the other spots.
+Oshlack et al (2004) consider the special issues that arise when a large proportion of probes are differentially expressed.
+They propose an improved version of composite loess normalization, which is implemented in the \code{"control"} method.
+This fits a global loess curve through a set of control spots, such as a whole-library titration series, and applies that curve to all the other spots.
 
 The \code{"robustspline"} method calls \code{\link{normalizeRobustSpline}}.
 See that function for more documentation.
@@ -61,23 +63,23 @@ Any components found in \code{object} will preserved except for \code{R}, \code{
 \author{Gordon Smyth}
 
 \references{
+Oshlack, A., Emslie, D., Corcoran, L., and Smyth, G. K. (2007). Normalization of boutique two-color microarrays with a high proportion of differentially expressed probes. \emph{Genome Biology} \bold{8}, R2. 
+
+Smyth, G. K., and Speed, T. P. (2003). Normalization of cDNA microarray data. \emph{Methods} \bold{31}, 265-273.
+
 Yang, Y. H., Dudoit, S., Luu, P., and Speed, T. P. (2001). Normalization for cDNA microarray data. In \emph{Microarrays: Optical Technologies and Informatics}, M. L. Bittner, Y. Chen, A. N. Dorsel, and E. R. Dougherty (eds), Proceedings of SPIE, Vol. 4266, pp. 141-152. 
 
 Yang, Y. H., Dudoit, S., Luu, P., Lin, D. M., Peng, V., Ngai, J., and Speed, T. P. (2002). Normalization for cDNA microarray data: a robust composite method addressing single and multiple slide systematic variation. \emph{Nucleic Acids Research} \bold{30}(4):e15.
-
-Smyth, G. K., and Speed, T. P. (2003). Normalization of cDNA microarray data. \emph{Methods} \bold{31}, 265-273.
 }
 
 \seealso{
 An overview of limma functions for normalization is given in \link{05.Normalization}.
 In particular, see \code{\link{normalizeBetweenArrays}} for between-array normalization.
 
-The original loess normalization function was the \code{\link[sma]{statma}} funtion in the sma package.
+The original loess normalization function was the \code{statma} funtion in the sma package.
 \code{normalizeWithinArrays} is a direct generalization of that function, with more options and with support for quantitative spot quality weights.
 
-A different implementation of loess normalization methods is provided by the \code{\link[marray]{maNorm}} in the marray package.
-
-An alternative wrapper for loess normalization, using different data classes but calling the limma functions, is provided by the \code{\link[arrayMagic]{normalise}} function in the arrayMagic package.
+A different implementation of loess normalization methods, with potentially different behavior, is provided by the \code{\link[marray:maNorm]{maNorm}} in the marray package.
 }
 
 \examples{

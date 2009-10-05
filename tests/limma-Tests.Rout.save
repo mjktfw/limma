@@ -1,5 +1,5 @@
 
-R version 2.9.0 Under development (unstable) (2009-01-15 r47607)
+R version 2.10.0 Under development (unstable) (2009-09-21 r49780)
 Copyright (C) 2009 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
@@ -558,100 +558,26 @@ $G
 > 
 > ### normalizeWithinArrays
 > 
-> library(sma)
-> data(MouseArray)
-Warning message:
-file 'MouseArray.RData' has magic number 'RDX1'
-   Use of save versions prior to 2 is deprecated 
-> RG <- new("RGList",mouse.data)
-> RGb <- backgroundCorrect(RG[,1:2],method="normexp",normexp.method="saddle")
-Green channel
-Corrected array 1 
-Corrected array 2 
-Red channel
-Corrected array 1 
-Corrected array 2 
-> RGb
-An object of class "RGList"
-$R
-          [,1]      [,2]
-[1,] 2526.7037 1393.7729
-[2,] 2629.5537 1902.7329
-[3,]  997.4437 1172.3929
-[4,]  151.0764  163.3706
-[5,]  145.8138  157.2796
-6379 more rows ...
-
-$G
-          [,1]      [,2]
-[1,] 5332.4833 4343.8832
-[2,] 4486.2833 2682.1132
-[3,] 1848.3833 3263.5232
-[4,]  288.7807  302.4411
-[5,]  596.3833  309.8584
-6379 more rows ...
-
-> Rne <- backgroundCorrect(RG$R[,1:2]-RG$Rb[,1:2],method="normexp",normexp.method="mle")
-Corrected array 1 
-Corrected array 2 
-> Rne[1:5,]
-          [,1]      [,2]
-[1,] 2525.1781 1393.4517
-[2,] 2628.0281 1902.4117
-[3,]  995.9181 1172.0717
-[4,]  151.6527  164.3790
-[5,]  146.5677  158.4225
-> MA <- normalizeWithinArrays(RG[,1:2], mouse.setup, method="robustspline")
-Loading required package: MASS
-Loading required package: splines
-> MA$M[1:5,]
-            [,1]        [,2]
-[1,] -0.21539109 -0.79670669
-[2,]  0.06449435  0.16873653
-[3,] -0.23149571 -0.66662065
-[4,] -0.20090146 -0.09709476
-[5,] -0.86822005 -0.13192148
-> MA <- normalizeWithinArrays(mouse.data, mouse.setup)
-> MA$M[1:5,]
-            [,1]        [,2]        [,3]        [,4]       [,5]       [,6]
-[1,] -0.22006681 -0.85229101 -0.61528102  0.07080387 -0.4017245  0.8790516
-[2,]  0.06720908  0.11711457  0.21083609  0.99616190  0.6494259  1.3351120
-[3,] -0.23069447 -0.71229077 -0.72631373 -0.12375213 -0.4262350 -0.3237170
-[4,] -0.17262990 -0.06186499 -0.28347377  0.27201473  0.2028371 -0.1018497
-[5,] -0.83900000 -0.09643457 -0.08877846 -0.06550247  0.2807478 -0.2229941
+> #library(sma)
+> #data(MouseArray)
+> #RG <- new("RGList",mouse.data)
+> #RGb <- backgroundCorrect(RG[,1:2],method="normexp",normexp.method="saddle")
+> #RGb
+> #Rne <- backgroundCorrect(RG$R[,1:2]-RG$Rb[,1:2],method="normexp",normexp.method="mle")
+> #Rne[1:5,]
+> #MA <- normalizeWithinArrays(RG[,1:2], mouse.setup, method="robustspline")
+> #MA$M[1:5,]
+> #MA <- normalizeWithinArrays(mouse.data, mouse.setup)
+> #MA$M[1:5,]
 > 
 > ### normalizeBetweenArrays
 > 
-> MA <- normalizeBetweenArrays(MA,method="scale")
-> MA$M[1:5,]
-            [,1]        [,2]       [,3]        [,4]       [,5]       [,6]
-[1,] -0.22060913 -0.97047013 -0.7132995  0.05299212 -0.4035381  0.8835727
-[2,]  0.06737471  0.13335374  0.2444237  0.74556284  0.6523577  1.3419787
-[3,] -0.23126298 -0.81105738 -0.8420205 -0.09262048 -0.4281592 -0.3253819
-[4,] -0.17305532 -0.07044322 -0.3286331  0.20358545  0.2037528 -0.1023735
-[5,] -0.84106756 -0.10980624 -0.1029215 -0.04902437  0.2820152 -0.2241410
-> MA$A[1:5,]
-          [,1]      [,2]      [,3]      [,4]      [,5]      [,6]
-[1,] 11.332980 11.198841 11.337353  9.693899 11.196822 10.506374
-[2,] 11.245664 11.074098 11.051345 10.931562 11.273305 10.008818
-[3,] 10.113995 10.923628 12.322088  9.875351 11.096463 10.829522
-[4,]  8.390963  9.019036  8.720987  9.774672  8.826249  9.113240
-[5,]  8.684837  9.017042  8.406961  9.477079  8.739632  8.557627
-> MA <- normalizeBetweenArrays(MA,method="quantile")
-> MA$M[1:5,]
-            [,1]       [,2]       [,3]        [,4]       [,5]       [,6]
-[1,] -0.31703694 -0.9938725 -0.5791881  0.03617137 -0.3769488  0.9820991
-[2,]  0.03923233  0.1066559  0.2312904  0.76612052  0.6368203  1.4728996
-[3,] -0.27566044 -0.8580353 -0.7504079 -0.08854074 -0.4200884 -0.2960210
-[4,] -0.11946685 -0.1095793 -0.2985336  0.15876207  0.2612499 -0.1006169
-[5,] -0.67628732 -0.1634459 -0.0938785 -0.05338925  0.3477450 -0.2227479
-> MA$A[1:5,]
-          [,1]      [,2]      [,3]      [,4]      [,5]     [,6]
-[1,] 11.478807 11.311915 11.142829  9.749722 11.137385 10.56415
-[2,] 11.369349 11.191410 10.896307 10.893490 11.205219 10.04138
-[3,] 10.124225 11.010219 12.026393  9.906701 11.045121 10.91363
-[4,]  8.521087  8.771148  8.810923  9.817860  8.681051  9.06633
-[5,]  8.772261  8.766051  8.538890  9.580934  8.567045  8.55471
+> #MA <- normalizeBetweenArrays(MA,method="scale")
+> #MA$M[1:5,]
+> #MA$A[1:5,]
+> #MA <- normalizeBetweenArrays(MA,method="quantile")
+> #MA$M[1:5,]
+> #MA$A[1:5,]
 > 
 > ### unwrapdups
 > 
@@ -909,6 +835,7 @@ Loading required package: statmod
 > ### mrlm
 > 
 > fit <- mrlm(M,design)
+Loading required package: MASS
 > fit$coef
       First3Arrays Last3Arrays
  [1,]  2.064402265  0.23453509

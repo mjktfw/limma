@@ -16,9 +16,14 @@ This is done using the function \code{\link{read.maimages}}.
 
 \code{\link{read.maimages}} optionally constructs quality weights for each spot using quality functions listed in \link{QualityWeights}.
 
-\code{read.maimages} produces an \code{RGList} object and stores only the information required from each image analysis output file.
+If the data is two-color, then \code{read.maimages} produces an \code{RGList} object.
+If the data is one-color (single channel) then an \code{EListRaw} object is produced.
+In either case, \code{read.maimages} stores only the information required from each image analysis output file.
 \code{\link{read.maimages}} uses utility functions \code{\link{removeExt}}, \code{\link{read.imagene}} and \code{\link{read.columns}}.
 There are also a series of utility functions which read the header information from image output files including \code{\link{readGPRHeader}}, \code{\link{readImaGeneHeader}} and \code{\link{readGenericHeader}}.
+
+\code{\link{read.ilmn}} reads probe or gene summary profile files from Illumina BeadChips,
+and produces an \code{ElistRaw} object.
 
 The function \link{as.MAList} can be used to convert a \code{marrayNorm} object to an \code{MAList} object if the data was read and normalized using the marray and marrayNorm packages.
 }

@@ -11,11 +11,11 @@ as.MAList(object)
 }
 
 \arguments{
-\item{object}{an \code{\link[marrayClasses:marrayNorm-class]{marrayNorm}} object}
+\item{object}{an \code{\link[marray:marrayNorm-class]{marrayNorm}} object}
 }
 
 \value{
-Object of class \code{\link[limma:MAList]{MAList}}
+Object of class \code{\link[=MAList-class]{MAList}}
 }
 
 \author{Gordon Smyth}

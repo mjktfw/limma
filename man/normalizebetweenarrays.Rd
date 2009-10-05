@@ -3,18 +3,19 @@
 \title{Normalize Between Arrays}
 
 \description{
-Normalizes expression intensities so that the intensities or log-ratios have similar distributions across a series of arrays.
+Normalizes expression intensities so that the intensities or log-ratios have similar distributions across a set of arrays.
 }
 
 \usage{
-normalizeBetweenArrays(object, method="Aquantile", targets=NULL, ...)
+normalizeBetweenArrays(object, method=NULL, targets=NULL, ...)
 }
 
 \arguments{
-  \item{object}{a \code{matrix}, \code{\link[limma:rglist]{RGList}} or \code{\link[limma:malist]{MAList}} object containing expression ratios for a series of arrays}
+  \item{object}{a numeric \code{matrix}, \code{EListRaw}, \code{\link[limma:rglist]{RGList}} or \code{\link[limma:malist]{MAList}} object.}
   \item{method}{character string specifying the normalization method to be used.
   Choices are \code{"none"}, \code{"scale"}, \code{"quantile"}, \code{"Aquantile"}, \code{"Gquantile"}, \code{"Rquantile"}, \code{"Tquantile"} or \code{"vsn"}.
-  A partial string sufficient to uniquely identify the choice is permitted.}
+  A partial string sufficient to uniquely identify the choice is permitted.
+  Default is \code{"Aquantile"} for two-color data objects or \code{"quantile"} for single-channel objects.}
   \item{targets}{vector, factor or matrix of length twice the number of arrays, used to indicate target groups if \code{method="Tquantile"}}
   \item{...}{other arguments are passed to \code{normalizeQuantiles} if one of the quantile methods are used or to \code{vsn} if \code{method="vsn"}}
 }
@@ -22,12 +23,13 @@ normalizeBetweenArrays(object, method="Aquantile", targets=NULL, ...)
 \details{
 \code{normalizeWithinArrays} normalizes expression values to make intensities consistent within each array.
 \code{normalizeBetweenArrays} normalizes expression values to achieve consistency between arrays.
-Normalization between arrays is usually, but not necessarily, applied after normalization within arrays.
+For two-color arrays, normalization between arrays usually occurs after normalization within arrays.
 An exception is \code{method="vsn"}, see below.
+For single-channel arrays, within array normalization is not usually relevant.
 
 The scale normalization method was proposed by Yang et al (2001, 2002) and is further explained by Smyth and Speed (2003).
 The idea is simply to scale the log-ratios to have the same median-abolute-deviation (MAD) across arrays.
-This idea has also been implemented by the \code{maNormScale} function in the marrayNorm package.
+This idea has also been implemented by the \code{maNormScale} function in the marray package.
 The implementation here is slightly different in that the MAD scale estimator is replaced with the median-absolute-value and the A-values are normalized as well as the M-values.
 
 Quantile normalization was proposed by Bolstad et al (2003) for Affymetrix-style single-channel arrays and by Yang and Thorne (2003) for two-color cDNA arrays.
@@ -36,7 +38,7 @@ Quantile normalization was proposed by Bolstad et al (2003) for Affymetrix-style
 These two methods are called "q" and "Aq" respectively in Yang and Thorne (2003).
 
 \code{method="Tquantile"} performs quantile normalization separately for the groups indicated by \code{targets}.
-\code{targets} may be a target matrix such as read by \code{readTargets} or can be a vector indicating green channel groups followed by red channel groups.
+\code{targets} may be a target frame such as read by \code{readTargets} or can be a vector indicating green channel groups followed by red channel groups.
 
 \code{method="Gquantile"} ensures that the green (first) channel has the same empirical distribution across arrays, leaving the M-values (log-ratios) unchanged.
 This method might be used when the green channel is a common reference throughout the experiment.
@@ -46,14 +48,16 @@ Both \code{Gquantile} and \code{Rquantile} normalization have the implicit effec
 
 If \code{object} is a \code{matrix} then the scale, quantile or vsn normalization will be applied to the columns.
 Applying \code{method="Aquantile"} when \code{object} is a \code{matrix} will produce an error.
+If \code{object} is an \code{EListRaw} object, then normalization will be applied to the matrix \code{object$E} of expression values, which will then be log2-transformed.
 
-\code{method="vsn"} uses the \code{\link[vsn]{vsn}} function from the vsn package.
+\code{method="vsn"} uses the \code{vsnMatrix} function from the vsn package.
 For this option the input \code{object} should contain raw intensities, i.e., prior to background correction, log-transformation or any normalization.
-Note that the normalized intensities are on the log-2 scale, not the log-e scale output by the \code{vsn} function in the vsn package.}
+}
 
 \value{
 If \code{object} is a matrix then \code{normalizeBetweenArrays} produces a matrix of the same size.
-Otherwise, \code{normalizeBetweenArrays} produces an \code{\link[limma:malist]{MAList}} object with M and A-values on the log-2 scale.
+If \code{object} is an \code{EListRaw} object, then an \code{EList} object with expression values on the log2 scale is produced.
+For two-color data, \code{normalizeBetweenArrays} produces an \code{\link[limma:malist]{MAList}} object with M and A-values on the log2 scale.
 }
 
 \author{Gordon Smyth}
@@ -74,11 +78,13 @@ In: D. R. Goldstein (ed.), \emph{Science and Statistics: A Festschrift for Terry
 \seealso{
   An overview of LIMMA functions for normalization is given in \link{05.Normalization}.
 
-  See also \code{\link[marrayNorm]{maNormScale}} in the marrayNorm package, \code{\link[affy:normalize-methods]{normalize}} in the affy package and \code{\link[vsn]{vsn}} in the vsn package.
+  See also \code{\link[marray:maNormScale]{maNormScale}} in the marray package,
+  \code{\link[affy:normalize]{normalize}} in the affy package,
+  and \code{\link[vsn:vsn]{vsn}} and \code{\link[vsn:vsn2]{vsnMatrix}} in the vsn package.
 }
 
 \examples{
-library(sma)
+if(require("sma")) {
 data(MouseArray)
 MA <- normalizeWithinArrays(mouse.data, mouse.setup)
 plot.scale.box(MA$M)
@@ -97,6 +103,7 @@ plot.scale.box(M)
 MpAq <- normalizeWithinArrays(mouse.data, mouse.setup)
 MpAq <- normalizeBetweenArrays(MpAq, method="Aq")
 plotDensities(MpAq)
+}
 }
 
 \keyword{models}

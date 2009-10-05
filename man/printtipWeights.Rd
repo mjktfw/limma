@@ -56,7 +56,7 @@ Ritchie, M. E., Diyagama, D., Neilson, van Laar, R., J., Dobrovic, A., Holloway,
 An overview of linear model functions in limma is given by \link{06.LinearModels}.
 }
 \examples{
-library(sma)
+if(require("sma")) {
 # Subset of data from ApoAI case study in Limma User's Guide
 data(MouseArray)
 # Avoid non-positive intensities
@@ -76,6 +76,7 @@ zlim <- c(min(subarrayw), max(subarrayw))
 par(mfrow=c(3,2), mai=c(0.1,0.1,0.3,0.1))
 for(i in 1:6) 
 	imageplot(subarrayw[,i], layout=mouse.setup, zlim=zlim, main=paste("Array", i))
+}
 }
 
 \author{Matthew Ritchie and Gordon Smyth}

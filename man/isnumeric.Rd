@@ -33,6 +33,6 @@ isNumeric(x)   # TRUE
 is.numeric(x)  # FALSE
 }
 \seealso{
-   \code{\link[base]{is.numeric}}, \code{\link[base]{Math}}
+   \code{\link[base:numeric]{is.numeric}}, \code{\link[base:groupGeneric]{Math}}
 }
 \keyword{programming}

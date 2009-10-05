@@ -2,15 +2,16 @@
 
 #  BACKGROUND CORRECTION
 
-backgroundCorrect <- function(RG, method="subtract", offset=0, printer=RG$printer, normexp.method="saddle", verbose=TRUE) {
+backgroundCorrect <- function(RG, method=NULL, offset=0, printer=RG$printer, normexp.method="saddle", verbose=TRUE) {
 #	Apply background correction to microarray data
 #	Gordon Smyth
-#	12 April 2003.  Last modified 24 Sept 2008.
+#	12 April 2003.  Last modified 3 July 2009.
 
+#	Methods for matrices and one-channel data
 	if(!is.list(RG) && is.vector(RG)) RG <- as.matrix(RG)
 	if(is.matrix(RG)) {
-		method <- match.arg(method, c("none","normexp","saddle","neldermean","bfgs","rma","mcgee"))
-		if(method=="normexp") method="saddle"
+		if(is.null(method)) method <- "normexp"
+		method <- match.arg(method, c("none","normexp"))
 		if(method!="none") {
 			for (j in 1:ncol(RG)) {
 				x <- RG[,j]
@@ -19,14 +20,16 @@ backgroundCorrect <- function(RG, method="subtract", offset=0, printer=RG$printe
 				if(verbose) cat("Corrected array",j,"\n")
 			}
 		}
-#		rma={
-#			require("affy")
-#			RG <- apply(RG,2,bg.adjust)
-#		})
 		if(offset) RG <- RG+offset
 		return(RG)
 	}
+	if(is(RG,"EListRaw")) {
+		RG$E <- Recall(RG$E,method=method,offset=offset,normexp.method=normexp.method,verbose=verbose)
+		return(RG)
+	}
 
+#	From here, RG is assumed to be two-color
+	if(is.null(method)) method <- "subtract"
 	if(is.null(RG$Rb) != is.null(RG$Gb)) stop("Background values exist for one channel but not the other")
 	method <- match.arg(method, c("none","subtract","half","minimum","movingmin","edwards","normexp","rma"))
 	if(method=="rma") {
@@ -84,9 +87,9 @@ backgroundCorrect <- function(RG, method="subtract", offset=0, printer=RG$printe
 	},
 	normexp=,rma={
 		if(verbose) cat("Green channel\n")
-		RG$G <- backgroundCorrect(RG$G-RG$Gb,method=method,verbose=verbose)
+		RG$G <- Recall(RG$G-RG$Gb,method=method,verbose=verbose)
 		if(verbose) cat("Red channel\n")
-		RG$R <- backgroundCorrect(RG$R-RG$Rb,method=method,verbose=verbose)
+		RG$R <- Recall(RG$R-RG$Rb,method=method,verbose=verbose)
 	}
 	)
 	RG$Rb <- NULL

@@ -5,15 +5,16 @@
 Background correct microarray expression intensities.
 }
 \usage{
-backgroundCorrect(RG, method="subtract", offset=0, printer=RG$printer, normexp.method="saddle", verbose=TRUE)
+backgroundCorrect(RG, method=NULL, offset=0, printer=RG$printer, normexp.method="saddle", verbose=TRUE)
 }
 \arguments{
-  \item{RG}{an \code{\link[limma:rglist]{RGList}} object or a numeric matrix.}
+  \item{RG}{a numeric matrix, \code{EListRaw} or \code{\link[limma:rglist]{RGList}} object.}
   \item{method}{character string specifying correction method.  Possible values are \code{"none"}, \code{"subtract"}, \code{"half"}, \code{"minimum"}, \code{"movingmin"}, \code{"edwards"} or \code{"normexp"}.
-  If \code{RG} is a matrix, possible values are restricted to \code{"none"} or \code{"normexp"}.}
+  If \code{RG} is a matrix or an \code{EListRaw} object, possible values are restricted to \code{"none"} or \code{"normexp"}.
+  Defaults to \code{"subtract"} for two-color data objects or \code{"normexp"} for single-cannel objects.}
   \item{offset}{numeric value to add to intensities}
   \item{printer}{a list containing printer layout information, see \code{\link{PrintLayout-class}}. Ignored if \code{RG} is a matrix.}
-  \item{normexp.method}{character string specifying parameter estimation strategy used by normexp, ignored for other methods. Possible values are \code{"saddle"}, \code{"mle"} or \code{"rma"}.}
+  \item{normexp.method}{character string specifying parameter estimation strategy used by normexp, ignored for other methods. Possible values are \code{"saddle"}, \code{"mle"}, \code{"rma"} or \code{"rma75"}.}
   \item{verbose}{logical. If \code{TRUE}, progress messages are sent to standard output}
 }
 \details{
@@ -35,7 +36,7 @@ If \code{method="normexp"} a convolution of normal and exponential distributions
 This results in a smooth monotonic transformation of the background subtracted intensities such that all the corrected intensities are positive.
 
 The normexp method is available in a number of variants depending on how the model parameters are estimated, and these are selected by \code{normexp.method}.
-Here \code{"saddle"} gives the saddle-point approximation to maximum likelihood from Ritchie et al (2007), \code{"mle"} gives exact maximum likelihood from Silver at al (2009), \code{"rma"} gives the background correction algorithm from the RMA-algorithm for Affymetrix microarray data as implemented in the affy package, and \code{"rma75"} gives the RMA-75 method from McGee and Chen (2006).
+Here \code{"saddle"} gives the saddle-point approximation to maximum likelihood from Ritchie et al (2007) and improved by Silver et al (2009), \code{"mle"} gives exact maximum likelihood from Silver at al (2009), \code{"rma"} gives the background correction algorithm from the RMA-algorithm for Affymetrix microarray data as implemented in the affy package, and \code{"rma75"} gives the RMA-75 method from McGee and Chen (2006).
 In practice \code{"mle"} performs well and is nearly as fast as \code{"saddle"}, but \code{"saddle"} is the default for backward compatibility.
 See \code{\link{normexp.fit}} for more details.
 
@@ -65,7 +66,7 @@ A comparison of background correction methods for two-colour microarrays.
 
 Silver, J., Ritchie, M. E., and Smyth, G. K. (2009).
 Microarray background correction: maximum likelihood estimation for the normal-exponential convolution model.
-\emph{Biostatistics}.
+\emph{Biostatistics} 10, 352-363.
 \url{http://biostatistics.oxfordjournals.org/cgi/content/abstract/kxn042}
 }
 \author{Gordon Smyth}

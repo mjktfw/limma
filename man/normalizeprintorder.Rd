@@ -67,9 +67,10 @@ Smyth, G. K. Print-order normalization of cDNA microarrays. March 2002.  \url{ht
 An overview of LIMMA functions for normalization is given in \link{05.Normalization}.
 }
 \examples{
-library(sma)
+if(require("sma")) {
 data(MouseArray)
 plotPrintorder(mouse.data,mouse.setup,slide=1,separate=TRUE)
 RG <- normalizeForPrintorder(mouse.data,mouse.setup)
+}
 }
 \keyword{models}

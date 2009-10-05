@@ -60,10 +60,10 @@ otherwise the default color of black will be used for all individual-channels.
 \seealso{
 An overview of diagnostic plots in LIMMA is given in \link{09.Diagnostics}.
 There is a section using \code{plotDensities} in conjunction with between-array normalization
-in the \emph{\link[limma:../doc/usersguide]{LIMMA User's Guide}}.
+in the \link[=limmaUsersGuide]{LIMMA User's Guide}.
 }
 \examples{
-library(sma)
+if(require("sma")) {
 data(MouseArray)
 
 #  no normalization but background correction is done
@@ -100,5 +100,6 @@ col=c("purple"))
 plotDensities(MA.n,singlechannels=c(1:12),
 groups=c(rep(1,3),rep(2,3),rep(3,6)),col=c("darkred","red","green"))
 
+}
 }
 \keyword{hplot}

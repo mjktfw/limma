@@ -38,6 +38,8 @@ The data frame will be sorted so that \code{Column} is the fastest moving index,
 }
 \author{Gordon Smyth}
 \seealso{
+\link[marray:read.Galfile]{read.Galfile} in the marray package.
+
 An overview of LIMMA functions for reading data is given in \link{03.ReadingData}.
 }
 \references{

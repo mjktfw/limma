@@ -58,8 +58,10 @@ This means that the smallest possible p-value is \code{1/(nrot+1)}.
 }
 
 \seealso{
-\code{\link{geneSetTest}},
+\code{\link{wilcoxGST}},
 \code{\link{romer}}
+
+An overview of tests in limma is given in \link{08.Tests}.
 }
 \author{Gordon Smyth and Di Wu}
 

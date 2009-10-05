@@ -1,37 +1,48 @@
 \name{geneSetTest}
 \alias{geneSetTest}
+\alias{wilcoxGST}
 \alias{barcodeplot}
-\title{Gene Set Test}
+\alias{barcodeplot2}
+\title{Mean-rank Gene Set Test}
 \description{
-Test whether a set of genes is enriched for differential expression.
+Test whether a set of genes is highly ranked relative to other genes in terms of a given statistic.
 Genes are assumed to be independent.
 }
 \usage{
 geneSetTest(selected,statistics,alternative="mixed",type="auto",ranks.only=TRUE,nsim=10000)
-barcodeplot(selected,statistics,type="auto",...)
+wilcoxGST(selected,statistics,alternative="mixed")
+barcodeplot(selected,statistics,labels=c("Up","Down"),...)
+barcodeplot2(selected,statistics,selected2=NULL,labels=c("Up","Down"),...)
 }
 \arguments{
-  \item{selected}{vector specifying the elements of \code{statistic} in the test group.  This can be a vector of indices, or a logical vector of the same length as \code{statistics}, or any vector such as \code{statistic[selected]} contains the statistic values for the selected group.}
+  \item{selected}{index vector for the gene set.  This can be a vector of indices, or a logical vector of the same length as \code{statistics} or, in general, any vector such that \code{statistic[selected]} gives the statistic values for the gene set to be tested.}
+  \item{selected2}{index vector for a second gene set.  Usually used to specify down-regulated genes when \code{selected} is used for up-regulated genes.vector specifying the elements of \code{statistic} in the test group.}
   \item{statistics}{numeric vector giving the values of the test statistic for every gene or probe in the reference set, usually every probe on the microarray.}
   \item{alternative}{character string specifying the alternative hypothesis, must be one of \code{"mixed"} (default), \code{"either"}, \code{"up"} or \code{"down"}. \code{two.sided}, \code{"greater"} and \code{"less"} are also permitted as synonyms for \code{"either"}, \code{"up"} and \code{"down"} respectively.}
   \item{type}{character string specifying whether the statistics are t-like (\code{"t"}), F-like \code{"f"} or whether the function should make an educated guess (\code{"auto"})}
   \item{ranks.only}{logical, if \code{TRUE} only the ranks of the \code{statistics} are used.} 
   \item{nsim}{number of random samples to take in computing the p-value.
   Not used if \code{ranks.only=TRUE}.}
+  \item{labels}{character vector of length 2 of labels associated with large and small statistics respectively.}
   \item{\ldots}{other arguments are passed to \code{plot}.}
 }
+
 \value{
-Numeric value giving the estimated p-value.
+\code{geneSetTest} and \code{wilcoxGST} return a numeric value giving the estimated p-value.
+
+\code{barcodeplot} and \code{barcodeplot2} return no value but produce a plot as a side effect.
 }
+
 \details{
-This function computes a p-value to test the hypothesis that the selected set of genes tends to be more highly ranked in differential expression compared to randomly selected genes.
-This function can be used to detect differential expression for a group of genes, even when the effects are too small or there is too little data to detect the genes individually.
-It is also provides a means to compare the results between different experiments.
+\code{wilcoxGST} is a synonym for \code{geneSetTest} with \code{ranks.only=TRUE} and \code{type="t"}.
+This test procedure was developed by Michaud et al (2008), who called it \emph{mean-rank gene-set enrichment}.
 
-The mean-rank gene set test of Michaud et al (2008) corresponds to \code{geneSetTest} with \code{ranks.only=TRUE}.
-
-\code{geneSetTest} is a competitive test in the sense that genes in the test set are compared to other genes (Goeman and Buhlmann, 2007).
-A self-contained gene set test is performed by \code{\link{roast}}.
+These functions compute a p-value to test the hypothesis that the selected set of genes tends to be more highly ranked in terms of some test statistic compared to randomly selected genes.
+The statistic might be any statistic of interest, for example t-statistics or F-statistics for differential expression.
+They are competitive tests in the sense that genes in the test set are compared to other genes (Goeman and Buhlmann, 2007).
+By contrast, a self-contained gene set test such as \code{\link{roast}} tests for differential expression for the test set only without regard to other genes on the array.
+Like all gene set tests, these functions can be used to detect differential expression for a group of genes, even when the effects are too small or there is too little data to detect the genes individually.
+The also provides a means to compare the results between different experiments.
 
 Because it is based on permuting genes, \code{geneSetTest} assumes that the different genes (or probes) are independent.
 (Strictly speaking, it assumes that the genes in the set are no more correlated on average than randomly selected genes.)
@@ -43,7 +54,7 @@ The \code{statistics} are usually a set of probe-wise statistics arising for som
 They may be t-statistics, meaning that the genewise null hypotheses would be rejected for large positive or negative values, or they may be F-statistics, meaning that only large values are significant.
 Any set of signed statistics, such as log-ratios, M-values or moderated t-statistics, are treated as t-like.
 Any set of unsigned statistics, such as F-statistics, posterior probabilities or chi-square tests are treated as F-like.
-If \code{type="auto"} then the statistics will be taken to be t-like if they take both positive and negative values and otherwise will be taken to be F-like.
+If \code{type="auto"} then the statistics will be taken to be t-like if they take both positive and negative values and will be taken to be F-like if they are all of the same sign.
 
 There are four possible alternatives to test for.
 \code{alternative=="up"} means the genes in the set tend to be up-regulated, with positive t-statistics.
@@ -54,18 +65,23 @@ In this case, the test will be significant if the set contains mostly large test
 
 The latter three alternatives are appropriate if you have a prior expection that all the genes in the set will react in the same direction.
 The \code{"mixed"} alternative is appropriate if you know only that the genes are involved in the relevant pathways, possibly in different directions.
-The \code{"mixed"} alternative is the only one possible with F-like statistics.
+The \code{"mixed"} is the only meaningful alternative with F-like statistics.
 
 The test statistic used for the gene-set-test is the mean of the statistics in the set.
 If \code{ranks.only} is \code{TRUE} the only the ranks of the statistics are used.
 In this case the p-value is obtained from a Wilcoxon test.
 If \code{ranks.only} is \code{FALSE}, then the p-value is obtained by simulation using \code{nsim} random selected sets of genes.
 
-The \code{barcodeplot} is a graphical representation of the gene set test using ranks.
+\code{barcodeplot} is a graphical representation of the Wilcox gene set test using ranks.
+\code{barcodeplot2} displays two sets.
+It is particularly used to displaying directional sets, when there are separate sets of genes expected to go up and down respectively.
 }
 
-\seealso{\code{\link{roast}}, \code{\link[stats]{wilcox.test}}}
-\author{Gordon Smyth}
+\seealso{\code{\link{roast}}, \code{\link{romer}}, \code{\link{wilcox.test}}
+
+An overview of tests in limma is given in \link{08.Tests}.
+}
+\author{Gordon Smyth and Di Wu}
 
 \references{
 Goeman, JJ, and Buhlmann P (2007).
@@ -78,13 +94,11 @@ Michaud, J, Simpson, KM, Escher, R, Buchet-Poyau, K, Beissbarth, T, Carmichael, 
 }
 
 \examples{
-stat <- -9:9
-sel <- c(2,4,5)
-geneSetTest(sel,stat,alternative="down")
-geneSetTest(sel,stat,alternative="either")
-geneSetTest(sel,stat,alternative="down",ranks=FALSE)
-sel <- c(1,19)
-geneSetTest(sel,stat,alternative="mixed")
-geneSetTest(sel,stat,alternative="mixed",ranks=FALSE)
+stat <- rnorm(100)
+sel <- 1:10
+wilcoxGST(sel,stat)
+barcodeplot(sel,stat)
+sel2 <- 11:20
+barcodeplot2(sel,stat,sel2)
 }
 \keyword{htest}

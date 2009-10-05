@@ -48,7 +48,7 @@ Other functions in LIMMA which operate on \code{RGList} objects include
 \seealso{
   \link{02.Classes} gives an overview of all the classes defined by this package.
   
-  \code{\link[marrayClasses]{marrayRaw-class}} is the corresponding class in the marrayClasses package.
+  \code{\link[marray:marrayRaw-class]{marrayRaw}} is the corresponding class in the marray package.
 }
 
 \keyword{classes}

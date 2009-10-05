@@ -6,7 +6,7 @@
 \title{Z-score Equivalents}
 
 \description{
-Compute z-score equivalents of for gamma or t-distribution random deviates.
+Compute z-score equivalents of gamma or t-distribution random deviates.
 }
 
 \usage{
@@ -37,7 +37,7 @@ Care is taken to do the computations accurately in both tails of the distributio
 
 \author{Gordon Smyth}
 \seealso{
-\code{\link[stats]{qnorm}}, \code{\link[stats]{pgamma}}, \code{\link[stats]{pt}}
+\code{\link{qnorm}}, \code{\link{pgamma}}, \code{\link{pt}} in the standard distribution packages.
 }
 \examples{
 zscoreGamma(1, shape=1, scale=1)

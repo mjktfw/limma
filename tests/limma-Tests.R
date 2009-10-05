@@ -36,26 +36,26 @@ backgroundCorrect(RG, offset=5)
 
 ### normalizeWithinArrays
 
-library(sma)
-data(MouseArray)
-RG <- new("RGList",mouse.data)
-RGb <- backgroundCorrect(RG[,1:2],method="normexp",normexp.method="saddle")
-RGb
-Rne <- backgroundCorrect(RG$R[,1:2]-RG$Rb[,1:2],method="normexp",normexp.method="mle")
-Rne[1:5,]
-MA <- normalizeWithinArrays(RG[,1:2], mouse.setup, method="robustspline")
-MA$M[1:5,]
-MA <- normalizeWithinArrays(mouse.data, mouse.setup)
-MA$M[1:5,]
+#library(sma)
+#data(MouseArray)
+#RG <- new("RGList",mouse.data)
+#RGb <- backgroundCorrect(RG[,1:2],method="normexp",normexp.method="saddle")
+#RGb
+#Rne <- backgroundCorrect(RG$R[,1:2]-RG$Rb[,1:2],method="normexp",normexp.method="mle")
+#Rne[1:5,]
+#MA <- normalizeWithinArrays(RG[,1:2], mouse.setup, method="robustspline")
+#MA$M[1:5,]
+#MA <- normalizeWithinArrays(mouse.data, mouse.setup)
+#MA$M[1:5,]
 
 ### normalizeBetweenArrays
 
-MA <- normalizeBetweenArrays(MA,method="scale")
-MA$M[1:5,]
-MA$A[1:5,]
-MA <- normalizeBetweenArrays(MA,method="quantile")
-MA$M[1:5,]
-MA$A[1:5,]
+#MA <- normalizeBetweenArrays(MA,method="scale")
+#MA$M[1:5,]
+#MA$A[1:5,]
+#MA <- normalizeBetweenArrays(MA,method="quantile")
+#MA$M[1:5,]
+#MA$A[1:5,]
 
 ### unwrapdups
 

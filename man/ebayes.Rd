@@ -53,6 +53,7 @@ the linear model output, see the example below.
 \code{eBayes} is intended to have a more object-orientated flavor as it produces objects containing all the necessary components for downstream analysis.
 
 \code{treat} computes empirical Bayes moderated-t p-values relative to a minimum required fold-change threshold.
+Use \code{\link{topTreat}} to summarize output from \code{treat}.
 Instead of testing for genes which have log-fold-changes different from zero, it tests whether the log2-fold-change is greater than \code{lfc} in absolute value (McCarthy and Smyth, 2009).
 \code{treat} is concerned with p-values rather than posterior odds, so it does not compute the B-statistic \code{lods}.
 The idea of thresholding doesn't apply to F-statistics in a straightforward way, so moderated F-statistics are also not computed.

@@ -31,7 +31,7 @@ A numeric matrix.
 }
 \author{Gordon Smyth}
 \seealso{
-  \code{\link[base]{as.matrix}} in the base package or \code{\link[Biobase]{exprs}} in the Biobase package.
+  \code{\link{as.matrix}} in the base package or \code{\link[Biobase]{exprs}} in the Biobase package.
   
   \link{02.Classes} gives an overview of data classes used in LIMMA.
 }

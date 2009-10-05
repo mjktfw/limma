@@ -38,14 +38,15 @@ topTreat(fit, coef=1, number=10, genelist=fit$genes, adjust.method="BH",
   \item{...}{any other arguments are passed to \code{ebayes} if \code{eb} is \code{NULL}}
 }
 \value{
-  A dataframe with a row for the \code{number} top genes and the following columns:
+  Produces a dataframe with a row for the \code{number} top genes and the following columns:
   \item{genelist}{one or more columns of probe annotation, if genelist was included as input}
-  \item{logFC}{estimate of the log2-fold-change corresponding to the effect or contrast}
+  \item{logFC}{estimate of the log2-fold-change corresponding to the effect or contrast (for \code{topTableF} there may be several columns of log-fold-changes)}
   \item{AveExpr}{average log2-expression for the probe over all arrays and channels, same as \code{Amean} in the \code{MarrayLM} object}
-  \item{t}{moderated t-statistic}
+  \item{t}{moderated t-statistic (omitted for \code{topTableF})}
+  \item{F}{moderated F-statistic (omitted for \code{topTable} unless more than one coef is specified)}
   \item{P.Value}{raw p-value}
   \item{adj.P.Value}{adjusted p-value or q-value}
-  \item{B}{log odds that the gene is differentially expressed}
+  \item{B}{log-odds that the gene is differentially expressed (omitted for \code{topTreat})}
 }
 \details{
 \code{toptable} is an earlier interface and is retained only for backward compatibility.

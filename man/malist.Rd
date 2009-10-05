@@ -28,7 +28,7 @@ Valid \code{MAList} objects may contain other optional components, but all probe
 
 \section{Methods}{
 This class inherits directly from class \code{list} so any operation appropriate for lists will work on objects of this class.
-In addition, \code{MAList} objects can be \link[limma:subsetting]{subsetted} and \link[limma:cbind]{combined}.
+In addition, \code{MAList} objects can be \link[=subsetting]{subsetted} and \link[=cbind]{combined}.
 \code{RGList} objects will return dimensions and hence functions such as \code{\link[limma:dim]{dim}}, \code{\link[base:nrow]{nrow}} and \code{\link[base:nrow]{ncol}} are defined. 
 \code{MALists} also inherit a \code{\link[methods]{show}} method from the virtual class \code{\link[limma:LargeDataObject]{LargeDataObject}}, which means that \code{RGLists} will print in a compact way.
 
@@ -45,7 +45,7 @@ and \code{\link{plotPrintTipLoess}}.
 \seealso{
   \link{02.Classes} gives an overview of all the classes defined by this package.
   
-  \code{\link[marrayClasses]{marrayNorm-class}} is the corresponding class in the marrayClasses package.
+  \code{\link[marray:marrayNorm-class]{marrayNorm}} is the corresponding class in the marray package.
 }
 
 \keyword{classes}

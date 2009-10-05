@@ -20,14 +20,15 @@ Numeric vector containing adjusted intensities.
 }
 
 \references{
-McGee, M., and Chen, Z. (2006).
-Parameter estimation for the exponential-normal convolution model for background correction of Affymetrix GeneChip data.
-\emph{Stat Appl Genet Mol Biol}, 5(1), Article 24.
-
 Ritchie, M. E., Silver, J., Oshlack, A., Silver, J., Holmes, M., Diyagama, D., Holloway, A., and Smyth, G. K. (2007).
 A comparison of background correction methods for two-colour microarrays.
 \emph{Bioinformatics}
 \url{http://bioinformatics.oxfordjournals.org/cgi/content/abstract/btm412}
+
+Silver, JD, Ritchie, ME, and Smyth, GK (2009).
+Microarray background correction: maximum likelihood estimation for the normal-exponential convolution.
+\emph{Biostatistics} 10, 352-363.
+\url{http://biostatistics.oxfordjournals.org/cgi/content/abstract/kxn042}
 }
 
 \author{Gordon Smyth}

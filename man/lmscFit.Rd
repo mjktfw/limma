@@ -38,7 +38,7 @@ Smyth, G. K. (2005). Individual channel analysis of two-colour microarray data.
 }
 
 \examples{
-library(sma)
+if(require("sma")) {
 # Subset of data from ApoAI case study in Limma User's Guide
 data(MouseArray)
 # Avoid non-positive intensities
@@ -58,6 +58,7 @@ cont.matrix <- cbind(KOvsWT=c(0,-1,1))
 fit2 <- contrasts.fit(fit,cont.matrix)
 fit2 <- eBayes(fit2)
 topTable(fit2,adjust="fdr")
+}
 }
 \keyword{models}
 \keyword{regression}

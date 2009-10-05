@@ -7,8 +7,11 @@ Reads an RGList from a set of two-color microarray image analysis output files,
 or an EListRaw from a set of one-color files.
 }
 \usage{
-read.maimages(files=NULL,source="generic",path=NULL,ext=NULL,names=NULL,columns=NULL,other.columns=NULL,annotation=NULL,channels=2,wt.fun=NULL,verbose=TRUE,sep="\t",quote=NULL,\dots)
-read.imagene(files,path=NULL,ext=NULL,names=NULL,columns=NULL,other.columns=NULL,wt.fun=NULL,verbose=TRUE,sep="\t",quote="\"",\dots)
+read.maimages(files=NULL, source="generic", path=NULL, ext=NULL, names=NULL,
+              columns=NULL, other.columns=NULL, annotation=NULL, channels=2,
+              wt.fun=NULL, verbose=TRUE, sep="\t", quote=NULL, \dots)
+read.imagene(files, path=NULL, ext=NULL, names=NULL, columns=NULL, other.columns=NULL,
+             wt.fun=NULL, verbose=TRUE, sep="\t", quote="\"", \dots)
 }
 \arguments{
   \item{files}{character vector giving the names of the files containing image analysis output or, for Imagene data, a character matrix of names of files.
@@ -86,7 +89,7 @@ For two-color data, an \code{\link[limma:rglist]{RGList}} object containing the 
   \item{genes}{data frame containing annotation information about the probes, for example gene names and IDs and spatial positions on the array, currently set only if \code{source} is \code{"agilent"}, \code{"genepix"} or \code{source="imagene"} or if the \code{annotation} argument is set}
   \item{targets}{data frame with column \code{FileName} giving the names of the files read}
   \item{source}{character string giving the image analysis program name}
-  \item{printer}{list of class \code{\link[limma:printlayout]{PrintLayout}}, currently set only if \code{source="imagene"}}
+  \item{printer}{list of class \code{\link[=PrintLayout-class]{PrintLayout}}, currently set only if \code{source="imagene"}}
 }
 \author{Gordon Smyth, with speed improvements by Marcus Davy}
 \references{
@@ -94,7 +97,7 @@ Web pages for the image analysis software packages mentioned here are listed at 
 }
 \seealso{
 \code{read.maimages} uses \code{\link{read.columns}} for efficient reading of text files.
-As far as possible, it is has similar behavior to \code{\link[base]{read.table}} in the base package.
+As far as possible, it is has similar behavior to \code{\link[utils]{read.table}} in the base package.
 
 An overview of LIMMA functions for reading data is given in \link{03.ReadingData}.
 }

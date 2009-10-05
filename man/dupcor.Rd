@@ -5,7 +5,8 @@
 Estimate the correlation between duplicate spots (regularly spaced replicate spots on the same array) or between technical replicates from a series of arrays.
 }
 \usage{
-duplicateCorrelation(object,design=rep(1,ncol(as.matrix(object))),ndups=2,spacing=1,block=NULL,trim=0.15,weights=NULL)
+duplicateCorrelation(object, design=rep(1,ncol(as.matrix(object))), ndups=2, spacing=1,
+                     block=NULL, trim=0.15, weights=NULL)
 }
 \arguments{
   \item{object}{a numeric matrix of expression values, or any data object from which \code{as.matrix} will extract a suitable matrix such as an \code{\link[limma:malist]{MAList}}, \code{marrayNorm} or \code{ExpressionSet} object.
@@ -44,7 +45,7 @@ This is not a serious concern providing that there are only a few such warnings 
 The consensus estimator computed by this function will not be materially affected by a small number of genes.
 }
 \seealso{
-These functions use \code{\link[statmod]{mixedModel2Fit}} from the statmod package.
+These functions use \code{\link[statmod:mixedmodel]{mixedModel2Fit}} from the statmod package.
 
 An overview of linear model functions in limma is given by \link{06.LinearModels}.
 }
