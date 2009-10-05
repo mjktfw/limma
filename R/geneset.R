@@ -673,7 +673,7 @@ romer <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=N
 	
 #	Observed rankings for each set
 	obs.ranks <- matrix(0,ngenes,3)
-	if(floor.rank) {
+	if(floor) {
 		obs.ranks[,1] <- rank(pmax(modt,0))
 		obs.ranks[,2] <- rank(pmax(-modt,0))
 		obs.ranks[,3] <- rank(pmax(abs(modt),1))
@@ -705,7 +705,7 @@ romer <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=N
 
 		modtr <- signc*Br/sdr.post
 	
-		if(floor.rank) {
+		if(floor) {
 			rot.ranks[,1] <- rank(pmax(modtr,0))
 			rot.ranks[,2] <- rank(pmax(-modtr,0))
 			rot.ranks[,3] <- rank(pmax(abs(modtr),1))

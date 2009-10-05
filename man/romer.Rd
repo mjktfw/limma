@@ -18,7 +18,7 @@ romer2(iset,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correla
   \item{block}{optional vector of blocks.}
   \item{correlation}{correlation between blocks.}
   \item{nrot}{number of rotations used to estimate the p-values.}
-  \item{floor.rank}{logical, if \code{TRUE} use floor-mean statistic instead of mean-rank statistic for summarizing t-statistics}
+  \item{floor}{logical, if \code{TRUE} use floor-mean statistic instead of mean-rank statistic for summarizing t-statistics}
 }
 \value{
 Matrix with the rows corresponding to estimated p-values for each gene set and the columns corresponding to the number of genes for each gene set and the alternative hypotheses mixed, up, down or either.
