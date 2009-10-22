@@ -1,3 +1,8 @@
+22 October 2009: limma 3.0.3
+
+- Case study with Illumina BeadChip microarrays added to
+  User's Guide.
+
 22 October 2009: limma 3.0.2
 
 - strsplit2() now uses ... to pass arguments to strsplit.
