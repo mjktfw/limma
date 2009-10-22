@@ -1,3 +1,15 @@
+22 October 2009: limma 3.0.2
+
+- strsplit2() now uses ... to pass arguments to strsplit.
+
+- minor updates to User's Guide.
+
+- propexpr() now accepts EListRaw objects, or any other
+  data object with an as.matrix method.
+
+- read.ilmn() now accepts more variations in the name
+  of the ProbeID column.
+
 15 October 2009: limma 3.0.1
 
 - documentation links to 00Index.html removed.

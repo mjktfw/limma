@@ -37,14 +37,14 @@ readGAL <- function(galfile=NULL,path=NULL,header=TRUE,sep="\t",quote="\"",skip=
 	gal
 }
 
-strsplit2 <- function(x, split, extended = TRUE, fixed = FALSE, perl = FALSE) {
+strsplit2 <- function(x, split, ...) {
 #	Split vector of composite names into matrix of simple names
 #	Gordon Smyth
-#	8 May 2003 (originally called splitName).  Last modified 18 October 2006.
+#	8 May 2003 (originally called splitName).  Last modified 22 October 2009.
 
 	x <- as.character(x)
 	n <- length(x)
-	s <- strsplit(x=x,split=split,extended=extended,fixed=fixed,perl=perl)
+	s <- strsplit(x,split=split,...)
 	nc <- unlist(lapply(s,length))
 	out <- matrix("",n,max(nc))
 	for (i in 1:n) {

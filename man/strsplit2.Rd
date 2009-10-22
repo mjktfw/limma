@@ -6,15 +6,13 @@
 Split a vector of composite names into a matrix of simple names.}
 
 \usage{
-strsplit2(x, split, extended = TRUE, fixed = FALSE, perl = FALSE)
+strsplit2(x, split, ...)
 }
 
 \arguments{
 \item{x}{character vector}
 \item{split}{character to split each element of vector on, see \code{strsplit}}
-\item{extended}{logical.  If \code{TRUE}, extended regular expression matching is used, see \code{strsplit}.}
-\item{fixed}{logical. If \code{TRUE} match string exactly, otherwise use regular expressions. Has priority over perl and extended.}
-\item{perl}{logical. Should perl-compatible regexps be used? Has priority over extended.}
+\item{\dots}{other arguments are passed to \code{strsplit}}
 }
 
 \value{
@@ -27,6 +25,8 @@ A list containing components
 This function is the same as \code{\link[base]{strsplit}} except that the output value is a matrix instead of a list.
 The first column of the matrix contains the first component from each element of \code{x}, the second column contains the second components etc.
 The number of columns is equal to the maximum number of components for any element of \code{x}.
+
+The motivation for this function in the limma package is handle input columns which are composites of two or more annotation fields.
 }
 
 \seealso{

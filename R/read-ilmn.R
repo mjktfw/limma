@@ -4,7 +4,7 @@ con <- file(fname, open="r")
 skiplines <- 0
 repeat{
   rl <- readLines(con=con, n=1)
-  if(length(grep(expr, rl))){
+  if(length(grep(tolower(expr), tolower(rl)))){
     close(con)
     break
   }
@@ -13,32 +13,33 @@ repeat{
 header <- unlist(strsplit(rl, sep))
 
 elist <- new("EListRaw")
-reqcol <- header[grep(paste(c(probeid, annotation, expr, other.columns), collapse="|"), header)]
+reqcol <- header[grep(tolower(paste(c(probeid, annotation, expr, other.columns), collapse="|")), tolower(header))]
 
 x <- read.columns(file=fname, required.col=reqcol, skip=skiplines, sep=sep, stringsAsFactors=FALSE,  ...)
 nprobes <- nrow(x)
 
-snames <- colnames(x)[grep(expr, colnames(x))]
+pids <- x[, grep(tolower(probeid), tolower(colnames(x)))]
+snames <- colnames(x)[grep(tolower(expr), tolower(colnames(x)))]
 snames <- unlist(strsplit(snames, paste("[.]*", expr, "-*", sep="")))
 snames <- snames[snames != ""]
 nsamples <- length(snames)
 
-elist$E <- data.matrix(x[, grep(expr, colnames(x))])
+elist$E <- data.matrix(x[, grep(tolower(expr), tolower(colnames(x)))])
 colnames(elist$E) <- snames
-rownames(elist$E) <- x[, probeid]
+rownames(elist$E) <- pids
 
-elist$genes <- x[, grep(paste(c(probeid, annotation), collapse="|"), colnames(x))]
+elist$genes <- x[, c(grep(tolower(probeid), tolower(colnames(x))), grep(tolower(paste(annotation,collapse="|")), tolower(colnames(x))))]
 elist$targets <- data.frame(SampleNames=snames, stringsAsFactors=FALSE)
 
 if(!is.null(other.columns)){
   elist$other <- vector("list", length(other.columns))
   for(i in 1:length(other.columns)){
-    if(length(co <- grep(other.columns[i], colnames(x))))
+    if(length(co <- grep(tolower(other.columns[i]), tolower(colnames(x)))))
       elist$other[[i]] <- as.matrix(x[, co])
     else
       elist$other[[i]] <- matrix(NA, nprobes, nsamples)
     colnames(elist$other[[i]]) <- snames
-    rownames(elist$other[[i]]) <- x[, probeid]
+    rownames(elist$other[[i]]) <- pids
   }
   names(elist$other) <- other.columns
 }
@@ -46,7 +47,7 @@ elist
 }
 
 read.ilmn <- function(files=NULL, ctrlfiles=NULL, path=NULL, ctrlpath=NULL,
-probeid="ProbeID",  annotation=c("TargetID", "SYMBOL"), expr="AVG_Signal", other.columns=NULL, 
+probeid="Probe",  annotation=c("TargetID", "SYMBOL"), expr="AVG_Signal", other.columns=NULL, 
 sep="\t", verbose=TRUE, ...)
 {
 if(is.null(ctrlfiles))
@@ -80,12 +81,14 @@ if(!is.null(ctrlfiles)){
     else
       elist.ctrl <- cbind(elist.ctrl, elist.ctrl1)
   }
-  elist.ctrl$genes$Status <- elist.ctrl$genes[, grep(paste(annotation, collapse="|"), colnames(elist.ctrl$genes))]
+  elist.ctrl$genes$Status <- elist.ctrl$genes[,ncol(elist.ctrl$genes)]
 }
 
 if(!is.null(files))
-  if(!is.null(ctrlfiles))
+  if(!is.null(ctrlfiles)){
+    colnames(elist.ctrl$genes) <- colnames(elist$genes)
     return(rbind(elist, elist.ctrl))
+  }
   else
     return(elist)
 else

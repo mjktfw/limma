@@ -4,7 +4,7 @@
 \description{Read Illumina summary probe profile files and summary control probe profile files}
 \usage{
 read.ilmn(files=NULL, ctrlfiles=NULL, path=NULL, ctrlpath=NULL,
-probeid="ProbeID",  annotation=c("TargetID", "SYMBOL"), expr="AVG_Signal", other.columns=NULL, 
+probeid="Probe",  annotation=c("TargetID", "SYMBOL"), expr="AVG_Signal", other.columns=NULL, 
 sep="\t", verbose=TRUE, ...)
 }
 \arguments{
