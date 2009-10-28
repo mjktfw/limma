@@ -5,7 +5,7 @@
 backgroundCorrect <- function(RG, method=NULL, offset=0, printer=RG$printer, normexp.method="saddle", verbose=TRUE) {
 #	Apply background correction to microarray data
 #	Gordon Smyth
-#	12 April 2003.  Last modified 3 July 2009.
+#	12 April 2003.  Last modified 28 October 2009.
 
 #	Methods for matrices and one-channel data
 	if(!is.list(RG) && is.vector(RG)) RG <- as.matrix(RG)
@@ -31,12 +31,15 @@ backgroundCorrect <- function(RG, method=NULL, offset=0, printer=RG$printer, nor
 #	From here, RG is assumed to be two-color
 	if(is.null(method)) method <- "subtract"
 	if(is.null(RG$Rb) != is.null(RG$Gb)) stop("Background values exist for one channel but not the other")
+
+#	rma is included as possible value for method for backward compatibility
+#	and is likely to be removed in a future version
 	method <- match.arg(method, c("none","subtract","half","minimum","movingmin","edwards","normexp","rma"))
 	if(method=="rma") {
+		warning("Please use normexp.method to specify rma instead")
 		method <- "normexp"
 		normexp.method <- "rma"
 	}
-	normexp.method <- match.arg(normexp.method, c("mle","saddle","rma","rma75","mcgee"))
 
 	if(is.null(RG$Rb) && is.null(RG$Gb)) method <- "none"
 	switch(method,
@@ -85,11 +88,11 @@ backgroundCorrect <- function(RG, method=NULL, offset=0, printer=RG$printer, nor
 		delta <- one %*% apply(sub, 2, delta.vec)
 		RG$G <- ifelse(sub < delta, delta*exp(1-(RG$Gb+delta)/RG$G), sub)
 	},
-	normexp=,rma={
+	normexp={
 		if(verbose) cat("Green channel\n")
-		RG$G <- Recall(RG$G-RG$Gb,method=method,verbose=verbose)
+		RG$G <- Recall(RG$G-RG$Gb,method=method,normexp.method=normexp.method,verbose=verbose)
 		if(verbose) cat("Red channel\n")
-		RG$R <- Recall(RG$R-RG$Rb,method=method,verbose=verbose)
+		RG$R <- Recall(RG$R-RG$Rb,method=method,normexp.method=normexp.method,verbose=verbose)
 	}
 	)
 	RG$Rb <- NULL

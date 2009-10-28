@@ -1,3 +1,10 @@
+28 October 2009: limma 3.3.1
+
+- bug fix to backgroundCorrect() so ensure that normexp.method
+  is always correctly passed to normexp.fit.  Previously the
+  normexp.method argument was being ignored, in favour of the
+  default, when RG was an RGList object.
+
 22 October 2009: limma 3.0.3
 
 - Case study with Illumina BeadChip microarrays added to
