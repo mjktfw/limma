@@ -5,7 +5,7 @@
 Plot the sample relations based on MDS.
 }
 \usage{
-plotMDS(x, top=500, labels=colnames(x), col=NULL, cex=1, dim.plot=c(1,2), ndim=max(dim.plot),...)
+plotMDS(x, top=500, labels=colnames(x), col=NULL, cex=1, dim.plot=c(1,2), ndim=max(dim.plot), gene.selection="pairwise", ...)
 }
 \arguments{
   \item{x}{any data object which can be coerced to a matrix, such as \code{ExpressionSet} or \code{EList}.}
@@ -15,13 +15,17 @@ plotMDS(x, top=500, labels=colnames(x), col=NULL, cex=1, dim.plot=c(1,2), ndim=m
   \item{cex}{numeric vector of plot symbol expansions.}
   \item{dim.plot}{which two dimensions should be plotted, numeric vector of length two.}
   \item{ndim}{number of dimensions in which data is to be represented}
+  \item{gene.selection}{character, \code{"pairwise"} to choose the top genes separately for each pairwise comparison between the samples or \code{"common"} to select the same genes for all comparisons}
   \item{...}{any other arguments are passed to \code{plot}.}
 }
 
 \details{
 This function is a variation on the usual multdimensional scaling (or principle coordinate) plot, in that a distance measure particularly appropriate for the microarray context is used.
-The distance between each pair of samples (columns) is the root-mean-square deviation for the top \code{top} genes which best distinguish that pair of samples.
-That is, Euclidean distance is used, but for a different gene subset for each pair of samples.
+The distance between each pair of samples (columns) is the root-mean-square deviation (Euclidean distance) for the top \code{top} genes.
+
+If \code{gene.selection} is \code{"common"}, then the top genes are those with the largest standard deviations between samples.
+If \code{gene.selection} is \code{"pairwise"}, then a different set of top genes is selected for each pair of samples.
+The pairwise feature selection may be appropriate for microarray data when different molecular pathways are relevant for distinguishing different pairs of samples.
 
 See \code{\link[graphics]{text}} for possible values for \code{col} and \code{cex}.
 }
