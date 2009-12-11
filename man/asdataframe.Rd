@@ -1,4 +1,7 @@
 \name{as.data.frame}
+\alias{as.data.frame.MAList}
+\alias{as.data.frame.EList}
+\alias{as.data.frame.EListRaw}
 \alias{as.data.frame.MArrayLM}
 \title{Turn a Microarray Linear Model Object into a Dataframe}
 \description{

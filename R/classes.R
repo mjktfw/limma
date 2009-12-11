@@ -198,10 +198,38 @@ as.matrix.ExpressionSet <- as.matrix.LumiBatch <- function(x,...) env=x@assayDat
 #  16 Sep 2007
 as.matrix.vsn <- function(x,...) x@hx
 
-if(getRversion() >= "2.4.0") {
+as.data.frame.MAList <- function(x, row.names = NULL, optional = FALSE, ...)
+#	Convert MAList object to data.frame
+#	Gordon Smyth
+#	10 Dec 2009.
+{
+	if(is.null(row.names) && !is.null(rownames(x$M))) row.names <- makeUnique(rownames(x$M))
+	if(is.null(x$genes)) {
+		y <- as.data.frame(x$M,row.names=row.names,check.names=FALSE)
+	} else {
+		if(is.vector(x$genes)) x$genes <- data.frame(ID=x$genes,stringsAsFactors=FALSE)
+		y <- data.frame(x$genes,x$M,row.names=row.names,check.names=FALSE,stringsAsFactors=FALSE)
+	}
+	y
+}
+
+as.data.frame.EList <- as.data.EListRaw <- function(x, row.names = NULL, optional = FALSE, ...)
+#	Convert EList object to data.frame
+#	Gordon Smyth
+#	11 Dec 2009.
+{
+	if(is.null(row.names) && !is.null(rownames(x$E))) row.names <- makeUnique(rownames(x$E))
+	if(is.null(x$genes)) {
+		y <- as.data.frame(x$E,row.names=row.names,check.names=FALSE)
+	} else {
+		if(is.vector(x$genes)) x$genes <- data.frame(ID=x$genes,stringsAsFactors=FALSE)
+		y <- data.frame(x$genes,x$E,row.names=row.names,check.names=FALSE,stringsAsFactors=FALSE)
+	}
+	y
+}
 
 as.data.frame.MArrayLM <- function(x, row.names = NULL, optional = FALSE, ...)
-#	Convert MAList object to data.frame
+#	Convert MArrayLM object to data.frame
 #	Gordon Smyth
 #	6 April 2005.  Last modified 13 Jan 2006.
 {
@@ -220,30 +248,4 @@ as.data.frame.MArrayLM <- function(x, row.names = NULL, optional = FALSE, ...)
 #	for (a in coef.comp) if(!is.null(x[[a]]) && NCOL(x[[a]])==1) colnames(x[[a]]) <- paste(a,colnames(x[[a]]),sep=".")
 	if(ncoef==1) x <- lapply(x,drop)
 	as.data.frame(x,row.names=row.names,optional=optional)
-}
-
-} else {
-
-as.data.frame.MArrayLM <- function(x, row.names = NULL, optional = FALSE)
-#	Convert MAList object to data.frame
-#	Gordon Smyth
-#	6 April 2005.  Last modified 13 Jan 2006.
-{
-	x <- unclass(x)
-	if(is.null(x$coefficients)) {
-		warning("NULL coefficients, returning empty data.frame")
-		return(data.frame())
-	}
-	cn <- names(x)
-	nprobes <- NROW(x$coefficients)
-	ncoef <- NCOL(x$coefficients)
-	include.comp <- cn[unlist(lapply(x,NROW))==nprobes]
-	other.comp <- setdiff(names(x),include.comp)
-	if(length(other.comp)) for (a in other.comp) x[[a]] <- NULL
-#	coef.comp <- c("coefficients","stdev.unscaled","t","p.value","lods")
-#	for (a in coef.comp) if(!is.null(x[[a]]) && NCOL(x[[a]])==1) colnames(x[[a]]) <- paste(a,colnames(x[[a]]),sep=".")
-	if(ncoef==1) x <- lapply(x,drop)
-	as.data.frame(x,row.names=row.names,optional=optional)
-}
-
 }
