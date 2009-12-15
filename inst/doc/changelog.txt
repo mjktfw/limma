@@ -1,3 +1,7 @@
+15 Dec 2009: limma 3.3.4
+
+- minor bug fix in treat() code.
+
 11 Dec 2009: limma 3.3.3
 
 - as.dataframe methods for MAList, EList and EListRaw objects.
