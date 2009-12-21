@@ -61,7 +61,7 @@ topTableF <- function(fit,number=10,genelist=fit$genes,adjust.method="BH",sort.b
 toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.method="BH",sort.by="B",resort.by=NULL,p.value=1,lfc=0,...)
 #	Summary table of top genes
 #	Gordon Smyth
-#	21 Nov 2002. Last revised 19 Jan 2009.
+#	21 Nov 2002. Last revised 21 Dec 2009.
 {
 #	Check input
 	if(length(coef)>1) coef <- coef[1]
@@ -81,6 +81,7 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 	tstat <- as.matrix(eb$t)[,coef]
 	P.Value <- as.matrix(eb$p.value)[,coef]
 	B <- as.matrix(eb$lods)[,coef]
+	rownum <- 1:length(M)
 	sort.by <- match.arg(sort.by,c("logFC","M","A","Amean","AveExpr","P","p","T","t","B","none"))
 	if(sort.by=="M") sort.by="logFC"
 	if(sort.by=="A" || sort.by=="Amean") sort.by <- "AveExpr"
@@ -102,6 +103,7 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 		P.Value <- P.Value[sig]
 		adj.P.Value <- adj.P.Value[sig]
 		B <- B[sig]
+		rownum <- rownum[sig]
 	}
 	ord <- switch(sort.by,
 		logFC=order(abs(M),decreasing=TRUE),
@@ -121,7 +123,7 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 	}
 	if(!is.null(A)) tab <- data.frame(tab,AveExpr=A[top])
 	tab <- data.frame(tab,t=tstat[top],P.Value=P.Value[top],adj.P.Val=adj.P.Value[top],B=B[top])
-	rownames(tab) <- as.character(1:length(M))[top]
+	rownames(tab) <- as.character(rownum)[top]
 	if(!is.null(resort.by)) {
 		resort.by <- match.arg(resort.by,c("logFC","M","A","Amean","AveExpr","P","p","T","t","B"))
 		if(resort.by=="M") resort.by <- "logFC"

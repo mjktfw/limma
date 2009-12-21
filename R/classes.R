@@ -213,7 +213,7 @@ as.data.frame.MAList <- function(x, row.names = NULL, optional = FALSE, ...)
 	y
 }
 
-as.data.frame.EList <- as.data.EListRaw <- function(x, row.names = NULL, optional = FALSE, ...)
+as.data.frame.EList <- as.data.frame.EListRaw <- function(x, row.names = NULL, optional = FALSE, ...)
 #	Convert EList object to data.frame
 #	Gordon Smyth
 #	11 Dec 2009.

@@ -348,7 +348,7 @@ alias2SymbolTable <- function(alias,species="Hs")
 #  Convert a set of alias names to official gene symbols of the same length
 #  via Entrez Gene identifiers
 #  Di Wu, Gordon Smyth and Yifang Hu
-#  3 Sep 2009.
+#  3 Sep 2009.  Last modified 17 Dec 2009.
 {
 	alias <- as.character(alias)
 	species <- match.arg(species,c("Dm","Hs","Mm","Rn"))
@@ -358,7 +358,7 @@ alias2SymbolTable <- function(alias,species="Hs")
 	suppressPackageStartupMessages(require(DB,character.only=TRUE))
 	
 	isSymbol <- alias %in% Rkeys(get(SYMBOL)) 
-	Symbol<-rep("NA",length(alias))
+	Symbol<-rep.int(NA,length(alias))
 	Symbol[isSymbol]<-alias[isSymbol]
 				
 	isalias<-(alias[!isSymbol]) %in% (Rkeys(get(ALIAS2EG)))

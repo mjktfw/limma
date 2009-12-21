@@ -5,16 +5,16 @@
 Compute exact area under the ROC for empirical data.
 }
 \usage{
-auROC(truth, stat)
+auROC(truth, stat=NULL)
 }
 \arguments{
-  \item{truth}{numeric vector of 0 and 1 indicating whether the null or alternative respectively is true for each case.
-  If \code{stat} is missing then \code{truth} is assuming to be already sorted in decreasing test statistic order.}
-  \item{stat}{numeric vector containing test statistics.
-  Hypotheses are to be rejected if \code{stat} exceeds a given threshold.}
+  \item{truth}{logical vector, or numeric vector of 0 and 1, indicating whether each case is a true positive.}
+  \item{stat}{numeric vector containing test statistics used to rank cases, from largest to smallest.
+  If \code{NULL}, then \code{truth} is assumed to be already sorted in decreasing test statistic order.}
 }
 \details{
 This function computes the exact area under an empirical ROC curve.
+Cases are ranked by \code{stat} from largest to smallest.
 The number of true and false discoveries are determined by how well the true states represented by \code{truth} match up with the observed statistics given by \code{stat}.
 }
 \value{

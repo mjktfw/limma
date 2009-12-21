@@ -26,11 +26,10 @@ The output vector may be longer or shorter than the original vector, because som
 If an alias maps to more than one symbol, then the first one found will be returned.
 }
 \value{
-\code{alias2Symbol} returns a character vector of gene symbols.
+Character vector of gene symbols.
 
-\code{alias2SymbolTable} returns a data.frame with two columns.
-The first column contains \code{alias}.
-The second column contains the corresponding gene symbol, or \code{NA} if none exists.
+\code{alias2SymbolTable} returns a vector of the same length and order as \code{alias}, including \code{NA} values where no gene symbol was found.
+\code{alias2Symbol} returns an unordered vector which may be longer or shorter than \code{alias}.
 }
 \author{Gordon Smyth and Yifang Hu}
 \seealso{
