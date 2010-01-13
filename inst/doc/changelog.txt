@@ -1,3 +1,9 @@
+13 January 2010: limma 3.3.6
+
+- MArrayLM objects now re-calculate F-statistics if they
+  are subsetted by columns.  This ensures that the F-statistics
+  always match the contrast columns in the object.
+
 21 Dec 2009: limma 3.3.5
 
 - bug fix to row numbers from toptable() and topTable() when

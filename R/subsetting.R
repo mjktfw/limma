@@ -148,7 +148,7 @@ assign("[.MArrayLM",
 function(object, i, j, ...)
 #  Subsetting for MArrayLM objects
 #  Gordon Smyth
-#  26 April 2005. Last modified 30 August 2006.
+#  26 April 2005. Last modified 13 January 2010.
 {
 	if(nargs() != 3) stop("Two subscripts required",call.=FALSE)
 	if(!is.null(object$coefficients)) object$coefficients <- as.matrix(object$coefficients)
@@ -207,9 +207,21 @@ function(object, i, j, ...)
 		object$sigma <- object$sigma[i]
 		object$s2.post <- object$s2.post[i]
 		object$Amean <- object$Amean[i]
-		object$F <- object$F[i]
-		object$F.p.value <- object$F.p.value[i]
 	}
+	if(!is.null(object$F))
+		if(missing(j)) {
+			object$F <- object$F[i]
+			object$F.p.value <- object$F.p.value[i]
+		} else {
+			F.stat <- classifyTestsF(object,fstat.only=TRUE)
+			object$F <- as.vector(F.stat)
+			df1 <- attr(F.stat,"df1")
+			df2 <- attr(F.stat,"df2")
+			if (df2[1] > 1e+06) 
+				object$F.p.value <- pchisq(df1*object$F,df1,lower.tail=FALSE)
+			else
+				object$F.p.value <- pf(object$F,df1,df2,lower.tail=FALSE)
+		}
 	object
 })
 
