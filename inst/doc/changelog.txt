@@ -1,3 +1,8 @@
+17 January 2010: limma 3.3.7
+
+- sma package (which no longer exists) removed from
+  normalizeBetweenArrays.Rd example.
+
 13 January 2010: limma 3.3.6
 
 - MArrayLM objects now re-calculate F-statistics if they
@@ -9,7 +14,7 @@
 - bug fix to row numbers from toptable() and topTable() when
   the arguments p or lfc are specified.
 
-- documentation fixes for alais2SymbolTable()
+- documentation fixes for alias2SymbolTable()
 
 - truth argument of auROC() can now be logical
 
