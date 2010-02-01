@@ -1,3 +1,7 @@
+1 February 2010: limma 3.3.8
+
+- documentation fix for alias2Symbol()
+
 17 January 2010: limma 3.3.7
 
 - sma package (which no longer exists) removed from

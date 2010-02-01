@@ -37,6 +37,6 @@ This function is often used to assist gene set testing, see
 \link{08.Tests}.
 }
 \examples{
-if(!require("org.Hs.eg.db")) alias2Symbol(c("PUMA","NOXA","BIM"))
+if(require("org.Hs.eg.db")) alias2Symbol(c("PUMA","NOXA","BIM"))
 }
 \keyword{character}
