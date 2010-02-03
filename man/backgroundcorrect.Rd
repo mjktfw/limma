@@ -11,7 +11,7 @@ backgroundCorrect(RG, method=NULL, offset=0, printer=RG$printer, normexp.method=
   \item{RG}{a numeric matrix, \code{EListRaw} or \code{\link[limma:rglist]{RGList}} object.}
   \item{method}{character string specifying correction method.  Possible values are \code{"none"}, \code{"subtract"}, \code{"half"}, \code{"minimum"}, \code{"movingmin"}, \code{"edwards"} or \code{"normexp"}.
   If \code{RG} is a matrix or an \code{EListRaw} object, possible values are restricted to \code{"none"} or \code{"normexp"}.
-  Defaults to \code{"subtract"} for two-color data objects or \code{"normexp"} for single-cannel objects.}
+  Defaults to \code{"subtract"} for two-color data objects or \code{"normexp"} for single-channel objects.}
   \item{offset}{numeric value to add to intensities}
   \item{printer}{a list containing printer layout information, see \code{\link{PrintLayout-class}}. Ignored if \code{RG} is a matrix.}
   \item{normexp.method}{character string specifying parameter estimation strategy used by normexp, ignored for other methods. Possible values are \code{"saddle"}, \code{"mle"}, \code{"rma"} or \code{"rma75"}.}

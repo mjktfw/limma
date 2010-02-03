@@ -44,7 +44,7 @@ p-values are given for four possible alternative hypotheses.
 \code{alternative=="mixed"} test whether the genes in the set tend to be differentially expressed, without regard for direction.
 In this case, the test will be significant if the set contains mostly large test statistics, even if some are positive and some are negative.
 
-The first three alternatives are appropriate if you have a prior expection that all the genes in the set will react in the same direction.
+The first three alternatives are appropriate if you have a prior expectation that all the genes in the set will react in the same direction.
 The \code{"mixed"} alternative is appropriate if you know only that the genes are involved in the relevant pathways, without knowing the direction of effect for each gene.
 The \code{"mixed"} alternative is the only one possible with F-like statistics.
 

@@ -1,6 +1,10 @@
+3 February 2010: limma 3.3.9
+
+- spelling error corrections to documentation files.
+
 1 February 2010: limma 3.3.8
 
-- documentation fix for alias2Symbol()
+- minor documentation fix to alias2Symbol() example.
 
 17 January 2010: limma 3.3.7
 
