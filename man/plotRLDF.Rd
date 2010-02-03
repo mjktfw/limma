@@ -26,7 +26,7 @@ This function is a variation on the plot of usual linear discriminant fuction, i
 A diagonal regulation using \code{df.prior} and the median within-group variance is used.
 
 The calculations are based on a filtered list of probes.
-The \code{"nprobes"} probes with largest moderated F statistics are used to discriminate.
+The \code{nprobes} probes with largest moderated F statistics are used to discriminate.
 
 See \code{\link[graphics]{text}} for possible values for \code{col} and \code{cex}.
 }
@@ -36,7 +36,8 @@ A plot is created on the current graphics device.}
 \author{Di Wu and Gordon Smyth}
 
 \seealso{
-\code{lda} in package \code{MASS}}
+\code{lda} in package \code{MASS}
+}
 
 \examples{
 
