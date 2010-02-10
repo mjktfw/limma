@@ -1,3 +1,9 @@
+10 February 2010: limma 3.3.10
+
+- read.maimages() now provides the option of reading Agilent
+  Feature Extraction data with using median foreground
+  summaries.
+
 3 February 2010: limma 3.3.9
 
 - spelling error corrections to documentation files.

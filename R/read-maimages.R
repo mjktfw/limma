@@ -4,7 +4,7 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 #	Extracts an RG list from a set of two-color image analysis output files
 #  or an EListRaw from a set of one-color files
 #	Gordon Smyth. 
-#	1 Nov 2002.  Last revised 9 Apr 2009.
+#	1 Nov 2002.  Last revised 10 Feb 2010.
 {
 #	Begin checking input arguments
 
@@ -18,7 +18,7 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 		}
 	}
 
-	source <- match.arg(source,c("generic","agilent","arrayvision","arrayvision.ARM","arrayvision.MTM","bluefuse","genepix","genepix.mean","genepix.median","genepix.custom","imagene","quantarray","scanarrayexpress","smd.old","smd","spot","spot.close.open"))
+	source <- match.arg(source,c("generic","agilent","agilent.median","arrayvision","arrayvision.ARM","arrayvision.MTM","bluefuse","genepix","genepix.mean","genepix.median","genepix.custom","imagene","quantarray","scanarrayexpress","smd.old","smd","spot","spot.close.open"))
 #	source2 is the source type with qualifications removed
 	source2 <- strsplit(source,split=".",fixed=TRUE)[[1]][1]
 	if(is.null(quote)) if(source=="agilent") quote <- "" else quote <- "\""
@@ -43,6 +43,7 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 		if(source2=="generic") stop("must specify columns for generic input")
 		columns <- switch(source,
 			agilent = list(G="gMeanSignal",Gb="gBGMedianSignal",R="rMeanSignal",Rb="rBGMedianSignal"),
+			agilent.median = list(G="gMedianSignal",Gb="gBGMedianSignal",R="rMedianSignal",Rb="rBGMedianSignal"),
 			arrayvision=,
 			arrayvision.ARM = list(G="ARM Dens - Levels",Gb="Bkgd",R="ARM Dens - Levels",Rb="Bkgd"),
 			arrayvision.MTM = list(G="MTM Dens - Levels",Gb="Bkgd",R="MTM Dens - Levels",Rb="Bkgd"),
@@ -71,7 +72,7 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 	cnames <- names(columns)
 	
 	if(is.null(annotation)) annotation <- switch(source,
-		agilent = c("Row","Col","Start","Sequence","SwissProt","GenBank","Primate","GenPept","ProbeUID","ControlType","ProbeName","GeneName","SystematicName","Description"),
+		agilent,agilent.median = c("Row","Col","Start","Sequence","SwissProt","GenBank","Primate","GenPept","ProbeUID","ControlType","ProbeName","GeneName","SystematicName","Description"),
 		arrayvision=,arrayvision.ARM=,arrayvision.MTM = c("Spot labels","ID"),
 		bluefuse = c("ROW","COL","SUBGRIDROW","SUBGRIDCOL","BLOCK","NAME","ID"),   
 		genepix=,genepix.median=,genepix.custom = c("Block","Row","Column","ID","Name"),
