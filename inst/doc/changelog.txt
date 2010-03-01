@@ -1,3 +1,8 @@
+2 March 2010: limma 3.3.11
+
+- bug fix: the output from treat() now includes a component
+  df.prior.
+
 10 February 2010: limma 3.3.10
 
 - read.maimages() now provides the option of reading Agilent

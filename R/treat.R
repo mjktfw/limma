@@ -3,7 +3,7 @@
 treat <- function(fit, lfc=0)
 #  Moderated t-statistics with threshold
 #  Davis McCarthy, Gordon Smyth
-#  25 July 2008. Last revised 15 Dec 2009.
+#  25 July 2008. Last revised 2 Mar 2010.
 {
 	coefficients <- as.matrix(fit$coefficients)
 	stdev.unscaled <- as.matrix(fit$stdev.unscaled)
@@ -17,6 +17,7 @@ treat <- function(fit, lfc=0)
 	if (all(!is.finite(sigma))) 
 		stop("No finite residual standard deviations")
 	sv <- squeezeVar(sigma^2, df.residual)
+	fit$df.prior <- sv$df.prior
 	fit$s2.prior <- sv$var.prior
 	fit$s2.post <- sv$var.post
 	df.total <- df.residual + sv$df.prior
