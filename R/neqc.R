@@ -31,7 +31,7 @@ return(normexp.par)
 }
 
 neqc <-
-function(x, status=NULL, negctrl="negative", regular="regular", offset=50, ...){
+function(x, status=NULL, negctrl="negative", regular="regular", offset=16, ...){
 normexp.par <- normexp.fit.control(x, status, negctrl)
 if(is(x, "EListRaw")){
   for(i in 1:ncol(x))

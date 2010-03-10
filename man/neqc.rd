@@ -3,7 +3,7 @@
 \title{NormExp and Quantile by Control (NEQC)}
 \description{Perform normexp background correction and quantile normalization using control probes.}
 \usage{
-neqc(x, status=NULL, negctrl="negative", regular="regular", offset=50, ...)
+neqc(x, status=NULL, negctrl="negative", regular="regular", offset=16, ...)
 }
 \arguments{
   \item{x}{ object of class \code{\link{EListRaw-class}} or \code{matrix} containing raw intensities for regular and control probes from a series of microarrays.}
