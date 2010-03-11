@@ -31,7 +31,7 @@ vennDiagram <- function(object,include="both",names,mar=rep(1,4),cex=1.5,lwd=1,c
 #	Plot Venn diagram
 #	Gordon Smyth, James Wettenhall.
 #	Capabilities for multiple counts and colors by Francois Pepin.
-#	4 July 2003.  Last modified 21 September 2006.
+#	4 July 2003.  Last modified 12 March 2010.
 {
 	if (!is(object, "VennCounts")){
 		if (length(include)>2) stop("Cannot plot Venn diagram for more than 2 sets of counts")
@@ -49,7 +49,7 @@ vennDiagram <- function(object,include="both",names,mar=rep(1,4),cex=1.5,lwd=1,c
 	if(missing(counts.col)) counts.col <- par('col')
 	if(length(counts.col)<length(include)) counts.col <- rep(counts.col,length.out=length(include))
 	if(missing(show.include)) show.include <- as.logical(length(include)-1)
-	theta <- 2*pi*(1:360)/360
+	theta <- 2*pi*(0:360)/360
 	xcentres <- list(0,c(-1,1),c(-1,1,0))[[nsets]]
 	ycentres <- list(0,c(0,0),c(1/sqrt(3),1/sqrt(3),-2/sqrt(3)))[[nsets]]
 	r <- c(1.5,1.5,1.5)[nsets]
