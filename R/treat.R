@@ -3,7 +3,7 @@
 treat <- function(fit, lfc=0)
 #  Moderated t-statistics with threshold
 #  Davis McCarthy, Gordon Smyth
-#  25 July 2008. Last revised 2 Mar 2010.
+#  25 July 2008. Last revised 16 Mar 2010.
 {
 	coefficients <- as.matrix(fit$coefficients)
 	stdev.unscaled <- as.matrix(fit$stdev.unscaled)
@@ -22,17 +22,17 @@ treat <- function(fit, lfc=0)
 	fit$s2.post <- sv$var.post
 	df.total <- df.residual + sv$df.prior
 	lfc <- abs(lfc)
-	fc.up <- (coefficients > lfc)
-	fc.down <- (coefficients < -lfc)
 	acoef <- abs(coefficients)
 	se <- stdev.unscaled*sqrt(fit$s2.post)
 	tstat.right <- (acoef-lfc)/se
 	tstat.left <- (acoef+lfc)/se
 	fit$t <- array(0,dim(coefficients),dimnames=dimnames(coefficients))
+	fit$p.value <- pt(tstat.right, df = df.total,lower=FALSE) + pt(tstat.left,df = df.total,lower=FALSE)
 	tstat.right <- pmax(tstat.right,0)
+	fc.up <- (coefficients > lfc)
+	fc.down <- (coefficients < -lfc)
 	fit$t[fc.up] <- tstat.right[fc.up]
 	fit$t[fc.down] <- -tstat.right[fc.down]
-	fit$p.value <- pt(tstat.right, df = df.total,lower=FALSE) + pt(tstat.left,df = df.total,lower=FALSE)
 	fit
 }
 

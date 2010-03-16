@@ -1,3 +1,8 @@
+16 March 2010: limma 3.3.13
+
+- bug fix to p.value computation in treat(). This affects
+  only p-values greater than 0.5.
+
 12 March 2010: limma 3.3.12
 
 - bug fix: the output from vennDiagram() now draws complete 
