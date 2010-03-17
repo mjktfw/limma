@@ -39,7 +39,7 @@ treat <- function(fit, lfc=0)
 topTreat <- function(fit,coef=1,number=10,genelist=fit$genes,adjust.method="BH",sort.by="p",resort.by=NULL,p.value=1)
 #	Summary table of top genes by treat
 #	Gordon Smyth
-#	15 June 2009.
+#	15 June 2009.  Last modified 17 March 2010.
 {
 #	Check input
 	if(length(coef)>1) coef <- coef[1]
@@ -52,6 +52,7 @@ topTreat <- function(fit,coef=1,number=10,genelist=fit$genes,adjust.method="BH",
 	}
 	tstat <- as.matrix(fit$t)[,coef]
 	P.Value <- as.matrix(fit$p.value)[,coef]
+	if(!is.null(genelist) && is.null(dim(genelist))) genelist <- data.frame(ID=genelist,stringsAsFactors=FALSE)
 	sort.by <- match.arg(sort.by,c("logFC","M","A","Amean","AveExpr","P","p","T","t","none"))
 	if(sort.by=="M") sort.by="logFC"
 	if(sort.by=="A" || sort.by=="Amean") sort.by <- "AveExpr"

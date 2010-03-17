@@ -1,3 +1,8 @@
+17 March 2010: limma 3.3.14
+
+- bug fix: topTreat() now allows genelist to be a vector
+  or a data.frame.  Previously failed when a vector was input.
+
 16 March 2010: limma 3.3.13
 
 - bug fix to p.value computation in treat(). This affects
