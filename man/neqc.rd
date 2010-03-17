@@ -26,7 +26,7 @@ An \code{\link{EList-class}} object containing normalized log2 expression values
 }
 
 \references{
-Shi W and Oshlack A and Smyth GK. Calibrating the noise versus bias trade-off: normalization of Illumina Whole Genome Expression BeadChips. In preparation.
+Shi W, Oshlack A and Smyth GK. Calibrating the noise versus bias trade-off: normalization of Illumina Whole Genome Expression BeadChips. Submitted.
 }
 
 \author{Wei Shi and Gordon Smyth}

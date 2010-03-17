@@ -10,8 +10,15 @@
 
 12 March 2010: limma 3.3.12
 
-- bug fix: the output from vennDiagram() now draws complete 
-  circles.
+- default value for offset in neqc() function reduced
+  from 50 to 16.
+
+- The raw data for the "IlluminaWG-6 Case Study: Mammary
+  Progenitor Cell Populations" in the User's Guide is now
+  available online, with URL given in User's Guide.
+
+- output from vennDiagram() improved to draw complete 
+  unbroken circles.
 
 2 March 2010: limma 3.3.11
 
