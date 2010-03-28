@@ -1,3 +1,9 @@
+28 March 2010: limma 3.3.15
+
+- speed improvement to avereps(), achieved by calling the base
+  package's rowsum() function, following a suggestion of
+  Michael Lawrence.
+
 17 March 2010: limma 3.3.14
 
 - bug fix: topTreat() now allows genelist to be a vector

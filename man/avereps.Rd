@@ -27,8 +27,15 @@ A data object of the same class as \code{x} with a row for each unique value of 
 }
 \author{Gordon Smyth}
 \seealso{
-  \code{\link[base]{dimnames}} in the base package.
+  \code{\link{avedups}}. Also \code{\link[base]{rowsum}} in the base package.
   
   \link{02.Classes} gives an overview of data classes used in LIMMA.
+}
+
+\examples{
+x <- matrix(rnorm(8*3),8,3)
+colnames(x) <- c("S1","S2","S3")
+rownames(x) <- c("b","a","a","c","c","b","b","b")
+avereps(x)
 }
 \keyword{array}

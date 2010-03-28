@@ -173,3 +173,10 @@ classifyTestsF(tstat)
 FStat(tstat)
 classifyTestsT(tstat)
 classifyTestsP(tstat)
+
+### avereps
+
+x <- matrix(rnorm(8*3),8,3)
+colnames(x) <- c("S1","S2","S3")
+rownames(x) <- c("b","a","a","c","c","b","b","b")
+avereps(x)

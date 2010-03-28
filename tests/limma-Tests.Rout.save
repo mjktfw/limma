@@ -1,5 +1,5 @@
 
-R version 2.10.0 (2009-10-26)
+R version 2.11.0 Under development (unstable) (2009-12-17 r50765)
 Copyright (C) 2009 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
@@ -1017,4 +1017,15 @@ TestResults matrix
 [2,]    0    1    0
 [3,]    0    0    0
 [4,]    0    0    0
+> 
+> ### avereps
+> 
+> x <- matrix(rnorm(8*3),8,3)
+> colnames(x) <- c("S1","S2","S3")
+> rownames(x) <- c("b","a","a","c","c","b","b","b")
+> avereps(x)
+          S1         S2         S3
+b -0.2353018  0.5220094  0.2302895
+a -0.4347701  0.6453498 -0.6758914
+c  0.3482980 -0.4820695 -0.3841313
 > 
