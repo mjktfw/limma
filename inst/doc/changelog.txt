@@ -1,3 +1,14 @@
+2 April 2010: limma 3.3.16
+
+- avedups() and avereps() now have methods for EList objects.
+
+- The function makeContrasts() requires coefficient names
+  (levels) to be syntactically valid variable names in R.
+  The intercept column name "(Intercept)", which is often
+  produced by the model.matrix() function, is now automatically
+  converted.  A more detailed diagnostic message is also output
+  in the case of non-valid names.
+
 28 March 2010: limma 3.3.15
 
 - speed improvement to avereps(), achieved by calling the base

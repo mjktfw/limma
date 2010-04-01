@@ -2,6 +2,7 @@
 \alias{avereps}
 \alias{avereps.default}
 \alias{avereps.MAList}
+\alias{avereps.EList}
 \title{Average Over Irregular Replicate Spots}
 \description{
 Condense a microarray data object so that values for within-array replicate spots are replaced with their average.
@@ -9,16 +10,19 @@ Condense a microarray data object so that values for within-array replicate spot
 \usage{
 \method{avereps}{default}(x, ID=rownames(x))
 \method{avereps}{MAList}(x, ID=NULL)
+\method{avereps}{EList}(x, ID=NULL)
 }
 \arguments{
-  \item{x}{a matrix-like object, usually a matrix or an \code{MAList} object.}
+  \item{x}{a matrix-like object, usually a matrix, \code{MAList} or \code{EList} object.}
   \item{ID}{probe identifier.}
 }
 \details{
-A new data object is computed in which each probe is represented by the average of its replicate spots.
-For an \code{MAList} object, the components \code{M} and \code{A} are both averaged in this way, as \code{weights} and any matrices found in \code{object$other}.
+A new data object is computed in which each probe ID is represented by the average of its replicate spots or features.
 
+For an \code{MAList} object, the components \code{M} and \code{A} are both averaged in this way, as are \code{weights} and any matrices found in \code{object$other}.
 For an \code{MAList} object, \code{ID} defaults to \code{MA$genes$ID} is that exists, otherwise to \code{rownames(MA$M)}.
+
+\code{EList} objects are similar, except that the \code{E} component is averaged instead of \code{M} and \code{A}.
 
 If \code{x} is of mode \code{"character"}, then the replicate values are assumed to be equal and the first is taken as the average.
 }

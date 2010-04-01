@@ -151,6 +151,22 @@ avedups.MAList <- function(x,ndups=x$printer$ndups,spacing=x$printer$spacing,wei
 	y
 }
 
+avedups.EList <- function(x,ndups=x$printer$ndups,spacing=x$printer$spacing,weights=x$weights)
+#	Average over duplicate spots for EList objects
+#	Gordon Smyth
+#	2 Apr 2010.
+{
+	if(is.null(ndups) || is.null(spacing)) stop("Must specify ndups and spacing")
+	y <- x
+	y$E <- avedups(x$E,ndups=ndups,spacing=spacing,weights=weights)
+	other <- names(x$other)
+	for (a in other) object$other[[a]] <- avedups(object$other[[a]],ndups=ndups,spacing=spacing,weights=weights)
+	y$weights <- avedups(x$weights,ndups=ndups,spacing=spacing)
+	y$genes <- uniquegenelist(x$genes,ndups=ndups,spacing=spacing)
+	y$printer <- NULL
+	y
+}
+
 avereps <- function(x,ID) UseMethod("avereps")
 #  4 June 2008
 
@@ -195,3 +211,22 @@ avereps.MAList <- function(x,ID=NULL)
 	y
 }
 
+avereps.EList <- function(x,ID=NULL)
+#	Average over irregular replicate probes for EList objects
+#	Gordon Smyth
+#	2 April 2010.
+{
+	if(is.null(ID)) {
+		ID <- x$genes$ID
+		if(is.null(ID)) ID <- rownames(x)
+		if(is.null(ID)) stop("Cannot find probe IDs")
+	}
+	y <- x
+	y$E <- avereps(x$E,ID=ID)
+	other <- names(x$other)
+	for (a in other) object$other[[a]] <- avereps(object$other[[a]],ID=ID)
+	y$weights <- avereps(x$weights,ID=ID)
+	y$genes <- x$genes[!duplicated(ID),]
+   y$printer <- NULL
+	y
+}
