@@ -1,3 +1,11 @@
+7 April 2010: limma 3.3.17
+
+- read.maimages() now has a new argument green.only which
+  replaces the older argument channels.  read.maimages()
+  now outputs an EListRaw object whenever single channel
+  data is read, and an RGList object when two color data
+  is read.
+
 2 April 2010: limma 3.3.16
 
 - avedups() and avereps() now have methods for EList objects.

@@ -8,7 +8,7 @@ or an EListRaw from a set of one-color files.
 }
 \usage{
 read.maimages(files=NULL, source="generic", path=NULL, ext=NULL, names=NULL,
-              columns=NULL, other.columns=NULL, annotation=NULL, channels=2,
+              columns=NULL, other.columns=NULL, annotation=NULL, green.only=FALSE,
               wt.fun=NULL, verbose=TRUE, sep="\t", quote=NULL, \dots)
 read.imagene(files, path=NULL, ext=NULL, names=NULL, columns=NULL, other.columns=NULL,
              wt.fun=NULL, verbose=TRUE, sep="\t", quote="\"", \dots)
@@ -22,10 +22,13 @@ read.imagene(files, path=NULL, ext=NULL, names=NULL, columns=NULL, other.columns
   \item{ext}{character string giving optional extension to be added to each file name}
   \item{names}{character vector of names to be associated with each array as column name.
   Defaults to \code{removeExt(files)}.}
-  \item{columns}{list with fields \code{R}, \code{G}, \code{Rb} and \code{Gb} giving the column names to be used for red and green foreground and background or, in the case of Imagene data, a list with fields \code{f} and \code{b}.  This argument is optional if \code{source} is specified, otherwise it is required.}
+  \item{columns}{list, or named character vector.
+  For two color data, this should have fields \code{R}, \code{G}, \code{Rb} and \code{Gb} giving the column names to be used for red and green foreground and background or, in the case of Imagene data, a list with fields \code{f} and \code{b}.
+  For single channel data, the fields are usually \code{E} and \code{Eb}.
+  This argument is optional if \code{source} is specified, otherwise it is required.}
   \item{other.columns}{character vector of names of other columns to be read containing spot-specific information}
   \item{annotation}{character vector of names of columns containing annotation information about the probes}
-  \item{channels}{number of channels, \code{channels=2} or two-color and \code{channels=1} for one-color.}
+  \item{green.only}{logical, for use with \code{source}, should the green (Cy3) channel only be read, or are both red and green required?}
   \item{wt.fun}{function to calculate spot quality weights}
   \item{verbose}{logical, \code{TRUE} to report each time a file is read}
   \item{sep}{the field separator character}

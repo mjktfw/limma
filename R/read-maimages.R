@@ -1,10 +1,10 @@
 #	READ IMAGE ANALYSIS FILES INTO RGList or EListRaw
 
-read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=NULL,columns=NULL,other.columns=NULL,annotation=NULL,channels=2,wt.fun=NULL,verbose=TRUE,sep="\t",quote=NULL,...)
+read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=NULL,columns=NULL,other.columns=NULL,annotation=NULL,green.only=FALSE,wt.fun=NULL,verbose=TRUE,sep="\t",quote=NULL,...)
 #	Extracts an RG list from a set of two-color image analysis output files
 #  or an EListRaw from a set of one-color files
 #	Gordon Smyth. 
-#	1 Nov 2002.  Last revised 10 Feb 2010.
+#	1 Nov 2002.  Last revised 7 April 2010.
 {
 #	Begin checking input arguments
 
@@ -60,16 +60,39 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 			spot.close.open = list(R="Rmean",G="Gmean",Rb="morphR.close.open",Gb="morphG.close.open"),
 			NULL
 		)
-		if(channels==1) columns$R <- columns$Rb <- NULL
+		if(green.only) {
+			columns$R <- columns$Rb <- NULL
+			nRG <- 1
+			E <- FALSE
+		} else {
+			nRG <- 2
+			E <- FALSE
+		}
+		cnames <- names(columns)
 	} else {
-		if(!is.list(columns)) stop("columns must be a list")
-		names(columns)[names(columns)=="Gf"] <- "G"
-		names(columns)[names(columns)=="Rf"] <- "R"
-		channels <- (!is.null(columns$R))+(!is.null(columns$G))
-		if(channels==0) stop("columns must specify foreground G or R")
-		if(!all(names(columns) %in% c("G","R","Gb","Rb"))) warning("non-standard columns specified")
+		columns <- as.list(columns)
+#		if(!is.list(columns)) stop("columns must be a list")
+		cnames <- names(columns)
+		if(is.null(cnames)) {
+			if(length(columns)==1) {
+#				Single channel with no background
+				names(columns) <- "E"
+				E <- TRUE
+				nRG <- 0
+			} else {
+				stop("columns needs to be a named list")
+			}
+		} else {
+			names(columns)[cnames=="Gf"] <- "G"
+			names(columns)[cnames=="Rf"] <- "R"
+			cnames <- names(columns)
+			nRG <- sum(c("R","G") %in% cnames)
+			E <- ("E" %in% cnames)
+			if(E && nRG>0) stop("columns can be R,G for two color data, or E for single channel, but not both")
+			if(!E && nRG==0) stop("columns must specify foreground G or R or E")
+			if(!all(cnames %in% c("G","R","Gb","Rb","E","Eb"))) warning("non-standard columns specified")
+		}
 	}
-	cnames <- names(columns)
 	
 	if(is.null(annotation)) annotation <- switch(source,
 		agilent=,agilent.median = c("Row","Col","Start","Sequence","SwissProt","GenBank","Primate","GenPept","ProbeUID","ControlType","ProbeName","GeneName","SystematicName","Description"),
@@ -220,13 +243,17 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 		}
 		if(verbose) cat(paste("Read",fullname,"\n"))
 	}
-	if(channels==1) {
+	if(nRG==1) {
 		n <- names(RG)
 		n[n=="G"] <- "E"
 		n[n=="Gb"] <- "Eb"
+		n[n=="R"] <- "E"
+		n[n=="Rb"] <- "Eb"
 		names(RG) <- n
+	}
+	if(E || nRG==1)
 		new("EListRaw",RG)
-	} else
+	else
 		new("RGList",RG)
 }
 
