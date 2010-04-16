@@ -3,15 +3,16 @@
 \title{NormExp and Quantile by Control (NEQC)}
 \description{Perform normexp background correction and quantile normalization using control probes.}
 \usage{
-neqc(x, status=NULL, negctrl="negative", regular="regular", offset=16, ...)
+neqc(x, status=NULL, negctrl="negative", regular="regular", offset=16, robust=FALSE, ...)
 }
 \arguments{
-  \item{x}{ object of class \code{\link{EListRaw-class}} or \code{matrix} containing raw intensities for regular and control probes from a series of microarrays.}
-  \item{status}{ character vector giving probe types.}
-  \item{negctrl}{ character string giving the \code{status} identifier of negative control probes. Default is \code{negative}.}
-  \item{regular}{ character string giving the \code{status} identifier of regular probes. Default is \code{regular}.}
-  \item{offset}{ numeric value added to the intensities after background correction.}
-  \item{...}{ any other parameters are passed to \code{normalizeBetweenArrays.}}
+  \item{x}{object of class \code{\link{EListRaw-class}} or \code{matrix} containing raw intensities for regular and control probes from a series of microarrays.}
+  \item{status}{character vector giving probe types.}
+  \item{negctrl}{character string identifier for negative control probes.}
+  \item{regular}{character string identifier for regular probes.}
+  \item{offset}{numeric value added to the intensities after background correction.}
+  \item{robust}{logical. Should robust estimators be used for the background mean and standard deviation?}
+  \item{...}{any other arguments are passed to \code{normalizeBetweenArrays.}}
   }
 \details{
 This function calls the function \code{\link{normexp.fit.control}} to estimate the parameters required by normal+exponential convolution model with the help of negative control probes.
@@ -22,7 +23,7 @@ This function will then call the function \code{\link{normalizeBetweenArrays}} t
 For more descriptions to parameters \code{x}, \code{status}, \code{negctrl} and \code{regular}, please refer to functions \code{\link{normexp.fit.control}} and \code{\link{read.ilmn}}.
 }
 \value{
-An \code{\link{EList-class}} object containing normalized log2 expression values. Control probes are removed.
+An \code{\link{EList-class}} or matrix object containing normalized log2 expression values. Control probes are removed.
 }
 
 \references{

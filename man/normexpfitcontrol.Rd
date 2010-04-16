@@ -3,12 +3,14 @@
 \title{Normexp Model Parameter Estimation Aided by Negative Controls}
 \description{The mean and log-standard-deviation of the background-normal part of the normexp+exponential convolution model is estimated as the mean and log-standard deviation of intensities from negative control probes. The log-mean of the signal-exponential part is estimated as the log of the difference between signal mean and background mean.}
 \usage{
-normexp.fit.control(x, status=NULL, negctrl="negative")
+normexp.fit.control(x, status=NULL, negctrl="negative", regular="regular", robust=FALSE)
 }
 \arguments{
-  \item{x}{ object of class \code{EListRaw-class} or \code{matrix} containing raw intensities for regular and control probes for a series of microarrays}
-  \item{status}{ character vector giving probe types.}
-  \item{negctrl}{ character string giving the type identifier of negative control probes.}
+  \item{x}{object of class \code{EListRaw-class} or \code{matrix} containing raw intensities for regular and control probes for a series of microarrays}
+  \item{status}{character vector giving probe types.}
+  \item{negctrl}{character string identifier for negative control probes.}
+  \item{regular}{character string identifier for regular probes.}
+  \item{robust}{logical. Should robust estimators be used for the background mean and standard deviation?}
   }
 \details{
 \code{x} has to contain raw expression intensities from both regular probes and negative control probes.

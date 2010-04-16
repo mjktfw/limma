@@ -1,39 +1,44 @@
 normexp.fit.control <-
-function(x, status=NULL, negctrl="negative"){
+function(x, status=NULL, negctrl="negative", regular="regular", robust=FALSE)
+#  Wei Shi
+#  Edits by Gordon Smyth, 16 April 2010
+{
 if(is(x, "EListRaw")){
   if(!is.null(status))
     s <- status
   else
     if(is.null(s <- x$genes$Status))
       stop("Probe status can not be found!")
-  xr <- x$E[tolower(s)=="regular", ]
-  xn <- x$E[tolower(s)==tolower(negctrl), ]
+  x$E <- as.matrix(x$E)
+  xr <- x$E[tolower(s)==tolower(regular),,drop=FALSE]
+  xn <- x$E[tolower(s)==tolower(negctrl),,drop=FALSE]
 }
-else
-  if(is.matrix(x)){
-    if(is.null(status))
-      stop("Please provide probe status!") 
-    xr <- x[tolower(status)=="regular", ]
-    xn <- x[tolower(status)==tolower(negctrl), ]
-  }
-  else
-    stop("Data type not supported!\n")
+else {
+  if(is.null(status)) stop("Please provide probe status!")
+  x <- as.matrix(x)
+  xr <- x[tolower(status)==tolower(regular),,drop=FALSE]
+  xn <- x[tolower(status)==tolower(negctrl),drop=FALSE]
+}
 
-mu <- sigma <- alpha <-  rep(NA, ncol(x))
-for(i in 1:ncol(x)){
-  mu[i] <- mean(xn[, i], na.rm=TRUE)
-  sigma[i] <- sd(xn[, i], na.rm=TRUE)
-  alpha[i] <- max(mean(xr[, i], na.rm=TRUE) - mu[i], 10)
+if(robust) {
+	require(statmod)
+	mu <- apply(xn,2,mean,trim=0.2,na.rm=TRUE)
+	sigma <- apply(t(xn)-mu,1,mscale,na.rm=TRUE)
+} else {
+	mu <- colMeans(xn,na.rm=TRUE)
+	sigma <- rowSums((t(xn)-mu)^2,na.rm=TRUE)/(nrow(xn)-1)
 }
-normexp.par <- matrix(cbind(mu, log(sigma), log(alpha)), ncol=3)
-colnames(normexp.par) <- c("mu", "logsigma", "logalpha")
-return(normexp.par)
+alpha <- pmax(colMeans(xr,na.rm=TRUE)-mu,10)
+cbind(mu=mu,logsigma=log(sigma),logalaph=log(alpha))
 }
 
 neqc <-
-function(x, status=NULL, negctrl="negative", regular="regular", offset=16, ...){
-normexp.par <- normexp.fit.control(x, status, negctrl)
-if(is(x, "EListRaw")){
+function(x, status=NULL, negctrl="negative", regular="regular", offset=16, robust=FALSE, ...)
+#  Wei Shi
+#  Edits by Gordon Smyth, 17 April 2010
+{
+normexp.par <- normexp.fit.control(x, status=status, negctrl=negctrl, regular=regular, robust=robust)
+if(is(x, "EListRaw")) {
   for(i in 1:ncol(x))
     x$E[, i] <- normexp.signal(normexp.par[i, ], x$E[, i])
   x$E <- x$E + offset
@@ -42,8 +47,8 @@ if(is(x, "EListRaw")){
     status <- x$genes$Status
   y <- y[status == regular, ]
   y$genes$Status <- NULL
-}
-if(is.matrix(x)){
+} else {
+  x <- as.matrix(x)	
   for(i in 1:ncol(x))
     x[, i] <- normexp.signal(normexp.par[i, ], x[, i])
   x <- x + offset

@@ -1,3 +1,9 @@
+16 April 2010: limma 3.3.19
+
+- new argument robust for normexp.fit.control() and neqc().
+  This gives the option of robust estimation of the background
+  mean and standard deviation.
+
 9 April 2010: limma 3.3.18
 
 - bug fix to the probe filtering in illumina case study in the 
