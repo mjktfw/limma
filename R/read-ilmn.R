@@ -1,13 +1,9 @@
-.readData <- function(fname, probeid,  annotation, expr, other.columns, sep, verbose, ...)
+.readData <- function(fname, probeid, annotation, expr, other.columns, sep, quote, verbose, ...)
 {
-con <- file(fname, open="r")
 skiplines <- 0
 repeat{
-  rl <- readLines(con=con, n=1)
-  if(length(grep(tolower(expr), tolower(rl)))){
-    close(con)
-    break
-  }
+  rl <- scan(fname, what="", sep=sep, quote=quote, nlines=1, quiet=TRUE, skip=skiplines, ...)
+  if(length(grep(tolower(expr), tolower(rl)))) break
   skiplines <- skiplines + 1 
 }
 header <- unlist(strsplit(rl, sep))
@@ -15,7 +11,7 @@ header <- unlist(strsplit(rl, sep))
 elist <- new("EListRaw")
 reqcol <- header[grep(tolower(paste(c(probeid, annotation, expr, other.columns), collapse="|")), tolower(header))]
 
-x <- read.columns(file=fname, required.col=reqcol, skip=skiplines, sep=sep, stringsAsFactors=FALSE,  ...)
+x <- read.columns(file=fname, required.col=reqcol, skip=skiplines, sep=sep, quote=quote, stringsAsFactors=FALSE,  ...)
 nprobes <- nrow(x)
 
 pids <- x[, grep(tolower(probeid), tolower(colnames(x)))]
@@ -48,7 +44,7 @@ elist
 
 read.ilmn <- function(files=NULL, ctrlfiles=NULL, path=NULL, ctrlpath=NULL,
 probeid="Probe",  annotation=c("TargetID", "SYMBOL"), expr="AVG_Signal", other.columns=NULL, 
-sep="\t", verbose=TRUE, ...)
+sep="\t", quote="\"", verbose=TRUE, ...)
 {
 if(is.null(ctrlfiles))
   warning("Names of control profile files are not provided.")
@@ -59,7 +55,7 @@ if(!is.null(files)){
   n <- length(f)
   for(i in 1:n){
     if(verbose) cat("Reading file", f[i], "... ...\n") 
-    elist1 <- .readData(f[i], probeid,  annotation, expr, other.columns, sep, verbose)
+    elist1 <- .readData(f[i], probeid,  annotation, expr, other.columns, sep, quote, verbose, ...)
     if(i==1)
       elist <- elist1
     else
@@ -75,7 +71,7 @@ if(!is.null(ctrlfiles)){
   n <- length(cf)
   for(i in 1:n){
     if(verbose) cat("Reading file", cf[i], "... ...\n")
-    elist.ctrl1 <- .readData(cf[i], probeid,  annotation, expr, other.columns, sep, verbose)
+    elist.ctrl1 <- .readData(cf[i], probeid,  annotation, expr, other.columns, sep, quote, verbose, ...)
     if(i==1)
       elist.ctrl <- elist.ctrl1
     else

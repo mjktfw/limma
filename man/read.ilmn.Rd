@@ -5,7 +5,7 @@
 \usage{
 read.ilmn(files=NULL, ctrlfiles=NULL, path=NULL, ctrlpath=NULL,
 probeid="Probe",  annotation=c("TargetID", "SYMBOL"), expr="AVG_Signal", other.columns=NULL, 
-sep="\t", verbose=TRUE, ...)
+sep="\t", quote="\"", verbose=TRUE, ...)
 }
 \arguments{
   \item{files}{ character vector giving the names of the summary probe profile files.}
@@ -17,6 +17,7 @@ sep="\t", verbose=TRUE, ...)
   \item{expr}{ character string giving the keyword in the names of the expression intensity columns.}
   \item{other.columns}{ character vector giving the keywords in the names of extra columns required, such as "Detection", "Avg_NBEADS", "BEAD_STDEV" etc. Each keyword corresponds to one type of columns.}
   \item{sep}{ the field separator character.}
+  \item{quote}{ character string of characters to be treated as quote marks.}
   \item{verbose}{ logical, \code{TRUE} to report names of profile files being read.}
   \item{...}{ any other parameters are passed on to \code{\link{read.columns}}.}
   }

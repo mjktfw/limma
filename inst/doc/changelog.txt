@@ -1,6 +1,7 @@
 19 April 2010: limma 3.3.20
 
 - bug fix to sigma calculation in normexp.fit.control().
+- Add "quote" argument to read.ilmn().
 
 16 April 2010: limma 3.3.19
 
