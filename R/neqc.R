@@ -1,8 +1,7 @@
 normexp.fit.control <-
 function(x, status=NULL, negctrl="negative", regular="regular", robust=FALSE)
-#  Wei Shi
-#  Edits by Gordon Smyth, 16 April 2010
-#  Edits by Wei Shi, 19 April 2010
+#  Wei Shi and Gordon Smyth
+#  Last modified 19 April 2010
 {
 if(is(x, "EListRaw")){
   if(!is.null(status))
@@ -22,15 +21,25 @@ else {
 }
 
 if(robust) {
-	require(statmod)
-	mu <- apply(xn,2,mean,trim=0.2,na.rm=TRUE)
-	sigma <- apply(t(xn)-mu,1,mscale,na.rm=TRUE)
+	require(MASS)
+	narrays <- ncol(xn)
+	m <- s <- rep(0,narrays)
+#  Robustness is judged on the log-scale, assumed normal
+	for (j in 1:ncol(xn)) {
+		h <- huber(log(xn[,j]))
+		m[j] <- h$mu
+		s[j] <- h$s
+	}
+#  Means and standard deviation are converted back to log-normal
+	mu <- exp(m+s^2/2)
+	omega <- exp(s^2)
+	sigma <- sqrt(omega*(omega-1))*exp(m)
 } else {
 	mu <- colMeans(xn,na.rm=TRUE)
 	sigma <- sqrt(rowSums((t(xn)-mu)^2,na.rm=TRUE)/(nrow(xn)-1))
 }
 alpha <- pmax(colMeans(xr,na.rm=TRUE)-mu,10)
-cbind(mu=mu,logsigma=log(sigma),logalaph=log(alpha))
+cbind(mu=mu,logsigma=log(sigma),logalpha=log(alpha))
 }
 
 neqc <-
