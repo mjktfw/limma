@@ -2,6 +2,7 @@ normexp.fit.control <-
 function(x, status=NULL, negctrl="negative", regular="regular", robust=FALSE)
 #  Wei Shi
 #  Edits by Gordon Smyth, 16 April 2010
+#  Edits by Wei Shi, 19 April 2010
 {
 if(is(x, "EListRaw")){
   if(!is.null(status))
@@ -26,7 +27,7 @@ if(robust) {
 	sigma <- apply(t(xn)-mu,1,mscale,na.rm=TRUE)
 } else {
 	mu <- colMeans(xn,na.rm=TRUE)
-	sigma <- rowSums((t(xn)-mu)^2,na.rm=TRUE)/(nrow(xn)-1)
+	sigma <- sqrt(rowSums((t(xn)-mu)^2,na.rm=TRUE)/(nrow(xn)-1))
 }
 alpha <- pmax(colMeans(xr,na.rm=TRUE)-mu,10)
 cbind(mu=mu,logsigma=log(sigma),logalaph=log(alpha))
@@ -45,7 +46,7 @@ if(is(x, "EListRaw")) {
   y <- normalizeBetweenArrays(x, method="quantile", ...)
   if(is.null(status))
     status <- x$genes$Status
-  y <- y[status == regular, ]
+  y <- y[tolower(status) == tolower(regular), ]
   y$genes$Status <- NULL
 } else {
   x <- as.matrix(x)	
@@ -53,7 +54,7 @@ if(is(x, "EListRaw")) {
     x[, i] <- normexp.signal(normexp.par[i, ], x[, i])
   x <- x + offset
   y <- log2(normalizeBetweenArrays(x, method="quantile", ...))
-  y <- y[status == regular, ]
+  y <- y[tolower(status) == tolower(regular), ]
 }
 y
 }
