@@ -575,15 +575,34 @@ normalizeQuantiles <- function(A, ties=TRUE) {
 }
 
 normalizeMedianAbsValues <- function(x) 
-{
 #	Normalize columns of a matrix to have the same median absolute value
 #	Gordon Smyth
 #	12 April 2003.  Last modified 19 Oct 2005.
-
+{
 	narrays <- NCOL(x)
 	if(narrays==1) return(x)
 	cmed <- log(apply(abs(x), 2, median, na.rm=TRUE))
 	cmed <- exp(cmed - mean(cmed))
 	t(t(x)/cmed)
+}
+
+normalizeCyclicLoess <- function(x, weights = NULL, span=0.4, iterations = 3)
+#	Cyclic loess normalization of columns of matrix
+#	incorporating probes weights.
+#	Yunshun (Andy) Chen and Gordon Smyth
+#	14 April 2010.  Last modified 22 April 2010.
+{
+	y <- as.matrix(x)
+	if(is.null(weights))
+		weights <- rep(1,nrow(y))
+	for (k in 1:iterations) for (i in 1:(ncol(y)-1)) for (j in (i+1):ncol(y))
+	{
+		m <- y[,j] - y[,i]
+		a <- .5*(y[,j] + y[,i])
+		fit <- loessFit(m, a, weights = weights, span = span)
+		y[,i] <- y[,i] + .5*(fit$fitted)
+		y[,j] <- y[,j] - .5*(fit$fitted)		
+	}
+	y
 }
 
