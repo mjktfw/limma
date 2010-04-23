@@ -1,3 +1,7 @@
+23 April 2010: limma 3.5.1
+
+- Update reference for propexpr().
+
 22 April 2010: limma 3.3.22
 
 - new function normalizeCyclicLoess().

@@ -28,7 +28,7 @@ Numeric vector giving the proportions of expressed probes in each array.
 }
 
 \references{
-Wei Shi, Carolyn de Graaf, Sarah A Kinkel, Tracey Baldwin, Douglas J Hilton and Gordon K Smyth. Estimating the Proportion of Microarray Probes Expressed in an RNA sample. In preparation.
+Shi, W, de Graaf, C, Kinkel, S, Achtman, A, Baldwin, T, Schofield, L, Scott, H, Hilton, D, Smyth, GK (2010). Estimating the proportion of microarray probes expressed in an RNA sample. Nucleic Acids Research 38, 2168-2176.
 }
 
 \author{Wei Shi and Gordon Smyth}
