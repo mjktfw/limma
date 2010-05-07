@@ -1,6 +1,17 @@
+7 May 2010: limma 3.5.2
+
+- edits to romer.Rd, in particular a link to the curated
+  database of gene sets.
+
+- bug fix to estimation of proportion of active genes in roast()
+  when there are gene weights.
+
 23 April 2010: limma 3.5.1
 
 - Update reference for propexpr().
+
+23 April 2010: limma 3.5.0 (Bioconductor 2.7 Developmental Branch)
+23 April 2010: limma 3.4.0 (Bioconductor 2.6 Release Branch)
 
 22 April 2010: limma 3.3.22
 

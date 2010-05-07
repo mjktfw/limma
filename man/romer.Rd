@@ -10,7 +10,7 @@ romer(iset,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlat
 romer2(iset,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,nrot=9999)
 }
 \arguments{
-  \item{iset}{list of indices specifying the rows of \code{y} in the gene sets. The list can be made by \link{symbols2indices} and the gene sets can be retrieved from the molecular signatures database in Broad Institute.}
+  \item{iset}{list of indices specifying the rows of \code{y} in the gene sets. The list can be made using \link{symbols2indices}.}
   \item{y}{numeric matrix giving log-expression values.}
   \item{design}{design matrix}
   \item{contrast}{contrast for which the test is required. Can be an integer specifying a column of \code{design}, or else a contrast vector of length equal to the number of columns of \code{design}.}
@@ -21,7 +21,9 @@ romer2(iset,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correla
   \item{floor}{logical, if \code{TRUE} use floor-mean statistic instead of mean-rank statistic for summarizing t-statistics}
 }
 \value{
-Matrix with the rows corresponding to estimated p-values for each gene set and the columns corresponding to the number of genes for each gene set and the alternative hypotheses mixed, up, down or either.
+Numeric matrix giving p-values and the number of matched genes in each gene set.
+Rows correspond to gene sets.
+There are five columns giving the number of genes in the set and p-values for the alternative hypotheses mixed, up, down or either.
 }
 \details{
 This function implements a GSEA of a battery of gene sets similar in motivation to Subramanian et al (2005) but designed for use with linear models.
@@ -29,7 +31,9 @@ It is a competitive test, in that the different gene sets are pitted against one
 Instead of permutation, it uses rotation, a parametric resampling method suitable for linear models (Langsrud, 2005).
 \code{romer} can be used with any linear model with some level of replication.
 
-Number of genes is given for each gene set.
+Curated gene sets suitable for use with \code{romer} can be downloaded from
+\url{http://bioinf.wehi.edu.au/software/MSigDB/}.
+These lists are based on the molecular signatures database from the Broad Institute, but with gene symbols converted to offical gene symbols, separately for mouse and human.
 
 p-values are given for four possible alternative hypotheses.
 The alternative "up" means the genes in the set tend to be up-regulated, with positive t-statistics.
