@@ -3,6 +3,9 @@
 - new argument 'set.statistic' for roast(), which specifies
   the gene set summary statistic to be used.
 
+- the output from roast() no longer includes a column for the
+  "either" alternative hypothesis.
+
 7 May 2010: limma 3.5.2
 
 - edits to romer.Rd, in particular a link to the curated
