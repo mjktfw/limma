@@ -1,3 +1,8 @@
+7 May 2010: limma 3.5.3
+
+- new argument 'set.statistic' for roast(), which specifies
+  the gene set summary statistic to be used.
+
 7 May 2010: limma 3.5.2
 
 - edits to romer.Rd, in particular a link to the curated
