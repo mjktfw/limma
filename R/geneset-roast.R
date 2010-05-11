@@ -193,8 +193,62 @@ roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",
 	}
 
 #	Output
-	out <- data.frame(ActiveProp=c(r1+r2,r1,r2),P.Value=p)
-	row.names(out) <- c("mixed","up","down")
+	out <- data.frame(c(r1+r2,r1,r2),p)
+	dimnames(out) <- list(c("Mixed","Up","Down"),c("ActiveProp","P.Value"))
 	out
+}
+
+
+mroast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,nrot=999, adjust.method="BH")
+# rotation gene set testing with multiple sets
+# Gordon Smyth and Di Wu
+# 28 Jan 2010. Last revised 11 May 2010.
+{ 
+	if (!is.list(iset)) 
+        iset <- list(set = iset)
+	mset<-iset
+	lset<-length(mset)
+
+	if(is.null(var.prior) || is.null(df.prior)) {
+		p <- ncol(design)
+		n <- ncol(y)
+		d <- n-p
+		if(length(contrast) == 1) {
+			u <- rep.int(0,p)
+			u[contrast] <- 1
+			contrast <- u
+		}
+		if(length(contrast) != p) stop("length of contrast must match column dimension of design")
+		if(all(contrast==0)) stop("contrast all zero")
+		qr <- qr(contrast)
+		Q <- qr.Q(qr,complete=TRUE)
+		sign1 <- sign(qr$qr[1,1])
+		Q <- cbind(Q[,-1],Q[,1])
+		X <- design %*% Q
+		qr <- qr(X)
+		effects <- qr.qty(qr,t(y))
+#		Estimate global parameters s0 and d0
+		s2 <- colMeans(effects[-(1:p),,drop=FALSE]^2)
+		sv <- squeezeVar(s2,df=d)
+		df.prior <- sv$df.prior
+		var.prior<- sv$var.prior
+	}
+
+	out0 <- list()
+	pv <- adjpv <- active <- array(0,c(lset,3),dimnames=list(NULL,c("Mixed","Up","Down")))
+	for(i in 1:lset) {
+		out0[[i]] <- roast(iset=mset[[i]],y=y,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=var.prior,nrot=nrot)
+		pv[i,] <- out0[[i]]$P.Value
+		active[i,] <- out0[[i]]$ActiveProp
+	}
+	
+	adjpv[, "Mixed"] <- p.adjust(pv[,"Mixed"], method=adjust.method) 
+	adjpv[, "Up"] <- p.adjust(pv[,"Up"], method=adjust.method) 
+	adjpv[, "Down"] <- p.adjust(pv[,"Down"], method=adjust.method) 
+	if(is.null(names(mset)))
+		rownames(pv) <- rownames(adjpv) <- rownames(active) <- 1:lset
+	else
+		rownames(pv) <- rownames(adjpv) <- rownames(active) <- names(mset)
+	list(P.Value=pv, Adj.P.Value=adjpv, Active.Proportion=active) 
 }
 

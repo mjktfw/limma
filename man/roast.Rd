@@ -1,14 +1,20 @@
 \name{roast}
 \alias{roast}
+\alias{mroast}
 \title{Rotation Gene Set Tests}
 \description{
 Rotation gene set testing for linear models.
 }
 \usage{
-roast(iset=NULL, y, design, contrast=ncol(design), set.statistic="mean", gene.weights=NULL, array.weights=NULL, block=NULL, correlation, var.prior=NULL, df.prior=NULL, nrot=999)
-}
+roast(iset=NULL, y, design, contrast=ncol(design), set.statistic="mean",
+     gene.weights=NULL, array.weights=NULL, block=NULL, correlation,
+     var.prior=NULL, df.prior=NULL, nrot=999)
+mroast(iset=NULL, y, design, contrast=ncol(design), set.statistic="mean",
+      gene.weights=NULL, array.weights=NULL, block=NULL, correlation,
+      var.prior=NULL, df.prior=NULL, nrot=999, adjust.method="BH")}
 \arguments{
-  \item{iset}{vector specifying the rows of \code{y} in the test set.  This can be a vector of indices, or a logical vector of the same length as \code{statistics}, or any vector such as \code{y[selected,]} contains the values for the gene set to be tested.}
+  \item{iset}{vector specifying the rows of \code{y} in the test set.  This can be a vector of indices, or a logical vector of the same length as \code{statistics}, or any vector such as \code{y[selected,]} contains the values for the gene set to be tested.
+  For \code{mroast}, a list of vectors of indices.}
   \item{y}{numeric matrix giving log-expression values. If \code{var.prior} or \code{df.prior} are null, then \code{y} should contain values for all genes on the arrays. If both prior parameters are given, then only \code{y} values for the test set are required.}
   \item{design}{design matrix}
   \item{contrast}{contrast for which the test is required. Can be an integer specifying a column of \code{design}, or else a contrast vector of length equal to the number of columns of \code{design}.}
@@ -20,6 +26,7 @@ roast(iset=NULL, y, design, contrast=ncol(design), set.statistic="mean", gene.we
   \item{var.prior}{prior value for residual variances. If not provided, this is estimated from all the data using \code{squeezeVar}.}
   \item{df.prior}{prior degrees of freedom for residual variances. If not provided, this is estimated using \code{squeezeVar}.}
   \item{nrot}{number of rotations used to estimate the p-values.}
+  \item{adjust.method}{method used to adjust the p-values for multiple testing.  Options, in increasing conservatism, include \code{"none"}, \code{"BH"}, \code{"BY"} and \code{"holm"}.}
 }
 \value{
 data.frame with columns \code{ActiveProp} and \code{P.Value}.
@@ -54,6 +61,8 @@ The strategy of random rotations is due to Langsrud (2005).
 
 Following Monte Carlo hypothesis testing theory (Barnard, 1963), the p-value is computed as \code{(x+1)/(nrot+1)} where \code{x} is the number of rotations giving a more extreme statistic than that observed.
 This means that the smallest possible p-value is \code{1/(nrot+1)}.
+
+\code{mroast} does roast tests for multiple sets.
 }
 
 \seealso{
@@ -83,6 +92,9 @@ design <- cbind(Intercept=1,Group=c(0,0,1,1))
 iset <- 1:5
 y[iset,3:4] <- y[iset,3:4]+3
 roast(iset,y,design,contrast=2)
+
+iset2 <- 6:10
+mroast(list(set1=iset,set2=iset2),y,design,contrast=2)
 
 # Alternative approach useful if multiple gene sets are tested:
 fit <- lmFit(y,design)
