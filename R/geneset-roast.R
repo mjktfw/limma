@@ -1,9 +1,20 @@
 ##  ROAST.R
 
+setClass("Roast",
+#  rotation gene set test
+representation("list")
+)
+
+setMethod("show","Roast",
+#  Di Wu, Gordon Smyth
+#  14 May 2010.  Last modified 19 May 2010.
+function(object) print(object$p.values)
+)
+
 roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,nrot=999)
-# rotation gene set testing for linear models
+# Rotation gene set testing for linear models
 # Gordon Smyth and Di Wu
-# 24 Apr 2008. Revised 7 May 2010.
+# 24 Apr 2008. Revised 19 May 2010.
 {
 	if(is.null(iset)) iset <- rep(TRUE,nrow(y))
 	y <- as.matrix(y)
@@ -118,13 +129,16 @@ roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",
 	if(set.statistic=="msq") {
 #		Observed statistics
 		modt2 <- modt^2
-		if(!is.null(gene.weights)) modt2 <- gene.weights*modt2
+		if(!is.null(gene.weights)) {
+			modt2 <- abs(gene.weights)*modt2
+			modt <- gene.weights*modt
+		}
 		statobs["mixed"] <- mean(modt2)
 		statobs["up"] <- sum(modt2[modt > 0])/nset
 		statobs["down"] <- sum(modt2[modt < 0])/nset
 #		Simulated statistics   
 		if(!is.null(gene.weights)) {
-			gene.weights <- s*sqrt(abs(gene.weights))
+			gene.weights <- sqrt(abs(gene.weights))
 			modtr <- t(gene.weights*t(modtr))
 		}
 		statrot[,"mixed"] <- rowMeans(modtr^2)
@@ -194,13 +208,13 @@ roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",
 
 #	Output
 	out <- data.frame(c(r1+r2,r1,r2),p)
-	dimnames(out) <- list(c("Mixed","Up","Down"),c("ActiveProp","P.Value"))
-	out
+	dimnames(out) <- list(c("Mixed","Up","Down"),c("Active.Prop","P.Value"))
+	new("Roast",list(p.value=out,var.prior=s02,df.prior=d0))
 }
 
 
 mroast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,nrot=999, adjust.method="BH")
-# rotation gene set testing with multiple sets
+# Rotation gene set testing with multiple sets
 # Gordon Smyth and Di Wu
 # 28 Jan 2010. Last revised 11 May 2010.
 { 
@@ -237,9 +251,9 @@ mroast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean"
 	out0 <- list()
 	pv <- adjpv <- active <- array(0,c(lset,3),dimnames=list(NULL,c("Mixed","Up","Down")))
 	for(i in 1:lset) {
-		out0[[i]] <- roast(iset=mset[[i]],y=y,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=var.prior,nrot=nrot)
+		out0[[i]] <- roast(iset=mset[[i]],y=y,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,nrot=nrot)[[1]]
 		pv[i,] <- out0[[i]]$P.Value
-		active[i,] <- out0[[i]]$ActiveProp
+		active[i,] <- out0[[i]]$Active.Prop
 	}
 	
 	adjpv[, "Mixed"] <- p.adjust(pv[,"Mixed"], method=adjust.method) 

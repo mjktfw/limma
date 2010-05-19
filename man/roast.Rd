@@ -1,17 +1,22 @@
 \name{roast}
 \alias{roast}
 \alias{mroast}
+\alias{Roast-class}
+\alias{show,Roast-method}
 \title{Rotation Gene Set Tests}
 \description{
 Rotation gene set testing for linear models.
 }
+
 \usage{
 roast(iset=NULL, y, design, contrast=ncol(design), set.statistic="mean",
      gene.weights=NULL, array.weights=NULL, block=NULL, correlation,
      var.prior=NULL, df.prior=NULL, nrot=999)
 mroast(iset=NULL, y, design, contrast=ncol(design), set.statistic="mean",
       gene.weights=NULL, array.weights=NULL, block=NULL, correlation,
-      var.prior=NULL, df.prior=NULL, nrot=999, adjust.method="BH")}
+      var.prior=NULL, df.prior=NULL, nrot=999, adjust.method="BH")
+}
+
 \arguments{
   \item{iset}{vector specifying the rows of \code{y} in the test set.  This can be a vector of indices, or a logical vector of the same length as \code{statistics}, or any vector such as \code{y[selected,]} contains the values for the gene set to be tested.
   For \code{mroast}, a list of vectors of indices.}
@@ -28,12 +33,22 @@ mroast(iset=NULL, y, design, contrast=ncol(design), set.statistic="mean",
   \item{nrot}{number of rotations used to estimate the p-values.}
   \item{adjust.method}{method used to adjust the p-values for multiple testing.  Options, in increasing conservatism, include \code{"none"}, \code{"BH"}, \code{"BY"} and \code{"holm"}.}
 }
+
 \value{
-data.frame with columns \code{ActiveProp} and \code{P.Value}.
-The \code{ActiveProp} gives the proportion of genes in the set contributing meaningfully to significance, defined as those with squared z-values greater than 2.
+An object of class \code{"Roast"}.
+This consists of a list with the following components:
+\tabular{ll}{
+  \code{p.value}:\tab
+data.frame with columns \code{Active.Prop} and \code{P.Value}.
+The \code{Active.Prop} gives the proportion of genes in the set contributing meaningfully to significance, defined as those with squared z-values greater than 2.
 The \code{P.Value} gives estimated p-values.
-The rows correspond to the alternative hypotheses mixed, up or down.
+The rows correspond to the alternative hypotheses mixed, up or down.\cr
+  \code{var.prior}:\tab prior value for residual variances.\cr
+  \code{df.prior}:\tab prior degrees of freedom for residual variances.
 }
+There is a \code{show} method for \code{"Roast"} objects.
+}
+
 \details{
 This function tests whether any of the genes in the set are differentially expressed.
 It uses rotation, which is a smoothed version of permutation suitable for linear models (Langsrud, 2005).
@@ -67,7 +82,8 @@ This means that the smallest possible p-value is \code{1/(nrot+1)}.
 
 \seealso{
 \code{\link{wilcoxGST}},
-\code{\link{romer}}
+\code{\link{romer}
+}
 
 An overview of tests in limma is given in \link{08.Tests}.
 }

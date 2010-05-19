@@ -3,7 +3,7 @@
 #  All functions exported other than those starting with "."
 exportPattern("^[^\\.]")
 
-exportClasses("RGList","MAList","EListRaw","EList","MArrayLM","TestResults","LargeDataObject")
+exportClasses("RGList","MAList","EListRaw","EList","MArrayLM","TestResults","LargeDataObject","Roast")
 exportMethods("show")
 
 S3method("[",MAList)
