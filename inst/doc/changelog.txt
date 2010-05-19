@@ -1,3 +1,7 @@
+19 May 2010: limma 3.5.6
+
+- code simplifications to mroast(). Not user-visible.
+
 19 May 2010: limma 3.5.5
 
 - new S4 class "Roast" for output from the function roast().

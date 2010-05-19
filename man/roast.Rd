@@ -39,10 +39,8 @@ An object of class \code{"Roast"}.
 This consists of a list with the following components:
 \tabular{ll}{
   \code{p.value}:\tab
-data.frame with columns \code{Active.Prop} and \code{P.Value}.
-The \code{Active.Prop} gives the proportion of genes in the set contributing meaningfully to significance, defined as those with squared z-values greater than 2.
-The \code{P.Value} gives estimated p-values.
-The rows correspond to the alternative hypotheses mixed, up or down.\cr
+data.frame with columns \code{Active.Prop} and \code{P.Value}, giving the proportion of genes in the set contributing meaningfully to significance and estimated p-values, respectively.
+Rows correspond to the alternative hypotheses mixed, up or down.\cr
   \code{var.prior}:\tab prior value for residual variances.\cr
   \code{df.prior}:\tab prior degrees of freedom for residual variances.
 }
