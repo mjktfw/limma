@@ -8,7 +8,7 @@ representation("list")
 setMethod("show","Roast",
 #  Di Wu, Gordon Smyth
 #  14 May 2010.  Last modified 19 May 2010.
-function(object) print(object$p.values)
+function(object) print(object$p.value)
 )
 
 roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,nrot=999)
