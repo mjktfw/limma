@@ -26,6 +26,9 @@ Most users should not use this function directly but should use \code{\link{lmFi
 The linear model is fit for each gene by calling the function \code{lm.fit} or \code{lm.wfit} from the base library.
 }
 \author{Gordon Smyth}
+\examples{
+# See lmFit for examples
+}
 \seealso{
 \code{\link[stats:lmfit]{lm.fit}}.
 

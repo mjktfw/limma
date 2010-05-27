@@ -58,7 +58,7 @@ if(is(x, "EListRaw")) {
   y <- y[tolower(status) == tolower(regular), ]
   y$genes$Status <- NULL
 } else {
-  x <- as.matrix(x)	
+  x <- as.matrix(x)
   for(i in 1:ncol(x))
     x[, i] <- normexp.signal(normexp.par[i, ], x[, i])
   x <- x + offset

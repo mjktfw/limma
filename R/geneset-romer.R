@@ -375,4 +375,14 @@ romer <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=N
 	cbind(NGenes=set.sizes,p.value)
 }
 
- 
+topRomer<-function(x,n=10,alternative="up")
+# extracts a number of top gene sets results from the romer output.
+# Gordon Smyth and Yifang Hu.
+# 22 Mar 2010.  Last modified 27 May 2010.
+{
+	n <- min(n,nrow(x))
+	alternative <- match.arg(alternative,c("up","down","mixed"))
+	alt<-alternative
+	o <- order(x[,alternative])
+	x[o,][1:n,,drop=FALSE]
+}

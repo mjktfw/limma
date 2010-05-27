@@ -86,6 +86,9 @@ y[iset,3:4] <- y[iset,3:4]+3
 
 iset1 <- 1:5
 iset2 <- 6:10
-romer(iset=list(iset1=iset1,iset2=iset2),y=y,design=design,contrast=2,nrot=99)
+r <- romer(iset=list(iset1=iset1,iset2=iset2),y=y,design=design,contrast=2,nrot=99)
+r
+topRomer(r,alt="up")
+topRomer(r,alt="down")
 }
 \keyword{htest}
