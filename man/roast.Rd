@@ -64,7 +64,7 @@ The argument \code{gene.weights} allows directions or weights to be set for indi
 The gene set statistics \code{"mean"}, \code{"floormean"}, \code{"mean50"} and \code{msq} are defined by Wu and Smyth (2010).
 The different gene set statistics have different sensitivities to small number of genes.
 If \code{set.statistic="mean"} then the set will be statistically significantly only when the majority of the genes are differentially expressed.
-\code{"floormean"} and \code{"mean50"} will detect as few as 20% differentially expressed.
+\code{"floormean"} and \code{"mean50"} will detect as few as 25\% differentially expressed.
 \code{"msq"} is sensitive to even smaller proportions of differentially expressed genes, if the effects are reasonably large.
 
 The output gives p-values three possible alternative hypotheses, 
