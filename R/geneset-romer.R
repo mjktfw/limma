@@ -21,7 +21,20 @@ symbols2indices <- function(gmtl.official, symbol)
 	iset
 }
 
-romer2 <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,nrot=9999)
+romer <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation=NULL,set.statistic="mean",nrot=9999)
+# rotation mean-rank version of GSEA (gene set enrichment analysis) for linear models
+# Gordon Smyth and Yifang Hu
+# 27 March 2009.  Last modified 3 June 2010.
+{
+	set.statistic <- match.arg(set.statistic,c("mean","floormean","mean50"))
+	if(set.statistic=="mean50") {
+		return(.romer.mean50(iset=iset,y=y,design=design,contrast=contrast,array.weights=array.weights,block=block,correlation=correlation,nrot=nrot))
+	} else {
+		return(.romer.mean.floormean(iset=iset,y=y,design=design,contrast=contrast,array.weights=array.weights,block=block,correlation=correlation,floor=(set.statistic=="floormean"),nrot=nrot))
+	}
+}
+
+.romer.mean50 <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,nrot=9999)
 # rotation-mean50-rank version of GSEA (gene set enrichment analysis) for linear models
 # Gordon Smyth and Yifang Hu
 # 27 March 2009.  Last modified 15 Sep 2009.
@@ -100,7 +113,6 @@ romer2 <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=
 	s.rank.mixed<-rep(0,nset)
 	s.rank.up<-rep(0,nset)
 	s.rank.down<-rep(0,nset)
-	s.rank.either<-rep(0,nset)
 
 	modt.abs<-abs(modt)
 	s.abs.r <-rank(modt.abs)
@@ -113,7 +125,6 @@ romer2 <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=
 		mh<-.meanHalf(s.r[iset[[i]]],m[i])
 		s.rank.up[i] <-mh[2]	
 		s.rank.down[i]<-mh[1]
-  		s.rank.either[i]<- max(abs(mh-(ngenes+1)/2))
   		s.rank.mixed[i]<-.meanHalf(s.abs.r[iset[[i]]],m[i])[2]
 	}	
 
@@ -153,7 +164,7 @@ romer2 <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=
 	Y[1,] <- Y[1,]*(sv$var.post/(sv$var.post+var.prior*pg))^(1/2)
 
 #	Random rotations
-	p.value <- matrix(rep(0,nset*4),nrow=nset,ncol=4)
+	p.value <- matrix(rep(0,nset*3),nrow=nset,ncol=3)
 	for(i in 1:nrot)
 	{
 		R <- matrix(rnorm((d+1)),1,d+1)
@@ -179,17 +190,15 @@ romer2 <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=
 			s.rank.up.2 <-mh.2[2]	
 			s.rank.down.2 <-mh.2[1]
   			s.rank.mixed.2 <-.meanHalf(s.abs.r.2[iset[[j]]],m[j])[2]
-			s.rank.either.2 <- max(abs(mh.2-(ngenes+1)/2))
 		
 			if(s.rank.mixed.2>=s.rank.mixed[j]) p.value[j,1]<-p.value[j,1]+1
 			if(s.rank.up.2>=s.rank.up[j]) p.value[j,2]<-p.value[j,2]+1
 			if(s.rank.down.2<=s.rank.down[j]) p.value[j,3]<-p.value[j,3]+1
-			if(s.rank.either.2>=s.rank.either[j]) p.value[j,4]<-p.value[j,4]+1
 		}
 	}	
 
 	p.value <- (p.value+1)/(nrot+1)
-	colnames(p.value)<-c("mixed","up","down","either")
+	colnames(p.value)<-c("Mixed","Up","Down")
 	SetNames <- names(iset)
 	if(is.null(SetNames))
 		rownames(p.value) <- 1:nset
@@ -211,7 +220,7 @@ romer2 <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=
 	c(top,bottom)
 }
 
-romer <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,floor=FALSE,nrot=9999)
+.romer.mean.floormean <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,floor=FALSE,nrot=9999)
 # rotation mean-rank version of GSEA (gene set enrichment analysis) for linear models
 # Gordon Smyth and Yifang Hu
 # 27 March 2009.  Last modified 5 Oct 2009.
@@ -365,7 +374,7 @@ romer <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=N
 	}	
 
 	p.value <- (p.value+1)/(nrot+1)
-	colnames(p.value)<-c("up","down","mixed")
+	colnames(p.value)<-c("Up","Down","Mixed")
 	SetNames <- names(iset)
 	if(is.null(SetNames))
 		rownames(p.value) <- 1:nset
@@ -378,11 +387,11 @@ romer <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=N
 topRomer<-function(x,n=10,alternative="up")
 # extracts a number of top gene sets results from the romer output.
 # Gordon Smyth and Yifang Hu.
-# 22 Mar 2010.  Last modified 27 May 2010.
+# 22 Mar 2010.  Last modified 3 June 2010.
 {
 	n <- min(n,nrow(x))
-	alternative <- match.arg(alternative,c("up","down","mixed"))
-	alt<-alternative
+	alternative <- match.arg(tolower(alternative),c("up","down","mixed"))
+	alternative <- switch(alternative,"up"="Up","down"="Down","mixed"="Mixed")
 	o <- order(x[,alternative])
 	x[o,][1:n,,drop=FALSE]
 }

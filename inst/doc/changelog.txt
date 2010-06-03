@@ -1,4 +1,14 @@
-6 June 2010: limma 3.5.8
+3 June 2010: limma 3.5.9
+
+- new argument 'set.statistic' for romer() to control the
+  sensitivity of the tests to sets with only a subset of genes
+  differentially expressed.  The old function romer2() and the
+  old argument 'floor' are now retired.
+- romer() now longer outputs p-values for the "either"
+  alternative hypothesis.  P-values are output for "Up", "Down"
+  or "Mixed".
+
+2 June 2010: limma 3.5.8
 
 - more complete documentation for roast().
 

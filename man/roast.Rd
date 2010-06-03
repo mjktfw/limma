@@ -104,7 +104,7 @@ Rotation tests.
 \emph{Statistics and Computing} 15, 53-60.
 
 Wu, D, and Smyth, GK (2010).
-Rotation gene set tests for complex microarray experiments.
+ROAST: rotation gene set tests for complex microarray experiments.
 Submitted.
 }
 

@@ -6,8 +6,7 @@
 Rotation-mean-rank version of GSEA (gene set enrichment analysis) for linear models.
 }
 \usage{
-romer(iset,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,floor=FALSE,nrot=9999)
-romer2(iset,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,nrot=9999)
+romer(iset,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,set.statistic="mean",nrot=9999)
 }
 \arguments{
   \item{iset}{list of indices specifying the rows of \code{y} in the gene sets. The list can be made using \link{symbols2indices}.}
@@ -17,13 +16,13 @@ romer2(iset,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correla
   \item{array.weights}{optional numeric vector of array weights.} 
   \item{block}{optional vector of blocks.}
   \item{correlation}{correlation between blocks.}
+  \item{set.statistic}{statistic used to summarize the gene ranks for each set. Possible values are \code{"mean"}, \code{"floormean"} or \code{"mean50"}.}
   \item{nrot}{number of rotations used to estimate the p-values.}
-  \item{floor}{logical, if \code{TRUE} use floor-mean statistic instead of mean-rank statistic for summarizing t-statistics}
 }
 \value{
 Numeric matrix giving p-values and the number of matched genes in each gene set.
 Rows correspond to gene sets.
-There are five columns giving the number of genes in the set and p-values for the alternative hypotheses mixed, up, down or either.
+There are four columns giving the number of genes in the set and p-values for the alternative hypotheses mixed, up or down.
 }
 \details{
 This function implements a GSEA of a battery of gene sets similar in motivation to Subramanian et al (2005) but designed for use with linear models.
@@ -35,31 +34,31 @@ Curated gene sets suitable for use with \code{romer} can be downloaded from
 \url{http://bioinf.wehi.edu.au/software/MSigDB/}.
 These lists are based on the molecular signatures database from the Broad Institute, but with gene symbols converted to offical gene symbols, separately for mouse and human.
 
-p-values are given for four possible alternative hypotheses.
+In the output, p-values are given for each set for three possible alternative hypotheses.
 The alternative "up" means the genes in the set tend to be up-regulated, with positive t-statistics.
 The alternative "down" means the genes in the set tend to be down-regulated, with negative t-statistics.
-The alternative "either" means the set is either up or down-regulated as a whole.
 The alternative "mixed" test whether the genes in the set tend to be differentially expressed, without regard for direction.
 In this case, the test will be significant if the set contains mostly large test statistics, even if some are positive and some are negative.
-
-The first three alternatives are appropriate if you have a prior expection that all the genes in the set will react in the same direction.
+The first two alternatives are appropriate if you have a prior expection that all the genes in the set will react in the same direction.
 The "mixed" alternative is appropriate if you know only that the genes are involved in the relevant pathways, without knowing the direction of effect for each gene.
-The "mixed" alternative is the only one possible with F-like statistics.
 
 Note that \code{romer} estimates p-values by simulation, specifically by random rotations of the orthogonalized residuals.
 This means that the p-values will vary slightly from run to run.
 To get more precise p-values, increase the number of rotations \code{nrot}.
 The strategy of random rotations is due to Langsrud (2005).
 
-\code{romer} and \code{romer2} differ in the way that t-statistics are summarized to form a set-level test statistic.
-The genes are ranked by moderated t-statistic and \code{romer} uses the mean-ranks for each set as the statistic.
-If \code{floor=TRUE} then negative t-statistics are put to zero before ranking for the up test, and vice versa for the down test.
+The argument \code{set.statistic} controls the way that t-statistics are summarized to form a summary test statistic for each set.
+In all cases, genes are ranked by moderated t-statistic.
+If \code{set.statistic="mean"}, the mean-rank of the genes in each set is the summary statistic.
+If \code{set.statistic="floormean"} then negative t-statistics are put to zero before ranking for the up test, and vice versa for the down test.
 This improves the power for detecting genes with a subset of responding genes.
-\code{romer2} using the mean rank of the top 50% of genes in each set.
+If \code{set.statistics="mean50"}, the mean of the top 50\% ranks in each set is the summary statistic.
 This statistic performs well in practice but is slightly slower to compute.
 }
 
 \seealso{
+\code{\link{topRomer}},
+\code{\link{symbols2indices}},
 \code{\link{roast}},
 \code{\link{wilcoxGST}}
 
