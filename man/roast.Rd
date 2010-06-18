@@ -72,13 +72,16 @@ The output gives p-values three possible alternative hypotheses,
 \code{"Down"} to test whether the genes in the set tend to be down-regulated, with negative t-statistics,
 and \code{"Mixed"} to test whether the genes in the set tend to be differentially expressed, without regard for direction.
 
-\code{roast} estimates p-values by simulation, specifically by random rotations of the orthogonalized residuals, so p-values will vary slightly from run to run.
+\code{roast} estimates p-values by simulation, specifically by random rotations of the orthogonalized residuals (Langsrud, 2005), so p-values will vary slightly from run to run.
 To get more precise p-values, increase the number of rotations \code{nrot}.
-The strategy of random rotations is due to Langsrud (2005).
 Following Monte Carlo hypothesis testing theory (Barnard, 1963), the p-value is computed as \code{(b+1)/(nrot+1)} where \code{b} is the number of rotations giving a more extreme statistic than that observed.
 This means that the smallest possible p-value is \code{1/(nrot+1)}.
 
 \code{mroast} does roast tests for multiple sets, including adjustment for multiple testing.
+}
+
+\note{
+The default setting for the set statistic was changed in limma 3.5.9 (3 June 2010) from \code{"msq"} to \code{"mean"}.
 }
 
 \seealso{
@@ -92,14 +95,14 @@ An overview of tests in limma is given in \link{08.Tests}.
 \author{Gordon Smyth and Di Wu}
 
 \references{
-Barnard, GA (1963). Discussion of The spectral analysis of point processes (by MS Bartlett).
+Barnard, GA (1963). Discussion of 'The spectral analysis of point processes' by MS Bartlett.
 \emph{Journal of the Royal Statistical Society} B 25, 294.
 
-Goeman, JJ, and Buhlmann, P 2007.
+Goeman, JJ, and Buhlmann, P (2007).
 Analyzing gene expression data in terms of gene sets: methodological issues.
 \emph{Bioinformatics} 23, 980-987. 
 
-Langsrud, O. (2005).
+Langsrud, O (2005).
 Rotation tests.
 \emph{Statistics and Computing} 15, 53-60.
 

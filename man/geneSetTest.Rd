@@ -18,7 +18,7 @@ barcodeplot2(selected,statistics,selected2=NULL,labels=c("Up","Down"),...)
   \item{selected}{index vector for the gene set.  This can be a vector of indices, or a logical vector of the same length as \code{statistics} or, in general, any vector such that \code{statistic[selected]} gives the statistic values for the gene set to be tested.}
   \item{selected2}{index vector for a second gene set.  Usually used to specify down-regulated genes when \code{selected} is used for up-regulated genes.vector specifying the elements of \code{statistic} in the test group.}
   \item{statistics}{numeric vector giving the values of the test statistic for every gene or probe in the reference set, usually every probe on the microarray.}
-  \item{alternative}{character string specifying the alternative hypothesis, must be one of \code{"mixed"} (default), \code{"either"}, \code{"up"} or \code{"down"}. \code{two.sided}, \code{"greater"} and \code{"less"} are also permitted as synonyms for \code{"either"}, \code{"up"} and \code{"down"} respectively.}
+  \item{alternative}{character string specifying the alternative hypothesis, must be one of \code{"mixed"}, \code{"either"}, \code{"up"} or \code{"down"}. \code{"two.sided"}, \code{"greater"} and \code{"less"} are also permitted as synonyms for \code{"either"}, \code{"up"} and \code{"down"} respectively.}
   \item{type}{character string specifying whether the statistics are t-like (\code{"t"}), F-like \code{"f"} or whether the function should make an educated guess (\code{"auto"})}
   \item{ranks.only}{logical, if \code{TRUE} only the ranks of the \code{statistics} are used.} 
   \item{nsim}{number of random samples to take in computing the p-value.
@@ -38,9 +38,10 @@ barcodeplot2(selected,statistics,selected2=NULL,labels=c("Up","Down"),...)
 This test procedure was developed by Michaud et al (2008), who called it \emph{mean-rank gene-set enrichment}.
 
 These functions compute a p-value to test the hypothesis that the selected set of genes tends to be more highly ranked in terms of some test statistic compared to randomly selected genes.
-The statistic might be any statistic of interest, for example t-statistics or F-statistics for differential expression.
-They are competitive tests in the sense that genes in the test set are compared to other genes (Goeman and Buhlmann, 2007).
-By contrast, a self-contained gene set test such as \code{\link{roast}} tests for differential expression for the test set only without regard to other genes on the array.
+The statistic might be any statistic of interest, for example a t-statistic or F-statistic for differential expression.
+
+These function perform \emph{competitive} tests in the sense that genes in the test set are compared to other genes (Goeman and Buhlmann, 2007).
+By contrast, a \emph{self-contained} gene set test such as \code{\link{roast}} tests for differential expression for the test set only without regard to other genes on the array.
 Like all gene set tests, these functions can be used to detect differential expression for a group of genes, even when the effects are too small or there is too little data to detect the genes individually.
 The also provides a means to compare the results between different experiments.
 
@@ -88,7 +89,8 @@ Goeman, JJ, and Buhlmann P (2007).
 Analyzing gene expression data in terms of gene sets: methodological issues.
 \emph{Bioinformatics} 23, 980-987. 
 
-Michaud, J, Simpson, KM, Escher, R, Buchet-Poyau, K, Beissbarth, T, Carmichael, C, Ritchie, ME, Schutz, F, Cannon, P, Liu, M, Shen, X, Ito, Y, Raskind, WH, Horwitz, MS, Osato, M, Turner, DR, Speed, TP, Kavallaris, M, Smyth, GK, and Scott, HS (2008). Integrative analysis of RUNX1 downstream pathways and target genes.
+Michaud, J, Simpson, KM, Escher, R, Buchet-Poyau, K, Beissbarth, T, Carmichael, C, Ritchie, ME, Schutz, F, Cannon, P, Liu, M, Shen, X, Ito, Y, Raskind, WH, Horwitz, MS, Osato, M, Turner, DR, Speed, TP, Kavallaris, M, Smyth, GK, and Scott, HS (2008).
+Integrative analysis of RUNX1 downstream pathways and target genes.
 \emph{BMC Genomics} 9, 363.
 \url{http://www.biomedcentral.com/1471-2164/9/363}
 }

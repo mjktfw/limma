@@ -1,3 +1,8 @@
+18 June 2010: limma 3.5.10
+
+- minor documentation improvements for roast.Rd and
+  geneSetTest.Rd.
+
 3 June 2010: limma 3.5.9
 
 - new argument 'set.statistic' for romer() to control the
