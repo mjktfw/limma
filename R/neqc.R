@@ -17,7 +17,7 @@ else {
   if(is.null(status)) stop("Please provide probe status!")
   x <- as.matrix(x)
   xr <- x[tolower(status)==tolower(regular),,drop=FALSE]
-  xn <- x[tolower(status)==tolower(negctrl),drop=FALSE]
+  xn <- x[tolower(status)==tolower(negctrl),,drop=FALSE]
 }
 
 if(robust) {
