@@ -1,3 +1,7 @@
+5 July 2010: limma 3.5.12
+
+- citation details updated for the roast() function.
+
 28 June 2010: limma 3.5.11
 
 - bug fix to normexp.fit.control() when the argument 'x'

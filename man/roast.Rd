@@ -49,7 +49,8 @@ There is a \code{show} method for \code{"Roast"} objects.
 }
 
 \details{
-This function tests whether any of the genes in the set are differentially expressed.
+This function implements the ROAST gene set test from Wu et al (2010).
+It tests whether any of the genes in the set are differentially expressed.
 The function can be used for any microarray experiment which can be represented by a linear model.
 The design matrix for the experiment is specified as for the \code{\link{lmFit}} function, and the contrast of interest is specified as for the \code{\link{contrasts.fit}} function.
 This allows users to focus on differential expression for any coefficient or contrast in a linear model.
@@ -61,7 +62,7 @@ If these arguments are not supplied, they are estimated exactly as is done by \c
 
 The argument \code{gene.weights} allows directions or weights to be set for individual genes in the set.
 
-The gene set statistics \code{"mean"}, \code{"floormean"}, \code{"mean50"} and \code{msq} are defined by Wu and Smyth (2010).
+The gene set statistics \code{"mean"}, \code{"floormean"}, \code{"mean50"} and \code{msq} are defined by Wu et al (2010).
 The different gene set statistics have different sensitivities to small number of genes.
 If \code{set.statistic="mean"} then the set will be statistically significantly only when the majority of the genes are differentially expressed.
 \code{"floormean"} and \code{"mean50"} will detect as few as 25\% differentially expressed.
@@ -106,9 +107,8 @@ Langsrud, O (2005).
 Rotation tests.
 \emph{Statistics and Computing} 15, 53-60.
 
-Wu, D, and Smyth, GK (2010).
-ROAST: rotation gene set tests for complex microarray experiments.
-Submitted.
+Wu, D, Lim, E, Francois Vaillant, F, Asselin-Labat, M-L, Visvader, JE, and Smyth, GK (2010). ROAST: rotation gene set tests for complex microarray experiments.
+\emph{Bioinformatics}. (Accepted 4 July 2010)
 }
 
 \examples{
