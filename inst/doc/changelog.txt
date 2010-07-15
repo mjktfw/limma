@@ -1,3 +1,11 @@
+15 July 2010: limma 3.5.13
+
+- marray no longer a suggested package
+- read.ilmn() now uses readGenericHeader() to skip over
+  header information in BeadStudio files.
+- read.ilmn() no longer issues warning if control probe
+  files are not provided.
+
 5 July 2010: limma 3.5.12
 
 - citation details updated for the roast() function.
