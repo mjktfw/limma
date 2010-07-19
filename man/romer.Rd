@@ -3,7 +3,7 @@
 \alias{romer2}
 \title{Rotation Gene Set Enrichment Analysis}
 \description{
-Rotation-mean-rank version of GSEA (gene set enrichment analysis) for linear models.
+Gene set enrichment analysis for linear models using rotation tests (ROtation testing using MEan Ranks).
 }
 \usage{
 romer(iset,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,set.statistic="mean",nrot=9999)
@@ -25,8 +25,10 @@ Rows correspond to gene sets.
 There are four columns giving the number of genes in the set and p-values for the alternative hypotheses mixed, up or down.
 }
 \details{
-This function implements a GSEA of a battery of gene sets similar in motivation to Subramanian et al (2005) but designed for use with linear models.
-It is a competitive test, in that the different gene sets are pitted against one another.
+This function implements the ROMER procedure described by Majewski et al (2010).
+\code{romer} tests a hypothesis similar to that of Gene Set Enrichment Analysis (GSEA) (Subramanian et al, 2005) but is designed for use with linear models.
+Like GSEA, it is designed for use with a database of gene sets.
+Like GSEA, it is a competitive test in that the different gene sets are pitted against one another.
 Instead of permutation, it uses rotation, a parametric resampling method suitable for linear models (Langsrud, 2005).
 \code{romer} can be used with any linear model with some level of replication.
 
@@ -71,6 +73,15 @@ An overview of tests in limma is given in \link{08.Tests}.
 Langsrud, O, 2005.
 Rotation tests.
 \emph{Statistics and Computing} 15, 53-60
+
+Doerum G, Snipen L, Solheim M, Saeboe S (2009).
+Rotation testing in gene set enrichment analysis for small direct comparison experiments.
+\emph{Stat Appl Genet Mol Biol}, Article 34.
+
+Majewski, IJ, Ritchie, ME, Phipson, B, Corbin, J, Pakusch, M, Ebert, A, Busslinger, M, Koseki, H, Hu, Y, Smyth, GK, Alexander, WS, Hilton, DJ, and Blewitt, ME (2010).
+Opposing roles of polycomb repressive complexes in hematopoietic stem and progenitor cells.
+\emph{Blood}, published online 5 May 2010.
+\url{http://www.ncbi.nlm.nih.gov/pubmed/20445021}
 
 Subramanian, A, Tamayo, P, Mootha, VK, Mukherjee, S, Ebert, BL, Gillette, MA, Paulovich, A, Pomeroy, SL, Golub, TR, Lander, ES and Mesirov JP, 2005.
 Gene set enrichment analysis: a knowledge-based approach for interpreting genome-wide expression profiles.

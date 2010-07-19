@@ -33,9 +33,10 @@ The results from \code{decideTests} can also be included when the results of a l
 Competitive gene set testing for an individual gene set is provided by \code{\link{wilcoxGST}} or \code{\link{geneSetTest}}, which permute genes.
 The gene set can be displayed using \code{\link{barcodeplot}} or \code{\link{barcodeplot2}}, the latter for directional gene sets with both up and down genes.
 
-Self-contained gene set testing for an individual is provided by \code{\link{roast}}, which uses rotation technology, analogous to permuting arrays.
+Self-contained gene set testing for an individual set is provided by \code{\link{roast}}, which uses rotation technology, analogous to permuting arrays.
 
-Gene set enrichment analysis for a battery of gene sets is provided by \code{\link{romer}}.
+Gene set enrichment analysis for a large database of gene sets is provided by \code{\link{romer}}.
+\code{\link{topRomer}} is used to rank results from \code{romer}.
 
 The functions \code{\link{alias2Symbol}} and \code{\link{alias2SymbolTable}} are provided to help match gene sets with microarray probes by way of official gene symbols.
 }

@@ -1,6 +1,6 @@
 19 July 2010: limma 3.5.14
 
-- minor documentation updates for roast().
+- minor documentation updates for roast() and romer().
 
 15 July 2010: limma 3.5.13
 
