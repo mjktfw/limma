@@ -1,3 +1,7 @@
+19 July 2010: limma 3.5.14
+
+- minor documentation updates for roast().
+
 15 July 2010: limma 3.5.13
 
 - marray no longer a suggested package
