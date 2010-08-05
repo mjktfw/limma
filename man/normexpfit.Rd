@@ -63,7 +63,7 @@ Microarray background correction: maximum likelihood estimation for the normal-e
 }
 
 \seealso{
-\code{\link{normexp.signal}}.
+\code{\link{normexp.signal}}, \code{\link{normexp.fit.control}}.
 Also \code{\link[affy:bg.adjust]{bg.parameters} in the affy package.
 }
 

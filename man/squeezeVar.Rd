@@ -1,9 +1,9 @@
 \name{squeezeVar}
 \alias{squeezeVar}
 
-\title{Smooth Sample Variances}
+\title{Squeeze Sample Variances}
 \description{
-Smooth a set of sample variances by computing empirical Bayes posterior means.
+Squeeze a set of sample variances together by computing empirical Bayes posterior means.
 }
 
 \usage{
@@ -41,6 +41,10 @@ Smyth, G. K. (2004). Linear models and empirical Bayes methods for
      assessing differential expression in microarray experiments.
      \emph{Statistical Applications in Genetics and Molecular Biology}, \bold{3},
      No. 1, Article 3. \url{http://www.bepress.com/sagmb/vol3/iss1/art3}
+}
+
+\seealso{
+An overview of linear model functions in limma is given by \link{06.LinearModels}.
 }
 
 \examples{
