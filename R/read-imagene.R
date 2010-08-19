@@ -66,7 +66,7 @@ read.imagene <- function(files,path=NULL,ext=NULL,names=NULL,columns=NULL,other.
 		RG$printer <- printer
 	} else {
 		printer$ngrid.r <- sum(FD[,"Metarows"])
-		if(	all(printer$ngrid.c==FD[,"Metacols"]) &&
+		if(all(printer$ngrid.c==FD[,"Metacols"]) &&
 			all(printer$nspot.r==FD[,"Rows"]) &&
 			all(printer$nspot.c==FD[,"Cols"]) ) RG$printer <- printer
 	}

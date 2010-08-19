@@ -1,3 +1,7 @@
+19 August 2010: limma 2.5.17
+
+- read.maimages() now supports ImaGene Version 9.0.
+
 19 August 2010: limma 3.5.16
 
 - minor non-user-visible changes to decideTests() code.

@@ -18,7 +18,7 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 		}
 	}
 
-	source <- match.arg(source,c("generic","agilent","agilent.median","arrayvision","arrayvision.ARM","arrayvision.MTM","bluefuse","genepix","genepix.mean","genepix.median","genepix.custom","imagene","quantarray","scanarrayexpress","smd.old","smd","spot","spot.close.open"))
+	source <- match.arg(source,c("generic","agilent","agilent.median","arrayvision","arrayvision.ARM","arrayvision.MTM","bluefuse","genepix","genepix.mean","genepix.median","genepix.custom","imagene","imagene9","quantarray","scanarrayexpress","smd.old","smd","spot","spot.close.open"))
 #	source2 is the source type with qualifications removed
 	source2 <- strsplit(source,split=".",fixed=TRUE)[[1]][1]
 	if(is.null(quote)) if(source=="agilent") quote <- "" else quote <- "\""
@@ -53,6 +53,7 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 			genepix.median = list(R="F635 Median",G="F532 Median",Rb="B635 Median",Gb="B532 Median"),
 			genepix.custom = list(R="F635 Mean",G="F532 Mean",Rb="B635",Gb="B532"),
 			quantarray = list(R="ch2 Intensity",G="ch1 Intensity",Rb="ch2 Background",Gb="ch1 Background"),
+			imagene9 = list(R="Signal Mean 2",G="Signal Mean 1",Rb="Background Median 2",Gb="Background Median 1"),
 			scanarrayexpress = list(G="Ch1 Mean",Gb="Ch1 B Median",R="Ch2 Mean",Rb="Ch2 B Median"),
 			smd.old = list(G="CH1I_MEAN",Gb="CH1B_MEDIAN",R="CH2I_MEAN",Rb="CH2B_MEDIAN"),
 			smd = list(G="Ch1 Intensity (Mean)",Gb="Ch1 Background (Median)",R="Ch2 Intensity (Mean)",Rb="Ch2 Background (Median)"),
@@ -99,6 +100,7 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 		arrayvision=,arrayvision.ARM=,arrayvision.MTM = c("Spot labels","ID"),
 		bluefuse = c("ROW","COL","SUBGRIDROW","SUBGRIDCOL","BLOCK","NAME","ID"),   
 		genepix=,genepix.median=,genepix.custom = c("Block","Row","Column","ID","Name"),
+		imagene9 = c("Meta Row","Meta Column","Row","Column","Gene ID"),
 		quantarray= c("Array Row","Array Column","Row","Column","Name"),
 		scanarrayexpress = c("Array Row","Array Column","Spot Row","Spot Column"), 	
 		smd = c("Spot","Clone ID","Gene Symbol","Gene Name","Cluster ID","Accession","Preferred name","Locuslink ID","Name","Sequence Type","X Grid Coordinate (within sector)","Y Grid Coordinate (within sector)","Sector","Failed","Plate Number","Plate Row","Plate Column","Clone Source","Is Verified","Is Contaminated","Luid"),
@@ -145,6 +147,13 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 		skip <- h$NHeaderRecords
 		obj <- read.columns(fullname,required.col,text.to.search,skip=skip,sep=sep,quote=quote,stringsAsFactors=FALSE,fill=TRUE,flush=TRUE,...)
 		nspots <- nrow(obj)
+	}, imagene9 = {
+		h <- readImaGeneHeader(fullname)
+		skip <- h$NHeaderRecords
+		FD <- h$"Field Dimensions"
+		if(is.null(FD)) stop("Can't find Field Dimensions in ImaGene header")
+		nspots <- sum(apply(FD,1,prod))
+		obj <- read.columns(fullname,required.col,text.to.search,skip=skip,sep=sep,quote=quote,stringsAsFactors=FALSE,fill=TRUE,flush=TRUE,nrows=nspots,...)
 	}, smd = {
 		skip <- readSMDHeader(fullname)$NHeaderRecords
 		obj <- read.columns(fullname,required.col,text.to.search,skip=skip,sep=sep,quote=quote,stringsAsFactors=FALSE,fill=TRUE,flush=TRUE,...)
@@ -199,6 +208,17 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 					RG$printer$ngrid.r <- RG$printer$ngrid.c <- NA
 				}
 			}
+		}
+	}
+	if(source2=="imagene9") {
+		printer <- list(ngrid.r=FD[1,"Metarows"],ngrid.c=FD[1,"Metacols"],nspot.r=FD[1,"Rows"],nspot.c=FD[1,"Cols"])
+		if(nrow(FD)==1) {
+			RG$printer <- printer
+		} else {
+			printer$ngrid.r <- sum(FD[,"Metarows"])
+			if(all(printer$ngrid.c==FD[,"Metacols"]) &&
+				all(printer$nspot.r==FD[,"Rows"]) &&
+				all(printer$nspot.c==FD[,"Cols"]) ) RG$printer <- printer
 		}
 	}
 

@@ -16,7 +16,7 @@ read.imagene(files, path=NULL, ext=NULL, names=NULL, columns=NULL, other.columns
 \arguments{
   \item{files}{character vector giving the names of the files containing image analysis output or, for Imagene data, a character matrix of names of files.
   If omitted, then all files with extension \code{ext} in the specified directory will be read in alphabetical order.}
-  \item{source}{character string specifying the image analysis program which produced the output files.  Choices are \code{"generic"}, \code{"agilent"}, \code{"agilent.median"}, \code{"arrayvision"}, \code{"arrayvision.ARM"}, \code{"arrayvision.MTM"}, \code{"bluefuse"}, \code{"genepix"}, \code{"genepix.custom"}, \code{"genepix.median"}, \code{"imagene"}, \code{"quantarray"}, \code{"scanarrayexpress"}, \code{"smd.old"}, \code{"smd"}, \code{"spot"} or \code{"spot.close.open"}.}
+  \item{source}{character string specifying the image analysis program which produced the output files.  Choices are \code{"generic"}, \code{"agilent"}, \code{"agilent.median"}, \code{"arrayvision"}, \code{"arrayvision.ARM"}, \code{"arrayvision.MTM"}, \code{"bluefuse"}, \code{"genepix"}, \code{"genepix.custom"}, \code{"genepix.median"}, \code{"imagene"}, \code{"imagene9"}, \code{"quantarray"}, \code{"scanarrayexpress"}, \code{"smd.old"}, \code{"smd"}, \code{"spot"} or \code{"spot.close.open"}.}
   \item{path}{character string giving the directory containing the files.
   The default is the current working directory.}
   \item{ext}{character string giving optional extension to be added to each file name}
@@ -59,11 +59,12 @@ The columns of the data.frame are as in the image analysis output files.
 There is one restriction, which is that the column names should be refered to in full form in the weight function, i.e., do not rely on name expansion for partial matches when refering to the names of the columns.
 See \code{\link{QualityWeights}} for suggested weight functions.
 
-For Imagene image data the argument \code{files} should be a matrix with two columns.
+For data from ImaGene versions 1 to 8 (\code{source="imagene"}), the argument \code{files} should be a matrix with two columns.
 The first column should contain the names of the files containing green channel (cy3) data and the second column should contain names of files containing red channel (cy5) data.
 If \code{source="imagene"} and \code{files} is a vector of even length instead of a matrix, then each consecutive pair of file names is assumed to correspond to the same array.
 The function \code{read.imagene} is called by \code{read.maimages} when \code{source="imagene"}.
 It does not need to be called directly by users.
+For ImaGene 9 (\code{source="imagene9"}), \code{files} is a vector as for other image analysis programs.
 
 ArrayVision reports spot intensities in a number of different ways.
 \code{read.maimages} caters for ArrayVision's Artifact-removed (ARM) density values as \code{"arrayvision.ARM"} or for
