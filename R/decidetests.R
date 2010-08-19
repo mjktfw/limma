@@ -23,27 +23,27 @@ setMethod("show","TestResults",function(object) {
 decideTests <- function(object,method="separate",adjust.method="BH",p.value=0.05,lfc=0)
 #	Accept or reject hypothesis tests across genes and contrasts
 #	Gordon Smyth
-#	17 Aug 2004. Last modified 24 June 2007.
+#	17 Aug 2004. Last modified 13 August 2010.
 {
 	if(!is(object,"MArrayLM")) stop("Need MArrayLM object")
-	if(is.null(object$t)) object <- eBayes(object)
+	if(is.null(object$p.value)) object <- eBayes(object)
 	method <- match.arg(method,c("separate","global","hierarchical","nestedF"))
 	adjust.method <- match.arg(adjust.method,c("none","bonferroni","holm","BH","fdr","BY"))
 	if(adjust.method=="fdr") adjust.method <- "BH"
 	switch(method,separate={
 		p <- as.matrix(object$p.value)
-		tstat <- as.matrix(object$t)
 		for (j in 1:ncol(p)) {
 			o <- !is.na(p[,j])
 			p[o,j] <- p.adjust(p[o,j],method=adjust.method)
 		}
-		results <- new("TestResults",sign(tstat)*(p<p.value))
+		s <- sign(as.matrix(object$coefficients))
+		results <- new("TestResults",s*(p<p.value))
 	},global={
 		p <- as.matrix(object$p.value)
-		tstat <- as.matrix(object$t)
 		o <- !is.na(p)
 		p[o] <- p.adjust(p[o],method=adjust.method)
-		results <- new("TestResults",sign(tstat)*(p<p.value))
+		s <- sign(as.matrix(object$coefficients))
+		results <- new("TestResults",s*(p<p.value))
 	},hierarchical={
 		if(any(is.na(object$F.p.value))) stop("Can't handle NA p-values yet")
 		sel <- p.adjust(object$F.p.value,method=adjust.method) < p.value

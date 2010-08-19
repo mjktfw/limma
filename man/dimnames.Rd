@@ -27,7 +27,7 @@ A consequence is that \code{rownames} and \code{colnames} will work as expected.
 }
 \value{
 Either \code{NULL} or a list of length 2.
-If a list, its components are either 'NULL' or a character vector the length of the appropriate dimension of \code{x}.
+If a list, its components are either \code{NULL} or a character vector the length of the appropriate dimension of \code{x}.
 }
 \author{Gordon Smyth}
 \seealso{
