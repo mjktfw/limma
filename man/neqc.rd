@@ -15,10 +15,11 @@ neqc(x, status=NULL, negctrl="negative", regular="regular", offset=16, robust=FA
   \item{...}{any other arguments are passed to \code{normalizeBetweenArrays.}}
   }
 \details{
-This function calls the function \code{\link{normexp.fit.control}} to estimate the parameters required by normal+exponential convolution model with the help of negative control probes.
-\code{\link{normexp.signal}} is then called to background correct the raw data.
+This function calls code{\link{normexp.fit.control}} to estimate the parameters required by normal+exponential convolution model with the help of negative control probes, followed by \code{\link{normexp.signal}} to perform the background correction.
+If \code{x} contains background intensities \code{x$Eb}, then these are first subtracted from the foreground intensities, prior to normexp background correction.
 An \code{offset} is added to the data after the background correction.
-This function will then call the function \code{\link{normalizeBetweenArrays}} to perform quantile between-array normalization and log2 transformation.
+Then the intensities are quantile normalized, including control probes.
+Finally the intensities are log2 transformed and the control probes are removed.
 
 For more descriptions to parameters \code{x}, \code{status}, \code{negctrl} and \code{regular}, please refer to functions \code{\link{normexp.fit.control}} and \code{\link{read.ilmn}}.
 }
