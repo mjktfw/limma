@@ -1,3 +1,13 @@
+30 August 2010: limma 2.5.19
+
+- The backgroundCorrect() code has been simplified and a
+  new function backgroundCorrect.matrix() introduced for
+  matrix arguments.  The argument 'method' now defaults to
+  "auto" instead of NULL, although the effect is the same.
+  None of the changes to backgroundCorrect() are user-
+  visible, except that background intensities are now
+  used correctly when the argument RG is an EListRaw object.
+
 20 August 2010: limma 2.5.18
 
 - neqc() now subtracts background intensities Rb if found

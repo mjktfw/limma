@@ -1,6 +1,6 @@
 
-R version 2.11.0 Under development (unstable) (2009-12-17 r50765)
-Copyright (C) 2009 The R Foundation for Statistical Computing
+R version 2.11.0 (2010-04-22)
+Copyright (C) 2010 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -518,18 +518,34 @@ c   24   24   14   14
 > backgroundCorrect(RG)
 An object of class "RGList"
 $R
-[1] -1  0  1  2
+     [,1]
+[1,]   -1
+[2,]    0
+[3,]    1
+[4,]    2
 
 $G
-[1] -1  0  1  2
+     [,1]
+[1,]   -1
+[2,]    0
+[3,]    1
+[4,]    2
 
 > backgroundCorrect(RG, method="half")
 An object of class "RGList"
 $R
-[1] 0.5 0.5 1.0 2.0
+     [,1]
+[1,]  0.5
+[2,]  0.5
+[3,]  1.0
+[4,]  2.0
 
 $G
-[1] 0.5 0.5 1.0 2.0
+     [,1]
+[1,]  0.5
+[2,]  0.5
+[3,]  1.0
+[4,]  2.0
 
 > backgroundCorrect(RG, method="minimum")
 An object of class "RGList"
@@ -550,10 +566,18 @@ $G
 > backgroundCorrect(RG, offset=5)
 An object of class "RGList"
 $R
-[1] 4 5 6 7
+     [,1]
+[1,]    4
+[2,]    5
+[3,]    6
+[4,]    7
 
 $G
-[1] 4 5 6 7
+     [,1]
+[1,]    4
+[2,]    5
+[3,]    6
+[4,]    7
 
 > 
 > ### normalizeWithinArrays
