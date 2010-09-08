@@ -3,24 +3,23 @@
 \title{Background Correction}
 
 \description{
-This page deals with background correction methods for two-color microarray data.
+This page deals with background correction methods provided by the \code{\link{backgroundCorrect}}, \code{\link{kooperberg}} or \code{\link{neqc}} functions.
+Microarray data is typically background corrected by one of these functions before normalization and other downstream analysis.
 
-Usually one doesn't need to explicitly ask for background correction of the intensities because this is done by default by \code{\link{normalizeWithinArrays}},
-which subtracts the background from the foreground intensities before applying the normalization method.
-This default background correction method can be over-ridden by using \code{\link{backgroundCorrect}} which offers a number of alternative
-background correct methods to simple subtraction.
-The function \code{backgroundCorrect} is used to correct the \code{RGList} before applying \code{normalizeWithinArrays}.
+\code{backgroundCorrect} works on matrices, \code{EListRaw} or \code{RGList} objects, and calls \code{\link{backgroundCorrect.matrix}}.
 
 The \code{movingmin} method of \code{backgroundCorrect} uses utility functions \code{\link{ma3x3.matrix}} and \code{\link{ma3x3.spottedarray}}.
 
 The \code{normexp} method of \code{backgroundCorrect} uses utility functions \code{\link{normexp.fit}} and \code{\link{normexp.signal}}.
 
-\code{\link{neqc}} performs normexp background correction and quantile normalization using control probes.
-This method uses utility functions \code{\link{normexp.fit.control}} to conduct the background correction.
+\code{\link{kooperberg}} is a Bayesian background correction tool designed specifically for two-color GenePix data.
+It is computationally intensive and requires several additional columns from the GenePix data files.
+These can be read in using \code{read.maimages} and specifying the \code{other.columns} argument.
 
-\code{\link{kooperberg}} is a Bayesian background correction tool designed specifically for GenePix data.
-\code{kooperberg} is not currently used as the default method for GenePix data because it is computationally intensive.
-It requires several additional columns from the GenePix data files which can be read in using \code{read.maimages} and specifying the \code{other.columns} argument.
+\code{\link{neqc}} is for single-color data.
+It performs normexp background correction and quantile normalization using control probes.
+It uses utility functions \code{\link{normexp.fit.control}} and \code{\link{normexp.signal}}.
+If \code{robust=TRUE}, then \code{normexp.fit.control} uses the function \code{huber} in the MASS package.
 }
 
 \author{Gordon Smyth}

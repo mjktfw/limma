@@ -1,4 +1,4 @@
-\title{Kooperberg Model-Based Background Correction}
+\title{Kooperberg Model-Based Background Correction for GenePix data}
 \name{kooperberg}
 \alias{kooperberg}
 \description{
@@ -40,6 +40,11 @@ the red channel for each spot for each array}
 Kooperberg, C., Fazzio, T. G., Delrow, J. J., and Tsukiyama, T. (2002)
 Improved background correction for spotted DNA microarrays.
 \emph{Journal of Computational Biology} \bold{9}, 55-66.
+
+Ritchie, M. E., Silver, J., Oshlack, A., Silver, J., Holmes, M., Diyagama, D., Holloway, A., and Smyth, G. K. (2007).
+A comparison of background correction methods for two-colour microarrays.
+\emph{Bioinformatics} 23, 2700-2707.
+\url{http://bioinformatics.oxfordjournals.org/cgi/content/abstract/btm412}
 }
 	
 \seealso{

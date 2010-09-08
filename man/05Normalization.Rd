@@ -21,6 +21,9 @@ For more details see the \link[=limmaUsersGuide]{LIMMA User's Guide} which inclu
 \code{normalizeWithinArrays} uses utility functions \code{\link{MA.RG}}, \code{\link{loessFit}} and \code{\link{normalizeRobustSpline}}.
 \code{normalizeBetweenArrays} uses utility functions \code{\link{normalizeMedianAbsValues}} and \code{\link{normalizeQuantiles}}, none of which need to be called directly by users.
 
+The function \code{\link{normalizeVSN}} is also provided as a interface to the vsn package.
+It performs variance stabilizing normalization, an algorithm which includes background correction, within and between normalization together, and therefore doesn't fit into the paradigm of the other methods.
+
 \code{removeBatchEffect} can be used to remove a batch effect, associated with hybridization time or some other technical variable, prior to unsupervised analysis.
 }
 

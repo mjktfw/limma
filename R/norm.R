@@ -434,7 +434,7 @@ plotPrintorder <- function(object,layout,start="topleft",slide=1,method="loess",
 normalizeBetweenArrays <- function(object, method=NULL, targets=NULL, ...) {
 #	Normalize between arrays
 #	Gordon Smyth
-#	12 Apri 2003.  Last revised 3 July 2009.
+#	12 Apri 2003.  Last revised 9 Sep 2010.
 
 #	Check method
 	if(is.null(method)) {
@@ -448,6 +448,7 @@ normalizeBetweenArrays <- function(object, method=NULL, targets=NULL, ...) {
 	}
 	choices <- c("none","scale","quantile","Aquantile","Gquantile","Rquantile","Tquantile","vsn")
 	method <- match.arg(method,choices)
+	if(method=="vsn") stop("vsn method no longer supported. Please use normalizeVSN instead.")
 
 #	Method for matrices
 	if(is(object,"matrix")) {
@@ -464,24 +465,6 @@ normalizeBetweenArrays <- function(object, method=NULL, targets=NULL, ...) {
 	if(is(object,"EListRaw")) {
 		object$E <- log2(Recall(object$E,method=method,...))
 		object <- new("EList",unclass(object))
-		return(object)
-	}
-
-#	vsn needs special treatment
-	if(method=="vsn") {
-		require("vsn")
-		if(!is.null(object$G) && !is.null(object$R)) {
-			y <- cbind(object$G,object$R)
-			object$G <- object$R <- NULL
-		} else
-			stop("vsn works only on RGList objects or matrices")
-		y <- exprs(vsnMatrix(x=y,...))
-		n2 <- ncol(y)/2
-		G <- y[,1:n2]
-		R <- y[,n2+(1:n2)]
-		object$M <- R-G
-		object$A <- (R+G)/2
-		object <- new("MAList",unclass(object))
 		return(object)
 	}
 
@@ -530,6 +513,49 @@ normalizeBetweenArrays <- function(object, method=NULL, targets=NULL, ...) {
 		})
 	object
 }
+
+
+normalizeVSN <- function(x,...)
+{
+	require("vsn")
+	UseMethod("normalizeVSN")
+}
+
+normalizeVSN.RGList <- function(x,...)
+#	vsn background correction and normalization for RGList objects
+#	Gordon Smyth
+#	9 Sep 2010.
+{
+	x <- backgroundCorrect(x,method="subtract")
+	y <- cbind(x$G,x$R)
+	x$G <- x$R <- NULL
+	y <- exprs(vsnMatrix(x=y,...))
+	n2 <- ncol(y)/2
+	G <- y[,1:n2]
+	R <- y[,n2+(1:n2)]
+	x$M <- R-G
+	x$A <- (R+G)/2
+	new("MAList",unclass(x))
+}
+
+normalizeVSN.EListRaw <- function(x,...)
+#	vsn background correction and normalization for EListRaw objects
+#	Gordon Smyth
+#	9 Sep 2010.
+{
+	x <- backgroundCorrect(x,method="subtract")
+	x$E <- exprs(vsnMatrix(x=x$E,...))
+	new("EList",unclass(x))
+}
+
+normalizeVSN.default <- function(x,...)
+#	vsn background correction and normalization for matrices
+#	Gordon Smyth
+#	9 Sep 2010.
+{
+	exprs(vsnMatrix(x=as.matrix(x),...))
+}
+
 
 normalizeQuantiles <- function(A, ties=TRUE) {
 #	Normalize columns of a matrix to have the same quantiles, allowing for missing values.

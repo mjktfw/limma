@@ -10,7 +10,7 @@ backgroundCorrect(RG, method="auto", offset=0, printer=RG$printer, normexp.metho
 backgroundCorrect.matrix(E, Eb=NULL, method="auto", offset=0, printer=NULL, normexp.method="saddle", verbose=TRUE)
 }
 \arguments{
-  \item{RG}{a numeric matrix, \code{EListRaw} or \code{\link[limma:rglist]{RGList}} object.}
+  \item{RG}{a numeric matrix, \code{\link[limma:EList]{EListRaw}} or \code{\link[limma:rglist]{RGList}} object.}
   \item{E}{numeric matrix containing foreground intensities.}
   \item{Eb}{numeric matrix containing background intensities.}
   \item{method}{character string specifying correction method.  Possible values are \code{"auto"}, \code{"none"}, \code{"subtract"}, \code{"half"}, \code{"minimum"}, \code{"movingmin"}, \code{"edwards"} or \code{"normexp"}.
@@ -81,6 +81,8 @@ backgroundCorrect(RG, method="minimum")
 backgroundCorrect(RG, offset=5)
 }
 \seealso{
+\code{\link{kooperberg}}, \code{\link{neqc}}.
+
 An overview of background correction functions is given in \code{\link{04.Background}}.
 }
 \keyword{models}

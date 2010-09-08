@@ -193,7 +193,7 @@ avereps.default <- function(x,ID=rownames(x))
 avereps.MAList <- function(x,ID=NULL)
 #	Average over irregular replicate spots for MAList objects
 #	Gordon Smyth
-#	3 June 2008.
+#	3 June 2008.  Last modified 8 Sep 2010.
 {
 	if(is.null(ID)) {
 		ID <- x$genes$ID
@@ -204,7 +204,7 @@ avereps.MAList <- function(x,ID=NULL)
 	y$M <- avereps(x$M,ID=ID)
 	y$A <- avereps(x$A,ID=ID)
 	other <- names(x$other)
-	for (a in other) object$other[[a]] <- avereps(object$other[[a]],ID=ID)
+	for (a in other) y$other[[a]] <- avereps(x$other[[a]],ID=ID)
 	y$weights <- avereps(x$weights,ID=ID)
 	y$genes <- x$genes[!duplicated(ID),]
    y$printer <- NULL

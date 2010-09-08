@@ -13,7 +13,7 @@ normalizeBetweenArrays(object, method=NULL, targets=NULL, ...)
 \arguments{
   \item{object}{a numeric \code{matrix}, \code{EListRaw}, \code{\link[limma:rglist]{RGList}} or \code{\link[limma:malist]{MAList}} object.}
   \item{method}{character string specifying the normalization method to be used.
-  Choices are \code{"none"}, \code{"scale"}, \code{"quantile"}, \code{"Aquantile"}, \code{"Gquantile"}, \code{"Rquantile"}, \code{"Tquantile"} or \code{"vsn"}.
+  Choices are \code{"none"}, \code{"scale"}, \code{"quantile"}, \code{"Aquantile"}, \code{"Gquantile"}, \code{"Rquantile"} or \code{"Tquantile"}.
   A partial string sufficient to uniquely identify the choice is permitted.
   Default is \code{"Aquantile"} for two-color data objects or \code{"quantile"} for single-channel objects.}
   \item{targets}{vector, factor or matrix of length twice the number of arrays, used to indicate target groups if \code{method="Tquantile"}}
@@ -50,9 +50,6 @@ If \code{object} is a \code{matrix} then the scale, quantile or vsn normalizatio
 Applying \code{method="Aquantile"} when \code{object} is a \code{matrix} will produce an error.
 If \code{object} is an \code{EListRaw} object, then normalization will be applied to the matrix \code{object$E} of expression values, which will then be log2-transformed.
 
-\code{method="vsn"} uses the \code{vsnMatrix} function from the vsn package.
-For this option the input \code{object} should contain raw intensities, i.e., prior to background correction, log-transformation or any normalization.
-
 See the limma User's Guide for more examples of use of this function.
 }
 
@@ -60,6 +57,8 @@ See the limma User's Guide for more examples of use of this function.
 If \code{object} is a matrix then \code{normalizeBetweenArrays} produces a matrix of the same size.
 If \code{object} is an \code{EListRaw} object, then an \code{EList} object with expression values on the log2 scale is produced.
 For two-color data, \code{normalizeBetweenArrays} produces an \code{\link[limma:malist]{MAList}} object with M and A-values on the log2 scale.
+
+Note than vsn normalization, previously offered as a method of this function, is now performed by the \code{\link{normalizeVSN}} function.
 }
 
 \author{Gordon Smyth}
@@ -80,9 +79,8 @@ In: D. R. Goldstein (ed.), \emph{Science and Statistics: A Festschrift for Terry
 \seealso{
   An overview of LIMMA functions for normalization is given in \link{05.Normalization}.
 
-  See also \code{\link[marray:maNormScale]{maNormScale}} in the marray package,
-  \code{\link[affy:normalize]{normalize}} in the affy package,
-  and \code{\link[vsn:vsn]{vsn}} and \code{\link[vsn:vsn2]{vsnMatrix}} in the vsn package.
+  See also \code{\link[marray:maNormScale]{maNormScale}} in the marray package and
+  \code{\link[affy:normalize]{normalize}} in the affy package.
 }
 
 \examples{
