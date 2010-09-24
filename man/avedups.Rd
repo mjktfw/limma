@@ -30,7 +30,7 @@ A data object of the same class as \code{x} with \code{1/ndups} as many rows.
 }
 \author{Gordon Smyth}
 \seealso{
-  \code{\link[base]{dimnames}} in the base package.
+  \code{\link{avereps}}.
   
   \link{02.Classes} gives an overview of data classes used in LIMMA.
 }

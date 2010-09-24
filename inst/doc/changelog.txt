@@ -1,4 +1,9 @@
-8 September 2010: limma 2.5.10
+24 September 2010: limma 2.5.21
+
+- new function avearrays() to average over technical replicate
+  arrays.
+
+8 September 2010: limma 2.5.20
 
 - new function normalizeVSN to apply vsn normalization
   to limma objects.  normalizeBetweenArrays() now longer

@@ -3,9 +3,9 @@
 \alias{avereps.default}
 \alias{avereps.MAList}
 \alias{avereps.EList}
-\title{Average Over Irregular Replicate Spots}
+\title{Average Over Irregular Replicate Probes}
 \description{
-Condense a microarray data object so that values for within-array replicate spots are replaced with their average.
+Condense a microarray data object so that values for within-array replicate probes are replaced with their average.
 }
 \usage{
 \method{avereps}{default}(x, ID=rownames(x))
@@ -31,7 +31,7 @@ A data object of the same class as \code{x} with a row for each unique value of 
 }
 \author{Gordon Smyth}
 \seealso{
-  \code{\link{avedups}}. Also \code{\link[base]{rowsum}} in the base package.
+  \code{\link{avedups}}, \code{\link{avearrays}}. Also \code{\link[base]{rowsum}} in the base package.
   
   \link{02.Classes} gives an overview of data classes used in LIMMA.
 }
