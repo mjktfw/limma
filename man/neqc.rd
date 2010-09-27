@@ -15,10 +15,12 @@ neqc(x, status=NULL, negctrl="negative", regular="regular", offset=16, robust=FA
   \item{...}{any other arguments are passed to \code{normalizeBetweenArrays.}}
   }
 \details{
-This function calls code{\link{normexp.fit.control}} to estimate the parameters required by normal+exponential convolution model with the help of negative control probes, followed by \code{\link{normexp.signal}} to perform the background correction.
+This function calls \code{\link{nec}} to carry out normexp background correction
+aided by negative control probes.
+\code{\link{nec}} will add an offset to the data after background correction.
 If \code{x} contains background intensities \code{x$Eb}, then these are first subtracted from the foreground intensities, prior to normexp background correction.
-An \code{offset} is added to the data after the background correction.
-Then the intensities are quantile normalized, including control probes.
+
+The background-corrected intensities will then be quantile normalized, including control probes.
 Finally the intensities are log2 transformed and the control probes are removed.
 
 For more descriptions to parameters \code{x}, \code{status}, \code{negctrl} and \code{regular}, please refer to functions \code{\link{normexp.fit.control}} and \code{\link{read.ilmn}}.
@@ -37,6 +39,8 @@ Shi W, Oshlack A and Smyth GK (2010). Optimizing the noise versus bias trade-off
   An overview of LIMMA functions for normalization is given in \link{05.Normalization}.
   
   An overview of background correction functions is given in \link{04.Background}.
+
+  \code{\link{nec}} performs normexp by control background correction. 
   
   \code{\link{normexp.fit.control}} estimates the parameters in the normal+exponential convolution model using the negative control probes.
   

@@ -42,10 +42,10 @@ normexp.fit.control <- function(x, status=NULL, negctrl="negative", regular="reg
 	cbind(mu=mu,logsigma=log(sigma),logalpha=log(alpha))
 }
 
-neqc <- function(x, status=NULL, negctrl="negative", regular="regular", offset=16, robust=FALSE, ...)
-#	Normexp background correction and quantile normalization using control probes
-#	Wei Shi and Gordon Smyth
-#	Created 17 April 2009. Last modified 17 April 2010.
+nec <- function(x, status=NULL, negctrl="negative", regular="regular", offset=16, robust=FALSE)
+#	Normexp background correction aided by negative controls.
+#	Wei Shi
+#	Created 27 September 2010.
 {
 	if(is(x,"EListRaw") && !is.null(x$Eb)) x$E <- x$E-x$Eb
 	normexp.par <- normexp.fit.control(x, status=status, negctrl=negctrl, regular=regular, robust=robust)
@@ -53,17 +53,30 @@ neqc <- function(x, status=NULL, negctrl="negative", regular="regular", offset=1
 		for(i in 1:ncol(x))
 			x$E[, i] <- normexp.signal(normexp.par[i, ], x$E[, i])
 		x$E <- x$E + offset
-		y <- normalizeBetweenArrays(x, method="quantile", ...)
-		if(is.null(status))
-			status <- x$genes$Status
-		y <- y[tolower(status) == tolower(regular), ]
-		y$genes$Status <- NULL
 	} else {
 		x <- as.matrix(x)
 		for(i in 1:ncol(x))
-			x[, i] <- normexp.signal(normexp.par[i, ], x[, i])
+		x[, i] <- normexp.signal(normexp.par[i, ], x[, i])
 		x <- x + offset
-		y <- log2(normalizeBetweenArrays(x, method="quantile", ...))
+	}
+	x
+}
+
+neqc <- function(x, status=NULL, negctrl="negative", regular="regular", offset=16, robust=FALSE, ...)
+#	Normexp background correction and quantile normalization using control probes
+#	Wei Shi and Gordon Smyth
+#	Created 17 April 2009. Last modified 27 September 2010.
+{
+	x.bg <- nec(x,status,negctrl,regular,offset,robust)
+	if(is(x.bg, "EListRaw")) {
+		y <- normalizeBetweenArrays(x.bg, method="quantile", ...)
+		if(is.null(status))
+			status <- y$genes$Status
+		y <- y[tolower(status) == tolower(regular), ]
+		y$genes$Status <- NULL
+	} else {
+		x.bg <- as.matrix(x.bg)
+		y <- log2(normalizeBetweenArrays(x.bg, method="quantile", ...))
 		y <- y[tolower(status) == tolower(regular), ]
 	}
 	y
