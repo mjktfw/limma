@@ -30,7 +30,7 @@ An \code{\link{EList-class}} or matrix object containing normalized log2 express
 }
 
 \references{
-Shi W, Oshlack A and Smyth GK (2010). Optimizing the noise versus bias trade-off for Illumina Whole Genome Expression BeadChips. Nucleic Acids Research, In Press 
+Shi W, Oshlack A and Smyth GK (2010). Optimizing the noise versus bias trade-off for Illumina Whole Genome Expression BeadChips. Nucleic Acids Research, Advance Access, October 6, 2010 
 }
 
 \author{Wei Shi and Gordon Smyth}
