@@ -2,7 +2,7 @@
 \alias{loessFit}
 \title{Fast Simple Loess}
 \description{
-A fast version of locally weighted regression when there is only one x-variable and only the fitted values and residuals are required.
+A fast version of locally weighted linear regression when there is only one x-variable and only the fitted values and residuals are required.
 }
 \usage{
 loessFit(y, x, weights=NULL, span=0.3, bin=0.01/(2-is.null(weights)), iterations=4)
@@ -20,17 +20,19 @@ loessFit(y, x, weights=NULL, span=0.3, bin=0.01/(2-is.null(weights)), iterations
 
 \details{
 This is a wrapper function to the Fortran and C code in the stats package which underlies the \code{lowess} and \code{loess} functions.
-Its is to give a streamlined common interface to \code{lowess} and \code{loess} for use in \code{\link{normalizeWithinArrays}}.
+Its purpose is to give a unified and streamlined interface to \code{lowess} and \code{loess} for use in \code{\link{normalizeWithinArrays}}.
 When \code{weights} is null, this function is in effect a call to \code{lowess} in the stats package, with appropropriate choice of tuning parameters.
-When \code{weights} is non-null, it is in effect a call to \code{loess}.
+When \code{weights} is non-null, it is in effect a call to \code{loess} with \code{degree=1}.
 See the help pages for those functions for references and credits.
 
-Note tha \code{lowess} is faster, needs less memory and is able to use a more accurate interpolation scheme than \code{loess}, so it is desirable to use \code{lowess} whenever \code{loess} is not needed to handle quantitative weights.
+Note that \code{lowess} is faster, needs less memory and is able to use a more accurate interpolation scheme than \code{loess}, so it is desirable to use \code{lowess} whenever \code{loess} is not needed to handle quantitative weights.
 
 The arguments \code{span}, \code{cell} and \code{iterations} here have the same meaning as in \code{loess}.
 \code{span} is equivalent to the argument \code{f} of \code{lowess} and \code{iterations} is equivalent to \code{iter+1}.
-The parameter \code{bin} is intended to give a simple uniform interface to the \code{delta} argument of \code{lowess} and the \code{cell} argument of \code{loess}.
+
+The parameter \code{bin} is intended to give a uniform interface to the \code{delta} argument of \code{lowess} and the \code{cell} argument of \code{loess}.
 \code{bin} translates to \code{delta=bin*diff(range(x))} in a call to \code{lowess} or to \code{cell=bin/span} in a call to \code{loess}.
+This is an attempt to put the \code{delta} and \code{cell} arguments on comparable scales.
 
 Unlike \code{lowess}, \code{loessFit} returns values in original rather than sorted order.
 Also unlike \code{lowess}, \code{loessFit} allows missing values, the treatment being analogous to \code{na.exclude}.
