@@ -1,3 +1,12 @@
+21 October 2010: limma 2.7.1
+
+- subsetting, cbind and rbind for EListRaw objects did not
+  operate correctly on the Eb component of the objects.
+  Now fixed.
+
+18 October 2010: limma 2.7.0 (Bioconductor 2.8 Developmental Branch)
+18 October 2010: limma 2.6.0 (Bioconductor 2.7 Release Branch)
+
 24 September 2010: limma 2.5.21
 
 - new function avearrays() to average over technical replicate
