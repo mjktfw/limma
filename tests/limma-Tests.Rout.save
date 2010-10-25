@@ -1,7 +1,8 @@
 
-R version 2.11.0 (2010-04-22)
+R version 2.12.0 (2010-10-15)
 Copyright (C) 2010 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
+Platform: i386-pc-mingw32/i386 (32-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -932,10 +933,10 @@ $df.residual
 [1] 6 6 6 6 4
 
 $cov.coefficients
-           alpha-beta      mu+alpha       mu+beta
-alpha-beta  0.6666667  3.333333e-01 -3.333333e-01
-mu+alpha    0.3333333  3.333333e-01 -1.821460e-17
-mu+beta    -0.3333333 -1.821460e-17  3.333333e-01
+           alpha-beta     mu+alpha       mu+beta
+alpha-beta  0.6666667 3.333333e-01 -3.333333e-01
+mu+alpha    0.3333333 3.333333e-01  9.280771e-17
+mu+beta    -0.3333333 9.280771e-17  3.333333e-01
 
 $method
 [1] "ls"

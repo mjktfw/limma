@@ -1,18 +1,22 @@
-21 October 2010: limma 2.7.1
+25 October 2010: limma 3.7.2
+
+- minor updates to User's Guide.
+
+21 October 2010: limma 3.7.1
 
 - subsetting, cbind and rbind for EListRaw objects did not
   operate correctly on the Eb component of the objects.
   Now fixed.
 
-18 October 2010: limma 2.7.0 (Bioconductor 2.8 Developmental Branch)
-18 October 2010: limma 2.6.0 (Bioconductor 2.7 Release Branch)
+18 October 2010: limma 3.7.0 (Bioconductor 2.8 Developmental Branch)
+18 October 2010: limma 3.6.0 (Bioconductor 2.7 Release Branch)
 
-24 September 2010: limma 2.5.21
+24 September 2010: limma 3.5.21
 
 - new function avearrays() to average over technical replicate
   arrays.
 
-8 September 2010: limma 2.5.20
+8 September 2010: limma 3.5.20
 
 - new function normalizeVSN to apply vsn normalization
   to limma objects.  normalizeBetweenArrays() now longer
@@ -24,7 +28,7 @@
 - updates to the 04.Background help page, which gives an
   overview of background correction functions.
 
-30 August 2010: limma 2.5.19
+30 August 2010: limma 3.5.19
 
 - The backgroundCorrect() code has been simplified and a
   new function backgroundCorrect.matrix() introduced for
@@ -34,12 +38,12 @@
   visible, except that background intensities are now
   used correctly when the argument RG is an EListRaw object.
 
-20 August 2010: limma 2.5.18
+20 August 2010: limma 3.5.18
 
 - neqc() now subtracts background intensities Rb if found
   in data object.
 
-19 August 2010: limma 2.5.17
+19 August 2010: limma 3.5.17
 
 - read.maimages() now supports ImaGene Version 9.0.
 
