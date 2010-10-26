@@ -63,8 +63,12 @@ There is a section using \code{plotDensities} in conjunction with between-array 
 in the \link[=limmaUsersGuide]{LIMMA User's Guide}.
 }
 \examples{
-if(require("sma")) {
-data(MouseArray)
+\dontrun{
+# This example is designed for work on a subset of the data
+# from the ApoAI case study in Limma User's Guide
+# This example was formerly loaded from sma package using
+#   library(sma)
+#   data(MouseArray)
 
 #  no normalization but background correction is done
 MA.n <- MA.RG(mouse.data)
@@ -99,7 +103,6 @@ col=c("purple"))
 #  All individual-channels, three groups (ctl,tmt,reference), three colors.
 plotDensities(MA.n,singlechannels=c(1:12),
 groups=c(rep(1,3),rep(2,3),rep(3,6)),col=c("darkred","red","green"))
-
 }
 }
 \keyword{hplot}

@@ -1,3 +1,10 @@
+25 October 2010: limma 3.7.3
+
+- Shi et al (2010) reference now given for neqc function
+  in User's Guide.
+
+- use of sma package now commented out of code examples.
+
 25 October 2010: limma 3.7.2
 
 - minor updates to User's Guide.

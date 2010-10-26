@@ -56,9 +56,13 @@ Ritchie, M. E., Diyagama, D., Neilson, van Laar, R., J., Dobrovic, A., Holloway,
 An overview of linear model functions in limma is given by \link{06.LinearModels}.
 }
 \examples{
-if(require("sma")) {
-# Subset of data from ApoAI case study in Limma User's Guide
-data(MouseArray)
+\dontrun{
+# This example is designed for work on a subset of the data
+# from ApoAI case study in Limma User's Guide
+# This example was formerly loaded from sma package using
+#   library(sma)
+#   data(MouseArray)
+
 # Avoid non-positive intensities
 RG <- backgroundCorrect(mouse.data, method="half")
 MA <- normalizeWithinArrays(RG, mouse.setup)
