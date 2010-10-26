@@ -6,8 +6,8 @@
 
 26 October 2010: limma 3.7.4
 
-- bug file to rbind.EListRaw and rbind.EList.  Background
-  component Eb was not being combined correctly.
+- bug file to rbind.EListRaw and rbind.EList.  This bug also
+  affected neqc() which calls rbind on EListRaw objects.
 
 25 October 2010: limma 3.7.3
 
