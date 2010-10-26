@@ -1,3 +1,9 @@
+26 October 2010: limma 3.7.6
+
+- .read.oneilmnfile() and read.ilmn() are now careful to return
+  the genes annotation as a data.frame, not a character vector,
+  even when it only has one column.
+
 26 October 2010: limma 3.7.5
 
 - rbind.EList and rbind.EListRaw now behave correctly when one
@@ -6,7 +12,7 @@
 
 26 October 2010: limma 3.7.4
 
-- bug file to rbind.EListRaw and rbind.EList.  This bug also
+- bug fix to rbind.EListRaw and rbind.EList.  This bug also
   affected neqc() which calls rbind on EListRaw objects.
 
 25 October 2010: limma 3.7.3

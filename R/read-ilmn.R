@@ -10,8 +10,8 @@ read.ilmn <- function(files=NULL, ctrlfiles=NULL, path=NULL, ctrlpath=NULL, prob
 		if(!is.null(path)) f <- file.path(path, f)
 		n <- length(f)
 		for(i in 1:n){
-			if(verbose) cat("Reading file", f[i], "... ...\n") 
-			elist1 <- .read.oneilmnfile(f[i], probeid,	annotation, expr, other.columns, sep, quote, verbose, ...)
+			if(verbose) cat("Reading file", f[i], "... ...\n")
+			elist1 <- .read.oneilmnfile(f[i], probeid, annotation, expr, other.columns, sep, quote, verbose, ...)
 			if(i==1)
 				elist <- elist1
 			else
@@ -27,7 +27,7 @@ read.ilmn <- function(files=NULL, ctrlfiles=NULL, path=NULL, ctrlpath=NULL, prob
 		n <- length(cf)
 		for(i in 1:n){
 			if(verbose) cat("Reading file", cf[i], "... ...\n")
-			elist.ctrl1 <- .read.oneilmnfile(cf[i], probeid,	annotation, expr, other.columns, sep, quote, verbose, ...)
+			elist.ctrl1 <- .read.oneilmnfile(cf[i], probeid, annotation, expr, other.columns, sep, quote, verbose, ...)
 			if(i==1)
 				elist.ctrl <- elist.ctrl1
 			else
@@ -86,7 +86,7 @@ read.ilmn <- function(files=NULL, ctrlfiles=NULL, path=NULL, ctrlpath=NULL, prob
 	colnames(elist$E) <- snames
 	rownames(elist$E) <- pids
 	
-	elist$genes <- x[, c(grep(tolower(probeid), tolower(colnames(x))), grep(tolower(paste(annotation,collapse="|")), tolower(colnames(x))))]
+	elist$genes <- x[, c(grep(tolower(probeid), tolower(colnames(x))), grep(tolower(paste(annotation,collapse="|")), tolower(colnames(x)))), drop=FALSE]
 	elist$targets <- data.frame(SampleNames=snames, stringsAsFactors=FALSE)
 	
 	if(!is.null(other.columns)){
