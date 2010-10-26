@@ -335,7 +335,7 @@ rbind.MAList <- function(..., deparse.level=1) {
 rbind.EListRaw <- rbind.EList <- function(..., deparse.level=1) {
 #  Combine EList objects assuming same array lists
 #  Gordon Smyth
-#  23 March 2009.  Last modified 21 October 2010.
+#  23 March 2009.  Last modified 26 October 2010.
 
 	objects <- list(...)
 	nobjects <- length(objects)
@@ -344,7 +344,7 @@ rbind.EListRaw <- rbind.EList <- function(..., deparse.level=1) {
 	if(nobjects > 1)
 	for (i in 2:nobjects) {
 		out$E <- rbind(out$E,objects[[i]]$E)
-		out$Eb <- rbind(out$E,objects[[i]]$Eb)
+		out$Eb <- rbind(out$Eb,objects[[i]]$Eb)
 		out$weights <- rbind(out$weights,objects[[i]]$weights)
 		out$genes <- rbind(out$genes,objects[[i]]$genes)
 		for (a in other) out$other[[a]] <- rbind(out$other[[a]],objects[[i]]$other[[a]])

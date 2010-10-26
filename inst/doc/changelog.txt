@@ -1,3 +1,8 @@
+25 October 2010: limma 3.7.4
+
+- bug file to rbind.EListRaw and rbind.EList.  Background
+  component Eb was not being combined correctly.
+
 25 October 2010: limma 3.7.3
 
 - Shi et al (2010) reference now given for neqc function
