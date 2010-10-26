@@ -341,13 +341,14 @@ rbind.EListRaw <- rbind.EList <- function(..., deparse.level=1) {
 	nobjects <- length(objects)
 	out <- objects[[1]]
 	other <- names(objects[[1]]$other)
+	am <- function(x) if(is.null(x)) NULL else as.matrix(x)
 	if(nobjects > 1)
 	for (i in 2:nobjects) {
-		out$E <- rbind(out$E,objects[[i]]$E)
-		out$Eb <- rbind(out$Eb,objects[[i]]$Eb)
-		out$weights <- rbind(out$weights,objects[[i]]$weights)
+		out$E <- rbind(am(out$E),am(objects[[i]]$E))
+		out$Eb <- rbind(am(out$Eb),am(objects[[i]]$Eb))
+		out$weights <- rbind(am(out$weights),am(objects[[i]]$weights))
 		out$genes <- rbind(out$genes,objects[[i]]$genes)
-		for (a in other) out$other[[a]] <- rbind(out$other[[a]],objects[[i]]$other[[a]])
+		for (a in other) out$other[[a]] <- rbind(am(out$other[[a]]),am(objects[[i]]$other[[a]]))
 	}
 	out
 }

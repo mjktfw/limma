@@ -1,4 +1,10 @@
-25 October 2010: limma 3.7.4
+26 October 2010: limma 3.7.5
+
+- rbind.EList and rbind.EListRaw now behave correctly when one
+  or more of the matrix components are simply undimensioned
+  vectors.
+
+26 October 2010: limma 3.7.4
 
 - bug file to rbind.EListRaw and rbind.EList.  Background
   component Eb was not being combined correctly.
