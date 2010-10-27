@@ -48,11 +48,11 @@ read.ilmn <- function(files=NULL, ctrlfiles=NULL, path=NULL, ctrlpath=NULL, prob
 			return(elist.ctrl)
 	}
 	
-	read.ilmn.targets <- function(targets, ...)
+read.ilmn.targets <- function(targets, ...)
 #  Read Illumina BeadStudio output using targets frame
 #  Wei Shi
 #  15 July 2009
-	{
+{
 	if(is.null(targets$files) && is.null(targets$ctrlfiles))
 		stop("Can not find column \"files\" or \"ctrlfiles\" in targets\n") 
 	x <- read.ilmn(targets$files, targets$ctrlfiles, ...) 
