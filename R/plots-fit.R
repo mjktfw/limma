@@ -1,4 +1,4 @@
-#  PRESENTATION PLOTS
+#  PRESENTATION PLOTS FROM FITTED MODEL OBJECTS
 
 volcanoplot <- function(fit,coef=1,highlight=0,names=fit$genes$ID,xlab="Log Fold Change",ylab="Log Odds",pch=16,cex=0.35, ...)
 #	Volcano plot of log-fold-change and B-statistic
@@ -181,11 +181,10 @@ heatdiagram <- function(stat,coef,primary=1,names=NULL,treatments=colnames(stat)
 	invisible(out)
 }
 
-
 plotSA <- function(fit, xlab="Average log-expression", ylab="log2(sigma)", zero.weights=FALSE, pch=16, cex=0.2, ...)
 #	Plot log-residual variance vs intensity
 #	Gordon Smyth 14 Jan 2009.
-#  Last modified 19 Jan 2009.
+#  Last modified 27 October 2010.
 {
 	if(!is(fit,"MArrayLM")) stop("fit must be a MArrayLM object")
 	x <- fit$Amean
@@ -199,5 +198,14 @@ plotSA <- function(fit, xlab="Average log-expression", ylab="log2(sigma)", zero.
 	}
 	plot(x,y,xlab=xlab,ylab=ylab,pch=pch,cex=cex,...)
 	lines(lowess(x,y,f=0.4),col="red")
+	if(!is.null(fit$s2.prior)) {
+		if(length(fit$s2.prior)==1) {
+			abline(h=log2(fit$s2.prior)/2,col="blue")
+		} else {
+			o <- order(x)
+			lines(x[o],log2(fit$s2.prior[o])/2,col="blue")
+			legend("topright",legend=c("lowess","prior"),col=c("red","blue"),lty=1)
+		}
+	}
 	invisible()
 }
