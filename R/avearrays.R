@@ -46,9 +46,9 @@ avearrays.MAList <- function(x,ID=colnames(x),weights=x$weights)
 }
 
 avearrays.EList <- function(x,ID=colnames(x),weights=x$weights)
-#	Average over irregular replicate probes for EList objects
+#	Average over irregular replicate columns for EList objects
 #	Gordon Smyth
-#	2 April 2010.
+#	24 Sept 2010.  Last modified 27 Oct 2010.
 {
 	d <- duplicated(ID)
 	if(!any(d)) return(x)
