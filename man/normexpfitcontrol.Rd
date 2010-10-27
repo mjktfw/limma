@@ -22,9 +22,11 @@ Regular probes have the status \code{regular}.
 Negative control probes have the status indicated by \code{negctrl}, which is \code{negative} by default.
 
 This function estimates parameters of the normal+exponential convolution model with the help of negative control probes.
-The mean and log-standard-deviation of the background-normal part of the normexp+exponential convolution model are estimated as the mean and log-standard deviation of intensities from negative control probes respectively.
+The mean and log-standard-deviation of the background-normal part of the normexp+exponential(normexp) convolution model are estimated as the mean and log-standard deviation of intensities from negative control probes respectively.
 The log-mean of the signal-exponential part is estimated as the log of the difference between signal mean and background mean.
 The signal mean is simply the mean of intensities from regular probes.
+
+When negative control probes are not available, the \code{\link{normexp.fit.detection.p}} function can be used to estimate the normexp model parameters which infers the negative control probe intensities from regular probes by taking advantage of their detection p value information.
 }
 \value{
 A matrix containing estimated parameters with rows being arrays and with columns being parameters.
@@ -32,23 +34,29 @@ Column names are \code{mu}, \code{logsigma} and \code{logalpha}.
 }
 
 \references{
-Wei Shi and Gordon K Smyth. Normalizing Illumina Whole Genome Expression BeadChips. In preparation.
+Shi W, Oshlack A and Smyth GK (2010). Optimizing the noise versus bias trade-off for Illumina Whole Genome Expression BeadChips. Nucleic Acids Research, October 6. [Epub ahead of print]. PMID: 20929874 
 }
 
 \author{Wei Shi and Gordon Smyth}
 
 \seealso{
-\code{\link{neqc}} calls this function to get the parameters of the normal+exponential convolution model and then calls \code{\link{normexp.signal}} to perform the background correction.
+\code{\link{nec}} calls this function to get the parameters of the normal+exponential convolution model and then calls \code{\link{normexp.signal}} to perform the background correction.
 
-\code{\link{normexp.fit}} estimates parameters in the normal+exponential convolution model using a saddle-point approximation or other mothods.
+\code{\link{normexp.fit.detection.p}} estimates the parameters in the normal+exponential convolution model using negative control probe intensities inferred from regular probes by using their detection p values information.
+
+\code{\link{normexp.fit}} estimates normexp parameters using a saddle-point approximation or other mothods.
 
 An overview of background correction functions is given in \code{\link{04.Background}}.
 }
 
 \examples{
 \dontrun{
-x <- read.profile(files="sample probe profile", ctrlfiles="control probe profile")
-par <- normexp.fit.control(x)
+# read in BeadChip probe profile file and control profile file
+x <- read.ilmn(files="sample probe profile", ctrlfiles="control probe profile")
+# estimated normexp parameters
+normexp.fit.control(x)
+# normalization using control data
+y <- neqc(x)
 }
 }
 

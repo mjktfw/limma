@@ -4,7 +4,7 @@
 \description{Read Illumina summary probe profile files and summary control probe profile files}
 \usage{
 read.ilmn(files=NULL, ctrlfiles=NULL, path=NULL, ctrlpath=NULL,
-probeid="Probe",  annotation=c("TargetID", "SYMBOL"), expr="AVG_Signal", other.columns=NULL, 
+probeid="Probe",  annotation=c("TargetID", "SYMBOL"), expr="AVG_Signal", other.columns="Detection", 
 sep="\t", quote="\"", verbose=TRUE, ...)
 }
 \arguments{
@@ -15,7 +15,7 @@ sep="\t", quote="\"", verbose=TRUE, ...)
   \item{probeid}{ character string giving the name of the probe identifier column.}
   \item{annotation}{ character vector giving possible names of the annotation column. It could be called "TargetID" or "SYMBOL" depending on which version of BeadStudio is used.}
   \item{expr}{ character string giving the keyword in the names of the expression intensity columns.}
-  \item{other.columns}{ character vector giving the keywords in the names of extra columns required, such as "Detection", "Avg_NBEADS", "BEAD_STDEV" etc. Each keyword corresponds to one type of columns.}
+  \item{other.columns}{ character vector giving the keywords in the names of extra columns required, such as "Detection", "Avg_NBEADS", "BEAD_STDEV" etc. Each keyword corresponds to one type of columns. The detection p value columns will be read in by default.}
   \item{sep}{ the field separator character.}
   \item{quote}{ character string of characters to be treated as quote marks.}
   \item{verbose}{ logical, \code{TRUE} to report names of profile files being read.}

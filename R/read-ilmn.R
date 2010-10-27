@@ -1,9 +1,9 @@
 #  READ-ILMN.R
 
-read.ilmn <- function(files=NULL, ctrlfiles=NULL, path=NULL, ctrlpath=NULL, probeid="Probe", annotation=c("TargetID", "SYMBOL"), expr="AVG_Signal", other.columns=NULL,sep="\t", quote="\"", verbose=TRUE, ...)
+read.ilmn <- function(files=NULL, ctrlfiles=NULL, path=NULL, ctrlpath=NULL, probeid="Probe", annotation=c("TargetID", "SYMBOL"), expr="AVG_Signal", other.columns="Detection",sep="\t", quote="\"", verbose=TRUE, ...)
 #	Read one or more files of Illumina BeadStudio output
 #	Wei Shi and Gordon Smyth.
-#  Created 15 July 2009. Last modified 20 Aug 2010.
+#  Created 15 July 2009. Last modified 27 October 2010.
 {
 	if(!is.null(files)){
 		f <- unique(files)

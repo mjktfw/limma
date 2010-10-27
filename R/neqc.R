@@ -1,5 +1,64 @@
-normexp.fit.control <- function(x, status=NULL, negctrl="negative", regular="regular", robust=FALSE)
-#	Estimate normexp parameters using negative control probes
+normexp.fit.detection.p <- function(x,detection.p="Detection")
+#  Estimate normexp parameters using negative control probes which are derived from probes' detection p values
+#  Wei Shi and Gordon Smyth
+#  Created 27 October 2010.
+{
+	if(is(x,"EListRaw")){
+		if(!is.null(x$genes$Status))
+			warning("You might not use this function because it seems negative control probes are available in your data.")
+		
+		if(is.character(detection.p)){
+			other.colnames <- tolower(names(x[["other"]]))
+			detection.index <- which(other.colnames %in% tolower(detection.p))
+			if(length(detection.index)!=1)
+				stop("Detection p values can not be found in the data.")
+			detection.p <- x[["other"]][[detection.index]]
+		}
+		else{
+			detection.p <- as.matrix(detection.p)
+		}
+		
+		x <- x$E
+	}
+	else{
+		if(is.character(detection.p))
+			stop("No control data or detection p value data were found.")
+		x <- as.matrix(x)
+		detection.p <- as.matrix(detection.p)
+	}
+	
+	if(!all(dim(x) == dim(detection.p)))
+		stop("The supplied detection p value data do not have the same dimension as that of the intensity data.")
+	
+	narrays <- ncol(x)
+	
+	y <- x[,1]
+	p <- detection.p[,1]	
+	if(p[which.max(y)] < p[which.min(y)]) 
+		detection.p <- 1 - detection.p
+	
+	mu <- sigma <- rep(NA, narrays)
+	for(i in 1:narrays){
+		y <- x[,i]
+		p <- detection.p[,i]
+		o <- order(y)
+		y <- y[o]
+		p <- p[o]
+		j <- which(!duplicated(p))[-1]
+		ync <- (y[j]+y[j-1])/2
+		d <- p[j]-p[j-1]
+		freq <- d/min(d)
+		n <- sum(freq)
+		mu[i] <- weighted.mean(ync,freq)
+		v <- (ync-mu[i])^2
+		sigma[i] <- sqrt(weighted.mean(v,freq)*n/(n-1))
+	}
+	alpha <- pmax(colMeans(x,na.rm=TRUE)-mu,10)
+	cbind(mu=mu,logsigma=log(sigma),logalpha=log(alpha))
+}
+
+normexp.fit.control <- function(x,status=NULL,negctrl="negative",regular="regular",robust=FALSE)
+#  Estimate normexp parameters using negative control probes
 #  Wei Shi and Gordon Smyth
 #  Created 17 April 2009. Last modified 19 April 2010.
 {
@@ -42,19 +101,36 @@ normexp.fit.control <- function(x, status=NULL, negctrl="negative", regular="reg
 	cbind(mu=mu,logsigma=log(sigma),logalpha=log(alpha))
 }
 
-nec <- function(x, status=NULL, negctrl="negative", regular="regular", offset=16, robust=FALSE)
+nec <- function(x,status=NULL,negctrl="negative",regular="regular",offset=16,robust=FALSE,detection.p="Detection")
 #	Normexp background correction aided by negative controls.
-#	Wei Shi
-#	Created 27 September 2010.
+#	Wei Shi and Gordon Smyth
+#	Created 27 September 2010. Last modified 27 October 2010.
 {
 	if(is(x,"EListRaw") && !is.null(x$Eb)) x$E <- x$E-x$Eb
-	normexp.par <- normexp.fit.control(x, status=status, negctrl=negctrl, regular=regular, robust=robust)
+		
 	if(is(x, "EListRaw")) {
+		if(any(tolower(x$genes$Status) %in% tolower(negctrl)) || any(tolower(status) %in% tolower(negctrl))){
+			normexp.par <- normexp.fit.control(x,status,negctrl,regular,robust)
+		}
+		else{
+			normexp.par <- normexp.fit.detection.p(x,detection.p)
+			cat("Inferred negative control probe intensities were used in background correction.\n")
+		}
+		
 		for(i in 1:ncol(x))
 			x$E[, i] <- normexp.signal(normexp.par[i, ], x$E[, i])
+		
 		x$E <- x$E + offset
-	} else {
+	} 
+	else {
 		x <- as.matrix(x)
+		if(any(tolower(status) %in% tolower(negctrl))){
+			normexp.par <- normexp.fit.control(x,status,negctrl,regular,robust)
+		}
+		else{
+			normexp.par <- normexp.fit.detection.p(x,detection.p)
+		}
+			
 		for(i in 1:ncol(x))
 		x[, i] <- normexp.signal(normexp.par[i, ], x[, i])
 		x <- x + offset
@@ -62,22 +138,27 @@ nec <- function(x, status=NULL, negctrl="negative", regular="regular", offset=16
 	x
 }
 
-neqc <- function(x, status=NULL, negctrl="negative", regular="regular", offset=16, robust=FALSE, ...)
+neqc <- function(x, status=NULL, negctrl="negative", regular="regular", offset=16, robust=FALSE, detection.p="Detection", ...)
 #	Normexp background correction and quantile normalization using control probes
 #	Wei Shi and Gordon Smyth
-#	Created 17 April 2009. Last modified 27 September 2010.
+#	Created 17 April 2009. Last modified 27 October 2010.
 {
-	x.bg <- nec(x,status,negctrl,regular,offset,robust)
+	x.bg <- nec(x,status,negctrl,regular,offset,robust,detection.p)
 	if(is(x.bg, "EListRaw")) {
 		y <- normalizeBetweenArrays(x.bg, method="quantile", ...)
 		if(is.null(status))
 			status <- y$genes$Status
-		y <- y[tolower(status) == tolower(regular), ]
-		y$genes$Status <- NULL
+		if(!is.null(status)){
+			y <- y[tolower(status) == tolower(regular), ]
+			y$genes$Status <- NULL
+		}
 	} else {
 		x.bg <- as.matrix(x.bg)
 		y <- log2(normalizeBetweenArrays(x.bg, method="quantile", ...))
-		y <- y[tolower(status) == tolower(regular), ]
+		if(!is.null(status))
+			y <- y[tolower(status) == tolower(regular), ]
 	}
 	y
 }
+
+
