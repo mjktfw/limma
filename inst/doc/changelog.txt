@@ -1,9 +1,17 @@
-27 October 2010: limma 3.7.7
-- neqc() function now supports normexp by control background correction
-  using inferred negative controls (detection.p option).
+27 October 2010: limma 3.7.8
 
-- The default value of "other.columns" argument in read.ilmn() function
-  is changed to "Detection". 
+- plotSA() now adds the prior variance estimated by eBayes()
+  (if available) to the sigma vs A plot.
+
+27 October 2010: limma 3.7.7
+
+- neqc() function now supports normexp by control background
+  correction using negative control values inferred from
+  detection p-values.  This is mainly applicable to Illumina
+  BeadChip.
+
+- The default value of "other.columns" argument in read.ilmn()
+  function is changed to "Detection". 
 
 26 October 2010: limma 3.7.6
 
