@@ -1,7 +1,7 @@
 \name{neqc}
 \alias{neqc}
 \title{NormExp and Quantile by Control (NEQC)}
-\description{Perform normexp background correction and quantile normalization using control probes.}
+\description{Perform normexp background correction, quantile normalization and log2 transformation using control probes.}
 \usage{
 neqc(x, status=NULL, negctrl="negative", regular="regular", offset=16, robust=FALSE, detection.p="Detection",...)
 }
