@@ -110,7 +110,7 @@ Rotation tests.
 \emph{Statistics and Computing} 15, 53-60.
 
 Wu, D, Lim, E, Francois Vaillant, F, Asselin-Labat, M-L, Visvader, JE, and Smyth, GK (2010). ROAST: rotation gene set tests for complex microarray experiments.
-\emph{Bioinformatics}, published online 7 July 2010.
+\emph{Bioinformatics} 26, 2176-2182.
 \url{http://bioinformatics.oxfordjournals.org/cgi/content/abstract/btq401?}
 }
 

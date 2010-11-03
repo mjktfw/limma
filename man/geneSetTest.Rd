@@ -40,7 +40,7 @@ This test procedure was developed by Michaud et al (2008), who called it \emph{m
 These functions compute a p-value to test the hypothesis that the selected set of genes tends to be more highly ranked in terms of some test statistic compared to randomly selected genes.
 The statistic might be any statistic of interest, for example a t-statistic or F-statistic for differential expression.
 
-These function perform \emph{competitive} tests in the sense that genes in the test set are compared to other genes (Goeman and Buhlmann, 2007).
+These functions perform \emph{competitive} tests in the sense that genes in the test set are compared to other genes (Goeman and Buhlmann, 2007).
 By contrast, a \emph{self-contained} gene set test such as \code{\link{roast}} tests for differential expression for the test set only without regard to other genes on the array.
 Like all gene set tests, these functions can be used to detect differential expression for a group of genes, even when the effects are too small or there is too little data to detect the genes individually.
 The also provides a means to compare the results between different experiments.
