@@ -7,12 +7,13 @@ Squeeze a set of sample variances together by computing empirical Bayes posterio
 }
 
 \usage{
-squeezeVar(var, df)
+squeezeVar(var, df, covariate=NULL)
 }
 
 \arguments{
-\item{var}{numeric vector of independent sample variances}
-\item{df}{numeric vector of degrees of freedom for the sample variances}
+\item{var}{numeric vector of independent sample variances.}
+\item{df}{numeric vector of degrees of freedom for the sample variances.}
+\item{covariate}{if non-\code{NULL}, \code{var.prior} will depend on this numeric covariate. Otherwise, \code{var.prior} is constant.}
 }
 
 \details{
@@ -29,9 +30,9 @@ The values \code{var.prior} and \var{var.post} output by \code{squeezeVar} corre
 
 \value{
 A list with components
-\item{var.post}{numeric vector of posterior variances}
-\item{var.prior}{location of prior distribution}
-\item{df.prior}{degrees of freedom of prior distribution}
+\item{var.post}{numeric vector of posterior variances.}
+\item{var.prior}{location of prior distribution. A vector if \code{covariate} is non-\code{NULL}, otherwise a scalar.}
+\item{df.prior}{degrees of freedom of prior distribution.}
 }
 
 \author{Gordon Smyth}

@@ -1,3 +1,26 @@
+3 November 2010: limma 3.7.10
+
+- the total df used by ebayes to compute p-values (and therefore
+  also by eBayes, topTable and so on) is now not allowed to be
+  larger than the total residual df pooled over all probes.
+  This limit will normally become active only when the prior df
+  is estimated as Inf.  Previously the total df was also allowed
+  to be Inf in this case, so that p-values were computed as if
+  the t-statistics followed a standard normal distibution.  This
+  change will not affect microarray analyses with thousands of
+  genes, but can come into play with simulated data or with
+  data sets with only a few genes or probes.  In these cases,
+  the ebayes p-values now agree with those from a pooled analysis
+  in which the genewise variances are assumed equal.
+
+- df.total is now included as a component of the MArrayLM object
+  output by ebayes() and eBayes().
+
+- ebayes() and eBayes() now include an option to allow the prior
+  variance to be intensity-dependent.  Associated with this is a
+  new optional argument 'covariate' to functions fitFDist() and
+  squeezeVar().
+
 28 October 2010: limma 3.7.9
 
 - update to installation instructions in User's Guide, no longer

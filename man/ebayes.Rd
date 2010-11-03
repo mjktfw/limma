@@ -5,14 +5,15 @@
 \title{Empirical Bayes Statistics for Differential Expression}
 \description{Given a series of related parameter estimates and standard errors, compute moderated t-statistics, moderated F-statistic, and log-odds of differential expression by empirical Bayes shrinkage of the standard errors towards a common value.}
 \usage{
-ebayes(fit, proportion=0.01, stdev.coef.lim=c(0.1,4))
-eBayes(fit, proportion=0.01, stdev.coef.lim=c(0.1,4))
+ebayes(fit, proportion=0.01, stdev.coef.lim=c(0.1,4), trend=FALSE)
+eBayes(fit, proportion=0.01, stdev.coef.lim=c(0.1,4), trend=FALSE)
 treat(fit, lfc=0)
 }
 \arguments{
   \item{fit}{an \code{MArrayLM} fitted model object produced by \code{lmFit} or \code{contrasts.fit}, or an unclassed list produced by \code{lm.series}, \code{gls.series} or \code{mrlm} containing components \code{coefficients}, \code{stdev.unscaled}, \code{sigma} and \code{df.residual}}
   \item{proportion}{numeric value between 0 and 1, assumed proportion of genes which are differentially expressed}
   \item{stdev.coef.lim}{numeric vector of length 2, assumed lower and upper limits for the standard deviation of log2-fold-changes for differentially expressed genes}
+  \item{trend}{logical, should an intensity-trend be allowed for the prior variance. Default is that the prior variance is constant.}
   \item{lfc}{the minimum log2-fold-change which is considered material}
 }
 \value{
@@ -21,9 +22,10 @@ treat(fit, lfc=0)
 \code{treat} produces an \code{MArrayLM} object, but without \code{lods}, \code{var.prior}, \code{F} or \code{F.p.value}.
   \item{t}{numeric vector or matrix of moderated t-statistics}
   \item{p.value}{numeric vector of p-values corresponding to the t-statistics}
-  \item{s2.prior}{estimated prior value for \code{sigma^2}}
+  \item{s2.prior}{estimated prior value for \code{sigma^2}. A vector if \code{covariate} is non-\code{NULL}, otherwise a scalar.}
   \item{df.prior}{degrees of freedom associated with \code{s2.prior}}
-  \item{s2.post}{vector giving the posterior values for \code{sigma^2}}
+  \item{df.total}{numeric vector of total degrees of freedom associated with t-statistics and p-values. Equal to \code{df.prior+df.residual} or \code{sum(df.residual)}, whichever is smaller.}
+  \item{s2.post}{numeric vector giving the posterior values for \code{sigma^2}}
   \item{lods}{numeric vector or matrix giving the log-odds of differential expression}
   \item{var.prior}{estimated prior value for the variance of the log2-fold-change for differentially expressed gene}
   \item{F}{numeric vector of moderated F-statistics for testing all contrasts defined by the columns of \code{fit} simultaneously equal to zero}
@@ -63,7 +65,7 @@ The idea of thresholding doesn't apply to F-statistics in a straightforward way,
 
 An overview of linear model functions in limma is given by \link{06.LinearModels}.
 }
-\author{Gordon Smyth}
+\author{Gordon Smyth and Davis McCarthy}
 \references{
 McCarthy, D. J., and Smyth, G. K. (2009). Testing significance relative to a fold-change threshold is a TREAT. \emph{Bioinformatics}.
 \url{http://bioinformatics.oxfordjournals.org/cgi/content/abstract/btp053}

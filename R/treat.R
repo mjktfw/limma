@@ -3,7 +3,7 @@
 treat <- function(fit, lfc=0)
 #  Moderated t-statistics with threshold
 #  Davis McCarthy, Gordon Smyth
-#  25 July 2008. Last revised 16 Mar 2010.
+#  25 July 2008. Last revised 3 November 2010.
 {
 	coefficients <- as.matrix(fit$coefficients)
 	stdev.unscaled <- as.matrix(fit$stdev.unscaled)
@@ -21,6 +21,9 @@ treat <- function(fit, lfc=0)
 	fit$s2.prior <- sv$var.prior
 	fit$s2.post <- sv$var.post
 	df.total <- df.residual + sv$df.prior
+	df.pooled <- sum(df.residual,na.rm=TRUE)
+	df.total <- pmin(df.total,df.pooled)
+	fit$df.total <- df.total
 	lfc <- abs(lfc)
 	acoef <- abs(coefficients)
 	se <- stdev.unscaled*sqrt(fit$s2.post)

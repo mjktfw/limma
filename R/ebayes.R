@@ -1,18 +1,20 @@
 #  DIFFERENTIAL EXPRESSION
 
-eBayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4)) {
+eBayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4),trend=FALSE)
 #	Empirical Bayes statistics to select differentially expressed genes
 #	Object orientated version
 #	Gordon Smyth
-#	4 August 2003.  Last modified 24 August 2005.
-
-	eb <- ebayes(fit=fit,proportion=proportion,stdev.coef.lim=stdev.coef.lim)
+#	4 August 2003.  Last modified 3 November 2010.
+{
+	if(trend) if(is.null(fit$Amean)) stop("Need Amean component in fit to estimate trend")
+	eb <- ebayes(fit=fit,proportion=proportion,stdev.coef.lim=stdev.coef.lim,trend=trend)
 	fit$df.prior <- eb$df.prior
 	fit$s2.prior <- eb$s2.prior
 	fit$var.prior <- eb$var.prior
 	fit$proportion <- proportion
 	fit$s2.post <- eb$s2.post
 	fit$t <- eb$t
+	fit$df.total <- eb$df.total
 	fit$p.value <- eb$p.value
 	fit$lods <- eb$lods
 	if(!is.null(fit$design) && is.fullrank(fit$design)) {
@@ -28,11 +30,11 @@ eBayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4)) {
 	fit
 }
 
-ebayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4)) {
+ebayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4),trend=FALSE)
 #	Empirical Bayes statistics to select differentially expressed genes
 #	Gordon Smyth
-#	8 Sept 2002.  Last revised 13 April 2009.
-
+#	8 Sept 2002.  Last revised 3 November 2010.
+{
 	coefficients <- fit$coefficients
 	stdev.unscaled <- fit$stdev.unscaled
 	sigma <- fit$sigma
@@ -40,18 +42,27 @@ ebayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4)) {
 	if(is.null(coefficients) || is.null(stdev.unscaled) || is.null(sigma) || is.null(df.residual)) stop("No data, or argument is not a valid lmFit object")
 	if(all(df.residual==0)) stop("No residual degrees of freedom in linear model fits")
 	if(all(!is.finite(sigma))) stop("No finite residual standard deviations")
+	if(trend) {
+		covariate <- fit$Amean
+		if(is.null(covariate)) stop("Need Amean component in fit to estimate trend")
+	} else {
+		covariate <- NULL
+	}
 
 #	Moderated t-statistic
-	out <- squeezeVar(sigma^2, df.residual)
+	out <- squeezeVar(sigma^2, df.residual, covariate=covariate)
 	out$s2.prior <- out$var.prior
 	out$s2.post <- out$var.post
 	out$var.prior <- out$var.post <- NULL
-	df.total <- df.residual + out$df.prior
 	out$t <- coefficients / stdev.unscaled / sqrt(out$s2.post)
+	df.total <- df.residual + out$df.prior
+	df.pooled <- sum(df.residual,na.rm=TRUE)
+	df.total <- pmin(df.total,df.pooled)
+	out$df.total <- df.total
 	out$p.value <- 2*pt(-abs(out$t),df=df.total)
 
 #	B-statistic
-	var.prior.lim <- stdev.coef.lim^2/out$s2.prior
+	var.prior.lim <- stdev.coef.lim^2/median(out$s2.prior)
 	out$var.prior <- tmixture.matrix(out$t,stdev.unscaled,df.total,proportion,var.prior.lim)
 	if(any(is.na(out$var.prior))) {
 		out$var.prior[ is.na(out$var.prior) ] <- 1/out$s2.prior
@@ -123,15 +134,16 @@ tmixture.vector <- function(tstat,stdev.unscaled,df,proportion,v0.lim=NULL) {
 	mean(v0)
 }
 
-fitFDist <- function(x,df1) {
+fitFDist <- function(x,df1,covariate=NULL)
 #	Moment estimation of the parameters of a scaled F-distribution
-#	The first degrees of freedom is given
-#	Gordon Smyth
-#	8 Sept 2002.  Last revised 6 April 2006.
-
+#	The first degrees of freedom are given
+#	Gordon Smyth and Belinda Phipson
+#	8 Sept 2002.  Last revised 27 Oct 2010.
+{
 #	Remove missing or infinite values and zero degrees of freedom
 	o <- is.finite(x) & is.finite(df1) & (x >= 0) & (df1 > 0)
 	if(any(!o)) {
+		if(!is.null(covariate)) stop("non-usable values of x or df1 with a covariate")
 		x <- x[o]
 		df1 <- df1[o]
 	}
@@ -146,13 +158,24 @@ fitFDist <- function(x,df1) {
 	} else {
 		if(any(x==0)) warning("Zero sample variances detected, have been offset",call.=FALSE)
 	}
-	x <- pmax(x, 1e-5 * median(x))
+	x <- pmax(x, 1e-5 * m)
 
 #	Better to work on with log(F)
 	z <- log(x)
 	e <- z-digamma(df1/2)+log(df1/2)
-	emean <- mean(e)
-	evar <- mean(n/(n-1)*(e-emean)^2-trigamma(df1/2))
+
+	if(is.null(covariate)) {
+		emean <- mean(e)
+		evar <- sum((e-emean)^2)/(n-1)
+	} else {
+		require(splines)
+		design <- try(ns(covariate,df=4,intercept=TRUE),silent=TRUE)
+		if(is(design,"try-error")) stop("Problem with covariate; perhaps too few distinct values")
+		fit <- lm.fit(design,e)
+		emean <- fit$fitted
+		evar <- mean(fit$residuals[-(1:fit$rank)]^2)
+	}
+	evar <- evar - mean(trigamma(df1/2))
 	if(evar > 0) {
 		df2 <- 2*trigammaInverse(evar)
 		s20 <- exp(emean+digamma(df2/2)-log(df2/2))
@@ -234,10 +257,10 @@ qqt <- function(y,df=Inf,ylim=range(y),main="Student's t Q-Q Plot",xlab="Theoret
     invisible(list(x=x,y=y))
 }
 
-squeezeVar <- function(var, df)
+squeezeVar <- function(var, df, covariate=NULL)
 #	Empirical Bayes posterior variances
 #	Gordon Smyth
-#	2 March 2004
+#	2 March 2004.  Last modified 27 Oct 2010.
 {
 	n <- length(var)
 	if(n == 0) stop("var is empty")
@@ -247,7 +270,7 @@ squeezeVar <- function(var, df)
 	} else {
 		if(length(df) != n) stop("lengths differ")
 	}
-	out <- fitFDist(var, df1=df)
+	out <- fitFDist(var, df1=df, covariate=covariate)
 	if(is.null(out$df2) || is.na(out$df2)) stop("Could not estimate prior df")
 	out$var.prior <- out$scale
 	out$df.prior <- out$df2
