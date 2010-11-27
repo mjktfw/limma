@@ -1,3 +1,8 @@
+27 November 2010: limma 3.7.11
+
+- bug fix to mroast(), which had been assigning prior.df
+  incorrectly for the second and subsequent gene sets.
+
 3 November 2010: limma 3.7.10
 
 - the total df used by ebayes to compute p-values (and therefore

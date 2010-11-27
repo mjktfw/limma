@@ -216,7 +216,7 @@ roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",
 mroast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,nrot=999, adjust.method="BH")
 #  Rotation gene set testing with multiple sets
 #  Gordon Smyth and Di Wu
-#  28 Jan 2010. Last revised 19 May 2010.
+#  28 Jan 2010. Last revised 27 Nov 2010.
 { 
 	if(!is.list(iset)) iset <- list(set = iset)
 	mset <- iset
@@ -230,7 +230,7 @@ mroast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean"
 	pv[1,] <- out$p.value$P.Value
 	active[1,] <- out$p.value$Active.Prop
 	var.prior <- out$var.prior
-	df.prior <- out$var.prior
+	df.prior <- out$df.prior
 
 	if(nsets > 1) {
 		for(i in 2:nsets) {
