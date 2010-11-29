@@ -1,5 +1,3 @@
-.onLoad <- function(lib, pkg) require(methods)
-
 #  All functions exported other than those starting with "."
 exportPattern("^[^\\.]")
 
