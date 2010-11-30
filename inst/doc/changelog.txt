@@ -1,3 +1,9 @@
+1 December 2010: limma 3.7.12
+
+- bug fix to avereps.default, which had been treating
+  NA expression values as if zero.  Averages are now
+  computed correctly over non-missing values for each probe.
+
 27 November 2010: limma 3.7.11
 
 - bug fix to mroast(), which had been assigning prior.df
