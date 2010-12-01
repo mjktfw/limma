@@ -6,7 +6,7 @@ avearrays <- function(x,ID=NULL,weights=NULL) UseMethod("avearrays")
 avearrays.default <- function(x,ID=colnames(x),weights=NULL)
 #	Average over technical replicate columns, for matrices
 #	Gordon Smyth
-#	Created 24 Sept 2010.
+#	Created 24 Sept 2010. Last modified 1 Dec 2010.
 {
 	if(is.null(x)) return(NULL)
 	if(is.null(ID)) stop("No sample IDs")
@@ -20,7 +20,9 @@ avearrays.default <- function(x,ID=colnames(x),weights=NULL)
 	}
 	ID <- factor(ID,levels=unique(ID))
 	if(is.null(weights)) {
-		y <- t(rowsum(t(x),ID,reorder=FALSE,na.rm=TRUE)/as.vector(table(ID)))
+		y <- t(rowsum(t(x),ID,reorder=FALSE,na.rm=TRUE))
+		n <- t(rowsum(t(1L-is.na(x)),ID,reorder=FALSE,na.rm=TRUE))
+		y <- y/n
 	} else {
 		design <- model.matrix(~0+ID)
 		y <- lmFit(x,design,weights=weights)$coefficients
