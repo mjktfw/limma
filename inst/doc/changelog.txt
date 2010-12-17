@@ -1,3 +1,8 @@
+17 December 2010: limma 3.7.14
+
+- fix to gls.series() so that it works correctly even when there
+  is only one column of microarray data.
+
 1 December 2010: limma 3.7.13
 
 - bug fixes to avereps.default and avearrays.default, which had
