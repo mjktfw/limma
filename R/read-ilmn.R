@@ -63,7 +63,7 @@ read.ilmn.targets <- function(targets, ...)
 .read.oneilmnfile <- function(fname, probeid, annotation, expr, other.columns, sep, quote, verbose, ...)
 #	Read a single file of Illumina BeadStudio output
 #  Wei Shi and Gordon Smyth
-#  Created 15 July 2009. Last modified 20 Aug 2010.
+#  Created 15 July 2009. Last modified 5 Jan 2011.
 {
 	h <- readGenericHeader(fname,columns=expr)
 	skip <- h$NHeaderRecords
@@ -72,6 +72,7 @@ read.ilmn.targets <- function(targets, ...)
 	elist <- new("EListRaw")
 	elist$source <- "illumina"
 	reqcol <- header[grep(tolower(paste(c(probeid, annotation, expr, other.columns), collapse="|")), tolower(header))]
+	reqcol <- trimWhiteSpace(reqcol)
 	
 	x <- read.columns(file=fname, required.col=reqcol, skip=skip, sep=sep, quote=quote, stringsAsFactors=FALSE,	...)
 	nprobes <- nrow(x)

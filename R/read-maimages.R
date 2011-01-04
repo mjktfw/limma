@@ -280,7 +280,7 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 read.columns <- function(file,required.col=NULL,text.to.search="",sep="\t",quote="\"",skip=0,fill=TRUE,blank.lines.skip=TRUE,comment.char="",allowEscapes=FALSE,...)
 #	Read specified columns from a delimited text file with header line
 #	Gordon Smyth
-#	3 Feb 2007. Last modified 1 May 2007.
+#	3 Feb 2007. Last modified 5 Jan 2011.
 {
 #	Default is to read all columns
 	if(is.null(required.col)) return(read.table(file=file,header=TRUE,check.names=FALSE,sep=sep,quote=quote,skip=skip,fill=fill,blank.lines.skip=blank.lines.skip,comment.char=comment.char,allowEscapes=allowEscapes,...))
@@ -296,7 +296,8 @@ read.columns <- function(file,required.col=NULL,text.to.search="",sep="\t",quote
 	if(is.numeric(required.col)) {
 		colClasses[required.col] <- NA
 	} else {
-		colClasses[allcnames %in% as.character(required.col)] <- NA
+		required.col <- trimWhiteSpace(as.character(required.col))
+		colClasses[allcnames %in% required.col] <- NA
 	}
 
 #	Search for column names in text

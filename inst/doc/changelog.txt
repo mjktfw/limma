@@ -1,3 +1,9 @@
+5 January 2011: limma 3.7.16
+
+- read.columns() and read.ilmn() now allow column names with
+  leading or trailing blanks, although leading or trailing
+  white space will be trimmed.
+
 17 December 2010: limma 3.7.14
 
 - fix to gls.series() so that it works correctly even when there
