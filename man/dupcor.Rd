@@ -35,7 +35,7 @@ The function also returns a consensus correlation, which is a robust average of 
 functions \code{lmFit} or \code{gls.series}.
 
 At this time it is not possible to estimate correlations between duplicate spots and between technical replicates simultaneously.
-If \code{block} is not null, then the function will set \code{ndups=1}.
+If \code{block} is not null, then the function will set \code{ndups=1}, which is equivalent to ignoring duplicate spots.
 
 For this function to return statistically useful results, there must be at least two more arrays than the number of coefficients to be estimated, i.e., two more than the column rank of \code{design}.
 

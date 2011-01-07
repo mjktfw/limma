@@ -1,3 +1,7 @@
+7 January 2011: limma 3.7.17
+
+- minor documentation edits.
+
 5 January 2011: limma 3.7.16
 
 - read.columns() and read.ilmn() now allow column names with

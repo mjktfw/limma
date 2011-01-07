@@ -77,7 +77,7 @@ and \code{"Mixed"} to test whether the genes in the set tend to be differentiall
 
 \code{roast} estimates p-values by simulation, specifically by random rotations of the orthogonalized residuals (Langsrud, 2005), so p-values will vary slightly from run to run.
 To get more precise p-values, increase the number of rotations \code{nrot}.
-Following Monte Carlo hypothesis testing theory (Barnard, 1963), the p-value is computed as \code{(b+1)/(nrot+1)} where \code{b} is the number of rotations giving a more extreme statistic than that observed.
+The p-value is computed as \code{(b+1)/(nrot+1)} where \code{b} is the number of rotations giving a more extreme statistic than that observed (Phipson and Smyth, 2010).
 This means that the smallest possible p-value is \code{1/(nrot+1)}.
 
 \code{mroast} does roast tests for multiple sets, including adjustment for multiple testing.
@@ -98,9 +98,6 @@ An overview of tests in limma is given in \link{08.Tests}.
 \author{Gordon Smyth and Di Wu}
 
 \references{
-Barnard, GA (1963). Discussion of 'The spectral analysis of point processes' by MS Bartlett.
-\emph{Journal of the Royal Statistical Society} B 25, 294.
-
 Goeman, JJ, and Buhlmann, P (2007).
 Analyzing gene expression data in terms of gene sets: methodological issues.
 \emph{Bioinformatics} 23, 980-987. 
@@ -108,6 +105,10 @@ Analyzing gene expression data in terms of gene sets: methodological issues.
 Langsrud, O (2005).
 Rotation tests.
 \emph{Statistics and Computing} 15, 53-60.
+
+Phipson B, and Smyth GK (2010).
+Permutation P-values should never be zero: calculating exact P-values when permutations are randomly drawn.
+\emph{Statistical Applications in Genetics and Molecular Biology}, Volume 9, Article 39.
 
 Wu, D, Lim, E, Francois Vaillant, F, Asselin-Labat, M-L, Visvader, JE, and Smyth, GK (2010). ROAST: rotation gene set tests for complex microarray experiments.
 \emph{Bioinformatics} 26, 2176-2182.
@@ -117,19 +118,15 @@ Wu, D, Lim, E, Francois Vaillant, F, Asselin-Labat, M-L, Visvader, JE, and Smyth
 \examples{
 y <- matrix(rnorm(100*4),100,4)
 design <- cbind(Intercept=1,Group=c(0,0,1,1))
-iset <- 1:5
-y[iset,3:4] <- y[iset,3:4]+3
-roast(iset,y,design,contrast=2)
 
-iset2 <- 6:10
-mroast(list(set1=iset,set2=iset2),y,design,contrast=2)
-
-# Alternative approach useful if multiple gene sets are tested:
-fit <- lmFit(y,design)
-sv <- squeezeVar(fit$sigma^2,df=fit$df.residual)
+# First set of 5 genes contains 3 that are genuinely differentially expressed
 iset1 <- 1:5
+y[iset1,3:4] <- y[iset1,3:4]+3
+
+# Second set of 5 genes contains none that are DE
 iset2 <- 6:10
-roast(y=y[iset1,],design=design,contrast=2,var.prior=sv$var.prior,df.prior=sv$var.prior)
-roast(y=y[iset2,],design=design,contrast=2,var.prior=sv$var.prior,df.prior=sv$var.prior)
+
+roast(iset1,y,design,contrast=2)
+mroast(list(set1=iset,set2=iset2),y,design,contrast=2)
 }
 \keyword{htest}
