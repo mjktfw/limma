@@ -1,3 +1,7 @@
+12 January 2011: limma 3.7.17
+
+- minor changes to Illumina case study in the user guide.
+
 7 January 2011: limma 3.7.17
 
 - minor documentation edits.
