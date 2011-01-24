@@ -3,8 +3,8 @@
 \title{Normalization of Microarray Data}
 
 \description{
-This page gives an overview of the LIMMA functions available to normalize data from spotted two-colour microarrays.
-Smyth and Speed (2003) give an overview of the normalization techniques implemented in the functions.
+This page gives an overview of the LIMMA functions available to normalize data from single-channel or two-colour microarrays.
+Smyth and Speed (2003) give an overview of the normalization techniques implemented in the functions for two-colour arrays.
 
 Usually data from spotted microarrays will be normalized using \code{\link{normalizeWithinArrays}}.
 A minority of data will also be normalized using \code{\link{normalizeBetweenArrays}} if diagnostic plots suggest a difference in scale between the arrays.
@@ -19,14 +19,15 @@ Single channel normalization uses further options of the \code{\link{normalizeBe
 For more details see the \link[=limmaUsersGuide]{LIMMA User's Guide} which includes a section on single-channel normalization.
 
 \code{normalizeWithinArrays} uses utility functions \code{\link{MA.RG}}, \code{\link{loessFit}} and \code{\link{normalizeRobustSpline}}.
-\code{normalizeBetweenArrays} uses utility functions \code{\link{normalizeMedianAbsValues}} and \code{\link{normalizeQuantiles}}, none of which need to be called directly by users.
 
-\code{\link{normalizeCyclicLoess}} implements cyclic loess normalization on matrices.
+\code{normalizeBetweenArrays} is the main normalization function for one-channel arrays,
+as well as an optional function for two-colour arrays.
+\code{normalizeBetweenArrays} uses utility functions \code{\link{normalizeMedianAbsValues}}, \code{\link{normalizeMedianAbsValues}}, \code{\link{normalizeQuantiles}} and \code{\link{normalizeCyclicLoess}}, none of which need to be called directly by users.
 
 The function \code{\link{normalizeVSN}} is also provided as a interface to the vsn package.
 It performs variance stabilizing normalization, an algorithm which includes background correction, within and between normalization together, and therefore doesn't fit into the paradigm of the other methods.
 
-\code{removeBatchEffect} can be used to remove a batch effect, associated with hybridization time or some other technical variable, prior to unsupervised analysis.
+\code{\link{removeBatchEffect}} can be used to remove a batch effect, associated with hybridization time or some other technical variable, prior to unsupervised analysis.
 }
 
 \author{Gordon Smyth}

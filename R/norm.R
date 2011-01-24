@@ -455,7 +455,7 @@ normalizeBetweenArrays <- function(object, method=NULL, targets=NULL, ...) {
 		if(!(method %in% c("none","scale","quantile","cyclicloess"))) stop("method not applicable to matrix objects")
 		return(switch(method,
 			none = object,
-			scale = normalizeMedianAbsValues(object),
+			scale = normalizeMedianValues(object),
 			quantile = normalizeQuantiles(object, ...),
 			cyclicloess = normalizeCyclicLoess(object, ...)
 		))
@@ -608,6 +608,18 @@ normalizeMedianAbsValues <- function(x)
 	narrays <- NCOL(x)
 	if(narrays==1) return(x)
 	cmed <- log(apply(abs(x), 2, median, na.rm=TRUE))
+	cmed <- exp(cmed - mean(cmed))
+	t(t(x)/cmed)
+}
+
+normalizeMedianValues <- function(x) 
+#	Normalize columns of a matrix to have the same median value
+#	Gordon Smyth
+#	24 Jan 2011.  Last modified 24 Jan 2011.
+{
+	narrays <- NCOL(x)
+	if(narrays==1) return(x)
+	cmed <- log(apply(x, 2, median, na.rm=TRUE))
 	cmed <- exp(cmed - mean(cmed))
 	t(t(x)/cmed)
 }

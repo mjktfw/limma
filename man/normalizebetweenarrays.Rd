@@ -26,12 +26,22 @@ normalizeBetweenArrays(object, method=NULL, targets=NULL, ...)
 For two-color arrays, normalization between arrays usually occurs after normalization within arrays.
 For single-channel arrays, within array normalization is not usually relevant.
 
-The scale normalization method was proposed by Yang et al (2001, 2002) and is further explained by Smyth and Speed (2003).
+If \code{object} is a \code{matrix} then the scale, quantile or cyclic loess normalization will be applied to the columns.
+Trying to apply other normalization methods when \code{object} is a \code{matrix} will produce an error.
+If \code{object} is an \code{EListRaw} object, then normalization will be applied to the matrix \code{object$E} of expression values, which will then be log2-transformed.
+Scale (\code{method="scale"}) scales the columns to have the same median.
+Quantile and cyclic loess normalization was originally proposed by Bolstad et al (2003) for Affymetrix-style single-channel arrays.
+Quantile normalization forces the entire empirical distribution of each column to be identical.
+Cyclic loess normalization applies loess normalization to all possible pairs of arrays, usually cycling through all pairs several times.
+Cyclic loess is slower than quantile, but allows probe-wise weights and is more robust to unbalanced differential expression.
+
+The other normalization methods are for two-color arrays.
+Scale normalization was proposed by Yang et al (2001, 2002) and is further explained by Smyth and Speed (2003).
 The idea is simply to scale the log-ratios to have the same median-abolute-deviation (MAD) across arrays.
 This idea has also been implemented by the \code{maNormScale} function in the marray package.
 The implementation here is slightly different in that the MAD scale estimator is replaced with the median-absolute-value and the A-values are normalized as well as the M-values.
 
-Quantile normalization was proposed by Bolstad et al (2003) for Affymetrix-style single-channel arrays and by Yang and Thorne (2003) for two-color cDNA arrays.
+Quantile normalization was explored by Yang and Thorne (2003) for two-color cDNA arrays.
 \code{method="quantile"} ensures that the intensities have the same empirical distribution across arrays and across channels.
 \code{method="Aquantile"} ensures that the A-values (average intensities) have the same empirical distribution across arrays leaving the M-values (log-ratios) unchanged.
 These two methods are called "q" and "Aq" respectively in Yang and Thorne (2003).
@@ -45,10 +55,6 @@ In such a case the green channel represents the same target throughout, so it ma
 \code{method="Rquantile"} ensures that the red (second) channel has the same empirical distribution across arrays, leaving the M-values (log-ratios) unchanged.
 Both \code{Gquantile} and \code{Rquantile} normalization have the implicit effect of changing the red and green log-intensities by equal amounts.
 
-If \code{object} is a \code{matrix} then the scale, quantile or vsn normalization will be applied to the columns.
-Applying \code{method="Aquantile"} when \code{object} is a \code{matrix} will produce an error.
-If \code{object} is an \code{EListRaw} object, then normalization will be applied to the matrix \code{object$E} of expression values, which will then be log2-transformed.
-
 See the limma User's Guide for more examples of use of this function.
 }
 
@@ -56,8 +62,6 @@ See the limma User's Guide for more examples of use of this function.
 If \code{object} is a matrix then \code{normalizeBetweenArrays} produces a matrix of the same size.
 If \code{object} is an \code{EListRaw} object, then an \code{EList} object with expression values on the log2 scale is produced.
 For two-color data, \code{normalizeBetweenArrays} produces an \code{\link[limma:malist]{MAList}} object with M and A-values on the log2 scale.
-
-Note than vsn normalization, previously offered as a method of this function, is now performed by the \code{\link{normalizeVSN}} function.
 }
 
 \author{Gordon Smyth}
@@ -78,7 +82,7 @@ In: D. R. Goldstein (ed.), \emph{Science and Statistics: A Festschrift for Terry
 \seealso{
   An overview of LIMMA functions for normalization is given in \link{05.Normalization}.
 
-  \code{link{normalizeVSN}}.
+  Note that vsn normalization, previously offered as a method of this function, is now performed by the \code{\link{normalizeVSN}} function.
 
   See also \code{\link[marray:maNormScale]{maNormScale}} in the marray package and
   \code{\link[affy:normalize]{normalize}} in the affy package.
