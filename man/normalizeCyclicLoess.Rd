@@ -16,8 +16,6 @@ normalizeCyclicLoess(x, weights = NULL, span=0.4, iterations = 3)
 \details{
 This function is intended to normalize single channel or A-value microarray intensities between arrays.
 Cyclic loess normalization is similar effect and intention to quantile normalization, but with some advantages, in particular the ability to incorporate probe weights.
-
-\link[affy]{normalize.loess} in the affy package also does cyclic loess normalization, using probe subsets instead of probe weights.
 }
 \value{
 A matrix of the same dimensions as \code{x} containing the normalized values.
@@ -27,10 +25,9 @@ Bolstad, B. M., Irizarry R. A., Astrand, M., and Speed, T. P. (2003). A comparis
 }
 \author{Yunshun (Andy) Chen and Gordon Smyth}
 \seealso{
-\code{\link{normalizeQuantiles}}.
-
-\link[affy]{normalize.loess} in the affy package.
-
 An overview of LIMMA functions for normalization is given in \link{05.Normalization}.
+
+\link[affy]{normalize.loess} in the affy package also implements cyclic loess normalization, without weights.
 }  
+
 \keyword{models}

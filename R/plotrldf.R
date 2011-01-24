@@ -74,6 +74,6 @@ plotRLDF <- function(y,design=NULL,z=NULL,labels.y=NULL,labels.z=NULL,col.y=1,co
 		ylab=paste("Discriminant Function",d2))
 	text(d1.y,d2.y,labels=lab.y,col=col.y,...)
 	if(!is.null(z)) text(d1.z,d2.z,labels=lab.z,col=col.z,...)
-	invisible(list(training=cbind(d1=d1.y,d2=d2.y),predicting=cbind(d1=d1.z,d2=d2.z),metagenes=metagenes))
+	invisible(list(training=cbind(d1=d1.y,d2=d2.y),predicting=cbind(d1=d1.z,d2=d2.z),metagenes=metagenes,top=top))
 }
 

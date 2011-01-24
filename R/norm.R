@@ -434,9 +434,9 @@ plotPrintorder <- function(object,layout,start="topleft",slide=1,method="loess",
 normalizeBetweenArrays <- function(object, method=NULL, targets=NULL, ...) {
 #	Normalize between arrays
 #	Gordon Smyth
-#	12 Apri 2003.  Last revised 9 Sep 2010.
+#	12 Apri 2003.  Last revised 24 January 2011.
 
-#	Check method
+#	Default method
 	if(is.null(method)) {
 		if(is(object,"matrix")) {
 			method="quantile"
@@ -446,18 +446,18 @@ normalizeBetweenArrays <- function(object, method=NULL, targets=NULL, ...) {
 			method="Aquantile"
 		}	
 	}
-	choices <- c("none","scale","quantile","Aquantile","Gquantile","Rquantile","Tquantile","vsn")
+	choices <- c("none","scale","quantile","Aquantile","Gquantile","Rquantile","Tquantile","vsn","cyclicloess")
 	method <- match.arg(method,choices)
 	if(method=="vsn") stop("vsn method no longer supported. Please use normalizeVSN instead.")
 
-#	Method for matrices
+#	Methods for matrices
 	if(is(object,"matrix")) {
-		if(!(method %in% c("none","scale","quantile","vsn"))) stop("method not applicable to matrix objects")
+		if(!(method %in% c("none","scale","quantile","cyclicloess"))) stop("method not applicable to matrix objects")
 		return(switch(method,
 			none = object,
 			scale = normalizeMedianAbsValues(object),
 			quantile = normalizeQuantiles(object, ...),
-			vsn = exprs(vsnMatrix(x=object,...))
+			cyclicloess = normalizeCyclicLoess(object, ...)
 		))
 	}
 

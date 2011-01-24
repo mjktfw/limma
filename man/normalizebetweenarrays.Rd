@@ -13,18 +13,17 @@ normalizeBetweenArrays(object, method=NULL, targets=NULL, ...)
 \arguments{
   \item{object}{a numeric \code{matrix}, \code{EListRaw}, \code{\link[limma:rglist]{RGList}} or \code{\link[limma:malist]{MAList}} object.}
   \item{method}{character string specifying the normalization method to be used.
-  Choices are \code{"none"}, \code{"scale"}, \code{"quantile"}, \code{"Aquantile"}, \code{"Gquantile"}, \code{"Rquantile"} or \code{"Tquantile"}.
+  Choices are \code{"none"}, \code{"scale"}, \code{"quantile"}, \code{"Aquantile"}, \code{"Gquantile"}, \code{"Rquantile"} or \code{"Tquantile"} or \code{"cyclicloess"}.
   A partial string sufficient to uniquely identify the choice is permitted.
   Default is \code{"Aquantile"} for two-color data objects or \code{"quantile"} for single-channel objects.}
   \item{targets}{vector, factor or matrix of length twice the number of arrays, used to indicate target groups if \code{method="Tquantile"}}
-  \item{...}{other arguments are passed to \code{normalizeQuantiles} if one of the quantile methods are used or to \code{vsn} if \code{method="vsn"}}
+  \item{...}{other arguments are passed to \code{normalizeQuantiles} or \code{normalizeCyclicLoess}}
 }
 
 \details{
 \code{normalizeWithinArrays} normalizes expression values to make intensities consistent within each array.
 \code{normalizeBetweenArrays} normalizes expression values to achieve consistency between arrays.
 For two-color arrays, normalization between arrays usually occurs after normalization within arrays.
-An exception is \code{method="vsn"}, see below.
 For single-channel arrays, within array normalization is not usually relevant.
 
 The scale normalization method was proposed by Yang et al (2001, 2002) and is further explained by Smyth and Speed (2003).
@@ -78,6 +77,8 @@ In: D. R. Goldstein (ed.), \emph{Science and Statistics: A Festschrift for Terry
 
 \seealso{
   An overview of LIMMA functions for normalization is given in \link{05.Normalization}.
+
+  \code{link{normalizeVSN}}.
 
   See also \code{\link[marray:maNormScale]{maNormScale}} in the marray package and
   \code{\link[affy:normalize]{normalize}} in the affy package.

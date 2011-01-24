@@ -127,6 +127,6 @@ y[iset1,3:4] <- y[iset1,3:4]+3
 iset2 <- 6:10
 
 roast(iset1,y,design,contrast=2)
-mroast(list(set1=iset,set2=iset2),y,design,contrast=2)
+mroast(list(set1=iset1,set2=iset2),y,design,contrast=2)
 }
 \keyword{htest}
