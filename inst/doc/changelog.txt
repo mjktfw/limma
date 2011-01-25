@@ -1,3 +1,8 @@
+26 January 2011: limma 3.7.20
+
+- normalizeWithinArrays() no longer checks for printer
+  layout information before doing "control" normalization.
+
 24 January 2011: limma 3.7.19
 
 - new function normalizeMedianValues().  This is now used by

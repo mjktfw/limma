@@ -225,10 +225,10 @@ normalizeWithinArrays <- function(object,layout=object$printer,method="printtipl
 			}
 		},
 		control = {
-			if(is.null(layout)) stop("Layout argument not specified")
+#			if(is.null(layout)) stop("Layout argument not specified")
 			if(is.null(controlspots)) stop("controlspots argument not specified")
-			ntips <- layout$ngrid.r * layout$ngrid.c
-			nspots <- layout$nspot.r * layout$nspot.c
+#			ntips <- layout$ngrid.r * layout$ngrid.c
+#			nspots <- layout$nspot.r * layout$nspot.c
 			for (j in 1:narrays) {
 				y <- object$M[,j]
 				x <- object$A[,j]
