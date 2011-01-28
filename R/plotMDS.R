@@ -3,7 +3,7 @@
 plotMDS <- function(x,top=500,labels=colnames(x),col=NULL,cex=1,dim.plot=c(1,2),ndim=max(dim.plot),gene.selection="pairwise",...)
 #	Multi-dimensional scaling with top-distance
 #	Di Wu and Gordon Smyth
-#	19 March 2009.  Last modified 26 March 2009.
+#	19 March 2009.  Last modified 28 Jan 2011.
 {
 	x <- as.matrix(x)
 
@@ -33,7 +33,7 @@ plotMDS <- function(x,top=500,labels=colnames(x),col=NULL,cex=1,dim.plot=c(1,2),
 		q <- quantile(s,p=(topindex-1.5)/(nprobes-1))
 		x <- x[s>=q,]
 		for (i in 2:(nsamples))
-			dd[i,1:(i-1)]=sqrt(mean((x[,i]-x[,1:(i-1)])^2))
+			dd[i,1:(i-1)]=sqrt(colMeans((x[,i]-x[,1:(i-1),drop=FALSE])^2))
 	}
 
 	a1 <- cmdscale(as.dist(dd),k=ndim)

@@ -1,3 +1,7 @@
+28 January 2011: limma 3.7.21
+
+- bug fix to plotMDS() when gene.selection="common".
+
 26 January 2011: limma 3.7.20
 
 - normalizeWithinArrays() no longer checks for printer
