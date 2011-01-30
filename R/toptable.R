@@ -1,9 +1,9 @@
 #  TOPTABLE.R
 
-topTable <- function(fit,coef=NULL,number=10,genelist=fit$genes,adjust.method="BH",sort.by="B",resort.by=NULL,p.value=1,lfc=0)
+topTable <- function(fit,coef=NULL,number=10,genelist=fit$genes,adjust.method="BH",sort.by="B",resort.by=NULL,p.value=1,lfc=0,confint=FALSE)
 #	Summary table of top genes, object-orientated version
 #	Gordon Smyth
-#	4 August 2003.  Last modified 23 Oct 2008.
+#	4 August 2003.  Last modified 30 Jan 2011.
 {
 	if(is.null(coef)) coef <- 1:ncol(fit)
 	if(length(coef)>1) {
@@ -18,12 +18,13 @@ topTable <- function(fit,coef=NULL,number=10,genelist=fit$genes,adjust.method="B
 		number=number,
 		genelist=genelist,
 		A=fit$Amean,
-		eb=fit[c("t","p.value","lods")],
+		eb=fit[c("s2.post","df.total","t","p.value","lods")],
 		adjust.method=adjust.method,
 		sort.by=sort.by,
 		resort.by=resort.by,
 		p.value=p.value,
-		lfc=lfc)
+		lfc=lfc,
+		confint=confint)
 }
 
 topTableF <- function(fit,number=10,genelist=fit$genes,adjust.method="BH",sort.by="F",p.value=1)
@@ -58,10 +59,10 @@ topTableF <- function(fit,number=10,genelist=fit$genes,adjust.method="BH",sort.b
 	tab
 }
 
-toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.method="BH",sort.by="B",resort.by=NULL,p.value=1,lfc=0,...)
+toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.method="BH",sort.by="B",resort.by=NULL,p.value=1,lfc=0,confint=FALSE,...)
 #	Summary table of top genes
 #	Gordon Smyth
-#	21 Nov 2002. Last revised 21 Dec 2009.
+#	21 Nov 2002. Last revised 30 Jan 2011.
 {
 #	Check input
 	if(length(coef)>1) coef <- coef[1]
@@ -120,6 +121,11 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 		tab <- data.frame(logFC=M[top])
 	else {
 		tab <- data.frame(genelist[top,,drop=FALSE],logFC=M[top],stringsAsFactors=FALSE)
+	}
+	if(confint) {
+		margin.error <- sqrt(eb$s2.post[top])*fit$stdev.unscaled[top]*qnorm(0.975)
+		tab$CI.025 <- M[top]-margin.error
+		tab$CI.975 <- M[top]+margin.error
 	}
 	if(!is.null(A)) tab <- data.frame(tab,AveExpr=A[top])
 	tab <- data.frame(tab,t=tstat[top],P.Value=P.Value[top],adj.P.Val=adj.P.Value[top],B=B[top])

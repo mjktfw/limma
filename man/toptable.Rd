@@ -9,9 +9,9 @@ Extract a table of the top-ranked genes from a linear model fit.
 }
 \usage{
 topTable(fit, coef=NULL, number=10, genelist=fit$genes, adjust.method="BH",
-         sort.by="B", resort.by=NULL, p.value=1, lfc=0)
+         sort.by="B", resort.by=NULL, p.value=1, lfc=0, confint=FALSE)
 toptable(fit, coef=1, number=10, genelist=NULL, A=NULL, eb=NULL, adjust.method="BH",
-         sort.by="B", resort.by=NULL, p.value=1, lfc=0, ...)
+         sort.by="B", resort.by=NULL, p.value=1, lfc=0, confint=FALSE, ...)
 topTableF(fit, number=10, genelist=fit$genes, adjust.method="BH",
          sort.by="F", p.value=1)
 topTreat(fit, coef=1, number=10, genelist=fit$genes, adjust.method="BH",
@@ -35,12 +35,15 @@ topTreat(fit, coef=1, number=10, genelist=fit$genes, adjust.method="BH",
   \item{resort.by}{character string specifying statistic to sort the selected genes by in the output data.frame.  Possibilities are the same as for \code{sort.by}.}
   \item{p.value}{cutoff value for adjusted p-values. Only genes with lower p-values are listed.}
   \item{lfc}{cutoff value for log2-fold-change. Only genes with larger fold changes are listed.}
+  \item{confint}{logical, should 95\% confidence intervals be output for \code{logFC}?}
   \item{...}{any other arguments are passed to \code{ebayes} if \code{eb} is \code{NULL}}
 }
 \value{
   Produces a dataframe with a row for the \code{number} top genes and the following columns:
   \item{genelist}{one or more columns of probe annotation, if genelist was included as input}
   \item{logFC}{estimate of the log2-fold-change corresponding to the effect or contrast (for \code{topTableF} there may be several columns of log-fold-changes)}
+  \item{CI.025}{left limit of confidence interval for \code{logFC} (if \code{contint=TRUE})}
+  \item{CI.975}{right limit of confidence interval for \code{logFC} (if \code{contint=TRUE})}
   \item{AveExpr}{average log2-expression for the probe over all arrays and channels, same as \code{Amean} in the \code{MarrayLM} object}
   \item{t}{moderated t-statistic (omitted for \code{topTableF})}
   \item{F}{moderated F-statistic (omitted for \code{topTable} unless more than one coef is specified)}
