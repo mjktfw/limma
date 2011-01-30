@@ -3,7 +3,7 @@
 topTable <- function(fit,coef=NULL,number=10,genelist=fit$genes,adjust.method="BH",sort.by="B",resort.by=NULL,p.value=1,lfc=0,confint=FALSE)
 #	Summary table of top genes, object-orientated version
 #	Gordon Smyth
-#	4 August 2003.  Last modified 30 Jan 2011.
+#	4 August 2003.  Last modified 31 Jan 2011.
 {
 	if(is.null(coef)) coef <- 1:ncol(fit)
 	if(length(coef)>1) {
@@ -13,12 +13,14 @@ topTable <- function(fit,coef=NULL,number=10,genelist=fit$genes,adjust.method="B
 		return(topTableF(fit,number=number,genelist=genelist,adjust.method=adjust.method,sort.by=sort.by,p.value=p.value))
 	}
 	fit <- unclass(fit)
+	ebcols <- c("t","p.value","lods")
+	if(confint) ebcols <- c("s2.post","df.total",ebcols)
 	toptable(fit=fit[c("coefficients","stdev.unscaled")],
 		coef=coef,
 		number=number,
 		genelist=genelist,
 		A=fit$Amean,
-		eb=fit[c("s2.post","df.total","t","p.value","lods")],
+		eb=fit[ebcols],
 		adjust.method=adjust.method,
 		sort.by=sort.by,
 		resort.by=resort.by,
