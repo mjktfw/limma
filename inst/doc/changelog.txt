@@ -1,3 +1,8 @@
+17 February 2011: limma 3.7.23
+
+- gene symbol annotation (using getSYMBOL) added to 
+  the Estrogen case study in the User's Guide.
+
 30 January 2011: limma 3.7.22
 
 - topTable() and toptable() now optionally output confidence
