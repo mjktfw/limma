@@ -260,7 +260,7 @@ qqt <- function(y,df=Inf,ylim=range(y),main="Student's t Q-Q Plot",xlab="Theoret
 squeezeVar <- function(var, df, covariate=NULL)
 #	Empirical Bayes posterior variances
 #	Gordon Smyth
-#	2 March 2004.  Last modified 27 Oct 2010.
+#	2 March 2004.  Last modified 24 Feb 2011.
 {
 	n <- length(var)
 	if(n == 0) stop("var is empty")
@@ -277,7 +277,7 @@ squeezeVar <- function(var, df, covariate=NULL)
 	out$df2 <- out$scale <- NULL
 	df.total <- df + out$df.prior
 	if(out$df.prior == Inf)
-		out$var.post <- rep.int(out$var.prior,n)
+		out$var.post <- rep(out$var.prior,length.out=n)
 	else {
 		var[df==0] <- 0 # guard against missing or infinite values
 		out$var.post <- (df*var + out$df.prior*out$var.prior) / df.total
