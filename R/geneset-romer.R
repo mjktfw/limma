@@ -366,10 +366,10 @@ romer <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=N
 			rot.ranks[,3] <- rank(abs(modtr))
 		}
 
-		for(i in 1:nset)
+		for(k in 1:nset)
 		{
-			rot.set.ranks <- colMeans(rot.ranks[iset[[i]],,drop=FALSE])
-			p.value[i,] <- p.value[i,] + (rot.set.ranks >= obs.set.ranks[i,])
+			rot.set.ranks <- colMeans(rot.ranks[iset[[k]],,drop=FALSE])
+			p.value[k,] <- p.value[k,] + (rot.set.ranks >= obs.set.ranks[k,])
 		}
 	}	
 
