@@ -1,3 +1,8 @@
+21 March 2011: limma 3.7.26
+
+- change to symbols2indices() so that it returns positions of
+  all occurrences of each symbol, not just the first occurrence.
+
 14 March 2011: limma 3.7.25
 
 - minor bug fix to romer(). Change probably not user-visible.

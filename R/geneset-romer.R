@@ -3,21 +3,13 @@
 symbols2indices <- function(gmtl.official, symbol)
 # Make a list of gene sets symbols into a list of gene sets indices used to create input for romer
 # Gordon Smyth and Yifang Hu
-# 25 March 2009.
+# 25 March 2009.  Last modified 21 March 2011.
 {
-	iset<-list()
-	j<-1
-	for(i in 1:length(gmtl.official))
-	{
-		idx<-match(gmtl.official[[i]],symbol)
-		if(any(is.na(idx)=="FALSE"))
-		{
-			iset[[j]] <-idx[!is.na(idx)]
-			names(iset)[j]<-names(gmtl.official)[i]
-			j<-j+1
-		}
+	iset <- gmtl.official <- as.list(gmtl.official)
+	for(i in 1:length(gmtl.official)) {
+		iset[[i]] <- which(symbol %in% gmtl.official[[i]])
+		if(length(iset[[i]])==0) iset[[i]] <- NULL
 	}
-
 	iset
 }
 
