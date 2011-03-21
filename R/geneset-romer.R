@@ -1,15 +1,14 @@
 ##  ROMER.R
 
-symbols2indices <- function(gmtl.official, symbol)
+symbols2indices <- function(gene.sets, symbols, remove.empty=TRUE)
 # Make a list of gene sets symbols into a list of gene sets indices used to create input for romer
 # Gordon Smyth and Yifang Hu
 # 25 March 2009.  Last modified 21 March 2011.
 {
-	iset <- gmtl.official <- as.list(gmtl.official)
-	for(i in 1:length(gmtl.official)) {
-		iset[[i]] <- which(symbol %in% gmtl.official[[i]])
-		if(length(iset[[i]])==0) iset[[i]] <- NULL
-	}
+	gene.sets <- as.list(gene.sets)
+	iset <- lapply(gene.sets, function(x) which(symbols %in% x))
+	if(remove.empty)
+		for (i in length(iset):1) if(!length(iset[[i]])) iset[[i]] <- NULL
 	iset
 }
 

@@ -1,7 +1,11 @@
 21 March 2011: limma 3.7.26
 
-- change to symbols2indices() so that it returns positions of
-  all occurrences of each symbol, not just the first occurrence.
+- change to symbols2indices() so that it returns indices of
+  all occurrences of each symbol on the array, not just the
+  first occurrence.  The argument names of symbols2indices()
+  have been changed to be more easily understood.  A new
+  argument remove.empty has been added to optionally remove
+  gene sets of length zero.  Previously this was always done.
 
 14 March 2011: limma 3.7.25
 
