@@ -1,21 +1,27 @@
 \name{nec}
 \alias{nec}
-\title{NormExp by Control background correction (NEC)}
+\alias{neqc}
+\title{NormExp Background Correction and Normalization Using Control Probes}
 \description{Perform normexp background correction using negative control probes.}
 \usage{
 nec(x, status=NULL, negctrl="negative", regular="regular", offset=16, robust=FALSE,detection.p="Detection")
+neqc(x, status=NULL, negctrl="negative", regular="regular", offset=16, robust=FALSE, detection.p="Detection",...)
 }
 \arguments{
   \item{x}{object of class \code{\link{EListRaw-class}} or \code{matrix} containing raw intensities for regular and control probes from a series of microarrays.}
   \item{status}{character vector giving probe types.}
   \item{negctrl}{character string identifier for negative control probes.}
-  \item{regular}{character string identifier for regular probes.}
+  \item{regular}{character string identifier for regular probes, i.e., all probes other than non-control probes.}
   \item{offset}{numeric value added to the intensities after background correction.}
   \item{robust}{logical. Should robust estimators be used for the background mean and standard deviation?}
   \item{detection.p}{a character string giving the name of the component which contains detection p value information in \code{x} or a numeric matrix giving detection p values, \code{Detection} by default}
+  \item{...}{any other arguments are passed to \code{normalizeBetweenArrays.}}
   }
 \details{
-When control data are available, this function calls \code{\link{normexp.fit.control}} to estimate the parameters required by normal+exponential(normexp) convolution model with the help of negative control probes, followed by \code{\link{normexp.signal}} to perform the background correction.
+\code{neqc} performs background correction followed by quantile normalization, using negative control probes for background correction and both negative and positive controls for normalization.
+\code{nec} is similar but performs background correction only.
+
+When control data are available, these function call \code{\link{normexp.fit.control}} to estimate the parameters required by normal+exponential(normexp) convolution model with the help of negative control probes, followed by \code{\link{normexp.signal}} to perform the background correction.
 If \code{x} contains background intensities \code{x$Eb}, then these are first subtracted from the foreground intensities, prior to normexp background correction.
 After background correction, an \code{offset} is added to the data.
 
@@ -23,9 +29,14 @@ When control data are not available, this function calls \code{\link{normexp.fit
 \code{\link{normexp.fit.detection.p}} infers negative control probe intensities from regular probes by taking advantage of their detection p value information.
 
 For more descriptions to parameters \code{x}, \code{status}, \code{negctrl}, \code{regular} and \code{detection.p}, please refer to functions \code{\link{normexp.fit.control}}, \code{\link{normexp.fit.detection.p}} and \code{\link{read.ilmn}}.
+
+Both \code{nec} and \code{neqc} perform the above steps.
+\code{neqc} does on to quantile normalize the background corrected intensities, including control probes.
+Finally the intensities are log2 transformed and the control probes are removed.
 }
 \value{
-An \code{\link{EListRaw-class}} or matrix object containing background-corrected intensities. Intensities are at raw scale. Control probes are kept. 
+\code{nec} produces a \code{\link{EListRaw-class}} or matrix object of the same dimensions as \code{x} containing background-corrected intensities, on the raw scale.
+\code{neqc} produces a \code{\link{EList-class}} or matrix object containing normalized log2 intensities, with rows corresponding to control probes removed.
 }
 
 \references{
@@ -54,8 +65,18 @@ Optimizing the noise versus bias trade-off for Illumina Whole Genome Expression 
 
 \examples{
 \dontrun{
+# neqc normalization for data which include control probes
 x <- read.ilmn(files="sample probe profile.txt",ctrlfiles="control probe profile.txt")
-x.bg <- nec(x)
+y <- neqc(x)
+
+# Same thing but in separate steps:
+x.b <- nec(x)
+y <- normalizeBetweenArrays(x.b,method="quantile")
+y <- y[y$genes$Status=="regular",]
+
+# neqc normalization for data which do not include control probes
+xr <- read.ilmn(files="sample probe profile.txt")
+yr <- neqc(xr)
 }
 }
 
