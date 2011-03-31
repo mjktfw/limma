@@ -1,3 +1,7 @@
+31 March 2011: limma 3.7.27
+
+- nec.Rd and neqc.Rd combined into one file.
+
 21 March 2011: limma 3.7.26
 
 - change to symbols2indices() so that it returns indices of
