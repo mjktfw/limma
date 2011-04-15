@@ -1,3 +1,6 @@
+14 April 2010: limma 3.9.0 (Bioconductor 2.9 Developmental Branch)
+14 April 2010: limma 3.8.0 (Bioconductor 2.8 Release Branch)
+
 31 March 2011: limma 3.7.27
 
 - nec.Rd and neqc.Rd combined into one file.
