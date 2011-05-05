@@ -8,7 +8,7 @@ Compute exact area under the ROC for empirical data.
 auROC(truth, stat=NULL)
 }
 \arguments{
-  \item{truth}{logical vector, or numeric vector of 0 and 1, indicating whether each case is a true positive.}
+  \item{truth}{logical vector, or numeric vector of 0s and 1s, indicating whether each case is a true positive.}
   \item{stat}{numeric vector containing test statistics used to rank cases, from largest to smallest.
   If \code{NULL}, then \code{truth} is assumed to be already sorted in decreasing test statistic order.}
 }

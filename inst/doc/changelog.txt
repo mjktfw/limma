@@ -1,3 +1,9 @@
+15 April 2010: limma 3.9.1
+
+- Updating package version numbers in introduction of User's Guide.
+
+- test file output updated to R 2.13.0 (not user visible).
+
 14 April 2010: limma 3.9.0 (Bioconductor 2.9 Developmental Branch)
 14 April 2010: limma 3.8.0 (Bioconductor 2.8 Release Branch)
 

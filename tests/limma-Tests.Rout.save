@@ -1,6 +1,6 @@
 
-R version 2.12.0 (2010-10-15)
-Copyright (C) 2010 The R Foundation for Statistical Computing
+R version 2.13.0 (2011-04-13)
+Copyright (C) 2011 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: i386-pc-mingw32/i386 (32-bit)
 
@@ -840,11 +840,11 @@ Loading required package: statmod
 > fit <- gls.series(M,design,correlation=cor.out$cor)
 > fit$coefficients
      First3Arrays Last3Arrays
-[1,]   1.02568064  0.04440632
-[2,]  -0.00893139 -0.04446419
-[3,]   0.06938317 -0.03407404
-[4,]  -0.02937598  0.11198606
-[5,]  -0.27617342  0.21529287
+[1,]  1.025680641  0.04440632
+[2,] -0.008931391 -0.04446419
+[3,]  0.069383171 -0.03407404
+[4,] -0.029375980  0.11198606
+[5,] -0.276173422  0.21529287
 > fit$stdev.unscaled
      First3Arrays Last3Arrays
 [1,]    0.3807838   0.3807838
@@ -886,8 +886,8 @@ Loading required package: MASS
  [9,]    0.5773503   0.5773503
 [10,]    0.5773503   0.5773503
 > fit$sigma
- [1] 0.0755165 0.1410025 0.3087025 0.1390960 0.3289335 0.1719261 0.4295126
- [8] 0.1197697 0.3906706 0.2267115
+ [1] 0.07551649 0.14100247 0.30870247 0.13909601 0.32893352 0.17192613
+ [7] 0.42951263 0.11976975 0.39067059 0.22671154
 > fit$df.residual
  [1] 4 4 4 4 4 4 4 4 4 4
 > 
