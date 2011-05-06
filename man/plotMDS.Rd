@@ -5,7 +5,8 @@
 Plot the sample relations based on MDS.
 }
 \usage{
-plotMDS(x, top=500, labels=colnames(x), col=NULL, cex=1, dim.plot=c(1,2), ndim=max(dim.plot), gene.selection="pairwise", ...)
+plotMDS(x, top=500, labels=colnames(x), col=NULL, cex=1, dim.plot=c(1,2), ndim=max(dim.plot), gene.selection="pairwise",
+        xlab=paste("Dimension",dim.plot[1]), ylab=paste("Dimension",dim.plot[2]), ...)
 }
 \arguments{
   \item{x}{any data object which can be coerced to a matrix, such as \code{ExpressionSet} or \code{EList}.}
@@ -30,7 +31,10 @@ The pairwise feature selection may be appropriate for microarray data when diffe
 See \code{\link[graphics]{text}} for possible values for \code{col} and \code{cex}.
 }
 
-\value{A plot is created on the current graphics device.}
+\value{
+A plot is created on the current graphics device.
+A list containing the \code{distance.matrix} and the \code{x} and \code{y} coordinates is invisibly returned.
+}
 
 \author{Di Wu and Gordon Smyth}
 

@@ -1,11 +1,16 @@
-15 April 2010: limma 3.9.1
+6 May 2011: limma 3.9.2
+
+- plotMDS() now invisibly returns the distance.matrix and the x and y
+  plotting coordinates.  plotMDS() now accepts xlab and ylab arguments.
+
+15 April 2011: limma 3.9.1
 
 - Updating package version numbers in introduction of User's Guide.
 
 - test file output updated to R 2.13.0 (not user visible).
 
-14 April 2010: limma 3.9.0 (Bioconductor 2.9 Developmental Branch)
-14 April 2010: limma 3.8.0 (Bioconductor 2.8 Release Branch)
+14 April 2011: limma 3.9.0 (Bioconductor 2.9 Developmental Branch)
+14 April 2011: limma 3.8.0 (Bioconductor 2.8 Release Branch)
 
 31 March 2011: limma 3.7.27
 

@@ -1,9 +1,9 @@
 ##  PLOTMDS.R
 
-plotMDS <- function(x,top=500,labels=colnames(x),col=NULL,cex=1,dim.plot=c(1,2),ndim=max(dim.plot),gene.selection="pairwise",...)
+plotMDS <- function(x,top=500,labels=colnames(x),col=NULL,cex=1,dim.plot=c(1,2),ndim=max(dim.plot),gene.selection="pairwise",xlab=paste("Dimension",dim.plot[1]),ylab=paste("Dimension",dim.plot[2]),...)
 #	Multi-dimensional scaling with top-distance
 #	Di Wu and Gordon Smyth
-#	19 March 2009.  Last modified 28 Jan 2011.
+#	19 March 2009.  Last modified 6 May 2011.
 {
 	x <- as.matrix(x)
 
@@ -37,7 +37,10 @@ plotMDS <- function(x,top=500,labels=colnames(x),col=NULL,cex=1,dim.plot=c(1,2),
 	}
 
 	a1 <- cmdscale(as.dist(dd),k=ndim)
-	plot(a1[,dim.plot[1]],a1[,dim.plot[2]],type="n",xlab=paste("Dimension",dim.plot[1]),ylab=paste("Dimension",dim.plot[2]),...)
-	text(a1[,dim.plot[1]],a1[,dim.plot[2]],labels=labels,col=col,cex=cex)
-	return(invisible(dd))
+	xcord <- a1[,dim.plot[1]]
+	ycord <- a1[,dim.plot[2]]
+	plot(xcord,ycord,type="n",xlab=xlab,ylab=ylab,...)
+	text(xcord,ycord,labels=labels,col=col,cex=cex)
+	return(invisible(list(distance.matrix=dd,x=xcord,y=ycord)))
 }
+
