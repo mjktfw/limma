@@ -7,7 +7,7 @@
 \usage{
 ebayes(fit, proportion=0.01, stdev.coef.lim=c(0.1,4), trend=FALSE)
 eBayes(fit, proportion=0.01, stdev.coef.lim=c(0.1,4), trend=FALSE)
-treat(fit, lfc=0)
+treat(fit, lfc=0, trend=FALSE)
 }
 \arguments{
   \item{fit}{an \code{MArrayLM} fitted model object produced by \code{lmFit} or \code{contrasts.fit}, or an unclassed list produced by \code{lm.series}, \code{gls.series} or \code{mrlm} containing components \code{coefficients}, \code{stdev.unscaled}, \code{sigma} and \code{df.residual}}

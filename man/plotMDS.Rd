@@ -3,6 +3,7 @@
 \alias{plotMDS}
 \description{
 Plot the sample relations based on MDS.
+Distances on the plot can be interpreted in terms of \emph{leading log2-fold-change}.
 }
 \usage{
 plotMDS(x, top=500, labels=colnames(x), col=NULL, cex=1, dim.plot=c(1,2), ndim=max(dim.plot), gene.selection="pairwise",
@@ -23,6 +24,8 @@ plotMDS(x, top=500, labels=colnames(x), col=NULL, cex=1, dim.plot=c(1,2), ndim=m
 \details{
 This function is a variation on the usual multdimensional scaling (or principle coordinate) plot, in that a distance measure particularly appropriate for the microarray context is used.
 The distance between each pair of samples (columns) is the root-mean-square deviation (Euclidean distance) for the top \code{top} genes.
+Distances on the plot can be interpreted as \emph{leading log2-fold-change}, meaning
+the typical log2-fold-change between the samples for the genes that distinguish the samples.
 
 If \code{gene.selection} is \code{"common"}, then the top genes are those with the largest standard deviations between samples.
 If \code{gene.selection} is \code{"pairwise"}, then a different set of top genes is selected for each pair of samples.

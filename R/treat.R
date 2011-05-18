@@ -1,9 +1,9 @@
 ###  treat.R
 
-treat <- function(fit, lfc=0)
+treat <- function(fit, lfc=0, trend=FALSE)
 #  Moderated t-statistics with threshold
 #  Davis McCarthy, Gordon Smyth
-#  25 July 2008. Last revised 3 November 2010.
+#  25 July 2008.  Last revised 19 May 2011.
 {
 	coefficients <- as.matrix(fit$coefficients)
 	stdev.unscaled <- as.matrix(fit$stdev.unscaled)
@@ -16,7 +16,13 @@ treat <- function(fit, lfc=0)
 		stop("No residual degrees of freedom in linear model fits")
 	if (all(!is.finite(sigma))) 
 		stop("No finite residual standard deviations")
-	sv <- squeezeVar(sigma^2, df.residual)
+	if(trend) {
+		covariate <- fit$Amean
+		if(is.null(covariate)) stop("Need Amean component in fit to estimate trend")
+	} else {
+		covariate <- NULL
+	}
+	sv <- squeezeVar(sigma^2, df.residual, covariate=covariate)
 	fit$df.prior <- sv$df.prior
 	fit$s2.prior <- sv$var.prior
 	fit$s2.post <- sv$var.post

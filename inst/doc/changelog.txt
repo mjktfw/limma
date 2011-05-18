@@ -1,3 +1,7 @@
+19 May 2011: limma 3.9.3
+
+- treat() now has an optional trend argument, same as eBayes().
+
 6 May 2011: limma 3.9.2
 
 - plotMDS() now invisibly returns the distance.matrix and the x and y

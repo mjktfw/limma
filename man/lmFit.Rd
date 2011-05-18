@@ -93,10 +93,6 @@ volcanoplot(fit,coef=2,highlight=2)
 \dontrun{write.fit(fit,file="exampleresults.txt")}
 \dontrun{write.table(fit,file="exampleresults2.txt")}
 
-# Robust fit
-# (There may be some warning messages)
-fit2 <- lmFit(y,design,method="robust")
-
 # Fit with correlated arrays
 # Suppose each pair of arrays is a block
 block <- c(1,1,2,2,3,3)
