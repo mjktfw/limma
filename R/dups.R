@@ -218,7 +218,7 @@ avereps.MAList <- function(x,ID=NULL)
 avereps.EList <- function(x,ID=NULL)
 #	Average over irregular replicate probes for EList objects
 #	Gordon Smyth
-#	2 April 2010.
+#	2 April 2010.  Last modified 20 May 2011.
 {
 	if(is.null(ID)) {
 		ID <- x$genes$ID
@@ -228,7 +228,7 @@ avereps.EList <- function(x,ID=NULL)
 	y <- x
 	y$E <- avereps(x$E,ID=ID)
 	other <- names(x$other)
-	for (a in other) object$other[[a]] <- avereps(object$other[[a]],ID=ID)
+	for (a in other) y$other[[a]] <- avereps(x$other[[a]],ID=ID)
 	y$weights <- avereps(x$weights,ID=ID)
 	y$genes <- x$genes[!duplicated(ID),]
    y$printer <- NULL

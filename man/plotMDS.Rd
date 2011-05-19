@@ -18,6 +18,8 @@ plotMDS(x, top=500, labels=colnames(x), col=NULL, cex=1, dim.plot=c(1,2), ndim=m
   \item{dim.plot}{which two dimensions should be plotted, numeric vector of length two.}
   \item{ndim}{number of dimensions in which data is to be represented}
   \item{gene.selection}{character, \code{"pairwise"} to choose the top genes separately for each pairwise comparison between the samples or \code{"common"} to select the same genes for all comparisons}
+  \item{xlab}{title for the x-axis}
+  \item{ylab}{title for the y-axis}
   \item{...}{any other arguments are passed to \code{plot}.}
 }
 
