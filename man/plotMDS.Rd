@@ -1,13 +1,19 @@
 \title{Multidimensional scaling plot of microarray data}
 \name{plotMDS}
 \alias{plotMDS}
+\alias{plotMDS.MDS}
+\alias{plotMDS.default}
+\alias{MDS-class}
+\alias{show,MDS-method}
 \description{
 Plot the sample relations based on MDS.
 Distances on the plot can be interpreted in terms of \emph{leading log2-fold-change}.
 }
 \usage{
-plotMDS(x, top=500, labels=colnames(x), col=NULL, cex=1, dim.plot=c(1,2), ndim=max(dim.plot), gene.selection="pairwise",
+\method{plotMDS}{default}(x, top=500, labels=colnames(x), col=NULL, cex=1, dim.plot=c(1,2), ndim=max(dim.plot), gene.selection="pairwise",
         xlab=paste("Dimension",dim.plot[1]), ylab=paste("Dimension",dim.plot[2]), ...)
+\method{plotMDS}{MDS}(x, labels=colnames(x$distance.matrix), col=NULL, cex=1, dim.plot=x$dim.plot, xlab=paste("Dimension",dim.plot[1]), ylab=paste("Dimension",dim.plot[2]),...)
+
 }
 \arguments{
   \item{x}{any data object which can be coerced to a matrix, such as \code{ExpressionSet} or \code{EList}.}
@@ -27,7 +33,7 @@ plotMDS(x, top=500, labels=colnames(x), col=NULL, cex=1, dim.plot=c(1,2), ndim=m
 This function is a variation on the usual multdimensional scaling (or principle coordinate) plot, in that a distance measure particularly appropriate for the microarray context is used.
 The distance between each pair of samples (columns) is the root-mean-square deviation (Euclidean distance) for the top \code{top} genes.
 Distances on the plot can be interpreted as \emph{leading log2-fold-change}, meaning
-the typical log2-fold-change between the samples for the genes that distinguish the samples.
+the typical (root-mean-square) log2-fold-change between the samples for the genes that distinguish those samples.
 
 If \code{gene.selection} is \code{"common"}, then the top genes are those with the largest standard deviations between samples.
 If \code{gene.selection} is \code{"pairwise"}, then a different set of top genes is selected for each pair of samples.
@@ -38,7 +44,15 @@ See \code{\link[graphics]{text}} for possible values for \code{col} and \code{ce
 
 \value{
 A plot is created on the current graphics device.
-A list containing the \code{distance.matrix} and the \code{x} and \code{y} coordinates is invisibly returned.
+
+An object of class \code{"MDS"} is invisibly returned.
+This is a list containing the following components:
+\item{distance.matrix}{numeric matrix of pairwise distances between columns of \code{x}}
+\item{cmdscale.out}{output from the function \code{cmdscale} given the distance matrix}
+\item{dim.plot}{dimensions plotted}
+\item{x}{x-xordinates of plotted points}
+\item{y}{y-cordinates of plotted points}
+\item{gene.selection}{gene selection method}
 }
 
 \author{Di Wu and Gordon Smyth}
@@ -58,9 +72,9 @@ x <- matrix(rnorm(1000*6,sd=sd),1000,6)
 rownames(x) <- paste("Gene",1:1000)
 x[1:50,4:6] <- x[1:50,4:6] + 2
 # without labels, indexes of samples are plotted.
-plotMDS(x,  col=c(rep("black",3), rep("red",3)) )
-# with labels as groups, group indicators are plotted.
-plotMDS(x,  col=c(rep("black",3), rep("red",3)), labels= c(rep("Grp1",3), rep("Grp2",3)))
+mds <- plotMDS(x,  col=c(rep("black",3), rep("red",3)) )
+# or labels can be provided, here group indicators:
+plotMDS(mds,  col=c(rep("black",3), rep("red",3)), labels= c(rep("Grp1",3), rep("Grp2",3)))
 }
 
 \keyword{hplot}

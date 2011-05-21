@@ -1,7 +1,7 @@
 #  All functions exported other than those starting with "."
 exportPattern("^[^\\.]")
 
-exportClasses("RGList","MAList","EListRaw","EList","MArrayLM","TestResults","LargeDataObject","Roast")
+exportClasses("RGList","MAList","EListRaw","EList","MArrayLM","TestResults","LargeDataObject","Roast","MDS")
 exportMethods("show")
 
 S3method("[",MAList)
@@ -66,3 +66,4 @@ S3method(summary,EListRaw)
 S3method(summary,TestResults)
 S3method(normalizeVSN,RGList)
 S3method(normalizeVSN,EListRaw)
+S3method(plotMDS,MDS)
