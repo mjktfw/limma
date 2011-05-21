@@ -1,11 +1,11 @@
 21 May 2011: limma 3.9.5
 
 - plotMDS is now an S3 generic function.  This allows MDS plots to be
-  repeated with new labels without repeating the distance or scaling
-  calculations.
+  redrawn with new labels without needing to repeat the distance or
+  scaling calculations.
 
-- new S4 class "MDS" to hold multidimensional scaling ouput from
-  plotMDS.
+- new S4 class "MDS" to hold the multidimensional scaling information
+  output from plotMDS.
 
 20 May 2011: limma 3.9.4
 
@@ -18,7 +18,9 @@
 6 May 2011: limma 3.9.2
 
 - plotMDS() now invisibly returns the distance.matrix and the x and y
-  plotting coordinates.  plotMDS() now accepts xlab and ylab arguments.
+  plotting coordinates.
+  
+- plotMDS() now accepts xlab and ylab arguments.
 
 15 April 2011: limma 3.9.1
 
