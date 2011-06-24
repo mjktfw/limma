@@ -1,3 +1,12 @@
+24 June 2011: limma 3.9.6
+
+- bug fixes for barcodeplot() and barcodeplot2().  They were not
+  processing character values for arguments select and select2
+  correctly.  Now fixed.
+
+- Data classes ElistRaw and Elist now described in the quick start
+  section of the User's Guide.  Other minor updates to User's Guide.
+
 21 May 2011: limma 3.9.5
 
 - plotMDS is now an S3 generic function.  This allows MDS plots to be

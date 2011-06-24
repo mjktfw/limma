@@ -78,7 +78,6 @@ barcodeplot <- function(selected,statistics,labels=c("Up","Down"),...)
 #	Gordon Smyth and Di Wu
 #  20 October 2008. Last revised 30 Sep 2009.
 {
-	statistics <- as.numeric(statistics)
 	isna <- is.na(statistics)
 	if(any(isna)) {
 		if(length(selected)==length(statistics)) {
@@ -114,7 +113,6 @@ barcodeplot2 <- function (selected,statistics,selected2=NULL,labels=c("Up","Down
 #	Gordon Smyth and Di Wu
 #  20 October 2008. Last revised 30 Sep 2009.
 {
-	statistics <- as.numeric(statistics)
 	isna <- is.na(statistics)
 	if (any(isna)) {
 		if (length(selected) == length(statistics)) {
@@ -124,6 +122,14 @@ barcodeplot2 <- function (selected,statistics,selected2=NULL,labels=c("Up","Down
 			selected <- as.integer(selected)
 			selected <- selected[!isna[selected]]
 		}
+		if(!is.null(selected2))
+			if (length(selected2) == length(statistics)) {
+				selected2 <- selected2[!isna]
+			}
+			else {
+				selected2 <- as.integer(selected2)
+				selected2 <- selected[!isna[selected2]]
+			}
 		statistics <- statistics[!isna]
 	}
 	n <- length(statistics)
@@ -153,5 +159,5 @@ barcodeplot2 <- function (selected,statistics,selected2=NULL,labels=c("Up","Down
 	mtext(labels[1],side=2,line=-0.5,col="black")
 	mtext(labels[2],side=4,line=-1,col="black")
 	invisible()
-} 
+}
 
