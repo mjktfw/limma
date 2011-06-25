@@ -31,7 +31,7 @@ The results from \code{decideTests} can also be included when the results of a l
 
 \section{Gene Set Tests}{
 Competitive gene set testing for an individual gene set is provided by \code{\link{wilcoxGST}} or \code{\link{geneSetTest}}, which permute genes.
-The gene set can be displayed using \code{\link{barcodeplot}} or \code{\link{barcodeplot2}}, the latter for directional gene sets with both up and down genes.
+The gene set can be displayed using \code{\link{barcodeplot}}.
 
 Self-contained gene set testing for an individual set is provided by \code{\link{roast}}, which uses rotation technology, analogous to permuting arrays.
 

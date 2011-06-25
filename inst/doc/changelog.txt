@@ -1,3 +1,7 @@
+25 June 2011: limma 3.9.7
+
+- barcodeplot() and barcodeplot2() merged into one function.
+
 24 June 2011: limma 3.9.6
 
 - bug fixes for barcodeplot() and barcodeplot2().  They were not

@@ -2,7 +2,6 @@
 \alias{geneSetTest}
 \alias{wilcoxGST}
 \alias{barcodeplot}
-\alias{barcodeplot2}
 \title{Mean-rank Gene Set Test}
 \description{
 Test whether a set of genes is highly ranked relative to other genes in terms of a given statistic.
@@ -11,8 +10,8 @@ Genes are assumed to be independent.
 \usage{
 geneSetTest(selected,statistics,alternative="mixed",type="auto",ranks.only=TRUE,nsim=10000)
 wilcoxGST(selected,statistics,alternative="mixed")
-barcodeplot(selected,statistics,labels=c("Up","Down"),...)
-barcodeplot2(selected,statistics,selected2=NULL,labels=c("Up","Down"),...)
+barcodeplot(statistics,selected,selected2=NULL,labels=c("Up","Down"),
+            quantiles=c(-1,1),col.bars=NULL,offset.bars=!is.null(selected2), ...)
 }
 \arguments{
   \item{selected}{index vector for the gene set.  This can be a vector of indices, or a logical vector of the same length as \code{statistics} or, in general, any vector such that \code{statistic[selected]} gives the statistic values for the gene set to be tested.}
@@ -23,7 +22,10 @@ barcodeplot2(selected,statistics,selected2=NULL,labels=c("Up","Down"),...)
   \item{ranks.only}{logical, if \code{TRUE} only the ranks of the \code{statistics} are used.} 
   \item{nsim}{number of random samples to take in computing the p-value.
   Not used if \code{ranks.only=TRUE}.}
-  \item{labels}{character vector of length 2 of labels associated with large and small statistics respectively.}
+  \item{labels}{character vector of length 2 of labels associated with large and small statistics respectively.  Displayed at ends of the barcodeplot.}
+  \item{quantiles}{numeric vector of length 2, giving cutoff values for \code{statistics} considered small or large respectively.  Used to color the rectangle of the barcodeplot.}
+  \item{col.bars}{character vector giving colors for the bars on the barcodeplot. Defaults to \code{"black"} for one set or \code{c("red","blue")} for two sets.}
+  \item{offset.bars}{logical. When there are two sets, bars are normally offset up and down from the rectangle of the barcodeplot.}
   \item{\ldots}{other arguments are passed to \code{plot}.}
 }
 
@@ -74,8 +76,7 @@ In this case the p-value is obtained from a Wilcoxon test.
 If \code{ranks.only} is \code{FALSE}, then the p-value is obtained by simulation using \code{nsim} random selected sets of genes.
 
 \code{barcodeplot} is a graphical representation of the Wilcox gene set test using ranks.
-\code{barcodeplot2} displays two sets.
-It is particularly used to displaying directional sets, when there are separate sets of genes expected to go up and down respectively.
+It can be used for one set, or to displaying directional sets, when there are separate sets of genes expected to go up and down respectively.
 }
 
 \seealso{\code{\link{roast}}, \code{\link{romer}}, \code{\link{wilcox.test}}
@@ -99,8 +100,8 @@ Integrative analysis of RUNX1 downstream pathways and target genes.
 stat <- rnorm(100)
 sel <- 1:10
 wilcoxGST(sel,stat)
-barcodeplot(sel,stat)
+barcodeplot(stat,sel)
 sel2 <- 11:20
-barcodeplot2(sel,stat,sel2)
+barcodeplot(stat,sel,sel2)
 }
 \keyword{htest}
