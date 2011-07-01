@@ -11,7 +11,7 @@ Rotation gene set testing for linear models.
 \usage{
 roast(iset=NULL, y, design, contrast=ncol(design), set.statistic="mean",
      gene.weights=NULL, array.weights=NULL, block=NULL, correlation,
-     var.prior=NULL, df.prior=NULL, nrot=999)
+     var.prior=NULL, df.prior=NULL, trend.var=FALSE, nrot=999)
 mroast(iset=NULL, y, design, contrast=ncol(design), set.statistic="mean",
       gene.weights=NULL, array.weights=NULL, block=NULL, correlation,
       var.prior=NULL, df.prior=NULL, nrot=999, adjust.method="BH")
@@ -32,6 +32,7 @@ mroast(iset=NULL, y, design, contrast=ncol(design), set.statistic="mean",
   \item{correlation}{correlation between blocks.}
   \item{var.prior}{prior value for residual variances. If not provided, this is estimated from all the data using \code{squeezeVar}.}
   \item{df.prior}{prior degrees of freedom for residual variances. If not provided, this is estimated using \code{squeezeVar}.}
+  \item{trend.var}{logical, should a trend be estimated for \code{var.prior}?  See \code{eBayes} for details.  Only used if \code{var.prior} or \code{df.prior} are \code{NULL}.}
   \item{nrot}{number of rotations used to estimate the p-values.}
   \item{adjust.method}{method used to adjust the p-values for multiple testing.
   See \code{\link{p.adjust}} for possible values.}

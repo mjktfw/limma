@@ -1,3 +1,8 @@
+1 July 2011: limma 3.9.9
+
+- new argument trend.var for roast().  roast() also now accepts
+  a vector value for argument var.prior.
+
 1 July 2011: limma 3.9.8
 
 - new argument batch2 for removeBatchEffect().

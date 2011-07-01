@@ -11,10 +11,10 @@ setMethod("show","Roast",
 function(object) print(object$p.value)
 )
 
-roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,nrot=999)
+roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999)
 # Rotation gene set testing for linear models
 # Gordon Smyth and Di Wu
-# 24 Apr 2008. Revised 19 May 2010.
+# Created 24 Apr 2008. Revised 1 July 2011.
 {
 	if(is.null(iset)) iset <- rep(TRUE,nrow(y))
 	y <- as.matrix(y)
@@ -72,16 +72,22 @@ roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",
 		effects <- qr.qty(qr,t(y))
 #		Estimate global parameters s0 and d0
 		s2 <- colMeans(effects[-(1:p),,drop=FALSE]^2)
-		sv <- squeezeVar(s2,df=d)
+		if(trend.var) covariate <- rowMeans(y,na.rm=TRUE) else covariate <- NULL
+		sv <- squeezeVar(s2,df=d,covariate=covariate)
 		d0 <- sv$df.prior
 		s02 <- sv$var.prior
+		if(trend.var) s02 <- s02[iset]
 		effects <- effects[,iset,drop=FALSE]
 		sd.post <- sqrt(sv$var.post[iset])
 	} else {
-		y <- y[iset,,drop=FALSE]
-		effects <- qr.qty(qr,t(y))
 		d0 <- df.prior
 		s02 <- var.prior
+		if(length(s02)>1) {
+			names(s02) <- rownames(y)
+			s02 <- s02[iset]
+		}
+		y <- y[iset,,drop=FALSE]
+		effects <- qr.qty(qr,t(y))
 		s2 <- colMeans(effects[-(1:p),,drop=FALSE]^2)
 		if(is.finite(d0))
 			sd.post <- sqrt( (d0*s02+d*s2)/(d0+d) )
