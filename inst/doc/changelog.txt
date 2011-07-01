@@ -1,3 +1,7 @@
+1 July 2011: limma 3.9.8
+
+- new argument batch2 for removeBatchEffect().
+
 25 June 2011: limma 3.9.7
 
 - barcodeplot() and barcodeplot2() merged into one function.

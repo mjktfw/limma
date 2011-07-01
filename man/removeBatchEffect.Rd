@@ -2,28 +2,29 @@
 \alias{removeBatchEffect}
 \title{Remove Batch Effect}
 \description{
-Remove a batch effect from expression data.
+Remove batch effects from expression data.
 }
 \usage{
-removeBatchEffect(x,batch,design=matrix(1,ncol(x),1))
+removeBatchEffect(x,batch,batch2=NULL,design=matrix(1,ncol(x),1))
 }
 \arguments{
-  \item{x}{numeric matrix containing log-expression intensity for a series of microarrays. Each column corresponds to an array.}
+  \item{x}{numeric matrix, or any object that can be coerced to a matrix by \code{as.matrix(x)}, containing log-expression intensities for a series of microarrays.
+  Rows correspond to probes and columns to arrays.}
   \item{batch}{a factor or vector indicating batches.}
-  \item{design}{design matrix}
+  \item{batch2}{an optional second batch factor or vector.}
+  \item{design}{optional design matrix relating to treatment conditions to be preserved}
 }
 \value{
 A numeric matrix of log-expression values with batch effects removed.
 }
 \details{
-This function is useful for removing batch effects, associated with hybridization time or other technical variables, prior to clustering or unsupervised analysis.
-
-This function is intended for use with clustering or PCA, not for use prior to linear modelling.
-If linear modelling is intended, it is better to include the batch effect as part of the linear model.
+This function is useful for removing batch effects, associated with hybridization time or other technical variables, prior to clustering or unsupervised analysis such as PCA or heatmaps.
+It is not intended to use with linear modelling.
+For linear modelling, it is better to include the batch factors in the linear model.
 
 The design matrix is used to describe comparisons between the samples, for example treatment effects, which should not be removed.
-The batch effect is estimated after adjusting for the design factors.
-By default, this is just the grand mean.
+
+The function (in effect) fits a linear model to the data, including both batches and regular treatments, then removes the component due to the batch effects.
 }
 
 \seealso{
