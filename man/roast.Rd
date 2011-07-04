@@ -13,13 +13,13 @@ roast(iset=NULL, y, design, contrast=ncol(design), set.statistic="mean",
      gene.weights=NULL, array.weights=NULL, block=NULL, correlation,
      var.prior=NULL, df.prior=NULL, trend.var=FALSE, nrot=999)
 mroast(iset=NULL, y, design, contrast=ncol(design), set.statistic="mean",
-      gene.weights=NULL, array.weights=NULL, block=NULL, correlation,
-      var.prior=NULL, df.prior=NULL, nrot=999, adjust.method="BH")
+     gene.weights=NULL, array.weights=NULL, block=NULL, correlation,
+     var.prior=NULL, df.prior=NULL, trend.var=FALSE, nrot=999, adjust.method="BH")
 }
 
 \arguments{
   \item{iset}{index vector specifying which rows (probes) of \code{y} are in the test set.  This can be a vector of indices, or a logical vector of the same length as \code{statistics}, or any vector such as \code{y[iset,]} contains the values for the gene set to be tested.
-  For \code{mroast}, \code{iset} is a list of vectors of indices.}
+  For \code{mroast}, \code{iset} is a list of index vectors.}
   \item{y}{numeric matrix giving log-expression or log-ratio values for a series of microarrays, or any object that can coerced to a matrix including \code{ExpressionSet}, \code{MAList}, \code{EList} or \code{PLMSet} objects.
   Rows correspond to probes and columns to samples.
   If either \code{var.prior} or \code{df.prior} are null, then \code{y} should contain values for all genes on the arrays. If both prior parameters are given, then only \code{y} values for the test set are required.}

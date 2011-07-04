@@ -219,31 +219,33 @@ roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",
 }
 
 
-mroast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,nrot=999, adjust.method="BH")
+mroast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH")
 #  Rotation gene set testing with multiple sets
 #  Gordon Smyth and Di Wu
-#  28 Jan 2010. Last revised 27 Nov 2010.
+#  Created 28 Jan 2010. Last revised 4 July 2011.
 { 
+	if(is.null(iset)) iset <- rep(TRUE,nrow(y))
 	if(!is.list(iset)) iset <- list(set = iset)
-	mset <- iset
-	nsets <- length(mset)
-	if(is.null(names(mset))) names(mset) <- paste("set",1:nsets,sep="")
-	pv <- adjpv <- active <- array(0,c(nsets,3),dimnames=list(names(mset),c("Mixed","Up","Down")))
+	nsets <- length(iset)
+	if(is.null(names(iset))) names(iset) <- paste("set",1:nsets,sep="")
 
-#	If var.prior and df.prior are not preset,
-#	these will be estimated from first call to roast
-	out <- roast(iset=mset[[1]],y=y,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,nrot=nrot)
-	pv[1,] <- out$p.value$P.Value
-	active[1,] <- out$p.value$Active.Prop
-	var.prior <- out$var.prior
-	df.prior <- out$df.prior
+#	Estimate var.prior and df.prior if not preset
+	fit <- lmFit(y,design=design,weights=array.weights,block=block,correlation=correlation)
+	covariate <- NULL
+	if(trend.var) {
+		covariate <- fit$Amean
+		if(is.null(covariate)) covariate <- rowMeans(as.matrix(y))
+	}
+	sv <- squeezeVar(fit$sigma^2,df=fit$df.residual,covariate=covariate)
+	var.prior <- sv$var.prior
+	df.prior <- sv$df.prior
 
-	if(nsets > 1) {
-		for(i in 2:nsets) {
-			out <- roast(iset=mset[[i]],y=y,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,nrot=nrot)[[1]]
-			pv[i,] <- out$P.Value
-			active[i,] <- out$Active.Prop
-		}
+	pv <- adjpv <- active <- array(0,c(nsets,3),dimnames=list(names(iset),c("Mixed","Up","Down")))
+	if(nsets<1) return(pv)
+	for(i in 1:nsets) {
+		out <- roast(iset=iset[[i]],y=y,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,nrot=nrot)[[1]]
+		pv[i,] <- out$P.Value
+		active[i,] <- out$Active.Prop
 	}
 	
 	adjpv[,"Mixed"] <- p.adjust(pv[,"Mixed"], method=adjust.method) 

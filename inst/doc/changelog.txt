@@ -1,3 +1,8 @@
+4 July 2011: limma 3.9.11
+
+- new argument trend.var for mroast(), with the same meaning as for
+  roast().
+
 4 July 2011: limma 3.9.10
 
 - Weaver case study (Section 11.5) in User's Guide is updated and
