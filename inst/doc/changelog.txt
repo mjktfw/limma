@@ -1,3 +1,10 @@
+5 Aug 2011: limma 3.9.12
+
+- bug fix for normalizeBetweenArrays() when object is an EListRaw
+  and method="cyclicloess".  Previously this function was applying
+  cyclicloess to the raw intensities, then logging.  Now it logs
+  first, then applies cyclicloess.
+
 4 July 2011: limma 3.9.11
 
 - new argument trend.var for mroast(), with the same meaning as for

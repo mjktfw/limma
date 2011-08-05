@@ -463,7 +463,10 @@ normalizeBetweenArrays <- function(object, method=NULL, targets=NULL, ...) {
 
 #	Treat EListRaw objects as matrices
 	if(is(object,"EListRaw")) {
-		object$E <- log2(Recall(object$E,method=method,...))
+		if(method=="cyclicloess")
+			object$E <- Recall(log2(object$E),method=method,...)
+		else
+			object$E <- log2(Recall(object$E,method=method,...))
 		object <- new("EList",unclass(object))
 		return(object)
 	}
