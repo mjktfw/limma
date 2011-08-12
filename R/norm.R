@@ -627,11 +627,11 @@ normalizeMedianValues <- function(x)
 	t(t(x)/cmed)
 }
 
-normalizeCyclicLoess <- function(x, weights = NULL, span=0.4, iterations = 3)
+normalizeCyclicLoess <- function(x, weights = NULL, span=0.7, iterations = 3)
 #	Cyclic loess normalization of columns of matrix
 #	incorporating probes weights.
 #	Yunshun (Andy) Chen and Gordon Smyth
-#	14 April 2010.  Last modified 22 April 2010.
+#	14 April 2010.  Last modified 12 August 2011.
 {
 	y <- as.matrix(x)
 	if(is.null(weights))

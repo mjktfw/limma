@@ -1,3 +1,7 @@
+12 Aug 2011: limma 3.9.13
+
+- default span for normalizeCyclicLoess increased from 0.4 to 0.7.
+
 5 Aug 2011: limma 3.9.12
 
 - bug fix for normalizeBetweenArrays() when object is an EListRaw

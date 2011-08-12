@@ -5,7 +5,7 @@
 Normalize the columns of a matrix, cyclicly applying loess normalization to normalize each pair of columns to each other.
 }
 \usage{
-normalizeCyclicLoess(x, weights = NULL, span=0.4, iterations = 3)
+normalizeCyclicLoess(x, weights = NULL, span=0.7, iterations = 3)
 }
 \arguments{
   \item{x}{numeric matrix, or object which can be coerced to a numeric matrix, containing log-expression values.}
