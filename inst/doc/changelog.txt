@@ -1,3 +1,8 @@
+18 Aug 2011: limma 3.9.14
+
+- plotMA() now recognizes ElistRaw and EList objects appropriately.
+- speed improvement for normalizeCyclicLoess when weights=NULL.
+
 12 Aug 2011: limma 3.9.13
 
 - default span for normalizeCyclicLoess increased from 0.4 to 0.7.

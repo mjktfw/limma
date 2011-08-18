@@ -3,13 +3,16 @@
 plotMA <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
 #	MA-plot with color coding for controls
 #	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.
-#	Last modified 22 May 2008.
+#	Last modified 18 Aug 2011.
 {
-#	Convert to MAList of possible
+#	Convert to MAList if possible
 	if(class(MA)=="list") MA <- new("MAList",MA)
 	if(is(MA,"RGList")) {
 		MA <- MA.RG(MA[,array])
 		array <- 1
+	}
+	if(is(MA,"EListRaw")) {
+		MA <- normalizeBetweenArrays(MA,method="none")
 	}
 
 	if(is(MA,"MAList")) {
@@ -22,6 +25,17 @@ plotMA <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xl
 		if(is.null(MA$Amean)) stop("MA-plot not possible because Amean component is absent.")
 		x <- MA$Amean
 		y <- as.matrix(MA$coef)[,array]
+		if(is.null(MA$weights)) w <- NULL else w <- as.matrix(MA$weights)[,array]
+		if(missing(status)) status <- MA$genes$Status
+	} else if(is(MA,"EList")) {
+		MA$E <- as.matrix(MA$E)
+		narrays <- ncol(MA$E)
+		if(narrays < 2) stop("Need at least two arrays")
+		if(narrays > 5)
+			x <- apply(MA$E,1,median,na.rm=TRUE)
+		else
+			x <- rowMeans(MA$E,na.rm=TRUE)
+		y <- MA$E[,array]-x
 		if(is.null(MA$weights)) w <- NULL else w <- as.matrix(MA$weights)[,array]
 		if(missing(status)) status <- MA$genes$Status
 	} else {

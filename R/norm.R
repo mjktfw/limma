@@ -631,13 +631,11 @@ normalizeCyclicLoess <- function(x, weights = NULL, span=0.7, iterations = 3)
 #	Cyclic loess normalization of columns of matrix
 #	incorporating probes weights.
 #	Yunshun (Andy) Chen and Gordon Smyth
-#	14 April 2010.  Last modified 12 August 2011.
+#	14 April 2010.  Last modified 17 August 2011.
 {
 	y <- as.matrix(x)
-	if(is.null(weights))
-		weights <- rep(1,nrow(y))
-	for (k in 1:iterations) for (i in 1:(ncol(y)-1)) for (j in (i+1):ncol(y))
-	{
+	for (k in 1:iterations)
+	for (i in 1:(ncol(y)-1)) for (j in (i+1):ncol(y)) {
 		m <- y[,j] - y[,i]
 		a <- .5*(y[,j] + y[,i])
 		fit <- loessFit(m, a, weights = weights, span = span)
