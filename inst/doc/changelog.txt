@@ -1,3 +1,9 @@
+3 Sep 2011: limma 3.9.15
+
+- change to p-value calculation in geneSetTest() when
+  rank.only=FALSE.
+- wilcoxGST() now accepts signed or unsigned test statistics.
+
 18 Aug 2011: limma 3.9.14
 
 - plotMA() now recognizes ElistRaw and EList objects appropriately.

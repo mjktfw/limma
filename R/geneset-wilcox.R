@@ -1,11 +1,11 @@
 ##  GENESET.R
 
-geneSetTest <- function(selected,statistics,alternative="mixed",type="auto",ranks.only=TRUE,nsim=10000)
+geneSetTest <- function(selected,statistics,alternative="mixed",type="auto",ranks.only=TRUE,nsim=9999)
 #	Gene set test using either Wilcox test or simulation.
 #	Gordon Smyth
-#	3 September 2004. Last modified 21 July 2006.
+#	3 September 2004. Last modified 3 Sep 2011.
 {
-	alternative <- match.arg(alternative,c("mixed","either","down","up","less","greater"))
+	alternative <- match.arg(alternative,c("mixed","either","down","up","less","greater","two.sided"))
 	if(alternative=="two.sided") alternative <- "either"
 	if(alternative=="less") alternative <- "down"
 	if(alternative=="greater") alternative <- "up"
@@ -61,15 +61,15 @@ geneSetTest <- function(selected,statistics,alternative="mixed",type="auto",rank
 		else
 			posstat <- function(x) x
 		msel <- posstat(msel)
-		ntail <- 0
+		ntail <- 1
 		for (i in 1:nsim) if(posstat(mean(sample(stat,nsel))) >= msel) ntail <- ntail+1
-		return(ntail/nsim)
+		return(ntail/(nsim+1))
 	}
 }
 
-wilcoxGST <- function(selected,statistics,alternative="mixed")
+wilcoxGST <- function(selected,statistics,...)
 #	Mean-rank gene set test using Wilcox test.
 #	Gordon Smyth
-#	27 July 2009.  Last modified 28 July 2009.
-geneSetTest(selected=selected,statistics=statistics,alternative=alternative,type="t",ranks.only=TRUE)
+#	27 July 2009.  Last modified 3 Sep 2011.
+geneSetTest(selected=selected,statistics=statistics,...,ranks.only=TRUE)
 

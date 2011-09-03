@@ -8,8 +8,8 @@ Test whether a set of genes is highly ranked relative to other genes in terms of
 Genes are assumed to be independent.
 }
 \usage{
-geneSetTest(selected,statistics,alternative="mixed",type="auto",ranks.only=TRUE,nsim=10000)
-wilcoxGST(selected,statistics,alternative="mixed")
+geneSetTest(selected, statistics, alternative="mixed", type="auto", ranks.only=TRUE, nsim=9999)
+wilcoxGST(selected, statistics, ...)
 barcodeplot(statistics,selected,selected2=NULL,labels=c("Up","Down"),
             quantiles=c(-1,1),col.bars=NULL,offset.bars=!is.null(selected2), ...)
 }
@@ -18,7 +18,8 @@ barcodeplot(statistics,selected,selected2=NULL,labels=c("Up","Down"),
   \item{selected2}{index vector for a second gene set.  Usually used to specify down-regulated genes when \code{selected} is used for up-regulated genes.vector specifying the elements of \code{statistic} in the test group.}
   \item{statistics}{numeric vector giving the values of the test statistic for every gene or probe in the reference set, usually every probe on the microarray.}
   \item{alternative}{character string specifying the alternative hypothesis, must be one of \code{"mixed"}, \code{"either"}, \code{"up"} or \code{"down"}. \code{"two.sided"}, \code{"greater"} and \code{"less"} are also permitted as synonyms for \code{"either"}, \code{"up"} and \code{"down"} respectively.}
-  \item{type}{character string specifying whether the statistics are t-like (\code{"t"}), F-like \code{"f"} or whether the function should make an educated guess (\code{"auto"})}
+  \item{type}{character string specifying whether the statistics are signed (t-like, \code{"t"}) or unsigned (F-like, \code{"f"}) or whether the function should make an educated guess (\code{"auto"}).
+  If the statistic is unsigned, then it assume that larger statistics are more significant.}
   \item{ranks.only}{logical, if \code{TRUE} only the ranks of the \code{statistics} are used.} 
   \item{nsim}{number of random samples to take in computing the p-value.
   Not used if \code{ranks.only=TRUE}.}
@@ -26,7 +27,7 @@ barcodeplot(statistics,selected,selected2=NULL,labels=c("Up","Down"),
   \item{quantiles}{numeric vector of length 2, giving cutoff values for \code{statistics} considered small or large respectively.  Used to color the rectangle of the barcodeplot.}
   \item{col.bars}{character vector giving colors for the bars on the barcodeplot. Defaults to \code{"black"} for one set or \code{c("red","blue")} for two sets.}
   \item{offset.bars}{logical. When there are two sets, bars are normally offset up and down from the rectangle of the barcodeplot.}
-  \item{\ldots}{other arguments are passed to \code{plot}.}
+  \item{\ldots}{other arguments are passed to \code{geneSetTest} (\code{wilcoxGST}) or to \code{plot} (\code{barcodelot}).}
 }
 
 \value{
@@ -36,7 +37,7 @@ barcodeplot(statistics,selected,selected2=NULL,labels=c("Up","Down"),
 }
 
 \details{
-\code{wilcoxGST} is a synonym for \code{geneSetTest} with \code{ranks.only=TRUE} and \code{type="t"}.
+\code{wilcoxGST} is a synonym for \code{geneSetTest} with \code{ranks.only=TRUE}.
 This test procedure was developed by Michaud et al (2008), who called it \emph{mean-rank gene-set enrichment}.
 
 These functions compute a p-value to test the hypothesis that the selected set of genes tends to be more highly ranked in terms of some test statistic compared to randomly selected genes.
