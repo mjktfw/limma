@@ -1,3 +1,9 @@
+5 Sep 2011: limma 3.9.16
+
+- topRomer() now ranks gene sets by secondary columns as well the
+  primary criterion specified, to give a more meaningful ranking when
+  the primary p-value is tied.
+
 3 Sep 2011: limma 3.9.15
 
 - change to p-value calculation in geneSetTest() when
