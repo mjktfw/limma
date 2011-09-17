@@ -1,3 +1,10 @@
+17 Sep 2011: limma 3.9.17
+
+- new function voom(), to compute expression values and weights
+  from RNA-Seq data suitable for limma linear modelling.
+- getEAWP() now gets probe annotation from the expression rownames
+  of an EList object, if no other probe annotation is available.
+
 5 Sep 2011: limma 3.9.16
 
 - topRomer() now ranks gene sets by secondary columns as well the

@@ -359,7 +359,7 @@ getEAWP <- function(object)
 #	Given any microarray data object, extract basic information needed for
 #	linear modelling.
 #	Gordon Smyth
-#  9 March 2008. Last modified 20 May 2009.
+#  9 March 2008. Last modified 17 Sep 2011.
 {
 	y <- list()
 	
@@ -375,6 +375,7 @@ getEAWP <- function(object)
 		}
 		y$weights <- object$weights
 		y$probes <- object$genes
+		if(is.null(y$probes) && !is.null(rownames(y$exprs))) y$probes <- data.frame(ID=rownames(y$exprs),stringsAsFactors=FALSE)
 		y$design <- object$design
 	} else {
 	if(is(object,"ExpressionSet")) {
