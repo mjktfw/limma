@@ -1,3 +1,8 @@
+21 Sep 2011: limma 3.9.18
+
+- minor change to voom() code.  Will now tend to give zero counts
+  lower weight than previously.
+
 17 Sep 2011: limma 3.9.17
 
 - new function voom(), to compute expression values and weights

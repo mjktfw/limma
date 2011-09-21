@@ -1,8 +1,8 @@
 voom <- function(counts,design=NULL,lib.size=NULL,normalize.method="none",plot=FALSE,...) 
 # Linear modelling of count data mean-variance modelling at the observational level.
-# Can be used to replace lmFit() in the limma pipeline.
+# Creates an EList object for entry to lmFit() etc in the limma pipeline.
 # Gordon Smyth and Charity Law
-# Created 22 June 2011.  Last modified 29 August 2011.
+# Created 22 June 2011.  Last modified 21 Sep 2011.
 {
 #	Fit linear model to log2-counts-per-million
 	counts <- as.matrix(counts)
@@ -34,11 +34,13 @@ voom <- function(counts,design=NULL,lib.size=NULL,normalize.method="none",plot=F
 	}
 
 #	Make interpolating rule
+#	Special treatment of zero counts is now removed;
+#	instead zero counts get same variance as smallest gene average.
 #	l$x <- c(0.5^0.25, l$x)
-	l$x <- c(log2(0.5), l$x)
-	var0 <- var(log2(0.5*1e6/(lib.size+0.5)))^0.25
-	var0 <- max(var0,1e-6)
-	l$y <- c(var0, l$y)
+#	l$x <- c(log2(0.5), l$x)
+#	var0 <- var(log2(0.5*1e6/(lib.size+0.5)))^0.25
+#	var0 <- max(var0,1e-6)
+#	l$y <- c(var0, l$y)
 	f <- approxfun(l, rule=2)
 
 #	Find individual quarterroot fitted counts
