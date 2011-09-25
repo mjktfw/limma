@@ -2,6 +2,7 @@
 
 - RNA-Seq case study added to User's Guide.
 - minor change to counts-per-million computation in voom().
+- edits to voom.Rd.
 
 21 Sep 2011: limma 3.9.18
 

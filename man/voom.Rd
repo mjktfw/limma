@@ -1,6 +1,6 @@
 \name{voom}
 \alias{voom}
-\title{Variance Observational-Level Modelling}
+\title{Transform RNA-Seq Data Ready for Linear Modelling}
 \description{
 Transform count data to log2-counts per million, estimate the mean-variance relationship and use this to compute appropriate observational-level weights.
 The data are then ready for linear modelling.
@@ -19,10 +19,17 @@ voom(counts, design = NULL, lib.size = NULL, normalize.method = "none", plot = F
   }
 
 \details{
-Typically, mean-variance relationships exist in count data. Weights can be assigned to each observation in a linear modelling process to adjust for heteroscedasticity. 
+This function is intended to process RNA-Seq or ChIP-Seq data prior to linear modelling in limma.
 
-In an experiment, a count value is observed for each tag in each sample. A tag-wise mean-variance trend is computed using \code{link{lowess}}. The tag-wise mean is the mean log2 count with an offset of 0.5, across samples for a given tag. The tag-wise variance is the quarter-root-variance of normalized log2 counts per million values with an offset of 0.5, across samples for a given tag. Tags with zero counts across all samples are not included in the lowess fit. Normalization is performed using \code{\link{normalizeBetweenArrays}}. 
+\code{voom} is an acronym for mean-variance modelling at the observational level.
+The key concern is to estimate the mean-variance relationship in the data, then use this to compute appropriate weights for each observation.
+Count data almost show non-trivial mean-variance relationships.
+Raw counts show increasing variance with increasing count size, while log-counts typically show a decreasing mean-variance trend.
+This function estimates the mean-variance trend for log-counts, then assigns a weight to each observation based on its predicted variance.
+The weights are then used in the linear modelling process to adjust for heteroscedasticity. 
 
+In an experiment, a count value is observed for each tag in each sample. A tag-wise mean-variance trend is computed using \code{\link{lowess}}. The tag-wise mean is the mean log2 count with an offset of 0.5, across samples for a given tag. The tag-wise variance is the quarter-root-variance of normalized log2 counts per million values with an offset of 0.5, across samples for a given tag. Tags with zero counts across all samples are not included in the lowess fit.
+Optional normalization is performed using \code{\link{normalizeBetweenArrays}}. 
 Using fitted values of log2 counts from a linear model fit by \code{\link{lmFit}}, variances from the mean-variance trend were interpolated for each observation. This was carried out by \code{\link{approxfun}}. Inverse variance weights can be used to correct for mean-variance trend in the count data.
 }
 \value{
