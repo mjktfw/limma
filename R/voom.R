@@ -2,7 +2,7 @@ voom <- function(counts,design=NULL,lib.size=NULL,normalize.method="none",plot=F
 # Linear modelling of count data mean-variance modelling at the observational level.
 # Creates an EList object for entry to lmFit() etc in the limma pipeline.
 # Gordon Smyth and Charity Law
-# Created 22 June 2011.  Last modified 21 Sep 2011.
+# Created 22 June 2011.  Last modified 25 Sep 2011.
 {
 #	Fit linear model to log2-counts-per-million
 	counts <- as.matrix(counts)
@@ -12,14 +12,14 @@ voom <- function(counts,design=NULL,lib.size=NULL,normalize.method="none",plot=F
 		colnames(design) <- "GrandMean"
 	}
 	if(is.null(lib.size)) lib.size <- colSums(counts)
-	y <- t(log2(t(counts+0.5)/(lib.size+0.5)*1e6))
+	y <- t(log2(t(counts+0.5)/(lib.size+1)*1e6))
 	y <- normalizeBetweenArrays(y,method=normalize.method)
 	fit <- lmFit(y,design,...)
 	if(is.null(fit$Amean)) fit$Amean <- rowMeans(y,na.rm=TRUE)
 
 #	Fit lowess trend to sqrt-standard-deviations by log-count-size
 #	sx <- 2^(0.25*(fit$Amean+mean(log2(lib.size+0.5))-log2(1e6)))
-	sx <- fit$Amean+mean(log2(lib.size+0.5))-log2(1e6)
+	sx <- fit$Amean+mean(log2(lib.size+1))-log2(1e6)
 	sy <- sqrt(fit$sigma)
 	allzero <- rowSums(counts)==0
 	if(any(allzero)) {
@@ -45,7 +45,7 @@ voom <- function(counts,design=NULL,lib.size=NULL,normalize.method="none",plot=F
 
 #	Find individual quarterroot fitted counts
 	fitted.cpm <- 2^(fit$coef %*% t(fit$design))
-	fitted.c <- 1e-6 * t(t(fitted.cpm)*(lib.size+0.5))
+	fitted.c <- 1e-6 * t(t(fitted.cpm)*(lib.size+1))
 #	fitted.qrc <- fitted.c^0.25
 	fitted.qrc <- log2(fitted.c)
 

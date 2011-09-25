@@ -1,3 +1,8 @@
+25 Sep 2011: limma 3.9.19
+
+- RNA-Seq case study added to User's Guide.
+- minor change to counts-per-million computation in voom().
+
 21 Sep 2011: limma 3.9.18
 
 - minor change to voom() code.  Will now tend to give zero counts
