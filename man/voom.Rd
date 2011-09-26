@@ -10,7 +10,7 @@ The data are then ready for linear modelling.
 voom(counts, design = NULL, lib.size = NULL, normalize.method = "none", plot = FALSE, ...)
 }
 \arguments{
- \item{counts}{object of class \code{matrix} containing raw counts.}
+ \item{counts}{either a numeric \code{matrix} containing raw counts or a \code{DGEList} object.}
  \item{design}{design matrix with rows corresponding to samples and columns to coefficients to be estimated.  Defaults to the unit vector meaning that samples are treated as replicates.}
  \item{lib.size}{numeric vector containing total librazy sizes for each sample. If \code{NULL}, library sizes are calculated as column sums of \code{counts}.}
  \item{normalize.method}{normalization method to be applied to the log2-counts-per-million. Choices are as for the \code{method} argument of \code{normalizeBetweenArrays} when the data is single-channel.}
@@ -34,11 +34,11 @@ Using fitted values of log2 counts from a linear model fit by \code{\link{lmFit}
 }
 \value{
 An EList object with the following components:
-
 \item{E}{numeric matrix of normalized expression values on the log2 scale}
 \item{weights}{numeric matrix of inverse variance weights}
 \item{design}{numeric matrix of experimental design}
 \item{lib.size}{numeric vector of total library sizes}
+\item{genes}{dataframe of gene annotation, only if \code{counts} was a \code{DGEList} object}
  }
 \seealso{
 \code{\link{normalizeBetweenArrays}}
