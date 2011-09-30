@@ -1,3 +1,7 @@
+30 Sep 2011: limma 3.9.21
+
+- Introduction to User's Guide now mentions RNA-Seq.
+
 26 Sep 2011: limma 3.9.20
 
 - voom() now gives special treatment to DGEList objects.
