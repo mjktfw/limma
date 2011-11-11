@@ -1,3 +1,11 @@
+11 Nov 2011: limma 3.11.1
+
+- User's Guide RNA-Seq case study updated to use tweeDEseqCountData
+  package instead of RNAseqCountData.
+
+1 Nov 2011: limma 3.11.0 (Bioconductor 2.10 Developmental Branch)
+1 Nov 2011: limma 3.10.0 (Bioconductor 2.9 Release Branch)
+
 14 Oct 2011: limma 3.9.22
 
 - Nigerian RNA-Seq case study expanded to include gene set tests
