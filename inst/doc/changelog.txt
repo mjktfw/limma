@@ -1,3 +1,7 @@
+25 Nov 2011: limma 3.11.2
+
+- voom() now works on ExpressionSet objects.
+
 11 Nov 2011: limma 3.11.1
 
 - User's Guide RNA-Seq case study updated to use tweeDEseqCountData

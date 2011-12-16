@@ -16,7 +16,7 @@ tZscore(x, df)
 }
 
 \arguments{
-\item{q, x}{numeric matrix for vector giving deviates of a random variaable}
+\item{q, x}{numeric vector or matrix giving deviates of a random variable}
 \item{shape}{gamma shape parameter (>0)}
 \item{rate}{gamma rate parameter (>0)}
 \item{scale}{gamma scale parameter (>0)}
@@ -37,7 +37,7 @@ Care is taken to do the computations accurately in both tails of the distributio
 
 \author{Gordon Smyth}
 \seealso{
-\code{\link{qnorm}}, \code{\link{pgamma}}, \code{\link{pt}} in the standard distribution packages.
+\code{\link{qnorm}}, \code{\link{pgamma}}, \code{\link{pt}} in the stats package.
 }
 \examples{
 zscoreGamma(1, shape=1, scale=1)

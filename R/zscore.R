@@ -10,13 +10,13 @@ zscoreGamma <- function(q, shape, rate = 1, scale = 1/rate)
 	shape <- rep(shape,length.out=n)
 	scale <- rep(scale,length.out=n)
 	up <- (q > shape*scale)
-	if(any(up)) z[up] <- qnorm(pgamma(q[up],shape=shape[up],scale=scale[up],lower.tail=FALSE,log.p=TRUE),,lower.tail=FALSE,log.p=TRUE)
+	if(any(up)) z[up] <- qnorm(pgamma(q[up],shape=shape[up],scale=scale[up],lower.tail=FALSE,log.p=TRUE),lower.tail=FALSE,log.p=TRUE)
 	if(any(!up)) z[!up] <- qnorm(pgamma(q[!up],shape=shape[!up],scale=scale[!up],lower.tail=TRUE,log.p=TRUE),lower.tail=TRUE,log.p=TRUE)
 	z
 }
 
 zscoreT <- function(x, df)
-#  Z-score equivalents for gamma deviates
+#  Z-score equivalents for t distribution deviates
 #  Gordon Smyth
 #  24 August 2003
 {

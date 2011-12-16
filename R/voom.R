@@ -2,18 +2,26 @@ voom <- function(counts,design=NULL,lib.size=NULL,normalize.method="none",plot=F
 # Linear modelling of count data mean-variance modelling at the observational level.
 # Creates an EList object for entry to lmFit() etc in the limma pipeline.
 # Gordon Smyth and Charity Law
-# Created 22 June 2011.  Last modified 26 Sep 2011.
+# Created 22 June 2011.  Last modified 25 Nov 2011.
 {
 	out <- list()
 
 #	Check inputs
 	if(is(counts,"DGEList")) {
 		out$genes <- counts$genes
+		out$targets <- counts$samples
 		if(is.null(design) && diff(range(as.numeric(counts$sample$group)))>0) design <- model.matrix(~group,data=counts$samples)
 		if(is.null(lib.size)) lib.size <- with(counts$samples,lib.size*norm.factors)
 		counts <- counts$counts
 	} else {
-		counts <- as.matrix(counts)
+		isExpressionSet <- suppressPackageStartupMessages(is(counts,"ExpressionSet"))
+		if(isExpressionSet) {
+			if(length(fData(counts))) out$genes <- fData(counts)
+			if(length(pData(counts))) out$targets <- pData(counts)
+			counts <- exprs(counts)
+		} else {
+			counts <- as.matrix(counts)
+		}
 	}
 	if(is.null(design)) {
 		design <- matrix(1,ncol(counts),1)
