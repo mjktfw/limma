@@ -2,6 +2,13 @@
 \title{limma News}
 \encoding{UTF-8}
 
+\section{Version 3.12.0}{\itemize{
+
+\item
+neqc(), nec() and normexp.fit.control() now give user-friendly error messages when no negative control probes or no regular probes are found.
+
+}}
+
 \section{Version 3.10.0}{\itemize{
 
 \item

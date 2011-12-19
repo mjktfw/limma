@@ -1,3 +1,9 @@
+19 Dec 2011: limma 3.11.3
+
+- neqc(), nec() and normexp.fit.control() now give user-friendly
+  error messages when no negative control probes or no regular
+  probes are found.
+
 25 Nov 2011: limma 3.11.2
 
 - voom() now works on ExpressionSet objects.
