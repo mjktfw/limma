@@ -1,3 +1,11 @@
+1 Jan 2012: limma 3.11.4
+
+- minor documentation correction for plotMA.Rd (default for cex
+  is 0.3 rather than 0.2).
+
+- minor edit to error message from neqc() when no control probe
+  information can be found.
+
 19 Dec 2011: limma 3.11.3
 
 - neqc(), nec() and normexp.fit.control() now give user-friendly

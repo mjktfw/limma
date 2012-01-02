@@ -22,7 +22,7 @@ normexp.fit.detection.p <- function(x,detection.p="Detection")
 	}
 	else{
 		if(is.character(detection.p))
-			stop("No control data or detection p value data were found.")
+			stop("No negative control probes or detection p value data were found.")
 		x <- as.matrix(x)
 		detection.p <- as.matrix(detection.p)
 	}
