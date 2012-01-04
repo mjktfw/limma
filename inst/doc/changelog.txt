@@ -2,6 +2,9 @@
 
 - improved documentation for object returned by mroast().
 
+- mroast() now uses mid-p-values by default when adjusting for
+  multiple testing.
+
 1 Jan 2012: limma 3.11.4
 
 - minor documentation correction for plotMA.Rd (default for cex

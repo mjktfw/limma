@@ -14,7 +14,7 @@ roast(iset=NULL, y, design, contrast=ncol(design), set.statistic="mean",
      var.prior=NULL, df.prior=NULL, trend.var=FALSE, nrot=999)
 mroast(iset=NULL, y, design, contrast=ncol(design), set.statistic="mean",
      gene.weights=NULL, array.weights=NULL, block=NULL, correlation,
-     var.prior=NULL, df.prior=NULL, trend.var=FALSE, nrot=999, adjust.method="BH")
+     var.prior=NULL, df.prior=NULL, trend.var=FALSE, nrot=999, adjust.method="BH", midp=TRUE)
 }
 
 \arguments{
@@ -34,8 +34,8 @@ mroast(iset=NULL, y, design, contrast=ncol(design), set.statistic="mean",
   \item{df.prior}{prior degrees of freedom for residual variances. If not provided, this is estimated using \code{squeezeVar}.}
   \item{trend.var}{logical, should a trend be estimated for \code{var.prior}?  See \code{eBayes} for details.  Only used if \code{var.prior} or \code{df.prior} are \code{NULL}.}
   \item{nrot}{number of rotations used to estimate the p-values.}
-  \item{adjust.method}{method used to adjust the p-values for multiple testing.
-  See \code{\link{p.adjust}} for possible values.}
+  \item{adjust.method}{method used to adjust the p-values for multiple testing. See \code{\link{p.adjust}} for possible values.}
+  \item{midp}{logical, should mid-p-values be used in instead of ordinary p-values when adjusting for multiple testing?}
 }
 
 \value{
@@ -82,6 +82,8 @@ The p-value is computed as \code{(b+1)/(nrot+1)} where \code{b} is the number of
 This means that the smallest possible p-value is \code{1/(nrot+1)}.
 
 \code{mroast} does roast tests for multiple sets, including adjustment for multiple testing.
+By default, \code{mroast} reports ordinary p-values but uses mid-p-values at the multiple testing stage.
+Mid-p-values are probably a good choice when using false discovery rates (\code{adjust.method="BH"}) but not when controlling the family-wise type I error rate (\code{adjust.method="holm"}).
 }
 
 \note{
@@ -110,6 +112,10 @@ Rotation tests.
 Phipson B, and Smyth GK (2010).
 Permutation P-values should never be zero: calculating exact P-values when permutations are randomly drawn.
 \emph{Statistical Applications in Genetics and Molecular Biology}, Volume 9, Article 39.
+
+Routledge, RD (1994).
+Practicing safe statistics with the mid-p.
+\emph{Canadian Journal of Statistics} 22, 103-110.
 
 Wu, D, Lim, E, Francois Vaillant, F, Asselin-Labat, M-L, Visvader, JE, and Smyth, GK (2010). ROAST: rotation gene set tests for complex microarray experiments.
 \emph{Bioinformatics} 26, 2176-2182.
