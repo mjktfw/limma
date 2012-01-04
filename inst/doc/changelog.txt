@@ -1,3 +1,7 @@
+4 Jan 2012: limma 3.11.5
+
+- improved documentation for object returned by mroast().
+
 1 Jan 2012: limma 3.11.4
 
 - minor documentation correction for plotMA.Rd (default for cex

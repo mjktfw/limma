@@ -39,16 +39,16 @@ mroast(iset=NULL, y, design, contrast=ncol(design), set.statistic="mean",
 }
 
 \value{
-An object of class \code{"Roast"}.
+\code{roast} produces an object of class \code{"Roast"}.
 This consists of a list with the following components:
-\tabular{ll}{
-  \code{p.value}:\tab
-data.frame with columns \code{Active.Prop} and \code{P.Value}, giving the proportion of genes in the set contributing meaningfully to significance and estimated p-values, respectively.
-Rows correspond to the alternative hypotheses mixed, up or down.\cr
-  \code{var.prior}:\tab prior value for residual variances.\cr
-  \code{df.prior}:\tab prior degrees of freedom for residual variances.
-}
-There is a \code{show} method for \code{"Roast"} objects.
+  \item{p.value}{data.frame with columns \code{Active.Prop} and \code{P.Value}, giving the proportion of genes in the set contributing meaningfully to significance and estimated p-values, respectively.
+Rows correspond to the alternative hypotheses mixed, up or down.}
+  \item{var.prior}{prior value for residual variances.}
+  \item{df.prior}{prior degrees of freedom for residual variances.}
+\code{mroast} produces a list of three matrices, each with a row for each set:
+  \item{P.Value}{unadjusted p-values for the mixed, up and down alternative hypotheses}
+	\item{Adj.P.Value}{adjusted p-values for each set and each hypothesis}
+	\item{Active.Proportion}{proportion of active genes for each set and each hypothesis}
 }
 
 \details{
