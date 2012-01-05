@@ -7,7 +7,7 @@ Normalizes expression intensities so that the intensities or log-ratios have sim
 }
 
 \usage{
-normalizeBetweenArrays(object, method=NULL, targets=NULL, ...)
+normalizeBetweenArrays(object, method=NULL, targets=NULL, cyclic.method="pairs", ...)
 }
 
 \arguments{
@@ -17,6 +17,7 @@ normalizeBetweenArrays(object, method=NULL, targets=NULL, ...)
   A partial string sufficient to uniquely identify the choice is permitted.
   Default is \code{"Aquantile"} for two-color data objects or \code{"quantile"} for single-channel objects.}
   \item{targets}{vector, factor or matrix of length twice the number of arrays, used to indicate target groups if \code{method="Tquantile"}}
+  \item{cyclic.method}{character string indicating the variant of \code{normalizeCyclicLoess} to be used if \code{method=="cyclicloess"}, see \code{\link{normalizeCyclicLoess}} for possible values.}
   \item{...}{other arguments are passed to \code{normalizeQuantiles} or \code{normalizeCyclicLoess}}
 }
 

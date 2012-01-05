@@ -431,10 +431,10 @@ plotPrintorder <- function(object,layout,start="topleft",slide=1,method="loess",
 
 #  BETWEEN ARRAY NORMALIZATION
 
-normalizeBetweenArrays <- function(object, method=NULL, targets=NULL, ...) {
+normalizeBetweenArrays <- function(object, method=NULL, targets=NULL, cyclic.method="pairs", ...) {
 #	Normalize between arrays
 #	Gordon Smyth
-#	12 Apri 2003.  Last revised 24 January 2011.
+#	12 Apri 2003.  Last revised 5 January 2012.
 
 #	Default method
 	if(is.null(method)) {
@@ -457,7 +457,7 @@ normalizeBetweenArrays <- function(object, method=NULL, targets=NULL, ...) {
 			none = object,
 			scale = normalizeMedianValues(object),
 			quantile = normalizeQuantiles(object, ...),
-			cyclicloess = normalizeCyclicLoess(object, ...)
+			cyclicloess = normalizeCyclicLoess(object,method=cyclic.method, ...)
 		))
 	}
 
@@ -627,21 +627,50 @@ normalizeMedianValues <- function(x)
 	t(t(x)/cmed)
 }
 
-normalizeCyclicLoess <- function(x, weights = NULL, span=0.7, iterations = 3)
+normalizeCyclicLoess <- function(x, weights = NULL, span=0.7, iterations = 3, method="pairs")
 #	Cyclic loess normalization of columns of matrix
 #	incorporating probes weights.
 #	Yunshun (Andy) Chen and Gordon Smyth
-#	14 April 2010.  Last modified 17 August 2011.
+#	14 April 2010.  Last modified 5 January 2012.
 {
-	y <- as.matrix(x)
-	for (k in 1:iterations)
-	for (i in 1:(ncol(y)-1)) for (j in (i+1):ncol(y)) {
-		m <- y[,j] - y[,i]
-		a <- .5*(y[,j] + y[,i])
-		fit <- loessFit(m, a, weights = weights, span = span)
-		y[,i] <- y[,i] + .5*(fit$fitted)
-		y[,j] <- y[,j] - .5*(fit$fitted)		
+	x <- as.matrix(x)
+	method <- match.arg(method, c("pairs","affy","fast"))
+	n <- ncol(x)
+	if(method=="pairs") {
+		for (k in 1:iterations)
+		for (i in 1:(n-1)) for (j in (i+1):n) {
+			m <- x[,j] - x[,i]
+			a <- .5*(x[,j] + x[,i])
+			f <- loessFit(m, a, weights=weights, span=span)$fitted
+			x[,i] <- x[,i] + f/2
+			x[,j] <- x[,j] - f/2		
+		}
 	}
-	y
+	if(method=="fast") {
+		for (k in 1:iterations) {
+			a <- rowMeans(x,na.rm=TRUE)
+			for (i in 1:n){
+				m <- x[,i] - a
+				f <- loessFit(m, a, weight=weights, span=span)$fitted
+				x[,i] <- x[,i] - f
+			}
+		}
+	}
+	if(method=="affy") {
+		g <- nrow(x)
+		for (k in 1:iterations) {
+			adjustment <- matrix(0,g,n)
+			for (i in 1:(n-1)) for (j in (i+1):n) {
+				m <- x[,j] - x[,i]
+				a <- .5*(x[,j] + x[,i])
+				f <- loessFit(m, a, weights=weights, span=span)$fitted
+				adjustment[,j] <- adjustment[,j] + f
+				adjustment[,i] <- adjustment[,i] - f
+			}
+			x <- x-adjustment/n
+		}
+	}
+	x
 }
+
 

@@ -1,3 +1,9 @@
+5 Jan 2012: limma 3.11.6
+
+- new methods "fast" and "affy" for normalizeCyclicLoess().  New
+  argument 'cyclic.method' for normalizeBetweenArrays() gives
+  access to the different cyclic loess methods.
+
 4 Jan 2012: limma 3.11.5
 
 - improved documentation for object returned by mroast().
