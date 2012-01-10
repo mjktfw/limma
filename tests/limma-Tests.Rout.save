@@ -1,5 +1,5 @@
 
-R version 2.13.0 (2011-04-13)
+R version 2.14.0 (2011-10-31)
 Copyright (C) 2011 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: i386-pc-mingw32/i386 (32-bit)
@@ -1056,4 +1056,54 @@ TestResults matrix
 b -0.2353018  0.5220094  0.2302895
 a -0.4347701  0.6453498 -0.6758914
 c  0.3482980 -0.4820695 -0.3841313
+> 
+> ### roast
+>
+> y <- matrix(rnorm(100*4),100,4)
+> design <- cbind(Intercept=1,Group=c(0,0,1,1))
+> iset1 <- 1:5
+> y[iset1,3:4] <- y[iset1,3:4]+3
+> iset2 <- 6:10
+> roast(iset1,y,design,contrast=2)
+      Active.Prop P.Value
+Mixed           1   0.007
+Up              1   0.003
+Down            0   0.998
+> roast(iset1,y,design,contrast=2,array.weights=c(0.5,1,0.5,1))
+      Active.Prop P.Value
+Mixed           1   0.006
+Up              1   0.003
+Down            0   0.998
+> mroast(list(set1=iset1,set2=iset2),y,design,contrast=2)
+$P.Value
+     Mixed    Up  Down
+set1 0.015 0.005 0.996
+set2 0.473 0.199 0.802
+
+$Adj.P.Value
+      Mixed     Up   Down
+set1 0.0290 0.0090 0.9955
+set2 0.4725 0.1985 0.9955
+
+$Active.Proportion
+     Mixed Up Down
+set1     1  1    0
+set2     0  0    0
+
+> mroast(list(set1=iset1,set2=iset2),y,design,contrast=2,gene.weights=runif(100))
+$P.Value
+     Mixed    Up  Down
+set1 0.013 0.007 0.994
+set2 0.169 0.066 0.935
+
+$Adj.P.Value
+      Mixed     Up   Down
+set1 0.0250 0.0130 0.9935
+set2 0.1685 0.0655 0.9935
+
+$Active.Proportion
+     Mixed Up Down
+set1     1  1    0
+set2     0  0    0
+
 > 

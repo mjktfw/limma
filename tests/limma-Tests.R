@@ -180,3 +180,15 @@ x <- matrix(rnorm(8*3),8,3)
 colnames(x) <- c("S1","S2","S3")
 rownames(x) <- c("b","a","a","c","c","b","b","b")
 avereps(x)
+
+### roast
+
+y <- matrix(rnorm(100*4),100,4)
+design <- cbind(Intercept=1,Group=c(0,0,1,1))
+iset1 <- 1:5
+y[iset1,3:4] <- y[iset1,3:4]+3
+iset2 <- 6:10
+roast(iset1,y,design,contrast=2)
+roast(iset1,y,design,contrast=2,array.weights=c(0.5,1,0.5,1))
+mroast(list(set1=iset1,set2=iset2),y,design,contrast=2)
+mroast(list(set1=iset1,set2=iset2),y,design,contrast=2,gene.weights=runif(100))

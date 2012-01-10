@@ -234,11 +234,7 @@ mroast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean"
 	if(!is.list(iset)) iset <- list(set = iset)
 	nsets <- length(iset)
 	if(is.null(names(iset))) names(iset) <- paste("set",1:nsets,sep="")
-	if(is.null(gene.weights)) {
-		g.w <- NULL
-	} else {
-		if(length(gene.weights) != nrow(y)) stop("gene.weights must have length equal to nrow(y)")
-	}
+	if(!is.null(gene.weights)) if(length(gene.weights) != nrow(y)) stop("gene.weights must have length equal to nrow(y)")
 
 #	Estimate var.prior and df.prior if not preset
 	fit <- lmFit(y,design=design,weights=array.weights,block=block,correlation=correlation)
@@ -254,8 +250,7 @@ mroast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean"
 	pv <- adjpv <- active <- array(0,c(nsets,3),dimnames=list(names(iset),c("Mixed","Up","Down")))
 	if(nsets<1) return(pv)
 	for(i in 1:nsets) {
-		if(!is.null(gene.weights)) g.w <- gene.weights[iset[[i]]]
-		out <- roast(iset=iset[[i]],y=y,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=g.w,array.weights=array.weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,nrot=nrot)[[1]]
+		out <- roast(iset=iset[[i]],y=y,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,nrot=nrot)[[1]]
 		pv[i,] <- out$P.Value
 		active[i,] <- out$Active.Prop
 	}
