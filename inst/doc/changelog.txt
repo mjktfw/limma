@@ -1,3 +1,10 @@
+11 Jan 2012: limma 3.11.7
+
+- There were problems with using the argument gene.weights in
+  mroast().  This argument is now permitted to be of the same
+  length as the number of probes in the data set.  It is then
+  automatically subsetted for each gene set.
+
 5 Jan 2012: limma 3.11.6
 
 - new methods "fast" and "affy" for normalizeCyclicLoess().  New
