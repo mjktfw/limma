@@ -3,14 +3,14 @@
 topTable <- function(fit,coef=NULL,number=10,genelist=fit$genes,adjust.method="BH",sort.by="B",resort.by=NULL,p.value=1,lfc=0,confint=FALSE)
 #	Summary table of top genes, object-orientated version
 #	Gordon Smyth
-#	4 August 2003.  Last modified 31 Jan 2011.
+#	4 August 2003.  Last modified 19 Jan 2012.
 {
 	if(is.null(coef)) coef <- 1:ncol(fit)
 	if(length(coef)>1) {
 		coef <- unique(coef)
 		if(length(fit$coef[1,coef]) < ncol(fit)) fit <- eBayes(fit[,coef])
 		if(sort.by=="B") sort.by <- "F"
-		return(topTableF(fit,number=number,genelist=genelist,adjust.method=adjust.method,sort.by=sort.by,p.value=p.value))
+		return(topTableF(fit,number=number,genelist=genelist,adjust.method=adjust.method,sort.by=sort.by,p.value=p.value,lfc=lfc))
 	}
 	fit <- unclass(fit)
 	ebcols <- c("t","p.value","lods")
@@ -29,35 +29,52 @@ topTable <- function(fit,coef=NULL,number=10,genelist=fit$genes,adjust.method="B
 		confint=confint)
 }
 
-topTableF <- function(fit,number=10,genelist=fit$genes,adjust.method="BH",sort.by="F",p.value=1)
+topTableF <- function(fit,number=10,genelist=fit$genes,adjust.method="BH",sort.by="F",p.value=1,lfc=0)
 #	Summary table of top genes by F-statistic
 #	Gordon Smyth
-#	27 August 2006. Last modified 23 August 2008.
+#	27 August 2006. Last modified 19 Jan 2012.
 {
 #	Check input
 	if(is.null(fit$F)) stop("F-statistics not available. Try topTable for individual coef instead.")
-	if(nrow(fit) < number) number <- nrow(fit)
 	if(!is.null(genelist) && is.null(dim(genelist))) genelist <- data.frame(ProbeID=genelist,stringsAsFactors=FALSE)
 	sort.by <- match.arg(sort.by,c("F","none"))
+
 	M <- as.matrix(fit$coefficients)
 	if(is.null(colnames(M))) colnames(M) <- paste("Coef",1:ncol(M),sep="")
-
+	rn <- rownames(M)
+	if(is.null(rn) || length(rn) > length(unique(rn))) rn <- 1:nrow(M)
 	adj.P.Value <- p.adjust(fit$F.p.value,method=adjust.method)
+
+	if(lfc > 0) {
+		big <- apply(abs(M)>lfc,1,any)
+		big[is.na(big)] <- FALSE
+		if(any(!big)) {
+			fit <- fit[big,]
+			if(!is.null(genelist)) genelist <- genelist[big,,drop=FALSE]
+			M <- M[big,]
+			rn <- rn[big]
+			adj.P.Value <- adj.P.Value[big]
+		}
+	}
+	if(nrow(fit) < number) number <- nrow(fit)
+
 	if(sort.by=="F")
 		o <- order(fit$F.p.value,decreasing=FALSE)[1:number]
 	else
 		o <- 1:number
+
 	if(p.value < 1) {
 		nsig <- sum(adj.P.Value[o] <= p.value,na.rm=TRUE)
 		if(nsig < number) o <- o[1:nsig]
 	}
+
 	if(is.null(genelist))
 		tab <- data.frame(M[o,,drop=FALSE])
 	else
 		tab <- data.frame(genelist[o,,drop=FALSE],M[o,,drop=FALSE])
 	if(!is.null(fit$Amean)) tab <- data.frame(tab,AveExpr=fit$Amean[o])
 	tab <- data.frame(tab,F=fit$F[o],P.Value=fit$F.p.value[o],adj.P.Val=adj.P.Value[o])
-	rownames(tab) <- as.character(1:length(M))[o]
+	rownames(tab) <- rn[o]
 	tab
 }
 
