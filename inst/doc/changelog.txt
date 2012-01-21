@@ -1,3 +1,7 @@
+22 Jan 2012: limma 3.11.9
+
+- minor edit to topTable.Rd.
+
 19 Jan 2012: limma 3.11.8
 
 - The lfc (log-fold-change) cutoff argument of topTable() is now

@@ -34,7 +34,7 @@ topTreat(fit, coef=1, number=10, genelist=fit$genes, adjust.method="BH",
   Possibilities for \code{topTreat} are as for \code{topTable} minus \code{"B"}.}
   \item{resort.by}{character string specifying statistic to sort the selected genes by in the output data.frame.  Possibilities are the same as for \code{sort.by}.}
   \item{p.value}{cutoff value for adjusted p-values. Only genes with lower p-values are listed.}
-  \item{lfc}{cutoff value for absolute log2-fold-change. \code{topTable} and \code{topTableF} include only genes with (at least one) absolute log-fold-changes greater than \code{lfc}. \code{topTreat} does not remove genes but ranks genes by evidence that their log-fold-change exceeds \code{lfc}.}
+  \item{lfc}{minimum absolute log2-fold-change required. \code{topTable} and \code{topTableF} include only genes with (at least one) absolute log-fold-changes greater than \code{lfc}. \code{topTreat} does not remove genes but ranks genes by evidence that their log-fold-change exceeds \code{lfc}.}
   \item{confint}{logical, should 95\% confidence intervals be output for \code{logFC}?}
   \item{...}{any other arguments are passed to \code{ebayes} if \code{eb} is \code{NULL}}
 }
