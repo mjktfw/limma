@@ -1,9 +1,9 @@
 ##  GENESET.R
 
 geneSetTest <- function(selected,statistics,alternative="mixed",type="auto",ranks.only=TRUE,nsim=9999)
-#	Gene set test using either Wilcox test or simulation.
+#	Competitive gene set test using either rank sum test or simulation.
 #	Gordon Smyth
-#	3 September 2004. Last modified 3 Sep 2011.
+#	3 September 2004. Last modified 23 Jan 2012.
 {
 	alternative <- match.arg(alternative,c("mixed","either","down","up","less","greater","two.sided"))
 	if(alternative=="two.sided") alternative <- "either"
@@ -25,28 +25,13 @@ geneSetTest <- function(selected,statistics,alternative="mixed",type="auto",rank
 	}
 	if(ranks.only) {
 #		The test statistic is the mean rank of the selected statistics
-#		and the p-value is obtained explicitly from the Wilcox test
-		if(alternative=="either")
-			wilc.alt <- "two.sided"
-		else
-			wilc.alt <- "greater"
-		x <- y <- NULL
-		if(is.logical(selected)) {
-			x <- statistics[selected]
-			y <- statistics[!selected]
-		}
-		if(is.numeric(selected)) {
-			x <- statistics[selected]
-			y <- statistics[-selected]
-		}
-		if(is.character(selected)) {
-			nam <- names(statistics)
-			if(is.null(nam)) stop("selected is character but elements of statistics are not named")
-			selected <- is.element(nam,selected)
-			x <- statistics[selected]
-			y <- statistics[!selected]
-		}
-		return(wilcox.test(x,y,alternative=wilc.alt,conf.int=FALSE)$p.value)
+#		and the p-value is obtained explicitly from the rank sum test
+		pvalues <- rankSumTestwithCorrelation(index=selected,statistics=statistics,df=Inf)
+		p.value <- switch(alternative,
+			"down" = pvalues["lower.tail"],
+			"up" = pvalues["upper.tail"],
+			"either" = pvalues["two.tail"],
+			"mixed" = pvalues["upper.tail"])
 	} else {
 #		The test statistic is the mean of the selected statistics
 #		and the p-value is obtained by random permutation
@@ -63,8 +48,9 @@ geneSetTest <- function(selected,statistics,alternative="mixed",type="auto",rank
 		msel <- posstat(msel)
 		ntail <- 1
 		for (i in 1:nsim) if(posstat(mean(sample(stat,nsel))) >= msel) ntail <- ntail+1
-		return(ntail/(nsim+1))
+		p.value <- ntail/(nsim+1)
 	}
+	p.value
 }
 
 wilcoxGST <- function(selected,statistics,...)
