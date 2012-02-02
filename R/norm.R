@@ -431,10 +431,10 @@ plotPrintorder <- function(object,layout,start="topleft",slide=1,method="loess",
 
 #  BETWEEN ARRAY NORMALIZATION
 
-normalizeBetweenArrays <- function(object, method=NULL, targets=NULL, cyclic.method="pairs", ...) {
+normalizeBetweenArrays <- function(object, method=NULL, targets=NULL, cyclic.method="fast", ...) {
 #	Normalize between arrays
 #	Gordon Smyth
-#	12 Apri 2003.  Last revised 5 January 2012.
+#	12 Apri 2003.  Last revised 2 Feb 2012.
 
 #	Default method
 	if(is.null(method)) {
@@ -627,14 +627,14 @@ normalizeMedianValues <- function(x)
 	t(t(x)/cmed)
 }
 
-normalizeCyclicLoess <- function(x, weights = NULL, span=0.7, iterations = 3, method="pairs")
+normalizeCyclicLoess <- function(x, weights = NULL, span=0.7, iterations = 3, method="fast")
 #	Cyclic loess normalization of columns of matrix
 #	incorporating probes weights.
 #	Yunshun (Andy) Chen and Gordon Smyth
-#	14 April 2010.  Last modified 5 January 2012.
+#	14 April 2010.  Last modified 2 Feb 2012.
 {
 	x <- as.matrix(x)
-	method <- match.arg(method, c("pairs","affy","fast"))
+	method <- match.arg(method, c("fast","affy","pairs"))
 	n <- ncol(x)
 	if(method=="pairs") {
 		for (k in 1:iterations)

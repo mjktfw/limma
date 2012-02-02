@@ -8,14 +8,13 @@ A extension of the well-known rank-based test, but allowing for correlations bet
 }
 
 \usage{
-rankSumTestwithCorrelation(index, statistics, correlation=NULL, vif=NULL, df=Inf)
+rankSumTestwithCorrelation(index, statistics, correlation=0, df=Inf)
 }
 
 \arguments{
   \item{index}{any index vector such that \code{statistics[index]} contains the values of the statistic for the test group.}
   \item{statistics}{numeric vector giving values of the test statistic.}
   \item{correlation}{numeric scalar, average correlation between cases in the test group.  Remaining cases are assumed independent.} 
-  \item{vif}{variance inflation factor for the mean, equal to \code{1+(m-1)*correlation} where \code{m} is the number of genes in the test group.} 
   \item{df}{degrees of freedom which the correlation has been estimated.} 
 }
 
@@ -24,16 +23,15 @@ Numeric vector containing \code{left.tail} and \code{right.tail} p-values respec
 }
 
 \details{
-Tests whether the mean rank of statistics in the test group is greater or less than the mean rank of the remaining statistic values.
+This function implements a correlation-adjusted version of the Wilcoxon-Mann-Whitney test proposed by Wu and Smyth (2012).
+It tests whether the mean rank of statistics in the test group is greater or less than the mean rank of the remaining statistic values.
 
-When the correlation (or variance inflation factor) is zero, the function performs the usual two-sample Wilcoxon-Mann-Whitney test rank sum test.
-The test is implemented following the formulas given in Zar (1999) Section 8.10, including corrections for ties and for continuity.
+When the correlation (or variance inflation factor) is zero, the function performs the usual two-sample Wilcoxon-Mann-Whitney rank sum test.
+The Wilcoxon-Mann-Whitney test is implemented following the formulas given in Zar (1999) Section 8.10, including corrections for ties and for continuity.
 
 The test allows for the possibility that cases in the test group may be more highly correlated on average than cases not in the group.
-When the correlation is non-zero, the variance of the z-statistic is inflated, and the standard normal test is replaced with a t-distribution test.
-When the correlation is positive, the VIF is positive and test will be more conservative.
-
-This correlation-adjusted test was proposed and described by Wu and Smyth (2012).
+When the correlation is non-zero, the variance is of the rank-sum statistic is computing using a formala derived by Barry et al (2008).
+When the correlation is positive, the variance is increased and test will become more conservative.
 }
 
 \seealso{
@@ -45,7 +43,12 @@ An overview of tests in limma is given in \link{08.Tests}.
 \author{Gordon Smyth and Di Wu}
 
 \references{
-Wu, D, and Smyth, GK (2012). Camera: a competitive gene set test accounting for inter-gene correlation.
+Barry, W.~T., Nobel, A.~B., and Wright, F.~A. (2008).
+A statistical framework for testing functional categories in microarray data.
+\emph{Annals of Applied Statistics} 2, 286-315.
+
+Wu, D, and Smyth, GK (2012).
+Camera: a competitive gene set test accounting for inter-gene correlation.
 Submitted.
 
 Zar, JH (1999). \emph{Biostatistical Analysis 4th Edition}.

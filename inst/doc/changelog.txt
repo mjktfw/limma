@@ -1,3 +1,17 @@
+2 Feb 2012: limma 3.11.11
+
+- default method for normalizeCyclicLoess() changed from "pairs"
+  to "fast".
+  
+- rankSumTestwithCorrelation() now uses a more exact variance
+  calculation.  Argument vif is removed.
+
+23 Jan 2012: limma 3.11.10
+
+- new function rankSumTestwithCorrelation, which extends the
+  Wilcoxon-Mann-Whitney test to allow for correlation between
+  cases in one of the groups.
+
 22 Jan 2012: limma 3.11.9
 
 - minor edit to topTable.Rd.

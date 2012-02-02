@@ -5,14 +5,14 @@
 Normalize the columns of a matrix, cyclicly applying loess normalization to normalize each pair of columns to each other.
 }
 \usage{
-normalizeCyclicLoess(x, weights = NULL, span=0.7, iterations = 3, method = "pairs")
+normalizeCyclicLoess(x, weights = NULL, span=0.7, iterations = 3, method = "fast")
 }
 \arguments{
   \item{x}{numeric matrix, or object which can be coerced to a numeric matrix, containing log-expression values.}
   \item{weights}{numeric vector of probe weights. Must be non-negative.}
   \item{span}{span of loess smoothing window, between 0 and 1.}
   \item{iterations}{number of times to cycle through all pairs of columns.}
-  \item{method}{character string specifying which variant of the cyclic loess method to use. Options are \code{"pairs"}, \code{"fast"} or \code{"affy"}.}
+  \item{method}{character string specifying which variant of the cyclic loess method to use. Options are \code{"fast"}, \code{"affy"} or \code{"pairs"}.}
 }
 \details{
 This function is intended to normalize single channel or A-value microarray intensities between arrays.
