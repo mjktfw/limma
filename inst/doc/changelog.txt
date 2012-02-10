@@ -1,3 +1,8 @@
+10 Feb 2012: limma 3.11.12
+
+- RNA-Seq case study in the User's Guide updated to reflect
+  changes to the tweeDEseqCountData package.
+
 2 Feb 2012: limma 3.11.11
 
 - default method for normalizeCyclicLoess() changed from "pairs"
