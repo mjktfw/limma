@@ -359,18 +359,18 @@ getEAWP <- function(object)
 #	Given any microarray data object, extract basic information needed for
 #	linear modelling.
 #	Gordon Smyth
-#  9 March 2008. Last modified 17 Sep 2011.
+#  9 March 2008. Last modified 9 Feb 2012.
 {
 	y <- list()
 	
 	if(is(object,"list")) {
 #		Method for MAList (classed or unclassed) or EList objects
 		if(is(object,"EList")) {
-			y$exprs <- object$E
+			y$exprs <- as.matrix(object$E)
 			y$Amean <- rowMeans(y$exprs,na.rm=TRUE)
 		} else {
 			y$printer <- object$printer
-			y$exprs <- object$M
+			y$exprs <- as.matrix(object$M)
 			if(!is.null(object$A)) y$Amean <- rowMeans(as.matrix(object$A),na.rm=TRUE)
 		}
 		y$weights <- object$weights

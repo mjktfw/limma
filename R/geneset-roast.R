@@ -104,7 +104,7 @@ roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",
 	modt <- signc*B/sd.post
 
 	statobs <- p <- rep(0,3)
-	names(statobs) <- names(p) <- c("mixed","up","down")
+	names(statobs) <- names(p) <- c("down","up","mixed")
 	statrot <- array(0,c(nrot,3),dimnames=list(NULL,names(p)))
 
 #	Convert to z-scores
@@ -219,8 +219,8 @@ roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",
 	}
 
 #	Output
-	out <- data.frame(c(r1+r2,r1,r2),p)
-	dimnames(out) <- list(c("Mixed","Up","Down"),c("Active.Prop","P.Value"))
+	out <- data.frame(c(r2,r1,r1+r2),p)
+	dimnames(out) <- list(c("Down","Up","Mixed"),c("Active.Prop","P.Value"))
 	new("Roast",list(p.value=out,var.prior=s02,df.prior=d0))
 }
 
@@ -228,7 +228,7 @@ roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",
 mroast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE)
 #  Rotation gene set testing with multiple sets
 #  Gordon Smyth and Di Wu
-#  Created 28 Jan 2010. Last revised 11 Jan 2012.
+#  Created 28 Jan 2010. Last revised 3 Feb 2012.
 { 
 	if(is.null(iset)) iset <- rep(TRUE,nrow(y))
 	if(!is.list(iset)) iset <- list(set = iset)
@@ -247,7 +247,7 @@ mroast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean"
 	var.prior <- sv$var.prior
 	df.prior <- sv$df.prior
 
-	pv <- adjpv <- active <- array(0,c(nsets,3),dimnames=list(names(iset),c("Mixed","Up","Down")))
+	pv <- adjpv <- active <- array(0,c(nsets,3),dimnames=list(names(iset),c("Down","Up","Mixed")))
 	if(nsets<1) return(pv)
 	for(i in 1:nsets) {
 		out <- roast(iset=iset[[i]],y=y,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,nrot=nrot)[[1]]

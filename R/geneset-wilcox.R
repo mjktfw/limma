@@ -1,9 +1,9 @@
 ##  GENESET.R
 
-geneSetTest <- function(selected,statistics,alternative="mixed",type="auto",ranks.only=TRUE,nsim=9999)
+geneSetTest <- function(index,statistics,alternative="mixed",type="auto",ranks.only=TRUE,nsim=9999)
 #	Competitive gene set test using either rank sum test or simulation.
 #	Gordon Smyth
-#	3 September 2004. Last modified 23 Jan 2012.
+#	3 September 2004. Last modified 11 Feb 2012.
 {
 	alternative <- match.arg(alternative,c("mixed","either","down","up","less","greater","two.sided"))
 	if(alternative=="two.sided") alternative <- "either"
@@ -24,18 +24,18 @@ geneSetTest <- function(selected,statistics,alternative="mixed",type="auto",rank
 		alternative <- "up"
 	}
 	if(ranks.only) {
-#		The test statistic is the mean rank of the selected statistics
+#		The test statistic is the mean rank of the selected genewise statistics
 #		and the p-value is obtained explicitly from the rank sum test
-		pvalues <- rankSumTestwithCorrelation(index=selected,statistics=statistics,df=Inf)
+		pvalues <- rankSumTestWithCorrelation(index=index,statistics=statistics,df=Inf)
 		p.value <- switch(alternative,
-			"down" = pvalues["lower.tail"],
-			"up" = pvalues["upper.tail"],
-			"either" = pvalues["two.tail"],
-			"mixed" = pvalues["upper.tail"])
+			"down" = pvalues["less"],
+			"up" = pvalues["greater"],
+			"either" = 2*min(pvalues),
+			"mixed" = pvalues["greater"])
 	} else {
-#		The test statistic is the mean of the selected statistics
+#		The global test statistic is the mean of the selected genewise statistics
 #		and the p-value is obtained by random permutation
-		ssel <- statistics[selected]
+		ssel <- statistics[index]
 		ssel <- ssel[!is.na(ssel)]
 		nsel <- length(ssel)
 		if(nsel==0) return(1)
@@ -50,12 +50,12 @@ geneSetTest <- function(selected,statistics,alternative="mixed",type="auto",rank
 		for (i in 1:nsim) if(posstat(mean(sample(stat,nsel))) >= msel) ntail <- ntail+1
 		p.value <- ntail/(nsim+1)
 	}
-	p.value
+	as.vector(p.value)
 }
 
-wilcoxGST <- function(selected,statistics,...)
+wilcoxGST <- function(index,statistics,...)
 #	Mean-rank gene set test using Wilcox test.
 #	Gordon Smyth
 #	27 July 2009.  Last modified 3 Sep 2011.
-geneSetTest(selected=selected,statistics=statistics,...,ranks.only=TRUE)
+geneSetTest(index=index,statistics=statistics,...,ranks.only=TRUE)
 

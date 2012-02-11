@@ -5,17 +5,18 @@
 Remove batch effects from expression data.
 }
 \usage{
-removeBatchEffect(x,batch,batch2=NULL,design=matrix(1,ncol(x),1))
+removeBatchEffect(x,batch=NULL,batch2=NULL,covariates=NULL,design=matrix(1,ncol(x),1))
 }
 \arguments{
   \item{x}{numeric matrix, or any object that can be coerced to a matrix by \code{as.matrix(x)}, containing log-expression intensities for a series of microarrays.
   Rows correspond to probes and columns to arrays.}
-  \item{batch}{a factor or vector indicating batches.}
-  \item{batch2}{an optional second batch factor or vector.}
+  \item{batch}{factor or vector indicating batches.}
+  \item{batch2}{factor or vector indicating batches.}
+  \item{covariates}{matrix or vector of covariates to be adjusted for.}
   \item{design}{optional design matrix relating to treatment conditions to be preserved}
 }
 \value{
-A numeric matrix of log-expression values with batch effects removed.
+A numeric matrix of log-expression values with batch and covariate effects removed.
 }
 \details{
 This function is useful for removing batch effects, associated with hybridization time or other technical variables, prior to clustering or unsupervised analysis such as PCA or heatmaps.

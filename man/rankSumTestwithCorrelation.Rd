@@ -1,5 +1,5 @@
-\name{rankSumTestwithCorrelation}
-\alias{rankSumTestwithCorrelation}
+\name{rankSumTestWithCorrelation}
+\alias{rankSumTestWithCorrelation}
 
 \title{Two Sample Wilcoxon-Mann-Whitney Rank Sum Test Allowing For Correlation}
 
@@ -8,13 +8,13 @@ A extension of the well-known rank-based test, but allowing for correlations bet
 }
 
 \usage{
-rankSumTestwithCorrelation(index, statistics, correlation=0, df=Inf)
+rankSumTestWithCorrelation(index, statistics, correlation=0, df=Inf)
 }
 
 \arguments{
   \item{index}{any index vector such that \code{statistics[index]} contains the values of the statistic for the test group.}
   \item{statistics}{numeric vector giving values of the test statistic.}
-  \item{correlation}{numeric scalar, average correlation between cases in the test group.  Remaining cases are assumed independent.} 
+  \item{correlation}{numeric scalar, average correlation between cases in the test group.  Cases in the second group are assumed independent of each other and other the first group.} 
   \item{df}{degrees of freedom which the correlation has been estimated.} 
 }
 
@@ -30,7 +30,7 @@ When the correlation (or variance inflation factor) is zero, the function perfor
 The Wilcoxon-Mann-Whitney test is implemented following the formulas given in Zar (1999) Section 8.10, including corrections for ties and for continuity.
 
 The test allows for the possibility that cases in the test group may be more highly correlated on average than cases not in the group.
-When the correlation is non-zero, the variance is of the rank-sum statistic is computing using a formala derived by Barry et al (2008).
+When the correlation is non-zero, the variance of the rank-sum statistic is computing using a formula derived from equation (4.5) of Barry et al (2008).
 When the correlation is positive, the variance is increased and test will become more conservative.
 }
 
@@ -60,8 +60,8 @@ stat <- rnorm(100)
 index <- 1:10
 stat[index] <- stat[1:10]+1
 
-rankSumTestwithCorrelation(index, stat)
-rankSumTestwithCorrelation(index, stat, correlation=0.1)
+rankSumTestWithCorrelation(index, stat)
+rankSumTestWithCorrelation(index, stat, correlation=0.1)
 
 group <- rep(1,100)
 group[index] <- 2
