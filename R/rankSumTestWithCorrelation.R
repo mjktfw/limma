@@ -2,7 +2,7 @@ rankSumTestWithCorrelation <- function(index,statistics,correlation=0,df=Inf)
 #	Rank sum test as for two-sample Wilcoxon-Mann-Whitney test,
 #	but allowing for correlation between members of test set.
 #	Gordon Smyth and Di Wu
-#	Created 2007.  Last modified 5 Feb 2012.
+#	Created 2007.  Last modified 24 Feb 2012.
 {
 	n <- length(statistics)
 	r <- rank(statistics)
@@ -12,7 +12,7 @@ rankSumTestWithCorrelation <- function(index,statistics,correlation=0,df=Inf)
 	U <- n1*n2 + n1*(n1+1)/2 - sum(r1)
 	mu <- n1*n2/2
 
-	if(correlation==0 ) {
+	if(correlation==0 || n1==1) {
 		sigma2 <- n1*n2*(n+1)/12
 	} else {
 		sigma2 <- asin(1)*n1*n2 + asin(0.5)*n1*n2*(n2-1) + asin(correlation/2)*n1*(n1-1)*n2*(n2-1) + asin((correlation+1)/2)*n1*(n1-1)*n2

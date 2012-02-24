@@ -38,16 +38,12 @@ Smyth, G. K. (2005). Individual channel analysis of two-colour microarray data.
 }
 
 \examples{
-if(require("sma")) {
+\dontrun{
 # Subset of data from ApoAI case study in Limma User's Guide
-data(MouseArray)
 # Avoid non-positive intensities
-RG <- backgroundCorrect(mouse.data,method="normexp")
-MA <- normalizeWithinArrays(RG,mouse.setup)
+RG <- backgroundCorrect(RG,method="normexp")
+MA <- normalizeWithinArrays(RG)
 MA <- normalizeBetweenArrays(MA,method="Aq")
-# Randomly choose 500 genes for this example
-i <- sample(1:nrow(MA),500)
-MA <- MA[i,]
 targets <- data.frame(Cy3=I(rep("Pool",6)),Cy5=I(c("WT","WT","WT","KO","KO","KO")))
 targets.sc <- targetsA2C(targets)
 targets.sc$Target <- factor(targets.sc$Target,levels=c("Pool","WT","KO"))

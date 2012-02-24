@@ -68,8 +68,13 @@ In this case the p-value is obtained from a Wilcoxon test.
 If \code{ranks.only} is \code{FALSE}, then the p-value is obtained by simulation using \code{nsim} random sets of genes.
 }
 
+\note{
+This function does not does allow for inter-gene correlation.
+For this reason, the alternative \code{camera} is now recommended over \code{geneSetTest} in those contexts for which \code{camera} is applicable.
+}
+
 \seealso{
-\code{\link{roast}}, \code{\link{romer}}, \code{\link{wilcox.test}}, \code{\link{barcodeplot}}
+\code{\link{camera}}, \code{\link{roast}}, \code{\link{romer}}, \code{\link{wilcox.test}}, \code{\link{barcodeplot}}
 
 An overview of tests in limma is given in \link{08.Tests}.
 }

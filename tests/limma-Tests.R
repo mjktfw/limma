@@ -111,14 +111,14 @@ table(out$pref)
 
 ### marray object
 
-suppressMessages(suppressWarnings(gotmarray <- require(marray,quietly=TRUE)))
-if(gotmarray) {
-	data(swirl)
-	snorm = maNorm(swirl)
-	fit <- lmFit(snorm, design = c(1,-1,-1,1))
-	fit <- eBayes(fit)
-	topTable(fit,resort.by="AveExpr")
-}
+#suppressMessages(suppressWarnings(gotmarray <- require(marray,quietly=TRUE)))
+#if(gotmarray) {
+#	data(swirl)
+#	snorm = maNorm(swirl)
+#	fit <- lmFit(snorm, design = c(1,-1,-1,1))
+#	fit <- eBayes(fit)
+#	topTable(fit,resort.by="AveExpr")
+#}
 
 ### duplicateCorrelation
 

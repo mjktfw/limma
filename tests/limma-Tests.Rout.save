@@ -1,6 +1,6 @@
 
-R version 2.14.1 (2011-12-22)
-Copyright (C) 2011 The R Foundation for Statistical Computing
+R Under development (unstable) (2012-02-22 r58452)
+Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: i386-pc-mingw32/i386 (32-bit)
 
@@ -795,36 +795,14 @@ $G
 > 
 > ### marray object
 > 
-> suppressMessages(suppressWarnings(gotmarray <- require(marray,quietly=TRUE)))
-> if(gotmarray) {
-+ 	data(swirl)
-+ 	snorm = maNorm(swirl)
-+ 	fit <- lmFit(snorm, design = c(1,-1,-1,1))
-+ 	fit <- eBayes(fit)
-+ 	topTable(fit,resort.by="AveExpr")
-+ }
-       X.ID. X.Name.      logFC   AveExpr         t      P.Value adj.P.Val
-2740 fb24d07   3-B14 -0.4826455 13.240578 -5.091599 0.0019794089 0.9998934
-579  fb16b05   1-A10  0.3949314 13.097786  3.998526 0.0065467612 0.9998934
-7482 fb22g12   2-L23  0.7510642 11.891570  4.649204 0.0031465059 0.9998934
-374  fb94a03   20-I5 -0.5203725 11.604698 -5.404558 0.0014487576 0.9998934
-4214 fc23d04   27-J8 -0.4247725 11.422167 -4.410713 0.0040860868 0.9998934
-7175 fb67h09  13-P18 -0.6295118 11.415981 -5.864468 0.0009363102 0.9998934
-4603 fb95e01   20-O1  0.5116209 11.192093  4.217088 0.0050827410 0.9998934
-2370 fb58c11  11-J21 -0.4953002 10.795979 -4.373073 0.0042613355 0.9998934
-109  fb26a01    3-I1  0.4042463  9.044124  4.177760 0.0053167673 0.9998934
-5300 control   3XSSC  0.5518738  7.142355  4.481356 0.0037785152 0.9998934
-             B
-2740 -3.547022
-579  -3.708507
-7482 -3.603735
-374  -3.512619
-4214 -3.638880
-7175 -3.469183
-4603 -3.670096
-2370 -3.644752
-109  -3.676751
-5300 -3.628104
+> #suppressMessages(suppressWarnings(gotmarray <- require(marray,quietly=TRUE)))
+> #if(gotmarray) {
+> #	data(swirl)
+> #	snorm = maNorm(swirl)
+> #	fit <- lmFit(snorm, design = c(1,-1,-1,1))
+> #	fit <- eBayes(fit)
+> #	topTable(fit,resort.by="AveExpr")
+> #}
 > 
 > ### duplicateCorrelation
 > 
@@ -1107,3 +1085,6 @@ set1    0  1     1
 set2    0  0     0
 
 > 
+> proc.time()
+   user  system elapsed 
+   0.88    0.00    1.23 

@@ -1,3 +1,13 @@
+24 Feb 2012: limma 3.11.14
+
+- camera() and mcamera() consolidated into one function.
+
+- rankSumTestWithCorrelation() now ignores correlation setting
+  when the first group contains only one observation.
+
+- implicit documentation dependencies on the sma and marray
+  packages removed.
+
 11 Feb 2012: limma 3.11.13
 
 - removeBatchEffect() now corrects for continuous covariates
@@ -22,6 +32,8 @@
   already.  This means that it do longer fails when given an
   EList object with component E a data.frame.
 
+- rankSumTestwithCorrelation() renamed to rankSumTestWithCorrelation().
+
 10 Feb 2012: limma 3.11.12
 
 - RNA-Seq case study in the User's Guide updated to reflect
@@ -39,7 +51,9 @@
 
 - new function rankSumTestwithCorrelation, which extends the
   Wilcoxon-Mann-Whitney test to allow for correlation between
-  cases in one of the groups.
+  cases in one of the groups.  geneSetTest() now calls this
+  function instead of wilcox.test, with a consequence improvement
+  in speed.
 
 22 Jan 2012: limma 3.11.9
 

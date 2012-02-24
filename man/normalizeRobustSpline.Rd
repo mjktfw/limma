@@ -29,10 +29,9 @@ The function is based on unpublished work by the author.
   An overview of LIMMA functions for normalization is given in \link{05.Normalization}.
 }
 \examples{
-if(require("sma")) {
-data(MouseArray)
-MA <- MA.RG(mouse.data)
-normM <- normalizeRobustSpline(MA$M[,1],MA$A[,1],mouse.setup)
+\dontrun{
+MA <- normalizeWithinArrays(RG)
+normM <- normalizeRobustSpline(MA$M[,1],MA$A[,1],MA$printer)
 }
 }
 \keyword{models}

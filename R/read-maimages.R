@@ -124,7 +124,7 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 		obj <- read.columns(fullname,required.col,text.to.search,skip=skip,sep=sep,quote=quote,stringsAsFactors=FALSE,fill=TRUE,nrows=nspots,flush=TRUE,...)
 	}, arrayvision = {
 		skip <- 1
-		cn <- scan(fullname,what="",sep=sep,quote=quote,skip=1,nlines=1,quiet=TRUE,allowEscape=FALSE)
+		cn <- scan(fullname,what="",sep=sep,quote=quote,skip=1,nlines=1,quiet=TRUE,allowEscapes=FALSE)
 		fg <- grep(" Dens - ",cn)
 		if(length(fg) != 2) stop(paste("Cannot find foreground columns in",fullname))
 		bg <- grep("^Bkgd$",cn)

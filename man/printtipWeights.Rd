@@ -59,14 +59,9 @@ An overview of linear model functions in limma is given by \link{06.LinearModels
 \dontrun{
 # This example is designed for work on a subset of the data
 # from ApoAI case study in Limma User's Guide
-# This example was formerly loaded from sma package using
-#   library(sma)
-#   data(MouseArray)
 
-# Avoid non-positive intensities
-RG <- backgroundCorrect(mouse.data, method="half")
-MA <- normalizeWithinArrays(RG, mouse.setup)
-MA <- normalizeBetweenArrays(MA, method="Aq")
+RG <- backgroundCorrect(RG, method="normexp")
+MA <- normalizeWithinArrays(RG)
 targets <- data.frame(Cy3=I(rep("Pool",6)),Cy5=I(c("WT","WT","WT","KO","KO","KO")))
 design <- modelMatrix(targets, ref="Pool")
 subarrayw <- printtipWeights(MA, design, layout=mouse.setup)

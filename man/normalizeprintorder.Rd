@@ -68,13 +68,7 @@ An overview of LIMMA functions for normalization is given in \link{05.Normalizat
 }
 \examples{
 \dontrun{
-# This example is designed for work on a subset of the data
-# from the ApoAI case study in Limma User's Guide
-# This example was formerly loaded from sma package using
-#   library(sma)
-#   data(MouseArray)
-
-plotPrintorder(mouse.data,mouse.setup,slide=1,separate=TRUE)
+plotPrintorder(RG,layout,slide=1,separate=TRUE)
 RG <- normalizeForPrintorder(mouse.data,mouse.setup)
 }
 }

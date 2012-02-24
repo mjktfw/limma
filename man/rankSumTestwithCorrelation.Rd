@@ -43,7 +43,7 @@ An overview of tests in limma is given in \link{08.Tests}.
 \author{Gordon Smyth and Di Wu}
 
 \references{
-Barry, W.~T., Nobel, A.~B., and Wright, F.~A. (2008).
+Barry, W.T., Nobel, A.B., and Wright, F.A. (2008).
 A statistical framework for testing functional categories in microarray data.
 \emph{Annals of Applied Statistics} 2, 286-315.
 

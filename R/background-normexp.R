@@ -3,7 +3,7 @@
 normexp.signal <- function(par,x)
 #	Expected value of signal given foreground in normal + exponential model
 #	Gordon Smyth
-#	24 Aug 2002. Last modified 24 September 2008.
+#	24 Aug 2002. Last modified 24 February 2012.
 {
 	mu <- par[1]
 	sigma <- exp(par[2])
@@ -13,7 +13,7 @@ normexp.signal <- function(par,x)
 	if(alpha <= 0) stop("alpha must be positive")
 	if(sigma <= 0) stop("sigma must be positive")
 	mu.sf <- x-mu-sigma2/alpha
-	signal <- mu.sf + sigma2 * exp(dnorm(0,mean=mu.sf,sd=sigma,log=TRUE) - pnorm(0,mean=mu.sf,sd=sigma,lower.tail=FALSE,log=TRUE))
+	signal <- mu.sf + sigma2 * exp(dnorm(0,mean=mu.sf,sd=sigma,log=TRUE) - pnorm(0,mean=mu.sf,sd=sigma,lower.tail=FALSE,log.p=TRUE))
 	o <- !is.na(signal)
 	if(any(signal[o]<0)) {
 		warning("Limit of numerical accuracy reached with very low intensity or very high background:\nsetting adjusted intensities to small value")
