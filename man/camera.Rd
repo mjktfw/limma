@@ -6,16 +6,16 @@
 Test whether a set of genes is highly ranked relative to other genes in terms of differential expression, accounting for inter-gene correlation.
 }
 \usage{
-camera(indices, y, design, contrast=ncol(design), statistic="modt", use.ranks=FALSE, trend.var=FALSE)
+camera(indices, y, design, contrast=ncol(design), weights=NULL, use.ranks=FALSE, trend.var=FALSE)
 interGeneCorrelation(y, design)
 }
 \arguments{
   \item{indices}{an index vector or a list of index vectors.  Can be any vector such that \code{y[indices,]} selects the rows corresponding to the test set.}
-  \item{y}{numeric matrix giving log-expression or log-ratio values for a series of microarrays, or any object that can coerced to a matrix including \code{ExpressionSet}, \code{MAList}, \code{EList} or \code{PLMSet} objects.
+  \item{y}{numeric matrix giving log-expression or log-ratio values for a series of microarrays, or any data object that can coerced to a matrix including \code{ExpressionSet}, \code{MAList}, \code{EList} or \code{PLMSet} objects.
   Rows correspond to probes and columns to samples.}
   \item{design}{design matrix.}
   \item{contrast}{contrast of the linear model coefficients for which the test is required. Can be an integer specifying a column of \code{design}, or else a numeric vector of same length as the number of columns of \code{design}.}
-  \item{statistic}{character string indicating the genewise statistic to use, either \code{"modt"} or \code{"logFC"}.}
+  \item{weights}{numeric matrix of weights, of same size as \code{y}.}
   \item{use.ranks}{should a rank sum test (\code{TRUE}) or a parametric t-test (\code{FALSE} be done?}
   \item{trend.var}{logical, should an empirical Bayes trend be estimated?  See \code{\link{eBayes}} for details.}
 } 

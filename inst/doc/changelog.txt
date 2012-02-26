@@ -1,3 +1,10 @@
+26 Feb 2012: limma 3.11.15
+
+- camera() now supports weights.
+
+- The 'statistics' argument to camera() has been removed.  The
+  default choice of moderated-t is now used always.
+
 24 Feb 2012: limma 3.11.14
 
 - camera() and mcamera() consolidated into one function.

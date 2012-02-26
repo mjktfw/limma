@@ -20,45 +20,76 @@ interGeneCorrelation <- function(y, design)
 }
 
 
-camera <- function(indices,y,design,contrast=ncol(design),statistic="modt",use.ranks=FALSE,trend.var=FALSE)
+camera <- function(indices,y,design,contrast=ncol(design),weights=NULL,use.ranks=FALSE,trend.var=FALSE)
 #	Competitive gene set test allowing for correlation between genes
 #	Gordon Smyth and Di Wu
-#  Created 1 Feb 2012.  Last modified 24 Feb 2012
+#  Created 2007.  Last modified 26 Feb 2012
 {
+#	Check arguments
 	if(!is.list(indices)) indices <- list(set1=indices)
+	if(is(y,"EList") || is(y,"MAList")) {
+		if(is.null(design)) design <- as.matrix(y$design)
+		if(is.null(weights)) weights <- as.matrix(y$weights)
+	}
 	y <- as.matrix(y)
-	statistic <- match.arg(statistic,choices=c("modt","logFC"))
 
+	G <- nrow(y)
+	n <- ncol(y)
+	p <- ncol(design)
+	df.residual <- n-p
+	df.camera <- min(df.residual,G-2)
+
+#	Reform design matrix so that contrast of interest is last column
 	if(is.character(contrast)) {
 		contrast <- which(contrast==colnames(design))
 		if(length(contrast)==0) stop("coef ",contrast," not found")
 	}
-#	Reform design matrix so that contrast of interest is last column
-	coef <- p <- ncol(design)
 	if(length(contrast)==1) {
-		if(contrast<p) design <- cbind(design[,-contrast,drop=FALSE],design[,contrast])
+		j <- c((1:p)[-contrast], contrast)
+		if(contrast<p) design <- design[,j]
 	} else {
-		qr <- qr(contrast)
-		Q <- qr.Q(qr,complete=TRUE)
-		Q <- cbind(Q[,-1],sign(qr$qr[1,1])*Q[,1])
-		design <- design %*% Q
+		QR <- qr(contrast)
+		design <- t(qr.qty(QR,t(design)))
+		if(sign(QR$qr[1,1]<0)) design[,1] <- -design[,1]
+		design <- design[,c(2:p,1)]
 	}
 
-	G <- nrow(y)
-	fit <- lm.fit(design,t(y))
-	df.camera <- min(fit$df.residual,G-2)
-	U <- fit$effects[-(1:fit$qr$rank),,drop=FALSE]
+#	Compute effects matrix
+	if(is.null(weights)) {
+		QR <- qr(design)
+		if(QR$rank<p) stop("design matrix is not of full rank")
+		effects <- qr.qty(QR,t(y))
+		unscaledt <- effects[p,]
+		if(QR$qr[p,p]<0) unscaledt <- -unscaledt
+	} else {
+		if(any(weights<=0)) stop("only positive weights permitted")
+		effects <- matrix(0,n,G)
+		unscaledt <- rep(0,n)
+		sw <- sqrt(weights)
+		yw <- y*sw
+		for (g in 1:G) {
+			xw <- design*sw[g,]
+			QR <- qr(xw)
+			if(QR$rank<p) stop("weighted design matrix not of full rank for gene ",g)
+			effects[,g] <- qr.qty(QR,yw[g,])
+			unscaledt[g] <- effects[p,g]
+			if(QR$qr[p,p]<0) unscaledt[g] <- -unscaledt[g]
+		}
+	}
+
+#	Standardized residuals
+	U <- effects[-(1:p),,drop=FALSE]
 	sigma2 <- colMeans(U^2)
 	U <- t(U) / sqrt(sigma2)
-	if(statistic=="logFC") {
-		Stat <- fit$coefficients[coef,]
-	} else {
-		if(trend.var) A <- rowMeans(y) else A <- NULL
-		sv <- squeezeVar(sigma2,df=fit$df.residual,covariate=A)
-		modt <- sign(fit$qr$qr[coef,coef]) * fit$effects[coef,] / sqrt(sv$var.post)
-		df.total <- pmin(fit$df.residual+sv$df.prior, G*fit$df.residual)
-		Stat <- zscoreT(modt, df=df.total)
-	}
+
+#	Moderated t
+	if(trend.var) A <- rowMeans(y) else A <- NULL
+	sv <- squeezeVar(sigma2,df=df.residual,covariate=A)
+	modt <- unscaledt / sqrt(sv$var.post)
+	df.total <- min(df.residual+sv$df.prior, G*df.residual)
+	Stat <- zscoreT(modt, df=df.total)
+
+#	Global statistics
 	meanStat <- mean(Stat)
 	varStat <- var(Stat)
 
