@@ -4,7 +4,7 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 #	Extracts an RG list from a set of two-color image analysis output files
 #  or an EListRaw from a set of one-color files
 #	Gordon Smyth. 
-#	1 Nov 2002.  Last revised 7 April 2010.
+#	1 Nov 2002.  Last revised 9 March 2012.
 {
 #	Begin checking input arguments
 
@@ -42,7 +42,8 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 	if(is.null(columns)) {
 		if(source2=="generic") stop("must specify columns for generic input")
 		columns <- switch(source,
-			agilent = list(G="gMeanSignal",Gb="gBGMedianSignal",R="rMeanSignal",Rb="rBGMedianSignal"),
+			agilent.mean = list(G="gMeanSignal",Gb="gBGMedianSignal",R="rMeanSignal",Rb="rBGMedianSignal"),
+			agilent =,
 			agilent.median = list(G="gMedianSignal",Gb="gBGMedianSignal",R="rMedianSignal",Rb="rBGMedianSignal"),
 			arrayvision=,
 			arrayvision.ARM = list(G="ARM Dens - Levels",Gb="Bkgd",R="ARM Dens - Levels",Rb="Bkgd"),

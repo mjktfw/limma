@@ -16,7 +16,7 @@ read.imagene(files, path=NULL, ext=NULL, names=NULL, columns=NULL, other.columns
 \arguments{
   \item{files}{character vector giving the names of the files containing image analysis output or, for Imagene data, a character matrix of names of files.
   If omitted, then all files with extension \code{ext} in the specified directory will be read in alphabetical order.}
-  \item{source}{character string specifying the image analysis program which produced the output files.  Choices are \code{"generic"}, \code{"agilent"}, \code{"agilent.median"}, \code{"arrayvision"}, \code{"arrayvision.ARM"}, \code{"arrayvision.MTM"}, \code{"bluefuse"}, \code{"genepix"}, \code{"genepix.custom"}, \code{"genepix.median"}, \code{"imagene"}, \code{"imagene9"}, \code{"quantarray"}, \code{"scanarrayexpress"}, \code{"smd.old"}, \code{"smd"}, \code{"spot"} or \code{"spot.close.open"}.}
+  \item{source}{character string specifying the image analysis program which produced the output files.  Choices are \code{"generic"}, \code{"agilent"}, \code{"agilent.median"}, \code{"agilent.mean"}, \code{"arrayvision"}, \code{"arrayvision.ARM"}, \code{"arrayvision.MTM"}, \code{"bluefuse"}, \code{"genepix"}, \code{"genepix.custom"}, \code{"genepix.median"}, \code{"imagene"}, \code{"imagene9"}, \code{"quantarray"}, \code{"scanarrayexpress"}, \code{"smd.old"}, \code{"smd"}, \code{"spot"} or \code{"spot.close.open"}.}
   \item{path}{character string giving the directory containing the files.
   The default is the current working directory.}
   \item{ext}{character string giving optional extension to be added to each file name}
@@ -47,7 +47,10 @@ SMD data should consist of raw data files from the database, in tab-delimited te
 There are two possible sets of column names depending on whether the data was entered into the database before or after September 2003.
 \code{source="smd.old"} indicates that column headings in use prior to September 2003 should be used.
 In the case of Agilent and GenePix, two possible foreground estimators are supported: \code{source="genepix"} uses the mean foreground estimates while \code{source="genepix.median"} uses median foreground estimates.
-Similarly for Agilent.
+Background esimates are always medians.
+For Agilent, \code{"agilent"} or \code{"agilent.median"} use median foreground while \code{"agilent.mean"} uses mean foreground.
+(Note change of behavior from limma 3.11.17 onwards;
+\code{"agilent"} now has same meaning as \code{"agilent.mean"} whereas previously it had same meaning as \code{"agilent.mean"}.)
 GenePix 6.0 and later also supplies some custom background options, notably morphological background.
 If the GPR files have been written using a custom background, you may read it using \code{source="genepix.custom"}. 
 In the case of SPOT, two possible background estimators are supported:

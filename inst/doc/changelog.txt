@@ -1,4 +1,10 @@
-4 March 2012: limm 3.11.16
+9 March 2012: limma 3.11.17
+
+- read.maimages() with source="agilent" now reads median foreground
+  estimates instead of mean foreground.  New option source=
+  "agilent.mean" preserves earlier meaning of source="agilent".
+
+4 March 2012: limma 3.11.16
 
 - Agilent single-channel case study added to User's Guide.
 
