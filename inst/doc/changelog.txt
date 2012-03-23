@@ -1,3 +1,9 @@
+24 March 2012: limma 3.11.18
+
+- new argument 'allow.neg.cor' for camera().
+
+- camera() now recognizes array weights as special case of weights.
+
 9 March 2012: limma 3.11.17
 
 - read.maimages() with source="agilent" now reads median foreground

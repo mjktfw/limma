@@ -20,7 +20,7 @@ interGeneCorrelation <- function(y, design)
 }
 
 
-camera <- function(indices,y,design,contrast=ncol(design),weights=NULL,use.ranks=FALSE,trend.var=FALSE)
+camera <- function(indices,y,design,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,trend.var=FALSE)
 #	Competitive gene set test allowing for correlation between genes
 #	Gordon Smyth and Di Wu
 #  Created 2007.  Last modified 26 Feb 2012
@@ -52,6 +52,14 @@ camera <- function(indices,y,design,contrast=ncol(design),weights=NULL,use.ranks
 		design <- t(qr.qty(QR,t(design)))
 		if(sign(QR$qr[1,1]<0)) design[,1] <- -design[,1]
 		design <- design[,c(2:p,1)]
+	}
+
+	if(length(weights)==n) {
+		if(any(weights<=0)) stop("only positive weights permitted")
+		sw <- sqrt(weights)
+		y <- t(t(y)*sw)
+		design <- design*sw
+		weights <- NULL
 	}
 
 #	Compute effects matrix
@@ -111,9 +119,13 @@ camera <- function(indices,y,design,contrast=ncol(design),weights=NULL,use.ranks
 			correlation <- NA
 		}
 
+		tab[i,1] <- m
+		tab[i,2] <- correlation
 		if(use.ranks) {
+			if(!allow.neg.cor) correlation <- max(0,correlation)
 			tab[i,3:4] <- rankSumTestWithCorrelation(index,statistics=Stat,correlation=correlation,df=df.camera)
 		} else {	
+			if(!allow.neg.cor) vif <- max(1,vif)
 			meanStatInSet <- mean(StatInSet)
 			delta <- G/m2*(meanStatInSet-meanStat)
 			varStatPooled <- ( (G-1)*varStat - delta^2*m*m2/G ) / (G-2)
@@ -121,8 +133,6 @@ camera <- function(indices,y,design,contrast=ncol(design),weights=NULL,use.ranks
 			tab[i,3] <- pt(two.sample.t,df=df.camera)
 			tab[i,4] <- pt(two.sample.t,df=df.camera,lower.tail=FALSE)
 		}
-		tab[i,1] <- m
-		tab[i,2] <- correlation
 	}
 	tab[,5] <- 2*pmin(tab[,3],tab[,4])
 	tab

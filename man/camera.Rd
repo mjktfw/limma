@@ -6,7 +6,7 @@
 Test whether a set of genes is highly ranked relative to other genes in terms of differential expression, accounting for inter-gene correlation.
 }
 \usage{
-camera(indices, y, design, contrast=ncol(design), weights=NULL, use.ranks=FALSE, trend.var=FALSE)
+camera(indices, y, design, contrast=ncol(design), weights=NULL, use.ranks=FALSE, allow.neg.cor=TRUE, trend.var=FALSE)
 interGeneCorrelation(y, design)
 }
 \arguments{
@@ -15,8 +15,9 @@ interGeneCorrelation(y, design)
   Rows correspond to probes and columns to samples.}
   \item{design}{design matrix.}
   \item{contrast}{contrast of the linear model coefficients for which the test is required. Can be an integer specifying a column of \code{design}, or else a numeric vector of same length as the number of columns of \code{design}.}
-  \item{weights}{numeric matrix of weights, of same size as \code{y}.}
-  \item{use.ranks}{should a rank sum test (\code{TRUE}) or a parametric t-test (\code{FALSE} be done?}
+  \item{weights}{can be a numeric matrix of individual weights, of same size as \code{y}, or a numeric vector of array weights with length equal to \code{ncol(y)}.}
+  \item{use.ranks}{do a rank-based test (\code{TRUE}) or a parametric test (\code{FALSE}?}
+  \item{allow.neg.cor}{should reduced variance inflation factors be allowed for negative correlations?}
   \item{trend.var}{logical, should an empirical Bayes trend be estimated?  See \code{\link{eBayes}} for details.}
 } 
 
