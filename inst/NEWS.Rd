@@ -5,6 +5,65 @@
 \section{Version 3.12.0}{\itemize{
 
 \item
+read.maimages() with source="agilent" now reads median foreground
+estimates instead of mean foreground.  New option source=
+"agilent.mean" preserves earlier meaning of source="agilent".
+
+\item
+Agilent single-channel case study added to User's Guide.
+
+\item
+removeBatchEffect() now corrects for continuous covariates
+as well as qualitative factors.
+
+\item
+new function camera() performs competitive
+gene set tests while adjusting for inter-gene correlation.
+
+\item
+new function interGeneCorrelation() estimates the average
+intergene correlation for a set of genes.
+
+\item
+columns in output from roast() have been re-ordered.
+
+\item
+arguments 'selected' and 'selected2' renamed to 'index'
+and 'index2' in functions barcodeplot(), geneSetTest()
+and wilcoxGST().
+
+\item
+default labels for barcodeplot() are now somewhat more
+explicit.
+
+\item
+new function rankSumTestWithCorrelation extends the
+Wilcoxon-Mann-Whitney test to allow for correlation between
+cases in one of the groups.  geneSetTest() now calls this
+function instead of wilcox.test, with a consequence improvement
+in speed.
+
+\item
+The lfc (log-fold-change) cutoff argument of topTable() is now
+applied to the minimum absolute logFC when ranking by F-statistic.
+Previously lfc was only used when ranking by t-statistic.
+
+\item
+new methods "fast" and "affy" for normalizeCyclicLoess(),
+with "fast" becoming the default method.
+New argument 'cyclic.method' for normalizeBetweenArrays() gives
+access to the different cyclic loess methods.
+
+\item
+There were problems with using the argument gene.weights in
+mroast().  This argument is now permitted to be of the same
+length as the number of probes in the data set.  It is then
+automatically subsetted for each gene set.
+
+\item
+mroast() now uses mid-p-values by default when adjusting for multiple testing.
+
+\item
 neqc(), nec() and normexp.fit.control() now give user-friendly error messages when no negative control probes or no regular probes are found.
 
 }}
