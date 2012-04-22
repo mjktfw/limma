@@ -29,10 +29,10 @@ alias2Symbol <- function(alias,species="Hs",expand.symbols=FALSE)
 }
 
 alias2SymbolTable <- function(alias,species="Hs")
-#  Convert a set of alias names to official gene symbols of the same length
+#  Convert a vector of alias names to the vector of corresponding official gene symbols
 #  via Entrez Gene identifiers
 #  Di Wu, Gordon Smyth and Yifang Hu
-#  3 Sep 2009.  Last modified 17 Dec 2009.
+#  Created 3 Sep 2009.  Last modified 21 Dec 2012.
 {
 	alias <- as.character(alias)
 	species <- match.arg(species,c("Dm","Hs","Mm","Rn"))
@@ -40,21 +40,24 @@ alias2SymbolTable <- function(alias,species="Hs")
 	ALIAS2EG <- paste("org",species,"egALIAS2EG",sep=".")
 	SYMBOL <- paste("org",species,"egSYMBOL",sep=".")
 	suppressPackageStartupMessages(require(DB,character.only=TRUE))
-	
-	isSymbol <- alias %in% Rkeys(get(SYMBOL)) 
-	Symbol<-rep.int(NA,length(alias))
-	Symbol[isSymbol]<-alias[isSymbol]
-				
-	isalias<-(alias[!isSymbol]) %in% (Rkeys(get(ALIAS2EG)))
-	alias2<-(alias[!isSymbol])[isalias]
 
-	aliasTbl<-toTable(get(ALIAS2EG)[alias2])
-	hits<-names(table(aliasTbl$alias_symbol))[as.numeric(table(aliasTbl$alias_symbol))>1]
-	if(length(hits)>0) warning("Multiple Hits for ", hits)
-	
-	aliasTbl.o<-aliasTbl[match(alias2,aliasTbl$alias_symbol),]
-	symb<-toTable(get(SYMBOL)[aliasTbl.o$gene_id])
-	Symbol[!isSymbol][isalias]<-symb[match(aliasTbl.o$gene_id,symb$gene_id),]$symbol
-	Symbol	
+	isSymbol <- alias %in% Rkeys(get(SYMBOL))
+	Symbol <- alias
+	Symbol[!isSymbol] <- NA
+
+	OtherAliases <- alias[!isSymbol]
+	isAlias <- OtherAliases %in% Rkeys(get(ALIAS2EG))
+	if(!any(isAlias)) return(Symbol)
+	OtherAliases <- OtherAliases[isAlias]
+
+	AliasTbl <- toTable(get(ALIAS2EG)[OtherAliases])
+	d <- duplicated(AliasTbl$alias_symbol)
+	if(any(d)) warning("Multiple symbols ignored for one or more aliases")
+	SymbolTbl <- toTable(get(SYMBOL)[AliasTbl$gene_id])
+	m <- match(OtherAliases,AliasTbl$alias_symbol)
+	GeneID <- AliasTbl$gene_id[m]
+	m <- match(GeneID,SymbolTbl$gene_id)
+	Symbol[!isSymbol][isAlias] <- SymbolTbl$symbol[m]
+	Symbol
 }
 
