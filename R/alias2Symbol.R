@@ -32,7 +32,7 @@ alias2SymbolTable <- function(alias,species="Hs")
 #  Convert a vector of alias names to the vector of corresponding official gene symbols
 #  via Entrez Gene identifiers
 #  Di Wu, Gordon Smyth and Yifang Hu
-#  Created 3 Sep 2009.  Last modified 21 Dec 2012.
+#  Created 3 Sep 2009.  Last modified 23 Dec 2012.
 {
 	alias <- as.character(alias)
 	species <- match.arg(species,c("Dm","Hs","Mm","Rn"))
@@ -51,8 +51,7 @@ alias2SymbolTable <- function(alias,species="Hs")
 	OtherAliases <- OtherAliases[isAlias]
 
 	AliasTbl <- toTable(get(ALIAS2EG)[OtherAliases])
-	d <- duplicated(AliasTbl$alias_symbol)
-	if(any(d)) warning("Multiple symbols ignored for one or more aliases")
+	if(anyDuplicated(AliasTbl$alias_symbol)) warning("Multiple symbols ignored for one or more aliases")
 	SymbolTbl <- toTable(get(SYMBOL)[AliasTbl$gene_id])
 	m <- match(OtherAliases,AliasTbl$alias_symbol)
 	GeneID <- AliasTbl$gene_id[m]
