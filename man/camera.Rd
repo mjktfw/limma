@@ -21,17 +21,8 @@ interGeneCorrelation(y, design)
   \item{trend.var}{logical, should an empirical Bayes trend be estimated?  See \code{\link{eBayes}} for details.}
 } 
 
-\value{
-A numeric matrix with a row for each set and the following columns:
-\item{NGenes}{number of genes in set}
-\item{Correlation}{inter-gene correlation}
-\item{Down}{left-tail p-value}
-\item{Up}{right-tail p-value}
-\item{TwoSided}{two-tailed p-value}
-}
-
 \details{
-This function implements the camera gene set test proposed by Wu and Smyth (2012).
+\code{camera} and \code{interGeneCorrelation} implement methods proposed by Wu and Smyth (2012).
 \code{camera} performs a \emph{competitive} test in the sense defined by Goeman and Buhlmann (2007).
 It tests whether the genes in the set are highly ranked in terms of differential expression relative to genes not in the set.
 It has similar aims to \code{geneSetTest} but accounts for inter-gene correlation.
@@ -42,7 +33,33 @@ The design matrix for the experiment is specified as for the \code{\link{lmFit}}
 This allows users to focus on differential expression for any coefficient or contrast in a linear model by giving the vector of test statistic values.
 
 \code{camera} estimates p-values after adjusting the variance of test statistics by an estimated variance inflation factor.
-The inflation factor depends on estimated genewise correlation and the number of genes in the gene set. 
+The inflation factor depends on estimated genewise correlation and the number of genes in the gene set.
+
+\code{interGeneCorrelation} estimates the mean pair-wise correlation between a set of genes.
+}
+
+\value{
+\code{camera} returns a numeric matrix with a row for each set and the following columns:
+\item{NGenes}{number of genes in set}
+\item{Correlation}{inter-gene correlation}
+\item{Down}{left-tail p-value}
+\item{Up}{right-tail p-value}
+\item{TwoSided}{two-tailed p-value}
+
+\code{interGeneCorrelation} returns a list with components:
+\item{vif}{variance inflation factor}
+\item{correlation}{inter-gene correlation}
+}
+
+\author{Di Wu and Gordon Smyth}
+
+\references{
+Wu, D, and Smyth, GK (2012). Camera: a competitive gene set test accounting for inter-gene correlation.
+\emph{Nucleic Acids Research}. (Accepted 1 May 2012)
+
+Goeman, JJ, and Buhlmann, P (2007).
+Analyzing gene expression data in terms of gene sets: methodological issues.
+\emph{Bioinformatics} 23, 980-987. 
 }
 
 \seealso{
@@ -50,17 +67,6 @@ The inflation factor depends on estimated genewise correlation and the number of
 \code{\link{geneSetTest}},
 \code{\link{roast}},
 \code{\link{romer}}.
-}
-
-\author{Di Wu and Gordon Smyth}
-
-\references{
-Wu, D, and Smyth, GK (2012). Camera: a competitive gene set test accounting for inter-gene correlation.
-Submitted.
-
-Goeman, JJ, and Buhlmann, P (2007).
-Analyzing gene expression data in terms of gene sets: methodological issues.
-\emph{Bioinformatics} 23, 980-987. 
 }
 
 \examples{
