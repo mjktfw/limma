@@ -47,9 +47,8 @@ Barry, W.T., Nobel, A.B., and Wright, F.A. (2008).
 A statistical framework for testing functional categories in microarray data.
 \emph{Annals of Applied Statistics} 2, 286-315.
 
-Wu, D, and Smyth, GK (2012).
-Camera: a competitive gene set test accounting for inter-gene correlation.
-Submitted.
+Wu, D, and Smyth, GK (2012). Camera: a competitive gene set test accounting for inter-gene correlation.
+\emph{Nucleic Acids Research}. (Accepted 1 May 2012)
 
 Zar, JH (1999). \emph{Biostatistical Analysis 4th Edition}.
 Prentice-Hall International, Upper Saddle River, New Jersey.
