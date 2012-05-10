@@ -22,7 +22,7 @@ loessFit <- function(y, x, weights=NULL, span=0.3, bin=0.01/(2-is.null(weights))
 #	This function uses stats:::lowess if no weights and stats:::loess otherwise.
 #	It is intended to give a streamlined common interface to the two functions.
 #	Gordon Smyth
-#	28 June 2003.  Last revised 16 Feb 2004.
+#	28 June 2003.  Last revised 10 May 2012.
 
 	n <- length(y)
 	out <- list(fitted=rep(NA,n),residuals=rep(NA,n))
@@ -37,11 +37,11 @@ loessFit <- function(y, x, weights=NULL, span=0.3, bin=0.01/(2-is.null(weights))
 		iter <- iterations-1
 		delta = bin * diff(range(xobs))
 #		The .C("lowess" call is copied from stats:::lowess
-		smoothy <- .C("lowess", x = as.double(xobs[o]), as.double(yobs[o]), 
+		lo <- .C("lowess", x = as.double(xobs[o]), as.double(yobs[o]), 
 			nobs, as.double(span), as.integer(iter), as.double(delta), 
-			y = double(nobs), double(nobs), double(nobs), PACKAGE = "stats")$y[oo]
-		out$fitted[obs] <- smoothy
-		out$residuals[obs] <- yobs-smoothy
+			y = double(nobs), double(nobs), double(nobs), PACKAGE = "stats")
+		out$fitted[obs] <- lo$y[oo]
+		out$residuals[obs] <- lo[[9]][oo]
 	} else {
 		weights[!is.finite(weights)] <- 0
 		wobs <- weights[obs]

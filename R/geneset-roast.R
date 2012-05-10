@@ -14,7 +14,7 @@ function(object) print(object$p.value)
 roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999)
 # Rotation gene set testing for linear models
 # Gordon Smyth and Di Wu
-# Created 24 Apr 2008. Revised 11 Jan 2012.
+# Created 24 Apr 2008. Revised 10 May 2012.
 {
 	if(is.null(iset)) iset <- rep(TRUE,nrow(y))
 	y <- as.matrix(y)
@@ -98,7 +98,10 @@ roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",
 
 #	From here, all results are for set only
 	nset <- ncol(effects)
-	Y <- effects[-(1:p0),,drop=FALSE]
+	if(p0>0)
+		Y <- effects[-(1:p0),,drop=FALSE]
+	else
+		Y <- effects
 	YY <- colSums(Y^2)
 	B <- Y[1,]
 	modt <- signc*B/sd.post

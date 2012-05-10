@@ -1,3 +1,17 @@
+10 May 2012: limma 3.13.4
+
+- bug fix for roast() when the fitted model has only one coefficient.
+
+- minor code simplification in loessFit().
+
+2 May 2012: limma 3.13.3
+
+- help pages for camera() now cite published paper.
+
+23 April 2012: limma 3.13.2
+
+- any(duplicated()) replaced by anyDuplicated().
+
 22 April 2012: limma 3.13.1
 
 - code speed-up for alias2SymbolTable()
