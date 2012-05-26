@@ -55,7 +55,8 @@ The inflation factor depends on estimated genewise correlation and the number of
 
 \references{
 Wu, D, and Smyth, GK (2012). Camera: a competitive gene set test accounting for inter-gene correlation.
-\emph{Nucleic Acids Research}. (Accepted 1 May 2012)
+\emph{Nucleic Acids Research}, doi: 10.1093/nar/gks461.
+\url{http://nar.oxfordjournals.org/content/early/2012/05/24/nar.gks461.abstract}
 
 Goeman, JJ, and Buhlmann, P (2007).
 Analyzing gene expression data in terms of gene sets: methodological issues.
