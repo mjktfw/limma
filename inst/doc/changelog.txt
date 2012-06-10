@@ -1,3 +1,8 @@
+10 June 2012: limma 3.13.6
+
+- User's guide now has sections on reading single channel Agilent
+  and Illumina data.
+
 25 May 2012: limma 3.13.5
 
 - camera() reference is published.
