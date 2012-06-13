@@ -1,5 +1,21 @@
 #  SCORE.R
 
+zscore <- function(q, distribution=NULL, ...) 
+#  Z-score equivalents for deviates from specified distribution
+#  Gordon Smyth
+#  13 June 2012
+{
+	z <- q
+	n <- length(q)
+	pdist <- get(paste("p",as.character(distribution),sep=""))
+	pupper <- pdist(q,...,lower.tail=FALSE,log.p=TRUE)
+	plower <- pdist(q,...,lower.tail=TRUE,log.p=TRUE)
+	up <- pupper<plower
+	if(any(up)) z[up] <- qnorm(pupper[up],lower.tail=FALSE,log.p=TRUE)
+	if(any(!up)) z[!up] <- qnorm(plower[!up],lower.tail=TRUE,log.p=TRUE)
+	z
+}
+
 zscoreGamma <- function(q, shape, rate = 1, scale = 1/rate) 
 #  Z-score equivalents for gamma deviates
 #  Gordon Smyth

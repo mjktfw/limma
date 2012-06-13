@@ -1,3 +1,8 @@
+13 June 2012: limma 3.13.7
+
+- new function zscore(). Includes old functions zscoreGamma()
+  and zscoreT() as special cases.
+
 10 June 2012: limma 3.13.6
 
 - User's guide now has sections on reading single channel Agilent
