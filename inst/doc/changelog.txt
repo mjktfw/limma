@@ -1,3 +1,8 @@
+2 July 2012: limma 3.13.8
+
+- fix to voom() so that it computes weights correctly even when the
+  design matrix is not of full rank.
+
 13 June 2012: limma 3.13.7
 
 - new function zscore(). Includes old functions zscoreGamma()

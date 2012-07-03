@@ -62,7 +62,13 @@ voom <- function(counts,design=NULL,lib.size=NULL,normalize.method="none",plot=F
 	f <- approxfun(l, rule=2)
 
 #	Find individual quarterroot fitted counts
-	fitted.cpm <- 2^(fit$coef %*% t(fit$design))
+	if(fit$rank < ncol(design)) {
+		j <- fit$pivot[1:fit$rank]
+		fitted.values <- fit$coef[,j,drop=FALSE] %*% t(fit$design[,j,drop=FALSE])
+	} else {
+		fitted.values <- fit$coef %*% t(fit$design)
+	}
+	fitted.cpm <- 2^fitted.values
 	fitted.count <- 1e-6 * t(t(fitted.cpm)*(lib.size+1))
 	fitted.logcount <- log2(fitted.count)
 
