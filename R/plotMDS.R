@@ -33,7 +33,7 @@ plotMDS.MDS <- function(x,labels=colnames(x$distance.matrix),col=NULL,cex=1,dim.
 plotMDS.default <- function(x,top=500,labels=colnames(x),col=NULL,cex=1,dim.plot=c(1,2),ndim=max(dim.plot),gene.selection="pairwise",xlab=paste("Dimension",dim.plot[1]),ylab=paste("Dimension",dim.plot[2]),...)
 #	Multi-dimensional scaling with top-distance
 #	Di Wu and Gordon Smyth
-#	19 March 2009.  Last modified 21 May 2011.
+#	19 March 2009.  Last modified 8 July 2012.
 {
 	x <- as.matrix(x)
 
@@ -47,6 +47,7 @@ plotMDS.default <- function(x,top=500,labels=colnames(x),col=NULL,cex=1,dim.plot
 	nsamples <- ncol(x)
 	if(ndim < 2) stop("Need at least two dim.plot")
 	if(nsamples < ndim) stop("Two few samples")
+	top <- min(top,nprobes)
 
 	gene.selection <- match.arg(gene.selection,c("pairwise","common"))
 

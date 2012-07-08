@@ -1,3 +1,8 @@
+8 July 2012: limma 3.13.9
+
+- plotMDS() no longer gives an error when the requested number of top
+  genes is greater than the total number of rows of data.
+
 2 July 2012: limma 3.13.8
 
 - fix to voom() so that it computes weights correctly even when the
