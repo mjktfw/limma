@@ -28,22 +28,22 @@ numeric value giving the estimated p-value.
 }
 
 \details{
-\code{wilcoxGST} is a synonym for \code{geneSetTest} with \code{ranks.only=TRUE}.
-This test procedure was developed by Michaud et al (2008), who called it \emph{mean-rank gene-set enrichment}.
-
-These functions compute a p-value to test the hypothesis that the (indexed) test set of genes tends to be more highly ranked in terms of some test statistic compared to randomly chosen genes.
+These functions compute a p-value to test the hypothesis that the indexed test set of genes tends to be more highly ranked in terms of some test statistic compared to randomly chosen genes.
 The statistic might be any statistic of interest, for example a t-statistic or F-statistic for differential expression.
-
-These functions perform \emph{competitive} tests in the sense that genes in the test set are compared to other genes (Goeman and Buhlmann, 2007).
-By contrast, a \emph{self-contained} gene set test such as \code{\link{roast}} tests for differential expression for the test set only without regard to other genes on the array.
 Like all gene set tests, these functions can be used to detect differential expression for a group of genes, even when the effects are too small or there is too little data to detect the genes individually.
-The also provides a means to compare the results between different experiments.
 
-Because it is based on permuting genes, \code{geneSetTest} assumes that the different genes (or probes) are independent.
+\code{wilcoxGST} is a synonym for \code{geneSetTest} with \code{ranks.only=TRUE}.
+This version of the test procedure was developed by Michaud et al (2008), who called it \emph{mean-rank gene-set enrichment}.
+
+\code{geneSetTest} performs a \emph{competitive} test in the sense that genes in the test set are compared to other genes (Goeman and Buhlmann, 2007).
+If the \code{statistic} is a genewise test statistic for differential expression,
+then \code{geneSetTest} tests whether genes in the set are more differentially expressed than genes not in the set.
+By contrast, a \emph{self-contained} gene set test such as \code{\link{roast}} tests whether genes in the test set are differentially expressed, in an absolute sense, without regard to any other genes on the array.
+
+Because it is based on permuting genes, \code{geneSetTest} assumes that the different genes (or probes) are statistically independent.
 (Strictly speaking, it assumes that the genes in the set are no more correlated on average than randomly chosen genes.)
-This assumption may be reasonable if the gene set is relatively small and if there is relatively little genotypic variation in the data, for example if the data is obtained from genetically identical inbred mice.
-The independence assumption may be misleading if the gene set is large or if the data contains a lot of genotypic variation, for example for human cancer samples.
-These assumptions, when valid, permit a much quicker and more powerful significance test to be conducted.
+If inter-gene correlations are present, then a statistically significant result from \code{geneSetTest} indicates either that the set is highly ranked or that the genes in the set are positively correlated on average (Wu and Smyth, 2012).
+Unless gene sets with positive correlations are particularly of interest, it may be advisable to use \code{\link{camera}} instead to adjust the test for inter-gene correlations.
 
 The \code{statistics} are usually a set of probe-wise statistics arising for some comparison from a microarray experiment.
 They may be t-statistics, meaning that the genewise null hypotheses would be rejected for large positive or negative values, or they may be F-statistics, meaning that only large values are significant.
@@ -69,7 +69,7 @@ If \code{ranks.only} is \code{FALSE}, then the p-value is obtained by simulation
 }
 
 \note{
-This function does not does allow for inter-gene correlation.
+This function does not does correct for inter-gene correlation, so it is more likely to assign small p-values to sets containing positive correlated genes.
 For this reason, the alternative \code{camera} is now recommended over \code{geneSetTest} in those contexts for which \code{camera} is applicable.
 }
 
@@ -82,6 +82,10 @@ An overview of tests in limma is given in \link{08.Tests}.
 \author{Gordon Smyth and Di Wu}
 
 \references{
+Wu, D, and Smyth, GK (2012). Camera: a competitive gene set test accounting for inter-gene correlation.
+\emph{Nucleic Acids Research}, doi: 10.1093/nar/gks461.
+\url{http://nar.oxfordjournals.org/content/early/2012/05/24/nar.gks461.abstract}
+
 Goeman, JJ, and Buhlmann P (2007).
 Analyzing gene expression data in terms of gene sets: methodological issues.
 \emph{Bioinformatics} 23, 980-987. 
