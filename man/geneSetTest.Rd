@@ -44,6 +44,8 @@ Because it is based on permuting genes, \code{geneSetTest} assumes that the diff
 (Strictly speaking, it assumes that the genes in the set are no more correlated on average than randomly chosen genes.)
 If inter-gene correlations are present, then a statistically significant result from \code{geneSetTest} indicates either that the set is highly ranked or that the genes in the set are positively correlated on average (Wu and Smyth, 2012).
 Unless gene sets with positive correlations are particularly of interest, it may be advisable to use \code{\link{camera}} instead to adjust the test for inter-gene correlations.
+Inter-gene correlations are likely to be present in differential expression experiments with biologically heterogeneous experimental units.
+On the other hand, the assumption of independence between genes should hold when the replicates are purely technical, i.e., when there is no biological variability between the replicate arrays in each experimental condition.
 
 The \code{statistics} are usually a set of probe-wise statistics arising for some comparison from a microarray experiment.
 They may be t-statistics, meaning that the genewise null hypotheses would be rejected for large positive or negative values, or they may be F-statistics, meaning that only large values are significant.
