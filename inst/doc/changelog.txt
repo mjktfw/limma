@@ -1,5 +1,10 @@
 18 July 2012: limma 3.13.11
 
+- new section on nested interactions for factorial designs in User's
+  Guide.
+
+18 July 2012: limma 3.13.11
+
 - new section on multi-level designs in User's Guide.
 
 16 July 2012: limma 3.13.10
