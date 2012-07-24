@@ -14,7 +14,7 @@ plotMDS.MDS <- function(x,labels=colnames(x$distance.matrix),col=NULL,cex=1,dim.
 #	Method for MDS objects
 #	Create a new plot using MDS coordinates or distances previously created
 #	Gordon Smyth
-#	21 May 2011
+#	21 May 2011.  Last modified 24 June 2012.
 {
 #	Are new dimensions requested?
 	if(!all(dim.plot==x$dim.plot)) {
@@ -23,9 +23,16 @@ plotMDS.MDS <- function(x,labels=colnames(x$distance.matrix),col=NULL,cex=1,dim.
 		x$x <- x$cmdscale.out[,dim.plot[1]]
 		x$y <- x$cmdscale.out[,dim.plot[2]]
 	}
-#	Redo plot
-	plot(x$x,x$y,type="n",xlab=xlab,ylab=ylab,...)
+
+#	Estimate width of labels in plot coordinates.
+#	Estimate will be ok for default plot width, but maybe too small for smaller plots.
 	if(is.null(labels)) labels <- 1:length(x$x)
+	StringRadius <- 0.01*cex*nchar(labels)
+	left.x <- x$x-StringRadius
+	right.x <- x$x+StringRadius
+
+#	Redo plot
+	plot(c(left.x,right.x),c(x$y,x$y),type="n",xlab=xlab,ylab=ylab,...)
 	text(x$x,x$y,labels=labels,col=col,cex=cex)
 	return(invisible(x))
 }

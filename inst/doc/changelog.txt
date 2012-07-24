@@ -1,11 +1,15 @@
-22 July 2012: limma 3.13.12
+24 July 2012: limma 3.13.14
+
+- plotMDS() now tries to make room on the plot for wider text labels.
+
+22 July 2012: limma 3.13.13
 
 - Update to User's Guide.  The chapter on experimental designs has
   been split into three on single-channel, common reference and
   two-color respectively.  The material on the fixed effect approach
   to technical replication has been deleted.
 
-18 July 2012: limma 3.13.11
+18 July 2012: limma 3.13.12
 
 - new section on nested interactions for factorial designs in User's
   Guide.
