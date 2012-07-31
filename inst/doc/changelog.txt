@@ -1,3 +1,13 @@
+31 July 2012: limma 3.13.16
+
+- updating links to Apoa1, Weaver and Bob1 case study datasets in
+  User's Guide.
+
+30 July 2012: limma 3.13.15
+
+- new function propTrueNull() for fast estimation of the proportion
+  of true null hypotheses from a vector of p-values.
+
 24 July 2012: limma 3.13.14
 
 - plotMDS() now tries to make room on the plot for wider text labels.
