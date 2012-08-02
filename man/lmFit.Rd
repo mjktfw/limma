@@ -22,7 +22,7 @@ Object of class \code{\link[limma:marraylm]{MArrayLM}}
 }
 
 \details{
-This function fits multiple linear models.
+This function fits multiple linear models by weighted or generalized least squares.
 It accepts data from a experiment involving a series of microarrays with the same set of probes.
 A linear model is fitted to the expression data for each probe.
 The expression data should be log-ratios for two-color array platforms or log-expression values for one-channel platforms.
