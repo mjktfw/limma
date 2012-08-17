@@ -19,9 +19,9 @@ loessFit(y, x, weights=NULL, span=0.3, bin=0.01/(2-is.null(weights)), iterations
 }
 
 \details{
-This is a wrapper function to the Fortran and C code in the stats package which underlies the \code{lowess} and \code{loess} functions.
+This function calls the \code{lowess} function when \code{weights=NULL} and \code{stats:::simpleLoess} otherwise.
 Its purpose is to give a unified and streamlined interface to \code{lowess} and \code{loess} for use in \code{\link{normalizeWithinArrays}}.
-When \code{weights} is null, this function is in effect a call to \code{lowess} in the stats package, with appropropriate choice of tuning parameters.
+When \code{weights} is null, this function call \code{lowess} in the stats package with appropropriate choice of tuning parameters.
 When \code{weights} is non-null, it is in effect a call to \code{loess} with \code{degree=1}.
 See the help pages for those functions for references and credits.
 
@@ -44,7 +44,7 @@ A list with components
 \item{residuals}{numeric vector of same length as \code{x} giving residuals from the fit}
 }
 
-\author{Gordon Smyth, based on code from \code{lowess} and \code{loess} by BD Ripley}
+\author{Gordon Smyth}
 
 \seealso{
 See \code{\link[stats]{lowess}} and \code{\link[stats]{loess}} in the stats package.
@@ -58,11 +58,11 @@ x <- rnorm(1000)
 w <- rep(1,1000)
 # The following are equivalent apart from execution time
 # and interpolation inaccuracies
-system.time(fit <- loessFit(y,x)$fitted)
-system.time(fit <- loessFit(y,x,w)$fitted)
-system.time(fit <- fitted(loess(y~x,weights=w,span=0.3,family="symmetric",iterations=4)))
+fit1 <- loessFit(y,x)$fitted
+fit2 <- loessFit(y,x,w)$fitted
+fit3 <- fitted(loess(y~x,weights=w,span=0.3,family="symmetric",iterations=4))
 # The same but with sorted x-values
-system.time(fit <- lowess(x,y,f=0.3)$y)
+fit4 <- lowess(x,y,f=0.3)$y
 }
 
 \keyword{models}

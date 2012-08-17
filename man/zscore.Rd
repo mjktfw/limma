@@ -7,7 +7,7 @@
 \title{Z-score Equivalents}
 
 \description{
-Compute z-score equivalents of gamma or t-distribution random deviates.
+Compute z-score equivalents of non-normal random deviates.
 }
 
 \usage{
