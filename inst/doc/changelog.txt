@@ -1,6 +1,14 @@
+13 Sep 2012: limma 3.3.18
+
+- loessFit() now applied minimum and maximum bounds to avoid zero or
+  infinite weights.  Equal weights are now treated as NULL, even all
+  zero weights, so that lowess is called instead of loess.
+
+- plotMDS() now coerces labels to be character.
+
 17 Aug 2012: limma 3.3.17
 
-- limma license upgraded to GPL-2 instead of LGPL to match R itself.
+- limma license upgraded to GPL (>=2) instead of LGPL to match R itself.
 
 - loessFit() no longer makes direct calls to foreign language
   functions in the stats package.  Same values are returned as before,

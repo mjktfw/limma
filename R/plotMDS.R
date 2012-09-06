@@ -14,7 +14,7 @@ plotMDS.MDS <- function(x,labels=colnames(x$distance.matrix),col=NULL,cex=1,dim.
 #	Method for MDS objects
 #	Create a new plot using MDS coordinates or distances previously created
 #	Gordon Smyth
-#	21 May 2011.  Last modified 24 June 2012.
+#	21 May 2011.  Last modified 6 Sep 2012.
 {
 #	Are new dimensions requested?
 	if(!all(dim.plot==x$dim.plot)) {
@@ -27,6 +27,7 @@ plotMDS.MDS <- function(x,labels=colnames(x$distance.matrix),col=NULL,cex=1,dim.
 #	Estimate width of labels in plot coordinates.
 #	Estimate will be ok for default plot width, but maybe too small for smaller plots.
 	if(is.null(labels)) labels <- 1:length(x$x)
+	labels <- as.character(labels)
 	StringRadius <- 0.01*cex*nchar(labels)
 	left.x <- x$x-StringRadius
 	right.x <- x$x+StringRadius
@@ -40,25 +41,33 @@ plotMDS.MDS <- function(x,labels=colnames(x$distance.matrix),col=NULL,cex=1,dim.
 plotMDS.default <- function(x,top=500,labels=colnames(x),col=NULL,cex=1,dim.plot=c(1,2),ndim=max(dim.plot),gene.selection="pairwise",xlab=paste("Dimension",dim.plot[1]),ylab=paste("Dimension",dim.plot[2]),...)
 #	Multi-dimensional scaling with top-distance
 #	Di Wu and Gordon Smyth
-#	19 March 2009.  Last modified 8 July 2012.
+#	19 March 2009.  Last modified 6 Sep 2012.
 {
+#	Check x
 	x <- as.matrix(x)
-
-#	Remove rows with missing or Inf values
-	ok <- is.finite(x)
-	if(!all(ok)) x <- x[apply(ok,1,all),]
-
-	if(is.null(labels)) labels<-1:dim(x)[2]
-
-	nprobes <- nrow(x)
 	nsamples <- ncol(x)
-	if(ndim < 2) stop("Need at least two dim.plot")
-	if(nsamples < ndim) stop("Two few samples")
+	cn <- colnames(x)
+#	Remove rows with missing or Inf values
+	bad <- rowSums(is.finite(x)) < nsamples
+	if(any(bad)) x <- x[!bad,,drop=FALSE]
+	nprobes <- nrow(x)
+
+#	Check top
 	top <- min(top,nprobes)
 
+#	Check labels
+	if(is.null(labels)) labels <- 1:nsamples
+	labels <- as.character(labels)
+
+#	Check dim
+	if(ndim < 2) stop("Need at least two dim.plot")
+	if(nsamples < ndim) stop("Two few samples")
+	if(nprobes < ndim) stop("Too few rows")
+
+#	Check gene.selection
 	gene.selection <- match.arg(gene.selection,c("pairwise","common"))
 
-	cn <- colnames(x)
+#	Distance matrix from pairwise leading fold changes
 	dd <- matrix(0,nrow=nsamples,ncol=nsamples,dimnames=list(cn,cn))
 	topindex <- nprobes-top+1
 	if(gene.selection=="pairwise") {
@@ -75,7 +84,10 @@ plotMDS.default <- function(x,top=500,labels=colnames(x),col=NULL,cex=1,dim.plot
 			dd[i,1:(i-1)]=sqrt(colMeans((x[,i]-x[,1:(i-1),drop=FALSE])^2))
 	}
 
+#	Multi-dimensional scaling
 	a1 <- cmdscale(as.dist(dd),k=ndim)
+
+#	Make MDS object and call plotMDS method
 	mds <- new("MDS",list(dim.plot=dim.plot,distance.matrix=dd,cmdscale.out=a1,top=top,gene.selection=gene.selection))
 	mds$x <- a1[,dim.plot[1]]
 	mds$y <- a1[,dim.plot[2]]
