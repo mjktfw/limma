@@ -1,6 +1,11 @@
-13 Sep 2012: limma 3.3.18
+6 Sep 2012: limma 3.3.19
 
-- loessFit() now applied minimum and maximum bounds to avoid zero or
+- loessFit() calls to foreign language code in the stats package is
+  restored.  Will be removed for R 2.16.X.
+
+6 Sep 2012: limma 3.3.18
+
+- loessFit() now applies minimum and maximum bounds to avoid zero or
   infinite weights.  Equal weights are now treated as NULL, even all
   zero weights, so that lowess is called instead of loess.
 
@@ -11,7 +16,7 @@
 - limma license upgraded to GPL (>=2) instead of LGPL to match R itself.
 
 - loessFit() no longer makes direct calls to foreign language
-  functions in the stats package.  Same values are returned as before,
+  code in the stats package.  Same values are returned as before,
   but now take 25-30% longer whenever weights are used.
 
 31 July 2012: limma 3.13.16
