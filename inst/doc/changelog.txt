@@ -1,6 +1,12 @@
+9 Sep 2012: limma 3.3.20
+
+- New argument 'file' for convest(), implementing edits contributed
+  by Marcus Davy.  Arguments doplot and dereport renamed to 'plot'
+  and 'report'.
+
 6 Sep 2012: limma 3.3.19
 
-- loessFit() calls to foreign language code in the stats package is
+- loessFit() calls to foreign language code in the stats package are
   restored.  Will be removed for R 2.16.X.
 
 6 Sep 2012: limma 3.3.18

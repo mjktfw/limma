@@ -10,14 +10,16 @@ Estimate the proportion of true null hypotheses from a vector of p-values.
 
 \usage{
 propTrueNull(p)
-convest(p, niter = 100, doplot = FALSE, doreport = FALSE)
+convest(p, niter = 100, plot = FALSE, report = FALSE, file="", tol=1e-6)
 }
 
 \arguments{
   \item{p}{numeric vector of p-values.}
   \item{niter}{number of iterations to be used in fitting the convex, decreasing density for the p-values.}
-  \item{doplot}{logical, should updated plots of fitted convex decreasing p-value density be produced at each iteration?}
-  \item{doreport}{logical, should the estimated proportion be printed at each iteration?}
+  \item{plot}{logical, should updated plots of fitted convex decreasing p-value density be produced at each iteration?}
+  \item{report}{logical, should the estimated proportion be printed at each iteration?}
+  \item{file}{name of file to which to write the report. Defaults to standard output.}
+  \item{tol}{accuracy of the bisectional search for finding a new convex combination of the current iterate and the mixing density}
 }
 
 \details{
@@ -38,7 +40,7 @@ to DNA microarray data.
 Preprint at \url{http://www.math.ntnu.no/~mettela/pi0.imf}
 }
 
-\author{Belinda Phipson and Gordon Smyth for \code{propTrueNull}, Egil Ferkingstad and Mette Langaas for \code{convest}}
+\author{Belinda Phipson and Gordon Smyth for \code{propTrueNull}; Egil Ferkingstad, Mette Langaas and Marcus Davy for \code{convest}}
 
 \seealso{
 See \link{08.Tests} for other functions for producing or interpreting p-values.
