@@ -1,3 +1,7 @@
+25 Sep 2012: limma 3.3.21
+
+- Minor edits to CITATION file and to User's Guide introduction.
+
 9 Sep 2012: limma 3.3.20
 
 - New argument 'file' for convest(), implementing edits contributed
