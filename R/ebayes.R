@@ -138,19 +138,28 @@ fitFDist <- function(x,df1,covariate=NULL)
 #	Moment estimation of the parameters of a scaled F-distribution
 #	The first degrees of freedom are given
 #	Gordon Smyth and Belinda Phipson
-#	8 Sept 2002.  Last revised 27 Oct 2010.
+#	8 Sept 2002.  Last revised 26 Sep 2012.
 {
+	if(!is.null(covariate)) {
+		if(length(covariate) != length(x)) stop("covariate and x must be of same length")
+		if(any(is.na(covariate))) stop("NA covariate values not allowed")
+	}
 #	Remove missing or infinite values and zero degrees of freedom
-	o <- is.finite(x) & is.finite(df1) & (x >= 0) & (df1 > 0)
-	if(any(!o)) {
-		if(!is.null(covariate)) stop("non-usable values of x or df1 with a covariate")
-		x <- x[o]
-		df1 <- df1[o]
+	ok <- is.finite(x) & is.finite(df1) & (x > -1e-15) & (df1 > 0)
+	notallok <- !all(ok)
+	if(notallok) {
+		x <- x[ok]
+		df1 <- df1[ok]
+		if(!is.null(covariate)) {
+			covariate2 <- covariate[!ok]
+			covariate <- covariate[ok]
+		}
 	}
 	n <- length(x)
 	if(n==0) return(list(scale=NA,df2=NA))
 
 #	Avoid exactly zero values
+	x <- pmax(x,0)
 	m <- median(x)
 	if(m==0) {
 		warning("More than half of residual variances are exactly zero: eBayes unreliable")
@@ -172,7 +181,14 @@ fitFDist <- function(x,df1,covariate=NULL)
 		design <- try(ns(covariate,df=4,intercept=TRUE),silent=TRUE)
 		if(is(design,"try-error")) stop("Problem with covariate; perhaps too few distinct values")
 		fit <- lm.fit(design,e)
-		emean <- fit$fitted
+		if(notallok) {
+			design2 <- predict(design,newx=covariate2)
+			emean <- rep.int(0,n+length(covariate2))
+			emean[ok] <- fit$fitted
+			emean[!ok] <- design2 %*% fit$coefficients
+		} else {
+			emean <- fit$fitted
+		}
 		evar <- mean(fit$residuals[-(1:fit$rank)]^2)
 	}
 	evar <- evar - mean(trigamma(df1/2))

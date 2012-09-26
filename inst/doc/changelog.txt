@@ -1,3 +1,10 @@
+26 Sep 2012: limma 3.3.22
+
+- fitFDist() now permits missing values for x or zero values for df1
+  with a non-null covariate.  This means that squeezeVar() and
+  eBayes() now work with trends even when not all the data values
+  are informative.
+
 25 Sep 2012: limma 3.3.21
 
 - Minor edits to CITATION file and to User's Guide introduction.

@@ -208,6 +208,8 @@ avereps(x)
 ### roast
 
 y <- matrix(rnorm(100*4),100,4)
+sigma <- sqrt(2/rchisq(100,df=7))
+y <- y*sigma
 design <- cbind(Intercept=1,Group=c(0,0,1,1))
 iset1 <- 1:5
 y[iset1,3:4] <- y[iset1,3:4]+3
@@ -216,3 +218,23 @@ roast(iset1,y,design,contrast=2)
 roast(iset1,y,design,contrast=2,array.weights=c(0.5,1,0.5,1))
 mroast(list(set1=iset1,set2=iset2),y,design,contrast=2)
 mroast(list(set1=iset1,set2=iset2),y,design,contrast=2,gene.weights=runif(100))
+
+### eBayes with trend
+
+y <- new("EList",list(E=y))
+fit <- lmFit(y,design)
+fit <- eBayes(fit,trend=TRUE)
+topTable(fit,coef=2)
+fit$df.prior
+fit$s2.prior
+summary(fit$s2.post)
+
+y$E[1,1] <- NA
+y$E[1,3] <- NA
+fit <- lmFit(y,design)
+fit <- eBayes(fit,trend=TRUE)
+topTable(fit,coef=2)
+fit$df.residual[1]
+fit$df.prior
+fit$s2.prior
+summary(fit$s2.post)
