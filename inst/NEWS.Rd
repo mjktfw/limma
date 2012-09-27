@@ -38,6 +38,10 @@ New function zscore() to compute z-score equivalents for deviates from any conti
 Includes the functionality of the older functions zscoreGamma() and zscoreT() as special cases.
 
 \item
+roast() now accepts observation level weights, through a new
+  argument 'weights'.
+
+\item
 loessFit() now applies minimum and maximum bounds by default to avoid zero or
   infinite weights.  Equal weights are now treated as if the weights were NULL, even all
   zero weights, so that the lowess code is called instead of the loess code.

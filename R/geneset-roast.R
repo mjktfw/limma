@@ -11,22 +11,33 @@ setMethod("show","Roast",
 function(object) print(object$p.value)
 )
 
-roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999)
+##  ROAST.R
+
+roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999)
 # Rotation gene set testing for linear models
 # Gordon Smyth and Di Wu
-# Created 24 Apr 2008. Revised 10 May 2012.
+# Created 24 Apr 2008. Revised 27 Sep 2012.
 {
-	if(is.null(iset)) iset <- rep(TRUE,nrow(y))
+#	Check y
+	if(is(y,"EList") || is(y,"MAList")) {
+		if(is.null(design)) design <- as.matrix(y$design)
+		if(is.null(weights)) weights <- as.matrix(y$weights)
+	}
 	y <- as.matrix(y)
-	design <- as.matrix(design)
-	if(!is.null(df.prior) && df.prior<0) stop("df.prior must be non-negative")
-	
-	p <- ncol(design)
-	p0 <- p-1
 	ngenes <- nrow(y)
 	n <- ncol(y)
+
+#	Check iset
+	if(is.null(iset)) iset <- rep.int(TRUE,ngenes)
+
+#	Check design
+	design <- as.matrix(design)
+	if(nrow(design) != n) stop("row dimension of design matrix must match column dimension of data")
+	p <- ncol(design)
+	p0 <- p-1
 	d <- n-p
 
+#	Check contrast
 	if(length(contrast) == 1) {
 		u <- rep.int(0,p)
 		u[contrast] <- 1
@@ -34,16 +45,26 @@ roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",
 	}
 	if(length(contrast) != p) stop("length of contrast must match column dimension of design")
 	if(all(contrast==0)) stop("contrast all zero")
-	if(nrow(design) != n) stop("row dimension of design matrix must match column dimension of data")
 
+#	Check set.statistic
+	set.statistic <- match.arg(set.statistic,c("mean","floormean","mean50","msq"))
+
+#	Check var.prior and df.prior
+	if(!is.null(var.prior) && var.prior<0) stop("var.prior must be non-negative")
+	if(!is.null(df.prior) && df.prior<0) stop("df.prior must be non-negative")
+	
+#	Check and divide out array weights
 	if(!is.null(array.weights)) {
+		if(!is.null(weights)) stop("Can't use array.weights with weights")
 		if(any(array.weights <= 0)) stop("array.weights must be positive")
 		if(length(array.weights) != n) stop("Length of array.weights doesn't match number of array")
 		design <- design*sqrt(array.weights)
 		y <- t(t(y)*sqrt(array.weights))
 	}
 
+#	Check and divide out block correlation
 	if(!is.null(block)) {
+		if(!is.null(weights)) stop("Can't use block with weights")
 		block <- as.vector(block)
 		if (length(block) != n) stop("Length of block does not match number of arrays")
 		ub <- unique(block)
@@ -56,7 +77,13 @@ roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",
 		design <- backsolve(R, design, transpose = TRUE)
  	}
 
-	set.statistic <- match.arg(set.statistic,c("mean","floormean","mean50","msq"))
+#	Check weights
+	if(!is.null(weights)) {
+		weights <- as.matrix(weights)
+		d <- dim(weights)
+		if(d[1]!=ngenes || d[2]!=n) stop("weights must have same dimensions as y")
+		if(any(weights<=0)) stop("weights must be positive")
+	}
 
 #	Reform design matrix so that contrast of interest is last column
 	qr <- qr(contrast)
@@ -66,11 +93,24 @@ roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",
 	X <- design %*% Q
 	qr <- qr(X)
 	sign2 <- sign(qr$qr[p,p])
-	signc <- sign1 * sign2
 
 	if(is.null(var.prior) || is.null(df.prior)) {
 #		Fit model to all genes
-		effects <- qr.qty(qr,t(y))
+		if(is.null(weights)) {
+			effects <- qr.qty(qr,t(y))
+		} else {
+			ws <- sqrt(weights)
+			effects <- matrix(0,n,ngenes)
+			sign2 <- rep.int(0,ngenes)
+			for (g in 1:ngenes) {
+				wX <- X*ws[g,]
+				wy <- y[g,]*ws[g,]
+				qrX <- qr(wX)
+				sign2[g] <- sign(qrX$qr[p,p])
+				effects[,g] <- qr.qty(qrX,wy)
+			}
+			sign2 <- sign2[iset]
+		}
 #		Estimate global parameters s0 and d0
 		s2 <- colMeans(effects[-(1:p),,drop=FALSE]^2)
 		if(trend.var) covariate <- rowMeans(y,na.rm=TRUE) else covariate <- NULL
@@ -88,7 +128,21 @@ roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",
 			s02 <- s02[iset]
 		}
 		y <- y[iset,,drop=FALSE]
-		effects <- qr.qty(qr,t(y))
+		if(is.null(weights)) {
+			effects <- qr.qty(qr,t(y))
+		} else {
+			ws <- sqrt(weights[iset,,drop=FALSE])
+			nset <- nrow(y)
+			effects <- matrix(0,n,nset)
+			sign2 <- rep.int(0,nset)
+			for (g in 1:nset) {
+				wX <- X*ws[g,]
+				wy <- y[g,]*ws[g,]
+				qrX <- qr(wX)
+				sign2[g] <- sign(qrX$qr[p,p])
+				effects[,g] <- qr.qty(qrX,wy)
+			}
+		}
 		s2 <- colMeans(effects[-(1:p),,drop=FALSE]^2)
 		if(is.finite(d0))
 			sd.post <- sqrt( (d0*s02+d*s2)/(d0+d) )
@@ -104,6 +158,7 @@ roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",
 		Y <- effects
 	YY <- colSums(Y^2)
 	B <- Y[1,]
+	signc <- sign1*sign2
 	modt <- signc*B/sd.post
 
 	statobs <- p <- rep(0,3)
@@ -226,7 +281,6 @@ roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",
 	dimnames(out) <- list(c("Down","Up","Mixed"),c("Active.Prop","P.Value"))
 	new("Roast",list(p.value=out,var.prior=s02,df.prior=d0))
 }
-
 
 mroast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE)
 #  Rotation gene set testing with multiple sets

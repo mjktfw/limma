@@ -1,3 +1,8 @@
+27 Sep 2012: limma 3.13.24
+
+- roast() now accepts observation level weights, through a new
+  argument 'weights'.
+
 27 Sep 2012: limma 3.13.23
 
 - Update NEWS.Rd ready for Bioconductor 2.11 release.
