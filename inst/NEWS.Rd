@@ -2,6 +2,85 @@
 \title{limma News}
 \encoding{UTF-8}
 
+
+\section{Version 3.14.0}{\itemize{
+
+\item
+limma license upgraded to GPL (>=2) instead of LGPL to match R itself.
+
+\item
+Many updates to the User's Guide. 
+Sections have been added on reading single channel Agilent and Illumina data.
+The chapter on experimental designs has been split into three chapters on single-channel, common reference and
+two-color designs respectively.  The material on the fixed effect approach
+  to technical replication has been deleted.
+There are new sections on nested interactions for factorial designs
+and on multi-level designs.
+
+\item
+The links to the Apoa1, Weaver and Bob1 datasets in the User's Guide have been updated
+to help users download the data themselves if they wish to repeat the case study analyses.
+
+\item
+The help page for camera() now cites published paper Wu and Smyth (NAR, 2012).
+In view of the results of this paper, the claim is no longer made on help page for geneSetTest()
+  that genes might be treated as independent when the experimental
+  units are genetically identical mice.
+
+\item
+Minor edits to CITATION file.
+
+\item
+New function propTrueNull() for fast estimation of the proportion of true null hypotheses from a vector of p-values.
+
+\item
+New function zscore() to compute z-score equivalents for deviates from any continuous distribution.
+Includes the functionality of the older functions zscoreGamma() and zscoreT() as special cases.
+
+\item
+loessFit() now applies minimum and maximum bounds by default to avoid zero or
+  infinite weights.  Equal weights are now treated as if the weights were NULL, even all
+  zero weights, so that the lowess code is called instead of the loess code.
+
+\item
+When there are no weights, loessFit() now extracts residuals
+directly from the C code output instead of computing in R.
+
+\item
+  fitFDist() now permits missing values for x or zero values for df1
+  even when there is a covariate.  This means that squeezeVar() and
+  eBayes() now work with trends even when not all the data values
+  are informative.
+
+\item
+New argument 'file' for convest(), implementing edits contributed
+  by Marcus Davy.  Arguments doplot and dereport renamed to 'plot'
+  and 'report'.
+
+\item
+Two improvements for plotMDS().
+It now coerces labels to be character, and now makes extra room on the plot when the text labels are wide.
+
+\item
+plotMDS() no longer gives an error when the requested number of top
+  genes is greater than the total number of rows of data.
+
+\item
+Code speed-up for alias2SymbolTable()
+
+\item
+any(duplicated()) replaced by anyDuplicated() in several functions.
+
+\item
+Fix to voom() so that it computes weights correctly even when the
+  design matrix is not of full rank.
+
+\item
+Bug fix for roast() when the fitted model has only one coefficient.
+
+}}
+
+
 \section{Version 3.12.0}{\itemize{
 
 \item
