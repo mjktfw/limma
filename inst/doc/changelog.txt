@@ -1,3 +1,7 @@
+1 Oct 2012: limma 3.13.35
+
+- Two bug fixes for roast() when there are observational weights.
+
 27 Sep 2012: limma 3.13.24
 
 - roast() now accepts observation level weights, through a new

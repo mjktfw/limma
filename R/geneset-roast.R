@@ -16,12 +16,12 @@ function(object) print(object$p.value)
 roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999)
 # Rotation gene set testing for linear models
 # Gordon Smyth and Di Wu
-# Created 24 Apr 2008. Revised 27 Sep 2012.
+# Created 24 Apr 2008. Revised 1 Oct 2012.
 {
 #	Check y
 	if(is(y,"EList") || is(y,"MAList")) {
 		if(is.null(design)) design <- as.matrix(y$design)
-		if(is.null(weights)) weights <- as.matrix(y$weights)
+		if(is.null(weights)) weights <- y$weights
 	}
 	y <- as.matrix(y)
 	ngenes <- nrow(y)
@@ -80,8 +80,8 @@ roast <- function(iset=NULL,y,design,contrast=ncol(design),set.statistic="mean",
 #	Check weights
 	if(!is.null(weights)) {
 		weights <- as.matrix(weights)
-		d <- dim(weights)
-		if(d[1]!=ngenes || d[2]!=n) stop("weights must have same dimensions as y")
+		dimw <- dim(weights)
+		if(dimw[1]!=ngenes || dimw[2]!=n) stop("weights must have same dimensions as y")
 		if(any(weights<=0)) stop("weights must be positive")
 	}
 
