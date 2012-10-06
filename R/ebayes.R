@@ -138,14 +138,14 @@ fitFDist <- function(x,df1,covariate=NULL)
 #	Moment estimation of the parameters of a scaled F-distribution
 #	The first degrees of freedom are given
 #	Gordon Smyth and Belinda Phipson
-#	8 Sept 2002.  Last revised 26 Sep 2012.
+#	8 Sept 2002.  Last revised 4 Oct 2012.
 {
 	if(!is.null(covariate)) {
 		if(length(covariate) != length(x)) stop("covariate and x must be of same length")
 		if(any(is.na(covariate))) stop("NA covariate values not allowed")
 	}
 #	Remove missing or infinite values and zero degrees of freedom
-	ok <- is.finite(x) & is.finite(df1) & (x > -1e-15) & (df1 > 0)
+	ok <- is.finite(x) & is.finite(df1) & (x > -1e-15) & (df1 > 1e-15)
 	notallok <- !all(ok)
 	if(notallok) {
 		x <- x[ok]

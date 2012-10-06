@@ -1,3 +1,7 @@
+4 Oct 2012: limma 3.15.1
+
+- fitFDist() now coerces degrees of freedom df1 below 1e-15 to zero.
+
 2 Oct 2012: limma 3.15.0 (Bioconductor 2.12 Developmental Branch)
 2 Oct 2012: limma 3.14.0 (Bioconductor 2.11 Release Branch)
 
