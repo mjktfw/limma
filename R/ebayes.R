@@ -1,4 +1,4 @@
-#  DIFFERENTIAL EXPRESSION
+#  EMPIRICAL BAYES FUNCTIONS
 
 eBayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4),trend=FALSE)
 #	Empirical Bayes statistics to select differentially expressed genes
@@ -258,19 +258,6 @@ trigammaInverse <- function(x) {
 		}
 	}
 	y
-}
-
-qqt <- function(y,df=Inf,ylim=range(y),main="Student's t Q-Q Plot",xlab="Theoretical Quantiles",ylab="Sample Quantiles",plot.it=TRUE,...)
-{
-#	Student's t probability plot
-#	Gordon Smyth
-#	3 Oct 2002
-
-    y <- y[!is.na(y)]
-    if(0 == (n <- length(y))) stop("y is empty")
-    x <- qt(ppoints(n),df=df)[order(order(y))]
-    if (plot.it) plot(x,y,main=main,xlab=xlab,ylab=ylab,ylim=ylim,...)
-    invisible(list(x=x,y=y))
 }
 
 squeezeVar <- function(var, df, covariate=NULL)
