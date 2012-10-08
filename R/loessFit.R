@@ -5,7 +5,7 @@ loessFit <- function(y, x, weights=NULL, span=0.3, bin=NULL, iterations=4, min.w
 #	This function uses stats:::lowess if no weights and stats:::loess otherwise.
 #	It is intended to give a streamlined common interface to the two functions.
 #	Gordon Smyth
-#	28 June 2003.  Last revised 5 Sep 2012.
+#	28 June 2003.  Last revised 8 Oct 2012.
 {
 	n <- length(y)
 	out <- list(fitted=rep(NA,n),residuals=rep(NA,n))
@@ -20,16 +20,15 @@ loessFit <- function(y, x, weights=NULL, span=0.3, bin=NULL, iterations=4, min.w
 		delta = bin * diff(range(xobs))
 		o <- order(xobs)
 #		The .C("lowess" call is copied from stats:::lowess
-		lo <- .C("lowess", x = as.double(xobs[o]), as.double(yobs[o]), 
-			nobs, as.double(span), as.integer(iter), as.double(delta), 
-			y = double(nobs), double(nobs), double(nobs), PACKAGE = "stats")
-		out$fitted[obs][o] <- lo$y
-		out$residuals[obs][o] <- lo[[9]]
-#		For R 2.16.X
-#		lo <- lowess(x=xobs,y=yobs,f=span,iter=iter,delta=delta)
-#		o <- order(xobs)
+#		lo <- .C("lowess", x = as.double(xobs[o]), as.double(yobs[o]), 
+#			nobs, as.double(span), as.integer(iter), as.double(delta), 
+#			y = double(nobs), double(nobs), double(nobs), PACKAGE = "stats")
 #		out$fitted[obs][o] <- lo$y
-#		out$residuals[obs] <- yobs-out$fitted[obs]
+#		out$residuals[obs][o] <- lo[[9]]
+#		For R 2.16.X
+		lo <- lowess(x=xobs,y=yobs,f=span,iter=iter,delta=delta)
+		out$fitted[obs][o] <- lo$y
+		out$residuals[obs] <- yobs-out$fitted[obs]
 	} else {
 		if(is.null(bin)) bin <- 0.005
 		wobs <- weights[obs]
@@ -59,9 +58,9 @@ loessFit <- function(y, x, weights=NULL, span=0.3, bin=NULL, iterations=4, min.w
 #			oldopt <- options(warning.expression=expression())
 			oldopt <- options(warn=-1)
 			on.exit(options(oldopt))
-			fit <- .vsimpleLoess(y=yobs, x=xobs, weights=wobs, span=span, degree=1, cell=bin/span, iterations=iterations)
+#			fit <- .vsimpleLoess(y=yobs, x=xobs, weights=wobs, span=span, degree=1, cell=bin/span, iterations=iterations)
 #			For R 2.16.X
-#			fit <- stats:::simpleLoess(y=yobs,x=xobs,weights=wobs,span=span,degree=1,parametric=FALSE,normalize=FALSE,statistics="none",surface="interpolate",cell=bin/span,iterations=iterations,trace.hat="approximate")
+			fit <- stats:::simpleLoess(y=yobs,x=xobs,weights=wobs,span=span,degree=1,parametric=FALSE,normalize=FALSE,statistics="none",surface="interpolate",cell=bin/span,iterations=iterations,trace.hat="approximate")
 		}
 		out$fitted[obs] <- fit$fitted
 		out$residuals[obs] <- fit$residuals
@@ -69,46 +68,3 @@ loessFit <- function(y, x, weights=NULL, span=0.3, bin=NULL, iterations=4, min.w
 	out
 }
 
-.vsimpleLoess <- function (y, x, weights, span=0.75, degree=2, cell=0.2, iterations=1)
-#	This function is an edited copy, with some steps removed that are not needed here,
-#  of the R function stats:::simpleLoess by BD Ripley
-#	Gordon Smyth
-#	28 June 2003.  Last modified 27 Feb 2008.
-{
-	statistics <- "none"
-	surface <- "interpolate"
-	surf.stat <- paste(surface, statistics, sep = "/")
-	D <- 1
-	N <- NROW(x)
-	if (!N || !D) stop("invalid `x'")
-	if (!length(y)) stop("invalid `y'")
-	x <- as.matrix(x)
-	max.kd <- max(N, 200)
-	robust <- rep(1, N)
-	sum.drop.sqr <- 0
-	sum.parametric <- 0
-	nonparametric <- 1
-	order.parametric <- 1
-	order.drop.sqr <- 2
-	if (iterations) 
-		for (j in 1:iterations) {
-			robust <- weights * robust
-			z <- .C("loess_raw", as.double(y), as.double(x), 
-				as.double(weights), as.double(robust), as.integer(D), 
-				as.integer(N), as.double(span), as.integer(degree), 
-				as.integer(nonparametric), as.integer(order.drop.sqr), 
-				as.integer(sum.drop.sqr), as.double(span * cell), 
-				as.character(surf.stat), fitted.values = double(N), 
-				parameter = integer(7), a = integer(max.kd), 
-				xi = double(max.kd), vert = double(2 * D), vval = double((D + 
-				1) * max.kd), diagonal = double(N), trL = double(1), 
-				delta1 = double(1), delta2 = double(1), as.integer(surf.stat == 
-				"interpolate/exact"), PACKAGE = "stats")
-			fitted.residuals <- y - z$fitted.values
-			if (j < iterations) 
-				robust <- .Fortran("lowesw", as.double(fitted.residuals), 
-				as.integer(N), robust = double(N), integer(N), 
-				PACKAGE = "stats")$robust
-		}
-	list(fitted = z$fitted.values, residuals = fitted.residuals)
-}

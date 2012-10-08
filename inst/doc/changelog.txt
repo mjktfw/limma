@@ -1,3 +1,10 @@
+8 Oct 2012: limma 3.15.2
+
+- Due to changes in R-devel, loessFit() no longer makes direct calls
+  to foreign language code in the stats package, and instead calls R
+  functions.  This makes loessFit() about 25-30% slower when weights
+  are used.
+
 4 Oct 2012: limma 3.15.1
 
 - fitFDist() now coerces degrees of freedom df1 below 1e-15 to zero.
