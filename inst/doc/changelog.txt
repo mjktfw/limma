@@ -1,18 +1,28 @@
-8 Oct 2012: limma 3.15.2
+13 Oct 2012: limma 3.15.3
+
+- Rewrite details section of read.maimages.Rd for extra clarity and
+  to fix a typo concerning the meaning of source="agilent".
+
+- Bug fix for contrasts.fit() when the covariance matrix of the 
+  coefficients (cov.coefficients) is not found in the fitted model
+  object.  This situation doesn't arise using any of the standard
+  limma analysis pipelines.
+
+ 8 Oct 2012: limma 3.15.2
 
 - Due to changes in R-devel, loessFit() no longer makes direct calls
   to foreign language code in the stats package, and instead calls R
   functions.  This makes loessFit() about 25-30% slower when weights
   are used.
 
-4 Oct 2012: limma 3.15.1
+ 4 Oct 2012: limma 3.15.1
 
 - fitFDist() now coerces degrees of freedom df1 below 1e-15 to zero.
 
-2 Oct 2012: limma 3.15.0 (Bioconductor 2.12 Developmental Branch)
-2 Oct 2012: limma 3.14.0 (Bioconductor 2.11 Release Branch)
+ 2 Oct 2012: limma 3.15.0 (Bioconductor 2.12 Developmental Branch)
+ 2 Oct 2012: limma 3.14.0 (Bioconductor 2.11 Release Branch)
 
-1 Oct 2012: limma 3.13.25
+ 1 Oct 2012: limma 3.13.25
 
 - Two bug fixes for roast() when there are observational weights.
 

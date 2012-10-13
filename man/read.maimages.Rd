@@ -36,25 +36,54 @@ read.imagene(files, path=NULL, ext=NULL, names=NULL, columns=NULL, other.columns
   \item{\dots}{any other arguments are passed to \code{read.table}}
 }
 \details{
-This is the main data input function for the LIMMA package for two-color microarray data.
-It extracts the foreground and background intensities from a series of files, produced by an image analysis program, and assembles them into the components of one list.
+These are the main data input functions for the LIMMA package.
+\code{read.maimages} reads either single channel or two-color microarray intensity data from text files.
+\code{read.imagene} is specifically for two-color ImaGene intensity data created by ImaGene versions 1 through 8, and is called by \code{read.maimages} to read such data.
+
+\code{read.maimages} is designed to read data from any microarray platform except for Illumina BeadChips, which are read by \code{\link{read.ilmn}}, and Affymetrix GeneChip data, which is best read and pre-processed by specialist packages designed for that platform.
+
+\code{read.maimages} extracts the foreground and background intensities from a series of files, produced by an image analysis program, and assembles them into the components of one list.
 The image analysis programs Agilent Feature Extraction, ArrayVision, BlueFuse, GenePix, ImaGene, QuantArray (Version 3 or later), Stanford Microarray Database (SMD) and SPOT are supported explicitly.
-Data from some other image analysis programs can be read if the appropriate column names containing the foreground and background intensities are specified using the \code{columns} argument.
-(This will work if the column names are unique and if there are no rows in the file after the last line of data.
+Almost all these programs write the intensity data for each microarray to one file.
+The exception is ImaGene, early versions of which wrote the red and green channels of each microarray to different files.
+Data from some other image analysis programs not mentioned above can be read if the appropriate column names containing the foreground and background intensities are specified using the \code{columns} argument.
+(Reading custom columns will work provided the column names are unique and there are no rows in the file after the last line of data.
 Header lines are ok.)
+
+For Agilent files, two possible foreground estimators are supported: \code{source="agilent.median"} use median foreground while \code{source="agilent.mean"} uses mean foreground.
+Background estimates are always medians.
+The use of \code{source="agilent"} defaults to \code{"agilent.median"}.
+Note that this behavior is new from 9 March 2012.
+Previously, in limma 3.11.16 or earlier, \code{"agilent"} had the same meaning as \code{"agilent.mean"}.
+
+For GenePix files, two possible foreground estimators are supported as well as custom background: \code{source="genepix.median"} uses the median foreground estimates while \code{source="genepix.mean"} uses mean foreground estimates.
+The use of \code{source="genepix"} defaults to \code{"genepix.mean"}.
+Background estimates are always medians unless \code{source="genepix.custom"} is specified.
+GenePix 6.0 and later supply some custom background options, notably morphological background.
+If the GPR files have been written using a custom background, then \code{source="genepix.custom"} will cause it to be read and used. 
+
+For SPOT files, two possible background estimators are supported:
+\code{source="spot"} uses background intensities estimated from the morphological opening algorithm.
+If \code{source="spot.close.open"} then background intensities are estimated from morphological closing followed by opening.
+
+ArrayVision reports spot intensities in a number of different ways.
+\code{read.maimages} caters for ArrayVision's Artifact-removed (ARM) density values using \code{source="arrayvision.ARM"} or for
+Median-based Trimmed Mean (MTM) density values with \code{"arrayvision.MTM"}.
+ArrayVision users may find it useful to read the top two lines of their data file to check which version of density values they have.
 
 SMD data should consist of raw data files from the database, in tab-delimited text form.
 There are two possible sets of column names depending on whether the data was entered into the database before or after September 2003.
 \code{source="smd.old"} indicates that column headings in use prior to September 2003 should be used.
-In the case of Agilent and GenePix, two possible foreground estimators are supported: \code{source="genepix"} uses the mean foreground estimates while \code{source="genepix.median"} uses median foreground estimates.
-Background esimates are always medians.
-For Agilent, \code{"agilent"} or \code{"agilent.median"} use median foreground while \code{"agilent.mean"} uses mean foreground.
-(Note change of behavior from limma 3.11.17 onwards;
-\code{"agilent"} now has same meaning as \code{"agilent.mean"} whereas previously it had same meaning as \code{"agilent.mean"}.)
-GenePix 6.0 and later also supplies some custom background options, notably morphological background.
-If the GPR files have been written using a custom background, you may read it using \code{source="genepix.custom"}. 
-In the case of SPOT, two possible background estimators are supported:
-if \code{source="spot.close.open"} then background intensities are estimated from \code{morph.close.open} rather than \code{morph}.
+
+Intensity data from ImaGene versions 1 to 8 (\code{source="imagene"}) is different from other image analysis programs in that the read and green channels were written to separate files.
+\code{read.maimages} handles the special behaviour of the early ImaGene versions by requiring that the argument \code{files} should be a matrix with two columns instead of a vector.
+The first column should contain the names of the files containing green channel (cy3) data and the second column should contain names of files containing red channel (cy5) data.
+Alternately, \code{files} can be entered as a vector of even length instead of a matrix.
+In that case, each consecutive pair of file names is assumed to contain the green (cy3) and red (cy5) intensities respectively from the same array.
+The function \code{read.imagene} is called by \code{read.maimages} when \code{source="imagene"}, so \code{read.imagene} does not need to be called directly by users.
+
+ImaGene version~9 (\code{source="imagene9"}) reverts to the same behavior as the other image analysis programs.
+For ImaGene~9, \code{files} is a vector of length equal to the number of microarrays, same as for other image analysis programs.
 
 Spot quality weights may be extracted from the image analysis files using a weight function wt.fun.
 \code{wt.fun} may be any user-supplied function which accepts a data.frame argument and returns a vector of non-negative weights.
@@ -62,21 +91,9 @@ The columns of the data.frame are as in the image analysis output files.
 There is one restriction, which is that the column names should be refered to in full form in the weight function, i.e., do not rely on name expansion for partial matches when refering to the names of the columns.
 See \code{\link{QualityWeights}} for suggested weight functions.
 
-For data from ImaGene versions 1 to 8 (\code{source="imagene"}), the argument \code{files} should be a matrix with two columns.
-The first column should contain the names of the files containing green channel (cy3) data and the second column should contain names of files containing red channel (cy5) data.
-If \code{source="imagene"} and \code{files} is a vector of even length instead of a matrix, then each consecutive pair of file names is assumed to correspond to the same array.
-The function \code{read.imagene} is called by \code{read.maimages} when \code{source="imagene"}.
-It does not need to be called directly by users.
-For ImaGene 9 (\code{source="imagene9"}), \code{files} is a vector as for other image analysis programs.
-
-ArrayVision reports spot intensities in a number of different ways.
-\code{read.maimages} caters for ArrayVision's Artifact-removed (ARM) density values as \code{"arrayvision.ARM"} or for
-Median-based Trimmed Mean (MTM) density values as \code{"arrayvision.MTM"}.
-ArrayVision users may find it useful to read the top two lines of their data file to check which version of density values they have.
-
 The argument \code{other.columns} allows arbitrary columns of the image analysis output files to be preserved in the data object.
 These become matrices in the component \code{other} component.
-For ImaGene data, the other column headings with be prefixed with \code{"R "} or \code{"G "} as appropriate.
+For ImaGene data, the other column headings should be prefixed with \code{"R "} or \code{"G "} as appropriate.
 }
 
 \section{Warnings}{
@@ -99,13 +116,15 @@ For two-color data, an \code{\link[limma:rglist]{RGList}} object containing the 
   \item{source}{character string giving the image analysis program name}
   \item{printer}{list of class \code{\link[=PrintLayout-class]{PrintLayout}}, currently set only if \code{source="imagene"}}
 }
-\author{Gordon Smyth, with speed improvements by Marcus Davy}
+\author{Gordon Smyth, with speed improvements suggested by Marcus Davy}
 \references{
 Web pages for the image analysis software packages mentioned here are listed at \url{http://www.statsci.org/micrarra/image.html}
 }
 \seealso{
 \code{read.maimages} uses \code{\link{read.columns}} for efficient reading of text files.
 As far as possible, it is has similar behavior to \code{\link[utils]{read.table}} in the base package.
+
+\code{\link{read.ilmn}} reads probe or gene summary profile files from Illumina BeadChips.
 
 An overview of LIMMA functions for reading data is given in \link{03.ReadingData}.
 }

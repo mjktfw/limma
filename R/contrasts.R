@@ -5,7 +5,7 @@ contrasts.fit <- function(fit,contrasts=NULL,coefficients=NULL) {
 #	Note: does not completely take probe-wise weights into account
 #	because this would require refitting the linear model for each probe
 #	Gordon Smyth
-#	13 Oct 2002.  Last modified 28 May 2009.
+#	13 Oct 2002.  Last modified 10 Oct 2012.
 
 	ncoef <- NCOL(fit$coefficients)
 	if(is.null(contrasts) == is.null(coefficients)) stop("Must specify only one of contrasts or coefficients")
@@ -23,11 +23,11 @@ contrasts.fit <- function(fit,contrasts=NULL,coefficients=NULL) {
 	}
 	if(NROW(contrasts)!=ncoef) stop("Number of rows of contrast matrix must match number of coefficients")
 	fit$contrasts <- contrasts
-	cormatrix <- cov2cor(fit$cov.coefficients)
-	if(is.null(cormatrix)) {
+	if(is.null(fit$cov.coefficients)) {
 		warning("no coef correlation matrix found in fit - assuming orthogonal")
 		cormatrix <- diag(ncoef)
-	}
+	} else
+		cormatrix <- cov2cor(fit$cov.coefficients)
 
 #	If design matrix was singular, reduce to estimable coefficients
 	r <- nrow(cormatrix)
