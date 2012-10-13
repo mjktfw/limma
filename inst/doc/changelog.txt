@@ -1,3 +1,8 @@
+13 Oct 2012: limma 3.15.4
+
+- minor help page improvements for squeezeVar(), fitFDist() and
+  trigammaInverse().
+
 13 Oct 2012: limma 3.15.3
 
 - Rewrite details section of read.maimages.Rd for extra clarity and

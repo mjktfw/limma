@@ -18,10 +18,12 @@ Numeric vector or array \code{y} satisfying \code{trigamma(y)==x}.
 }
 \author{Gordon Smyth}
 \seealso{
-   \code{\link[base:Special]{trigamma}}
+This function is the inverse of \code{\link{trigamma}} in the base package.
+
+This function is called by \code{\link{fitFDist}}.
 }
 \note{
-This function does not accept a data.frame as argument although the internal function \code{trigamma} does.
+This function does not accept a data.frame as argument although the base package function \code{trigamma} does.
 }
 \examples{
 y <- trigammaInverse(5)

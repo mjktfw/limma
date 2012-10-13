@@ -17,15 +17,23 @@ squeezeVar(var, df, covariate=NULL)
 }
 
 \details{
-The sample variances \code{var} are assumed to follow scaled chi-squared distributions.
-An inverse chi-squared prior is assumed for the true variances.
-The scale and degrees of freedom for the prior distribution are estimated from the data.
+This function implements an empirical Bayes algorithm proposed by Smyth (2004).
 
-The effect of this function is to smooth or shrink the variances towards a common value.
-The smoothed variances have a smaller expected mean square error to the true variances than do the sample variances themselves.
+A conjugate Bayesian hierarchical model is assumed for a set of sample variances.
+The hyperparameters are estimated by fitting a scaled F-distribution to the sample variances.
+The function returns the posterior variances and the estimated hyperparameters.
 
+Specifically, the sample variances \code{var} are assumed to follow scaled chi-squared distributions, conditional on the true variances,
+and an scaled inverse chi-squared prior is assumed for the true variances.
+The scale and degrees of freedom of this prior distribution are estimated from the values of \code{var}.
+
+The effect of this function is to squeeze the variances towards a common value.
+The squeezed variances have a smaller expected mean square error to the true variances than do the sample variances themselves.
+}
+
+\note{
 This function is called by \code{eBayes}, but beware a possible confusion with the output from that function.
-The values \code{var.prior} and \var{var.post} output by \code{squeezeVar} correspond to the quantities \code{s2.prior} and \code{s2.post} output by \code{eBayes}, whereas \code{var.prior} output by \code{eBayes} relates to a different parameter.
+The values \code{var.prior} and \code{var.post} output by \code{squeezeVar} correspond to the quantities \code{s2.prior} and \code{s2.post} output by \code{eBayes}, whereas \code{var.prior} output by \code{eBayes} relates to a different parameter.
 }
 
 \value{
@@ -45,6 +53,10 @@ Smyth, G. K. (2004). Linear models and empirical Bayes methods for
 }
 
 \seealso{
+This function is called by \code{\link{ebayes}}.
+
+This function calls \code{\link{fitFDist}}.
+
 An overview of linear model functions in limma is given by \link{06.LinearModels}.
 }
 
