@@ -59,7 +59,7 @@ After fitting a linear model, the standard errors are moderated using a simple e
 A moderated t-statistic and a log-odds of differential expression is computed for each contrast for each gene.
 \code{treat} tests whether log-fold-changes are greater than a threshold rather than merely different to zero.
 
-\code{\link{eBayes}} and \code{\link{eBayes}} use internal functions \code{squeezeVar}, \code{\link{fitFDist}}, \code{\link{tmixture.matrix}} and \code{\link{tmixture.vector}}.
+\code{\link{eBayes}} and \code{\link{eBayes}} use internal functions \code{\link{squeezeVar}}, \code{\link{fitFDist}}, \code{\link{tmixture.matrix}} and \code{\link{tmixture.vector}}.
 
 The function \code{\link{zscoreT}} is sometimes used for computing z-score equivalents for t-statistics so as to place t-statistics with different degrees of freedom on the same scale.
 \code{\link{zscoreGamma}} is used the same way with standard deviations instead of t-statistics.
