@@ -9,8 +9,8 @@ This function is called internally by \code{eBayes} and \code{squeezeVar} and is
 fitFDist(x, df1, covariate=NULL)
 }
 \arguments{
-  \item{x}{numeric vector or array of positive values representing a sample from an F-distribution.}
-  \item{df1}{the first degrees of freedom of the F-distribution. Should be a single value, or else a vector of the same length as \code{x}.}
+  \item{x}{numeric vector or array of positive values representing a sample from a scaled F-distribution.}
+  \item{df1}{the first degrees of freedom of the F-distribution. Can be a single value, or else a vector of the same length as \code{x}.}
   \item{covariate}{if non-\code{NULL}, the estimated scale value will depend on this numeric covariate.}
 }
 \details{
@@ -35,5 +35,9 @@ Smyth, G. K. (2004). Linear models and empirical Bayes methods for
 This function is called by \code{\link{squeezeVar}}, and hence by \code{\link{ebayes}} and \code{\link{eBayes}}.
 
 This function calls \code{\link{trigammaInverse}}.
+}
+\examples{
+x <- rf(100,df1=8,df2=16)
+fitFDist(x,df1=8)
 }
 \keyword{distribution}
