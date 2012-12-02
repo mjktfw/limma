@@ -1,5 +1,5 @@
 
-R version 2.15.1 Patched (2012-09-16 r60736) -- "Roasted Marshmallows"
+R version 2.15.2 (2012-10-26) -- "Trick or Treat"
 Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: i386-w64-mingw32/i386 (32-bit)
@@ -921,7 +921,7 @@ Loading required package: statmod
 Loading required package: MASS
 Warning message:
 In rlm.default(x = X, y = y, weights = w, ...) :
-  rlm failed to converge in 20 steps
+  'rlm' failed to converge in 20 steps
 > fit$coef
       First3Arrays Last3Arrays
  [1,]   1.75138894  0.06025114
@@ -1252,4 +1252,4 @@ Loading required package: splines
 > 
 > proc.time()
    user  system elapsed 
-   1.02    0.06    1.13 
+   1.02    0.03    1.04 

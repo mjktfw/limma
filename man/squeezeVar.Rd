@@ -7,13 +7,15 @@ Squeeze a set of sample variances together by computing empirical Bayes posterio
 }
 
 \usage{
-squeezeVar(var, df, covariate=NULL)
+squeezeVar(var, df, covariate=NULL, robust=FALSE, winsor.tail.p=c(0.05,0.1))
 }
 
 \arguments{
 \item{var}{numeric vector of independent sample variances.}
 \item{df}{numeric vector of degrees of freedom for the sample variances.}
 \item{covariate}{if non-\code{NULL}, \code{var.prior} will depend on this numeric covariate. Otherwise, \code{var.prior} is constant.}
+\item{robust}{logical, should the estimation of \code{df.prior} and \code{var.prior} be robustified against outlier sample variances?}
+\item{winsor.tail.p}{numeric vector of length 1 or 2, giving left and right tail proportions of \code{x} to Winsorize. Used only when \code{robust=TRUE}.}
 }
 
 \details{
@@ -40,7 +42,7 @@ The values \code{var.prior} and \code{var.post} output by \code{squeezeVar} corr
 A list with components
 \item{var.post}{numeric vector of posterior variances.}
 \item{var.prior}{location of prior distribution. A vector if \code{covariate} is non-\code{NULL}, otherwise a scalar.}
-\item{df.prior}{degrees of freedom of prior distribution.}
+\item{df.prior}{degrees of freedom of prior distribution. A vector if \code{robust=TRUE}, otherwise a scalar.}
 }
 
 \author{Gordon Smyth}

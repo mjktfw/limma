@@ -76,7 +76,7 @@ For example, \code{topTable(fit, sort.by="B", resort.by="logFC")} selects the to
 Or \code{topTable(fit, sort.by="logFC", resort.by="logFC")} would select the genes by absolute log-fold-change and then sort them from most positive to most negative.
 
 \code{topTableF} ranks genes on the basis of moderated F-statistics for one or more coefficients.
-If \code{topTable} is called with \code{coef} has length greater than 1, then the specified columns will be extracted from \code{fit} and \code{topTableF} called on the result.
+If \code{topTable} is called and \code{coef} has two or more elements, then the specified columns will be extracted from \code{fit} and \code{topTableF} called on the result.
 \code{topTable} with \code{coef=NULL} is the same as \code{topTableF}, unless the fitted model \code{fit} has only one column.
 
 Toptable output for all probes in original (unsorted) order can be obtained by \code{topTable(fit,sort="none",n=Inf)}.

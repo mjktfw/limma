@@ -1,3 +1,46 @@
+29 Nov 2012: limma 3.15.5
+
+- New robust method for estimating the empirical Bayes prior, called
+  by specifying robust=TRUE in the call to eBayes().  When this is
+  TRUE the output df.prior is now a vector instead of a scalar.
+  
+- New function fitFDistRobustly() estimates the parameters of a
+  scaled F-distribution robustly using Winsorized values.  Outlier
+  observations receive smaller values for df.prior than non-outliers.
+  This permits robust methods for squeezeVar(), ebayes() and eBayes(),
+  all of which now have a new argument wins.tail.p to specify the
+  tail proportions for Winsorizing.
+
+- fitFDist() now permits infinite values for covariate.  It also
+  gracefully handles cases where the covariate takes only a small
+  number of distinct values.  Similarly for eBayes() and squeezeVar()
+  that call fitFDist().  
+
+- new function vooma() for computing precision weights based on a
+  mean-variance trend.  This is similar to voom() but for microarray
+  data instead of RNA-Seq.
+
+- genas() now has the ability to automatically select which probes
+  are used for the correlation analysis.  A new argument controls the
+  method used for this selection.
+
+- genas() now optionally draws a plot in which ellipses are used to
+  represent the technical and biological components of correlation.
+
+- new function fitGammaIntercept() for estimating the intercept of
+  a gamma glm with an offset.  (No .Rd file at present.)
+
+- new function propTrueNull() for estimating the proportion of true
+  null hypotheses from a vector of p-values.
+
+- new function zscoreHyper() for computing z-score equivalents of
+  deviates from a hypergeometric distribution.
+
+- The layout argument for normalizeRobustSpline() now defaults to a
+  single print-tip group.
+
+- Additional motivating comments added to normalizeRobustSpline.Rd.
+
 13 Oct 2012: limma 3.15.4
 
 - new function qqf() for qq-plots relative to an F-distribution.

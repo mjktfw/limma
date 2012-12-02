@@ -1,13 +1,13 @@
 #  EMPIRICAL BAYES FUNCTIONS
 
-eBayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4),trend=FALSE)
+eBayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4),trend=FALSE,robust=FALSE,winsor.tail.p=c(0.05,0.1))
 #	Empirical Bayes statistics to select differentially expressed genes
 #	Object orientated version
 #	Gordon Smyth
-#	4 August 2003.  Last modified 3 November 2010.
+#	4 August 2003.  Last modified 20 November 2012.
 {
 	if(trend) if(is.null(fit$Amean)) stop("Need Amean component in fit to estimate trend")
-	eb <- ebayes(fit=fit,proportion=proportion,stdev.coef.lim=stdev.coef.lim,trend=trend)
+	eb <- ebayes(fit=fit,proportion=proportion,stdev.coef.lim=stdev.coef.lim,trend=trend,robust=robust,winsor.tail.p=winsor.tail.p)
 	fit$df.prior <- eb$df.prior
 	fit$s2.prior <- eb$s2.prior
 	fit$var.prior <- eb$var.prior
@@ -30,10 +30,10 @@ eBayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4),trend=FALSE)
 	fit
 }
 
-ebayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4),trend=FALSE)
+ebayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4),trend=FALSE,robust=FALSE,winsor.tail.p=c(0.05,0.1))
 #	Empirical Bayes statistics to select differentially expressed genes
 #	Gordon Smyth
-#	8 Sept 2002.  Last revised 3 November 2010.
+#	8 Sept 2002.  Last revised 20 November 2012.
 {
 	coefficients <- fit$coefficients
 	stdev.unscaled <- fit$stdev.unscaled
@@ -50,7 +50,8 @@ ebayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4),trend=FALSE)
 	}
 
 #	Moderated t-statistic
-	out <- squeezeVar(sigma^2, df.residual, covariate=covariate)
+	if(!robust) winsor.tail.p <- 0
+	out <- squeezeVar(sigma^2, df.residual, covariate=covariate, winsor.tail.p=winsor.tail.p)
 	out$s2.prior <- out$var.prior
 	out$s2.post <- out$var.post
 	out$var.prior <- out$var.post <- NULL
@@ -71,9 +72,16 @@ ebayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4),trend=FALSE)
 	r <- rep(1,NROW(out$t)) %o% out$var.prior
 	r <- (stdev.unscaled^2+r) / stdev.unscaled^2
 	t2 <- out$t^2
-	if(out$df.prior > 10^6)
+	Infdf <- out$df.prior > 10^6
+	if(any(Infdf)) {
 		kernel <- t2*(1-1/r)/2
-	else
+		if(any(!Infdf)) {
+			t2 <- t2[!Infdf]
+			r <- r[!Infdf]
+			df.total <- df.total[!Infdf]
+			kernel[!Infdf] <- (1+df.total)/2*log((t2+df.total) / (t2/r+df.total))
+		}
+	} else
 		kernel <- (1+df.total)/2*log((t2+df.total) / (t2/r+df.total))
 	out$lods <- log(proportion/(1-proportion))-log(r)/2+kernel
 	out
@@ -133,4 +141,3 @@ tmixture.vector <- function(tstat,stdev.unscaled,df,proportion,v0.lim=NULL) {
 	if(!is.null(v0.lim)) v0 <- pmin(pmax(v0,v0.lim[1]),v0.lim[2])
 	mean(v0)
 }
-

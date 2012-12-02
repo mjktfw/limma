@@ -1,8 +1,8 @@
-voom <- function(counts,design=NULL,lib.size=NULL,normalize.method="none",plot=FALSE,...) 
+voom <- function(counts,design=NULL,lib.size=NULL,normalize.method="none",plot=FALSE,span=0.5,...) 
 # Linear modelling of count data mean-variance modelling at the observational level.
 # Creates an EList object for entry to lmFit() etc in the limma pipeline.
 # Gordon Smyth and Charity Law
-# Created 22 June 2011.  Last modified 25 Nov 2011.
+# Created 22 June 2011.  Last modified 1 Nov 2012.
 {
 	out <- list()
 
@@ -44,7 +44,7 @@ voom <- function(counts,design=NULL,lib.size=NULL,normalize.method="none",plot=F
 		sx <- sx[!allzero]
 		sy <- sy[!allzero]
 	}
-	l <- lowess(sx,sy,f=0.5)
+	l <- lowess(sx,sy,f=span)
 	if(plot) {
 		plot(sx,sy,xlab="log2( count size + 0.5 )",ylab="Sqrt( standard deviation )",pch=16,cex=0.25)
 		title("voom: Mean-variance trend")

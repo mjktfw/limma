@@ -143,17 +143,22 @@ normalizeWithinArrays <- function(object,layout=object$printer,method="printtipl
 	object
 }
 
-normalizeRobustSpline <- function(M,A,layout,df=5,method="M") {
+normalizeRobustSpline <- function(M,A,layout=NULL,df=5,method="M") {
 #	Robust spline normalization
 #	Gordon Smyth
-#	27 April 2003.  Last revised 2 Feb 2007.
+#	27 April 2003.  Last revised 29 Nov 2012.
 
 	require(MASS)
 	require(splines)
-	ngrids <- round(layout$ngrid.r * layout$ngrid.c)
-	nspots <- round(layout$nspot.r * layout$nspot.c)
-	if(ngrids < 1) stop("layout incorrectly specified")
-	if(nspots < df+1) stop("too few spots in each print-tip block")
+	if(is.null(layout)) {
+		ngrids <- 1
+		nspots <- length(M)
+	} else {
+		ngrids <- round(layout$ngrid.r * layout$ngrid.c)
+		nspots <- round(layout$nspot.r * layout$nspot.c)
+		if(ngrids < 1) stop("layout incorrectly specified")
+		if(nspots < df+1) stop("too few spots in each print-tip block")
+	}
 
 #	Global splines
 	O <- is.finite(M) & is.finite(A)

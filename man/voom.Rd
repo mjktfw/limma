@@ -7,7 +7,7 @@ The data are then ready for linear modelling.
 }
 
 \usage{
-voom(counts, design = NULL, lib.size = NULL, normalize.method = "none", plot = FALSE, ...)
+voom(counts, design = NULL, lib.size = NULL, normalize.method = "none", plot = FALSE, span=0.5, ...)
 }
 \arguments{
  \item{counts}{either a numeric \code{matrix} containing raw counts or a \code{DGEList} object.}
@@ -15,6 +15,7 @@ voom(counts, design = NULL, lib.size = NULL, normalize.method = "none", plot = F
  \item{lib.size}{numeric vector containing total librazy sizes for each sample. If \code{NULL}, library sizes are calculated as column sums of \code{counts}.}
  \item{normalize.method}{normalization method to be applied to the log2-counts-per-million. Choices are as for the \code{method} argument of \code{normalizeBetweenArrays} when the data is single-channel.}
  \item{plot}{\code{logical} value indicating whether a plot of mean-variance trend is displayed.}
+ \item{span}{width of the smoothing window, as a proportion of the data set.}
  \item{...}{other arguments are passed to \code{lmFit}.}
   }
 

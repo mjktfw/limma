@@ -5,16 +5,18 @@
 \title{Empirical Bayes Statistics for Differential Expression}
 \description{Given a series of related parameter estimates and standard errors, compute moderated t-statistics, moderated F-statistic, and log-odds of differential expression by empirical Bayes shrinkage of the standard errors towards a common value.}
 \usage{
-ebayes(fit, proportion=0.01, stdev.coef.lim=c(0.1,4), trend=FALSE)
-eBayes(fit, proportion=0.01, stdev.coef.lim=c(0.1,4), trend=FALSE)
+ebayes(fit, proportion=0.01, stdev.coef.lim=c(0.1,4), trend=FALSE, robust=FALSE, winsor.tail.p=c(0.05,0.1))
+eBayes(fit, proportion=0.01, stdev.coef.lim=c(0.1,4), trend=FALSE, robust=FALSE, winsor.tail.p=c(0.05,0.1))
 treat(fit, lfc=0, trend=FALSE)
 }
 \arguments{
   \item{fit}{an \code{MArrayLM} fitted model object produced by \code{lmFit} or \code{contrasts.fit}, or an unclassed list produced by \code{lm.series}, \code{gls.series} or \code{mrlm} containing components \code{coefficients}, \code{stdev.unscaled}, \code{sigma} and \code{df.residual}}
   \item{proportion}{numeric value between 0 and 1, assumed proportion of genes which are differentially expressed}
   \item{stdev.coef.lim}{numeric vector of length 2, assumed lower and upper limits for the standard deviation of log2-fold-changes for differentially expressed genes}
-  \item{trend}{logical, should an intensity-trend be allowed for the prior variance. Default is that the prior variance is constant.}
-  \item{lfc}{the minimum log2-fold-change which is considered material}
+  \item{trend}{logical, should an intensity-trend be allowed for the prior variance? Default is that the prior variance is constant.}
+  \item{robust}{logical, should the estimation of \code{df.prior} and \code{var.prior} be robustified against outlier sample variances?}
+  \item{winsor.tail.p}{numeric vector of length 1 or 2, giving left and right tail proportions of \code{x} to Winsorize. Used only when \code{robust=TRUE}.}
+  \item{lfc}{the minimum log2-fold-change that is considered scientifically meaningful}
 }
 \value{
 \code{eBayes} produces an object of class \code{MArrayLM} with the following components, see \code{\link{MArrayLM-class}}.

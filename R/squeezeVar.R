@@ -1,9 +1,9 @@
 #	EMPIRICAL BAYES SQUEEZING OF VARIANCES
 
-squeezeVar <- function(var, df, covariate=NULL)
+squeezeVar <- function(var, df, covariate=NULL, robust=FALSE, winsor.tail.p=c(0.05,0.1))
 #	Empirical Bayes posterior variances
 #	Gordon Smyth
-#	2 March 2004.  Last modified 24 Feb 2011.
+#	2 March 2004.  Last modified 29 Nov 2012.
 {
 	n <- length(var)
 	if(n == 0) stop("var is empty")
@@ -13,30 +13,49 @@ squeezeVar <- function(var, df, covariate=NULL)
 	} else {
 		if(length(df) != n) stop("lengths differ")
 	}
-	out <- fitFDist(var, df1=df, covariate=covariate)
-	if(is.null(out$df2) || is.na(out$df2)) stop("Could not estimate prior df")
-	out$var.prior <- out$scale
-	out$df.prior <- out$df2
-	out$df2 <- out$scale <- NULL
-	df.total <- df + out$df.prior
-	if(out$df.prior == Inf)
-		out$var.post <- rep(out$var.prior,length.out=n)
-	else {
-		var[df==0] <- 0 # guard against missing or infinite values
-		out$var.post <- (df*var + out$df.prior*out$var.prior) / df.total
+	if(robust)
+		fit <- fitFDistRobustly(var, df1=df, covariate=covariate, winsor.tail.p=winsor.tail.p)
+	else
+		fit <- fitFDist(var, df1=df, covariate=covariate)
+	var.prior <- fit$scale
+	df.prior <- fit$df2.shrunk
+	if(is.null(df.prior)) df.prior <- fit$df2
+	if(is.null(df.prior) || any(is.na(df.prior))) stop("Could not estimate prior df")
+	df.total <- df + df.prior
+	var[df==0] <- 0 # guard against missing or infinite values
+	Infdf <- df.prior==Inf
+	if(any(Infdf)) {
+		var.post <- rep(var.prior,length.out=n)
+		i <- which(!Infdf)
+		if(length(i)) var.post[i] <- (df[i]*var[i] + df.prior[i]*var.prior[i]) / df.total[i]
+	} else {
+		var.post <- (df*var + df.prior*var.prior) / df.total
 	}
-	out
+	list(df.prior=df.prior,var.prior=var.prior,var.post=var.post)
 }
 
 fitFDist <- function(x,df1,covariate=NULL)
 #	Moment estimation of the parameters of a scaled F-distribution
 #	The first degrees of freedom are given
 #	Gordon Smyth and Belinda Phipson
-#	8 Sept 2002.  Last revised 4 Oct 2012.
+#	8 Sept 2002.  Last revised 27 Oct 2012.
 {
+#	Check covariate
 	if(!is.null(covariate)) {
 		if(length(covariate) != length(x)) stop("covariate and x must be of same length")
 		if(any(is.na(covariate))) stop("NA covariate values not allowed")
+		isfin <- is.finite(covariate)
+		if(!all(isfin)) {
+			if(!any(isfin))
+				covariate <- sign(covariate)
+			else {
+				r <- range(covariate[isfin])
+				covariate[covariate == -Inf] <- r[1]-1
+				covariate[covariate == Inf] <- r[2]+1
+			}
+		}
+		splinedf <- min(4,length(unique(covariate)))
+		if(splinedf < 2) covariate <- NULL
 	}
 #	Remove missing or infinite values and zero degrees of freedom
 	ok <- is.finite(x) & is.finite(df1) & (x > -1e-15) & (df1 > 1e-15)
@@ -72,8 +91,8 @@ fitFDist <- function(x,df1,covariate=NULL)
 		evar <- sum((e-emean)^2)/(n-1)
 	} else {
 		require(splines)
-		design <- try(ns(covariate,df=4,intercept=TRUE),silent=TRUE)
-		if(is(design,"try-error")) stop("Problem with covariate; perhaps too few distinct values")
+		design <- try(ns(covariate,df=splinedf,intercept=TRUE),silent=TRUE)
+		if(is(design,"try-error")) stop("Problem with covariate")
 		fit <- lm.fit(design,e)
 		if(notallok) {
 			design2 <- predict(design,newx=covariate2)

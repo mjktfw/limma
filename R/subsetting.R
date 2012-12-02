@@ -207,6 +207,7 @@ function(object, i, j, ...)
 			object$var.prior <- object$var.prior[j]
 		}
 		object$df.residual <- object$df.residual[i]
+		if(length(object$df.prior)>1) object$df.prior <- object$df.prior[i]
 		object$sigma <- object$sigma[i]
 		object$s2.post <- object$s2.post[i]
 		object$Amean <- object$Amean[i]

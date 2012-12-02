@@ -1,0 +1,45 @@
+\name{vooma}
+\alias{vooma}
+
+\title{Convert Mean-Variance Trend to Observation-specific Precision Weights for Microarray Data}
+
+\description{
+Estimate the mean-variance relationship and use this to compute appropriate observational-level weights.
+}
+
+\usage{
+vooma(y, design=NULL, correlation, block=NULL, plot=FALSE, span=NULL)
+}
+\arguments{
+  \item{y}{numeric \code{matrix}, \code{EList} object, or any similar object containing expression data that can be coerced to a matrix.}
+  \item{design}{design matrix with rows corresponding to samples and columns to coefficients to be estimated.  Defaults to the unit vector meaning that samples are treated as replicates.}
+  \item{block}{vector or factor specifying a blocking variable on the arrays. Has length equal to the number of arrays.}
+  \item{correlation}{intra-block correlation}
+  \item{span}{width of the smoothing window, as a proportion of the data set.}
+  \item{plot}{\code{logical} value indicating whether a plot of mean-variance trend should be displayed.}
+}
+
+\details{
+\code{vooma} is an acronym for mean-variance modelling at the observational level for arrays.
+
+\code{vooma} estimates the mean-variance relationship in the data, and uses this to compute appropriate weights for each observation.
+This done by estimating a mean-variance trend, then interpolating this trend to obtain a precision weight (inverse variance) for each observation.
+The weights can then used by other functions such as \code{lmFit} to adjust for heteroscedasticity. 
+}
+
+\value{
+An EList object with the following components:
+\item{E}{numeric matrix of as input}
+\item{weights}{numeric matrix of weights}
+\item{design}{numeric matrix of experimental design}
+\item{genes}{dataframe of gene annotation, only if \code{counts} was a \code{DGEList} object}
+ }
+
+\seealso{
+\code{\link{voom}}
+}
+
+\author{Gordon Smyth and Charity Law}
+
+\keyword{weights}
+\keyword{variance}
