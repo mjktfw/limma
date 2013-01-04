@@ -46,8 +46,8 @@ The inflation factor depends on estimated genewise correlation and the number of
 \code{camera} returns a data.frame with a row for each set and the following columns:
 \item{NGenes}{number of genes in set}
 \item{Correlation}{inter-gene correlation}
-\item{PValue}{two-tailed p-value}
 \item{Direction}{direction of change (\code{"Up"} or \code{"Down"})}
+\item{PValue}{two-tailed p-value}
 \item{FDR}{Benjamini and Hochberg FDR adjusted p-value}
 
 \code{interGeneCorrelation} returns a list with components:

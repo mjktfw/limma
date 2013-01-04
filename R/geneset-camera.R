@@ -169,9 +169,9 @@ camera.default <- function(y,indices,design=NULL,contrast=ncol(design),weights=N
 	tab <- data.frame(tab,stringsAsFactors=FALSE)
 	Direction <- rep.int("Up",nsets)
 	Direction[tab$Down < tab$Up] <- "Down"
-	tab$Down <- tab$Up <- NULL
-	colnames(tab)[3] <- "PValue"
 	tab$Direction <- Direction
+	tab$PValue <- tab$TwoSided
+	tab$Down <- tab$Up <- tab$TwoSided <- NULL
 
 #	Add FDR
 	if(nsets>1) tab$FDR <- p.adjust(tab$PValue,method="BH")
