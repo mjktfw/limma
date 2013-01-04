@@ -1138,37 +1138,13 @@ Down            0   0.999
 Up              1   0.002
 Mixed           1   0.003
 > mroast(y=y,list(set1=iset1,set2=iset2),design,contrast=2)
-$P.Value
-      Down    Up Mixed
-set1 0.998 0.003 0.003
-set2 0.718 0.283 0.547
-
-$Adj.P.Value
-       Down     Up  Mixed
-set1 0.9975 0.0050 0.0050
-set2 0.9975 0.2825 0.5465
-
-$Active.Proportion
-     Down Up Mixed
-set1    0  1     1
-set2    0  0     0
-
+     PropDown PropUp Direction PValue   FDR PValue.Mixed FDR.Mixed
+set1        0      1        Up  0.006 0.010        0.003    0.0050
+set2        0      0        Up  0.566 0.565        0.547    0.5465
 > mroast(y=y,list(set1=iset1,set2=iset2),design,contrast=2,gene.weights=runif(100))
-$P.Value
-      Down    Up Mixed
-set1 0.999 0.002 0.009
-set2 0.819 0.182 0.205
-
-$Adj.P.Value
-       Down     Up  Mixed
-set1 0.9985 0.0030 0.0170
-set2 0.9985 0.1815 0.2045
-
-$Active.Proportion
-     Down Up Mixed
-set1    0  1     1
-set2    0  0     0
-
+     PropDown PropUp Direction PValue   FDR PValue.Mixed FDR.Mixed
+set1        0      1        Up  0.004 0.006        0.009    0.0170
+set2        0      0        Up  0.364 0.363        0.205    0.2045
 > 
 > ### camera
 > 
@@ -1273,4 +1249,4 @@ Loading required package: splines
 > 
 > proc.time()
    user  system elapsed 
-   1.01    0.06    1.06 
+   1.09    0.06    1.15 

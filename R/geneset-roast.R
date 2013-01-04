@@ -300,7 +300,7 @@ roast.default <- function(y,iset=NULL,design=NULL,contrast=ncol(design),set.stat
 	new("Roast",list(p.value=out,var.prior=s02,df.prior=d0))
 }
 
-mroast <- function(y,iset=NULL,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE)
+mroast <- function(y,iset=NULL,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE,sort="directional")
 #  Rotation gene set testing with multiple sets
 #  Gordon Smyth and Di Wu
 #  Created 28 Jan 2010. Last revised 3 Feb 2012.
@@ -334,9 +334,35 @@ mroast <- function(y,iset=NULL,design,contrast=ncol(design),set.statistic="mean"
 	pv2 <- pv
 	if(midp) pv2 <- pv2-1/2/(nrot+1)
 
-	adjpv[,"Down"] <- p.adjust(pv2[,"Down"], method=adjust.method) 
-	adjpv[,"Up"] <- p.adjust(pv2[,"Up"], method=adjust.method) 
-	adjpv[,"Mixed"] <- p.adjust(pv2[,"Mixed"], method=adjust.method) 
-	list(P.Value=pv, Adj.P.Value=adjpv, Active.Proportion=active) 
+#	adjpv[,"Down"] <- p.adjust(pv2[,"Down"], method=adjust.method)
+#	adjpv[,"Up"] <- p.adjust(pv2[,"Up"], method=adjust.method)
+#	adjpv[,"Mixed"] <- p.adjust(pv2[,"Mixed"], method=adjust.method)
+#	list(P.Value=pv, Adj.P.Value=adjpv, Active.Proportion=active)
+
+#	New-style output
+	Up <- pv[,"Up"] < pv[,"Down"]
+	Direction <- rep.int("Down",nsets); Direction[Up] <- "Up"
+	TwoSidedP <- pv[,"Down"]; TwoSidedP[Up] <- pv[Up,"Up"]; TwoSidedP <- 2*TwoSidedP
+	TwoSidedP2 <- pv2[,"Down"]; TwoSidedP2[Up] <- pv2[Up,"Up"]; TwoSidedP2 <- 2*TwoSidedP2
+	tab <- data.frame(
+		PropDown=active[,"Down"],
+		PropUp=active[,"Up"],
+		Direction=Direction,
+		PValue=TwoSidedP,
+		FDR=p.adjust(TwoSidedP2,method="BH"),
+		PValue.Mixed=pv[,"Mixed"],
+		FDR.Mixed=p.adjust(pv2[,"Mixed"],method="BH"),
+		row.names=names(iset),
+		stringsAsFactors=FALSE
+	)
+
+#	Sort by p-value
+	sort <- match.arg(sort,c("directional","mixed","none"))
+	if(sort=="none") return(tab)
+	if(sort=="directional")
+		o <- order(tab$PValue)
+	else
+		o <- order(tab$PValue.Mixed)
+	tab[o,,drop=FALSE]
 }
 

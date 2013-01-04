@@ -17,7 +17,7 @@ Rotation gene set testing for linear models.
      var.prior=NULL, df.prior=NULL, trend.var=FALSE, nrot=999)
 mroast(y, iset=NULL, design, contrast=ncol(design), set.statistic="mean",
      gene.weights=NULL, array.weights=NULL, block=NULL, correlation,
-     var.prior=NULL, df.prior=NULL, trend.var=FALSE, nrot=999, adjust.method="BH", midp=TRUE)
+     var.prior=NULL, df.prior=NULL, trend.var=FALSE, nrot=999, adjust.method="BH", midp=TRUE, sort="directional")
 }
 
 \arguments{
@@ -40,6 +40,7 @@ mroast(y, iset=NULL, design, contrast=ncol(design), set.statistic="mean",
   \item{nrot}{number of rotations used to estimate the p-values.}
   \item{adjust.method}{method used to adjust the p-values for multiple testing. See \code{\link{p.adjust}} for possible values.}
   \item{midp}{logical, should mid-p-values be used in instead of ordinary p-values when adjusting for multiple testing?}
+  \item{sort}{character, whether to sort output table by directional p-values (\code{"directional"}), non-directional p-value (\code{"mixed"}), or not at all (\code{"none"}).}
 }
 
 \value{
@@ -49,10 +50,15 @@ This consists of a list with the following components:
 Rows correspond to the alternative hypotheses mixed, up or down.}
   \item{var.prior}{prior value for residual variances.}
   \item{df.prior}{prior degrees of freedom for residual variances.}
-\code{mroast} produces a list of three matrices, each with a row for each set:
-  \item{P.Value}{unadjusted p-values for the mixed, up and down alternative hypotheses}
-	\item{Adj.P.Value}{adjusted p-values for each set and each hypothesis}
-	\item{Active.Proportion}{proportion of active genes for each set and each hypothesis}
+
+\code{mroast} produces a data.frame with a row for each set and the following columns:
+	\item{PropDown}{proportion of genes in set with \code{z < -sqrt(2)}}
+	\item{PropUp}{proportion of genes in set with \code{z > sqrt(2)}}
+	\item{Direction}{direction of change}
+	\item{PValue}{two-sided directional p-value}
+	\item{FDR}{directional false discovery rate}
+	\item{PValue.Mixed}{non-directional p-value}
+	\item{FDR.Mixed}{non-directional false discovery rate}
 }
 
 \details{

@@ -1,3 +1,9 @@
+4 Jan 2013: limma 3.15.9
+
+- mroast() now produces a data.frame instead of a list of matrices.
+  It also has a new argument 'sort' to indicate whether and how the
+  output results should be sorted by p-value.
+
 4 Jan 2013: limma 3.15.8
 
 - camera() now produces a data.frame instead of a matrix, and with
