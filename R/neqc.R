@@ -1,28 +1,22 @@
 normexp.fit.detection.p <- function(x,detection.p="Detection")
 #  Estimate normexp parameters using negative control probes which are derived from probes' detection p values
 #  Wei Shi and Gordon Smyth
-#  Created 27 October 2010.
+#  Created 27 October 2010.  Modified 3 Jan 2013.
 {
 	if(is(x,"EListRaw")){
-		if(!is.null(x$genes$Status))
-			warning("You might not use this function because it seems negative control probes are available in your data.")
-		
 		if(is.character(detection.p)){
 			other.colnames <- tolower(names(x[["other"]]))
 			detection.index <- which(other.colnames %in% tolower(detection.p))
 			if(length(detection.index)!=1)
-				stop("Detection p values can not be found in the data.")
+				stop("Detection p values not found in the data.")
 			detection.p <- x[["other"]][[detection.index]]
-		}
-		else{
+		} else {
 			detection.p <- as.matrix(detection.p)
 		}
-		
-		x <- x$E
-	}
-	else{
+		x <- as.matrix(x$E)
+	} else {
 		if(is.character(detection.p))
-			stop("No negative control probes or detection p value data were found.")
+			stop("detection.p must be a numeric matrix (unless x is an EListRaw)")
 		x <- as.matrix(x)
 		detection.p <- as.matrix(detection.p)
 	}
@@ -31,12 +25,13 @@ normexp.fit.detection.p <- function(x,detection.p="Detection")
 		stop("The supplied detection p value data do not have the same dimension as that of the intensity data.")
 	
 	narrays <- ncol(x)
-	
+
+#	Check whether pvalues are actually 1-pvalues
 	y <- x[,1]
 	p <- detection.p[,1]	
-	if(p[which.max(y)] < p[which.min(y)]) 
-		detection.p <- 1 - detection.p
-	
+	if(p[which.max(y)] < p[which.min(y)])
+		detection.p <- 1-detection.p
+
 	mu <- sigma <- rep(NA, narrays)
 	for(i in 1:narrays){
 		y <- x[,i]
@@ -47,6 +42,7 @@ normexp.fit.detection.p <- function(x,detection.p="Detection")
 		j <- which(!duplicated(p))[-1]
 		ync <- (y[j]+y[j-1])/2
 		d <- p[j]-p[j-1]
+		if(any(d<0)) stop("detection p-values are not monotonic in the expression values for array",i)
 		freq <- d/min(d)
 		n <- sum(freq)
 		mu[i] <- weighted.mean(ync,freq)
@@ -111,20 +107,18 @@ nec <- function(x,status=NULL,negctrl="negative",regular="regular",offset=16,rob
 			normexp.par <- normexp.fit.detection.p(x,detection.p)
 			message("Inferred negative control probe intensities were used in background correction.")
 		}
-		
+
 		for(i in 1:ncol(x))
 			x$E[, i] <- normexp.signal(normexp.par[i, ], x$E[, i])
 		x$E <- x$E + offset
-	} 
-	else {
+	} else {
 		x <- as.matrix(x)
 		if(any(tolower(status) %in% tolower(negctrl))){
 			normexp.par <- normexp.fit.control(x,status,negctrl,regular,robust)
-		}
-		else{
+		} else {
 			normexp.par <- normexp.fit.detection.p(x,detection.p)
 		}
-			
+
 		for(i in 1:ncol(x))
 			x[, i] <- normexp.signal(normexp.par[i, ], x[, i])
 		x <- x + offset

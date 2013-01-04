@@ -1127,17 +1127,17 @@ c  0.3482980 -0.4820695 -0.3841313
 > iset1 <- 1:5
 > y[iset1,3:4] <- y[iset1,3:4]+3
 > iset2 <- 6:10
-> roast(iset1,y,design,contrast=2)
+> roast(y=y,iset1,design,contrast=2)
       Active.Prop P.Value
 Down            0   0.996
 Up              1   0.005
 Mixed           1   0.008
-> roast(iset1,y,design,contrast=2,array.weights=c(0.5,1,0.5,1))
+> roast(y=y,iset1,design,contrast=2,array.weights=c(0.5,1,0.5,1))
       Active.Prop P.Value
 Down            0   0.999
 Up              1   0.002
 Mixed           1   0.003
-> mroast(list(set1=iset1,set2=iset2),y,design,contrast=2)
+> mroast(y=y,list(set1=iset1,set2=iset2),design,contrast=2)
 $P.Value
       Down    Up Mixed
 set1 0.998 0.003 0.003
@@ -1153,7 +1153,7 @@ $Active.Proportion
 set1    0  1     1
 set2    0  0     0
 
-> mroast(list(set1=iset1,set2=iset2),y,design,contrast=2,gene.weights=runif(100))
+> mroast(y=y,list(set1=iset1,set2=iset2),design,contrast=2,gene.weights=runif(100))
 $P.Value
       Down    Up Mixed
 set1 0.999 0.002 0.009
@@ -1252,4 +1252,4 @@ Loading required package: splines
 > 
 > proc.time()
    user  system elapsed 
-   1.02    0.03    1.04 
+   1.01    0.04    1.04 

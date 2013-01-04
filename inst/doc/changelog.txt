@@ -1,3 +1,10 @@
+4 Jan 2013: limma 3.15.6
+
+- roast() is now an S3 generic function.
+
+- Order of arguments changed for roast() and mroast().
+  First argument is now y.
+
 29 Nov 2012: limma 3.15.5
 
 - New robust method for estimating the empirical Bayes prior, called

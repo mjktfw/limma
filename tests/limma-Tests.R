@@ -214,10 +214,10 @@ design <- cbind(Intercept=1,Group=c(0,0,1,1))
 iset1 <- 1:5
 y[iset1,3:4] <- y[iset1,3:4]+3
 iset2 <- 6:10
-roast(iset1,y,design,contrast=2)
-roast(iset1,y,design,contrast=2,array.weights=c(0.5,1,0.5,1))
-mroast(list(set1=iset1,set2=iset2),y,design,contrast=2)
-mroast(list(set1=iset1,set2=iset2),y,design,contrast=2,gene.weights=runif(100))
+roast(y=y,iset1,design,contrast=2)
+roast(y=y,iset1,design,contrast=2,array.weights=c(0.5,1,0.5,1))
+mroast(y=y,list(set1=iset1,set2=iset2),design,contrast=2)
+mroast(y=y,list(set1=iset1,set2=iset2),design,contrast=2,gene.weights=runif(100))
 
 ### eBayes with trend
 
