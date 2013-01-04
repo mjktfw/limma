@@ -1176,9 +1176,9 @@ set2    0  0     0
      NGenes Correlation      PValue Direction
 set1      5  -0.2481655 0.001050253        Up
 > camera(y=y,list(set1=iset1,set2=iset2),design,contrast=2)
-     NGenes Correlation       PValue Direction
-set1      5  -0.2481655 0.0009047749        Up
-set2      5   0.1719094 0.9068364381      Down
+     NGenes Correlation       PValue Direction        FDR
+set1      5  -0.2481655 0.0009047749        Up 0.00180955
+set2      5   0.1719094 0.9068364381      Down 0.90683644
 > 
 > ### with EList arg
 > 
@@ -1273,4 +1273,4 @@ Loading required package: splines
 > 
 > proc.time()
    user  system elapsed 
-   0.92    0.12    1.04 
+   1.04    0.01    1.07 

@@ -1,9 +1,12 @@
 4 Jan 2013: limma 3.15.8
 
 - camera() now produces a data.frame instead of a matrix, and with
-  fewer columns than previously.  Instead of separate up and down
+  different columns than previously.  Instead of separate up and down
   p-value columns there is now a column indicating direction of
-  change.
+  change.  A new column gives the FDR adjusted p-value.
+
+- camera() has a new argument 'sort' to indicate whether output
+  results should be sorted by p-value.
 
 4 Jan 2013: limma 3.15.7
 

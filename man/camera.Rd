@@ -9,7 +9,7 @@
 Test whether a set of genes is highly ranked relative to other genes in terms of differential expression, accounting for inter-gene correlation.
 }
 \usage{
-\method{camera}{EList}(y, indices, design, contrast=ncol(design), weights=NULL, use.ranks=FALSE, allow.neg.cor=TRUE, trend.var=FALSE)
+\method{camera}{EList}(y, indices, design, contrast=ncol(design), weights=NULL, use.ranks=FALSE, allow.neg.cor=TRUE, trend.var=FALSE, sort=TRUE)
 interGeneCorrelation(y, design)
 }
 \arguments{
@@ -22,7 +22,8 @@ interGeneCorrelation(y, design)
   \item{use.ranks}{do a rank-based test (\code{TRUE}) or a parametric test (\code{FALSE}?}
   \item{allow.neg.cor}{should reduced variance inflation factors be allowed for negative correlations?}
   \item{trend.var}{logical, should an empirical Bayes trend be estimated?  See \code{\link{eBayes}} for details.}
-} 
+  \item{sort}{logical, should the results be sorted by p-value?}
+}
 
 \details{
 \code{camera} and \code{interGeneCorrelation} implement methods proposed by Wu and Smyth (2012).
@@ -46,7 +47,8 @@ The inflation factor depends on estimated genewise correlation and the number of
 \item{NGenes}{number of genes in set}
 \item{Correlation}{inter-gene correlation}
 \item{PValue}{two-tailed p-value}
-\item{Direction}{direction of change (\code{{"Up"} or \code{"Down"}}
+\item{Direction}{direction of change (\code{"Up"} or \code{"Down"})}
+\item{FDR}{Benjamini and Hochberg FDR adjusted p-value}
 
 \code{interGeneCorrelation} returns a list with components:
 \item{vif}{variance inflation factor}
