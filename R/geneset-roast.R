@@ -11,28 +11,30 @@ setMethod("show","Roast",
 function(object) print(object$p.value)
 )
 
-roast <- function(y,iset=NULL,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999)
+roast <- function(y,iset=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999)
 UseMethod("roast")
 
-roast.EList <- function(y,iset=NULL,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999)
+roast.EList <- function(y,iset=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999)
+# Gordon Smyth
 # Created 4 Jan 2013.
 {
-	if(is.null(design)) design <- as.matrix(y$design)
+	if(is.null(design)) design <- y$design
 	if(is.null(weights)) weights <- y$weights
 	y <- as.matrix(y)
 	roast(y=y,iset=iset,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,weights=weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,trend.var=trend.var,nrot=nrot)
 }
 
-roast.MAList <- function(y,iset=NULL,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999)
+roast.MAList <- function(y,iset=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999)
+# Gordon Smyth
 # Created 4 Jan 2013.
 {
-	if(is.null(design)) design <- as.matrix(y$design)
+	if(is.null(design)) design <- y$design
 	if(is.null(weights)) weights <- y$weights
 	y <- as.matrix(y)
 	roast(y=y,iset=iset,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,weights=weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,trend.var=trend.var,nrot=nrot)
 }
 
-roast.default <- function(y,iset=NULL,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999)
+roast.default <- function(y,iset=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999)
 # Rotation gene set testing for linear models
 # Gordon Smyth and Di Wu
 # Created 24 Apr 2008. Revised 4 Jan 2013.
@@ -46,6 +48,7 @@ roast.default <- function(y,iset=NULL,design,contrast=ncol(design),set.statistic
 	if(is.null(iset)) iset <- rep.int(TRUE,ngenes)
 
 #	Check design
+	if(is.null(design)) stop("no design matrix")
 	design <- as.matrix(design)
 	if(nrow(design) != n) stop("row dimension of design matrix must match column dimension of data")
 	p <- ncol(design)
@@ -331,9 +334,9 @@ mroast <- function(y,iset=NULL,design,contrast=ncol(design),set.statistic="mean"
 	pv2 <- pv
 	if(midp) pv2 <- pv2-1/2/(nrot+1)
 
-	adjpv[,"Mixed"] <- p.adjust(pv2[,"Mixed"], method=adjust.method) 
-	adjpv[,"Up"] <- p.adjust(pv2[,"Up"], method=adjust.method) 
 	adjpv[,"Down"] <- p.adjust(pv2[,"Down"], method=adjust.method) 
+	adjpv[,"Up"] <- p.adjust(pv2[,"Up"], method=adjust.method) 
+	adjpv[,"Mixed"] <- p.adjust(pv2[,"Mixed"], method=adjust.method) 
 	list(P.Value=pv, Adj.P.Value=adjpv, Active.Proportion=active) 
 }
 

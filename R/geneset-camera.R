@@ -20,24 +20,63 @@ interGeneCorrelation <- function(y, design)
 }
 
 
-camera <- function(indices,y,design,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,trend.var=FALSE)
+camera <- function(y,indices,design=NULL,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,trend.var=FALSE)
+UseMethod("camera")
+
+camera.EList <- function(y,indices,design=NULL,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,trend.var=FALSE)
+#	Gordon Smyth
+#  Created 4 Jan 2013
+{
+	if(is.null(design)) design <- y$design
+	if(is.null(weights)) weights <- y$weights
+	y <- y$E
+	camera(y=y,indices=indices,design=design,contrast=contrast,weights=weights,use.ranks=use.ranks,allow.neg.cor=allow.neg.cor,trend.var=trend.var)
+}
+
+camera.MAList <- function(y,indices,design=NULL,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,trend.var=FALSE)
+#	Gordon Smyth
+#  Created 4 Jan 2013
+{
+	if(is.null(design)) design <- y$design
+	if(is.null(weights)) weights <- y$weights
+	y <- y$M
+	camera(y=y,indices=indices,design=design,contrast=contrast,weights=weights,use.ranks=use.ranks,allow.neg.cor=allow.neg.cor,trend.var=trend.var)
+}
+
+camera.default <- function(y,indices,design=NULL,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,trend.var=FALSE)
 #	Competitive gene set test allowing for correlation between genes
 #	Gordon Smyth and Di Wu
-#  Created 2007.  Last modified 26 Feb 2012
+#  Created 2007.  Last modified 4 Jan 2013
 {
-#	Check arguments
-	if(!is.list(indices)) indices <- list(set1=indices)
-	if(is(y,"EList") || is(y,"MAList")) {
-		if(is.null(design)) design <- as.matrix(y$design)
-		if(is.null(weights)) weights <- as.matrix(y$weights)
-	}
+#	Check y
 	y <- as.matrix(y)
-
 	G <- nrow(y)
 	n <- ncol(y)
+
+#	Check indices
+	if(!is.list(indices)) indices <- list(set1=indices)
+
+#	Check design
+	if(is.null(design)) stop("no design matrix")
 	p <- ncol(design)
 	df.residual <- n-p
 	df.camera <- min(df.residual,G-2)
+
+#	Check weights
+	if(!is.null(weights)) {
+		if(any(weights<=0)) stop("weights must be positive")
+		if(length(weights)==n) {
+			sw <- sqrt(weights)
+			y <- t(t(y)*sw)
+			design <- design*sw
+			weights <- NULL
+		}
+	}
+	if(!is.null(weights)) {
+		if(length(weights)==G) weights <- matrix(weights,G,n)
+		weights <- as.matrix(weights)
+		if(any( dim(weights) != dim(y) )) stop("weights not conformal with y")
+	}
 
 #	Reform design matrix so that contrast of interest is last column
 	if(is.character(contrast)) {
@@ -54,14 +93,6 @@ camera <- function(indices,y,design,contrast=ncol(design),weights=NULL,use.ranks
 		design <- design[,c(2:p,1)]
 	}
 
-	if(length(weights)==n) {
-		if(any(weights<=0)) stop("only positive weights permitted")
-		sw <- sqrt(weights)
-		y <- t(t(y)*sw)
-		design <- design*sw
-		weights <- NULL
-	}
-
 #	Compute effects matrix
 	if(is.null(weights)) {
 		QR <- qr(design)
@@ -70,7 +101,6 @@ camera <- function(indices,y,design,contrast=ncol(design),weights=NULL,use.ranks
 		unscaledt <- effects[p,]
 		if(QR$qr[p,p]<0) unscaledt <- -unscaledt
 	} else {
-		if(any(weights<=0)) stop("only positive weights permitted")
 		effects <- matrix(0,n,G)
 		unscaledt <- rep(0,n)
 		sw <- sqrt(weights)

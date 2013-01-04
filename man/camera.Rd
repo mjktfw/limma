@@ -1,18 +1,21 @@
 \name{camera}
 \alias{camera}
+\alias{camera.EList}
+\alias{camera.MAList}
+\alias{camera.default}
 \alias{interGeneCorrelation}
 \title{Competitive Gene Set Test Accounting for Inter-gene Correlation}
 \description{
 Test whether a set of genes is highly ranked relative to other genes in terms of differential expression, accounting for inter-gene correlation.
 }
 \usage{
-camera(indices, y, design, contrast=ncol(design), weights=NULL, use.ranks=FALSE, allow.neg.cor=TRUE, trend.var=FALSE)
+\method{camera}{EList}(y, indices, design, contrast=ncol(design), weights=NULL, use.ranks=FALSE, allow.neg.cor=TRUE, trend.var=FALSE)
 interGeneCorrelation(y, design)
 }
 \arguments{
-  \item{indices}{an index vector or a list of index vectors.  Can be any vector such that \code{y[indices,]} selects the rows corresponding to the test set.}
   \item{y}{numeric matrix giving log-expression or log-ratio values for a series of microarrays, or any data object that can coerced to a matrix including \code{ExpressionSet}, \code{MAList}, \code{EList} or \code{PLMSet} objects.
   Rows correspond to probes and columns to samples.}
+  \item{indices}{an index vector or a list of index vectors.  Can be any vector such that \code{y[indices,]} selects the rows corresponding to the test set.}
   \item{design}{design matrix.}
   \item{contrast}{contrast of the linear model coefficients for which the test is required. Can be an integer specifying a column of \code{design}, or else a numeric vector of same length as the number of columns of \code{design}.}
   \item{weights}{can be a numeric matrix of individual weights, of same size as \code{y}, or a numeric vector of array weights with length equal to \code{ncol(y)}.}
@@ -81,10 +84,10 @@ y[iset1,4:6] <- y[iset1,4:6]+1
 # Second set of 20 genes are not DE
 iset2 <- 21:40
  
-camera(iset1, y, design)
-camera(iset2, y, design)
+camera(y, iset1, design)
+camera(y, iset2, design)
 
-camera(list(set1=iset1,set2=iset2), y, design)
+camera(y, list(set1=iset1,set2=iset2), design)
 }
 \keyword{htest}
 

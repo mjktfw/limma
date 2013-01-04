@@ -1170,9 +1170,30 @@ set1    0  1     1
 set2    0  0     0
 
 > 
-> ### eBayes with trend
+> ### camera
+> 
+> camera(y=y,iset1,design,contrast=2,weights=c(0.5,1,0.5,1))
+     NGenes Correlation      Down           Up    TwoSided
+set1      5  -0.2481655 0.9994749 0.0005251267 0.001050253
+> camera(y=y,list(set1=iset1,set2=iset2),design,contrast=2)
+     NGenes Correlation      Down           Up     TwoSided
+set1      5  -0.2481655 0.9995476 0.0004523875 0.0009047749
+set2      5   0.1719094 0.4534182 0.5465817810 0.9068364381
+> 
+> ### with EList arg
 > 
 > y <- new("EList",list(E=y))
+> roast(y=y,iset1,design,contrast=2)
+      Active.Prop P.Value
+Down            0   0.999
+Up              1   0.002
+Mixed           1   0.002
+> camera(y=y,iset1,design,contrast=2)
+     NGenes Correlation      Down           Up     TwoSided
+set1      5  -0.2481655 0.9995476 0.0004523875 0.0009047749
+> 
+> ### eBayes with trend
+> 
 > fit <- lmFit(y,design)
 > fit <- eBayes(fit,trend=TRUE)
 Loading required package: splines
@@ -1252,4 +1273,4 @@ Loading required package: splines
 > 
 > proc.time()
    user  system elapsed 
-   1.01    0.04    1.04 
+   0.96    0.09    1.06 

@@ -219,9 +219,19 @@ roast(y=y,iset1,design,contrast=2,array.weights=c(0.5,1,0.5,1))
 mroast(y=y,list(set1=iset1,set2=iset2),design,contrast=2)
 mroast(y=y,list(set1=iset1,set2=iset2),design,contrast=2,gene.weights=runif(100))
 
-### eBayes with trend
+### camera
+
+camera(y=y,iset1,design,contrast=2,weights=c(0.5,1,0.5,1))
+camera(y=y,list(set1=iset1,set2=iset2),design,contrast=2)
+
+### with EList arg
 
 y <- new("EList",list(E=y))
+roast(y=y,iset1,design,contrast=2)
+camera(y=y,iset1,design,contrast=2)
+
+### eBayes with trend
+
 fit <- lmFit(y,design)
 fit <- eBayes(fit,trend=TRUE)
 topTable(fit,coef=2)
