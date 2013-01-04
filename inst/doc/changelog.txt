@@ -1,3 +1,10 @@
+4 Jan 2013: limma 3.15.8
+
+- camera() now produces a data.frame instead of a matrix, and with
+  fewer columns than previously.  Instead of separate up and down
+  p-value columns there is now a column indicating direction of
+  change.
+
 4 Jan 2013: limma 3.15.7
 
 - camera() is now an S3 generic function.

@@ -42,12 +42,11 @@ The inflation factor depends on estimated genewise correlation and the number of
 }
 
 \value{
-\code{camera} returns a numeric matrix with a row for each set and the following columns:
+\code{camera} returns a data.frame with a row for each set and the following columns:
 \item{NGenes}{number of genes in set}
 \item{Correlation}{inter-gene correlation}
-\item{Down}{left-tail p-value}
-\item{Up}{right-tail p-value}
-\item{TwoSided}{two-tailed p-value}
+\item{PValue}{two-tailed p-value}
+\item{Direction}{direction of change (\code{{"Up"} or \code{"Down"}}
 
 \code{interGeneCorrelation} returns a list with components:
 \item{vif}{variance inflation factor}
@@ -58,8 +57,8 @@ The inflation factor depends on estimated genewise correlation and the number of
 
 \references{
 Wu, D, and Smyth, GK (2012). Camera: a competitive gene set test accounting for inter-gene correlation.
-\emph{Nucleic Acids Research}, doi: 10.1093/nar/gks461.
-\url{http://nar.oxfordjournals.org/content/early/2012/05/24/nar.gks461.abstract}
+\emph{Nucleic Acids Research} 40, e133.
+\url{http://nar.oxfordjournals.org/content/40/17/e133}
 
 Goeman, JJ, and Buhlmann, P (2007).
 Analyzing gene expression data in terms of gene sets: methodological issues.

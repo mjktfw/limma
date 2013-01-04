@@ -165,5 +165,13 @@ camera.default <- function(y,indices,design=NULL,contrast=ncol(design),weights=N
 		}
 	}
 	tab[,5] <- 2*pmin(tab[,3],tab[,4])
+
+#	New column names (Jan 2013)
+	tab <- data.frame(tab,stringsAsFactors=FALSE)
+	Direction <- rep.int("Up",nsets)
+	Direction[tab$Down < tab$Up] <- "Down"
+	tab$Down <- tab$Up <- NULL
+	colnames(tab)[3] <- "PValue"
+	tab$Direction <- Direction
 	tab
 }

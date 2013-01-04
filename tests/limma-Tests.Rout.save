@@ -1173,12 +1173,12 @@ set2    0  0     0
 > ### camera
 > 
 > camera(y=y,iset1,design,contrast=2,weights=c(0.5,1,0.5,1))
-     NGenes Correlation      Down           Up    TwoSided
-set1      5  -0.2481655 0.9994749 0.0005251267 0.001050253
+     NGenes Correlation      PValue Direction
+set1      5  -0.2481655 0.001050253        Up
 > camera(y=y,list(set1=iset1,set2=iset2),design,contrast=2)
-     NGenes Correlation      Down           Up     TwoSided
-set1      5  -0.2481655 0.9995476 0.0004523875 0.0009047749
-set2      5   0.1719094 0.4534182 0.5465817810 0.9068364381
+     NGenes Correlation       PValue Direction
+set1      5  -0.2481655 0.0009047749        Up
+set2      5   0.1719094 0.9068364381      Down
 > 
 > ### with EList arg
 > 
@@ -1189,8 +1189,8 @@ Down            0   0.999
 Up              1   0.002
 Mixed           1   0.002
 > camera(y=y,iset1,design,contrast=2)
-     NGenes Correlation      Down           Up     TwoSided
-set1      5  -0.2481655 0.9995476 0.0004523875 0.0009047749
+     NGenes Correlation       PValue Direction
+set1      5  -0.2481655 0.0009047749        Up
 > 
 > ### eBayes with trend
 > 
@@ -1273,4 +1273,4 @@ Loading required package: splines
 > 
 > proc.time()
    user  system elapsed 
-   0.96    0.09    1.06 
+   0.92    0.12    1.04 
