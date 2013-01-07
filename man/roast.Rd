@@ -62,18 +62,24 @@ Rows correspond to the alternative hypotheses mixed, up or down.}
 }
 
 \details{
-This function implements the ROAST gene set test from Wu et al (2010).
-It tests whether any of the genes in the set are differentially expressed.
-The function can be used for any microarray experiment which can be represented by a linear model.
+These functions implement the ROAST gene set tests proposed by Wu et al (2010).
+They perform \emph{self-contained} gene set tests in the sense defined by Goeman and Buhlmann (2007).
+For \emph{competitive} gene set tests, see \code{\link{camera}}.
+For a gene set enrichment analysis style analysis using a database of gene sets, see \code{\link{romer}}.
+
+\code{roast} and \code{mroast} test whether any of the genes in the set are differentially expressed.
+They can be used for any microarray experiment which can be represented by a linear model.
 The design matrix for the experiment is specified as for the \code{\link{lmFit}} function, and the contrast of interest is specified as for the \code{\link{contrasts.fit}} function.
 This allows users to focus on differential expression for any coefficient or contrast in a linear model.
-If \code{contrast} is not specified, the last coefficient in the linear model will be tested.
-The arguments \code{array.weights}, \code{block} and \code{correlation} have the same meaning as they for for the \code{\link{lmFit}} function.
+If \code{contrast} is not specified, then the last coefficient in the linear model will be tested.
 
+The argument \code{gene.weights} allows directional weights to be set for individual genes in the set.
+This is often useful, because it allows each gene to be flagged as to its direction and magnitude of change based on prior experimentation.
+A typical use it to make the \code{gene.weights} \code{1} or \code{-1} depending on whether the gene is up or down-regulated in the pathway under consideration.
+
+The arguments \code{array.weights}, \code{block} and \code{correlation} have the same meaning as for the \code{\link{lmFit}} function.
 The arguments \code{df.prior} and \code{var.prior} have the same meaning as in the output of the \code{\link{eBayes}} function.
 If these arguments are not supplied, they are estimated exactly as is done by \code{eBayes}.
-
-The argument \code{gene.weights} allows directions or weights to be set for individual genes in the set.
 
 The gene set statistics \code{"mean"}, \code{"floormean"}, \code{"mean50"} and \code{msq} are defined by Wu et al (2010).
 The different gene set statistics have different sensitivities to small number of genes.
@@ -92,7 +98,7 @@ The p-value is computed as \code{(b+1)/(nrot+1)} where \code{b} is the number of
 This means that the smallest possible p-value is \code{1/(nrot+1)}.
 
 \code{mroast} does roast tests for multiple sets, including adjustment for multiple testing.
-By default, \code{mroast} reports ordinary p-values but uses mid-p-values at the multiple testing stage.
+By default, \code{mroast} reports ordinary p-values but uses mid-p-values (Routledge, 1994) at the multiple testing stage.
 Mid-p-values are probably a good choice when using false discovery rates (\code{adjust.method="BH"}) but not when controlling the family-wise type I error rate (\code{adjust.method="holm"}).
 }
 
@@ -101,10 +107,7 @@ The default setting for the set statistic was changed in limma 3.5.9 (3 June 201
 }
 
 \seealso{
-\code{roast} performs a \emph{self-contained} test in the sense defined by Goeman and Buhlmann (2007).
-For a \emph{competitive} gene set test, see \code{\link{wilcoxGST}}.
-For a competitive gene set enrichment analysis using a database of gene sets, see \code{\link{romer}.
-}
+\code{\link{camera}}, \code{\link{romer}}, \code{\link{geneSetTest}}.
 
 An overview of tests in limma is given in \link{08.Tests}.
 }
@@ -129,7 +132,7 @@ Practicing safe statistics with the mid-p.
 
 Wu, D, Lim, E, Francois Vaillant, F, Asselin-Labat, M-L, Visvader, JE, and Smyth, GK (2010). ROAST: rotation gene set tests for complex microarray experiments.
 \emph{Bioinformatics} 26, 2176-2182.
-\url{http://bioinformatics.oxfordjournals.org/cgi/content/abstract/btq401?}
+\url{http://bioinformatics.oxfordjournals.org/content/26/17/2176}
 }
 
 \examples{
@@ -144,6 +147,7 @@ y[iset1,3:4] <- y[iset1,3:4]+3
 iset2 <- 6:10
 
 roast(y,iset1,design,contrast=2)
+mroast(y,iset1,design,contrast=2)
 mroast(y,list(set1=iset1,set2=iset2),design,contrast=2)
 }
 \keyword{htest}
