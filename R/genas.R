@@ -76,6 +76,7 @@ genas <- function(fit,coef=c(1,2),chooseMethod=NULL,plot=FALSE,alpha=0.4)
 {
 	d0<-fit$df.prior
 	d<-fit$df.residual
+	if(d0==Inf) d0 <- 999*d[1]
 	s<-fit$s2.post
 	B<-fit$coefficients
 	m<-m
@@ -104,6 +105,7 @@ genas <- function(fit,coef=c(1,2),chooseMethod=NULL,plot=FALSE,alpha=0.4)
 {	
  	     d0<-fit$df.prior
  	     d<-fit$df.residual
+	     if(d0==Inf) d0 <- 999*d[1]
  	     s<-fit$s2.post
  	     B<-fit$coefficients
  	     m<-m

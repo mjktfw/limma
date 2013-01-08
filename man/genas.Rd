@@ -6,18 +6,23 @@
 Calculates biological correlation between two gene expression profiles.
 }
 \usage{
-genas(fit, coef=c(1,2))
+genas(fit, coef=c(1,2), chooseMethod=NULL,plot=FALSE,alpha=0.4)
 }
 \arguments{
  \item{fit}{an \code{MArrayLM} fitted model object produced by \code{lmFit} or \code{contrasts.fit} and followed by \code{eBayes}}
  \item{coef}{numeric vector of length 2 to indicate which contrasts/columns in the fit object are to be used}
+ \item{chooseMethod}{character string, "n" for none, "Fpval" to subset using the F p-value, "p.union" to subset based on the union of the two contrasts' significant moderated t p-value, "p.int" to subset based on the intersection of the two contrasts' significant moderated t p-value, "logFC" to subset based on genes that have absolute logFC greater than the 90th quantile, "predFC" to subset based on genes that have absolute predictive logFC greater than the 90th quantile}
+ \item{plot}{logical, if true a logFC versus logFC plot is outputted with biological and technical correlation represented by ellipses}
+ \item{alpha}{plot option, a numeric value between 0 and 1 which determines the transparency of the ellipses}
   }
 \details{
-The biological correlation between the true log fold changes of pairs of comparisons is computed. This method is to be applied when multiple groups (such as treatment groups, mutants or knock-outs) are compared back to the same control group.
+The biological correlation between the log fold changes of pairs of comparisons is computed. This method is to be applied when multiple groups (such as treatment groups, mutants or knock-outs) are compared back to the same control group.
 
 This method is an extension of the empirical Bayes method of \code{limma}. It aims to separate the technical correlation, which comes from comparing multiple treatment/mutant/knock-out groups to the same control group, from biological correlation, which is the true correlation of the gene expression profiles between two treatment/mutant/knock-out groups.
 
-The fit object should include only differentially expressed genes. One approach is to calculate the true proportion of differentially expressed genes using \code{convest} on the F p-value produced by \code{lmFit}. Any reasonable set of genes displaying some degree of differential expression should be adequate.
+The \code{chooseMethod} argument specifies whether and how the fit object should be subsetted. The default is "n", which uses all genes in the fit object to estimate the biological correlation. Only genes that display evidence of differential expression can be used to estimate the biological correlation. The option "Fpval" chooses genes based on how many F p-values are estimated to be truly significant using the method \code{propNotDE}. This should capture genes that display any evidence of differential expression in either of the two contrasts. The options "p.union" and "p.int" are based on the moderated t p-values from both contrasts. From the \code{propNotDE} method an estimate of the number of p-values truly significant in either of the two contrasts can be obtained. "p.union" takes the union of these genes and "p.int" takes the intersection of these genes. The other options, "logFC" and "predFC" subsets on genes that attain a logFC or predFC at least as large as the 90th percentile of the log fold changes or predictive log fold changes on the absolute scale. 
+
+The \code{plot} option is a logical argument that specifies whether or not to plot the log fold changes of the two contrasts. The biological and technical correlations are overlaid on the log fold change versus log fold change scatterplot using transparent ellipses. \code{library(ellipse)} is required to enable the plotting of ellipses. The \code{alpha} argument takes values between 0 and 1 and controls how transparent the ellipses are.
 }
 \value{
 	\code{genas} produces a list with the following components.
@@ -26,6 +31,7 @@ The fit object should include only differentially expressed genes. One approach 
 	  \item{biological.correlation}{estimate of the biological correlation}
 	  \item{deviance}{the likelihood ratio test statistic used to test whether the biological correlation is equal to 0}
 	  \item{p.value}{the p.value associated with \code{deviance}}
+	  \item{n}{the number of genes used to estimate the biological correlation} 
  }
  \seealso{
 \code{\link{lmFit}}, \code{\link{eBayes}}, \code{\link{contrasts.fit}}
@@ -39,9 +45,9 @@ The fit object should include only differentially expressed genes. One approach 
 \examples{
 library(limma)
 #  Simulate gene expression data,
-#  6 microarrays with 100 genes on each array 
+#  6 microarrays with 1000 genes on each array 
 set.seed(2004)
-y<-matrix(rnorm(600),ncol=6)
+y<-matrix(rnorm(6000),ncol=6)
 
 # two experimental groups and one control group with two replicates each
 group<-factor(c("A","A","B","B","control","control"))
