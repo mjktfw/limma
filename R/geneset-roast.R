@@ -301,6 +301,9 @@ roast.default <- function(y,iset=NULL,design=NULL,contrast=ncol(design),set.stat
 }
 
 mroast <- function(y,iset=NULL,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE,sort="directional")
+UseMethod("mroast")
+
+mroast.default <- function(y,iset=NULL,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE,sort="directional")
 #  Rotation gene set testing with multiple sets
 #  Gordon Smyth and Di Wu
 #  Created 28 Jan 2010. Last revised 3 Feb 2012.

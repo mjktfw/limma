@@ -4,6 +4,7 @@
 \alias{roast.MAList}
 \alias{roast.default}
 \alias{mroast}
+\alias{mroast.default}
 \alias{Roast-class}
 \alias{show,Roast-method}
 \title{Rotation Gene Set Tests}
@@ -15,7 +16,7 @@ Rotation gene set testing for linear models.
 \method{roast}{EList}(y, iset=NULL, design, contrast=ncol(design), set.statistic="mean",
      gene.weights=NULL, array.weights=NULL, weights=NULL, block=NULL, correlation,
      var.prior=NULL, df.prior=NULL, trend.var=FALSE, nrot=999)
-mroast(y, iset=NULL, design, contrast=ncol(design), set.statistic="mean",
+\method{mroast}{default}(y, iset=NULL, design, contrast=ncol(design), set.statistic="mean",
      gene.weights=NULL, array.weights=NULL, block=NULL, correlation,
      var.prior=NULL, df.prior=NULL, trend.var=FALSE, nrot=999, adjust.method="BH", midp=TRUE, sort="directional")
 }
