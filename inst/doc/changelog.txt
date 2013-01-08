@@ -1,6 +1,10 @@
 8 Jan 2013: limma 3.15.10
 
-- mroast() now an S3 generic function.
+- mroast() now an S3 generic function, with methods for EList and
+  MAList objects.
+
+- mroast() has a new argument 'weights' for observational weights,
+  to bring it into line with roast().
 
 4 Jan 2013: limma 3.15.9
 
@@ -23,13 +27,15 @@
 
 4 Jan 2013: limma 3.15.7
 
-- camera() is now an S3 generic function.
+- camera() is now an S3 generic function, with methods for EList and
+  MAList objects.
 
 - Order of arguments changed for camera().  First argument is now y.
 
 4 Jan 2013: limma 3.15.6
 
-- roast() is now an S3 generic function.
+- roast() is now an S3 generic function, with methods for EList and
+  MAList objects.
 
 - Order of arguments changed for roast() and mroast().  First
   argument is now y.

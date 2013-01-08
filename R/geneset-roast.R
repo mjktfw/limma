@@ -19,7 +19,7 @@ roast.EList <- function(y,iset=NULL,design=NULL,contrast=ncol(design),set.statis
 # Created 4 Jan 2013.
 {
 	if(is.null(design)) design <- y$design
-	if(is.null(weights)) weights <- y$weights
+	if(is.null(weights) && is.null(array.weights)) weights <- y$weights
 	y <- as.matrix(y)
 	roast(y=y,iset=iset,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,weights=weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,trend.var=trend.var,nrot=nrot)
 }
@@ -29,7 +29,7 @@ roast.MAList <- function(y,iset=NULL,design=NULL,contrast=ncol(design),set.stati
 # Created 4 Jan 2013.
 {
 	if(is.null(design)) design <- y$design
-	if(is.null(weights)) weights <- y$weights
+	if(is.null(weights) && is.null(array.weights)) weights <- y$weights
 	y <- as.matrix(y)
 	roast(y=y,iset=iset,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,weights=weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,trend.var=trend.var,nrot=nrot)
 }
@@ -73,7 +73,7 @@ roast.default <- function(y,iset=NULL,design=NULL,contrast=ncol(design),set.stat
 	
 #	Check and divide out array weights
 	if(!is.null(array.weights)) {
-		if(!is.null(weights)) stop("Can't use array.weights with weights")
+		if(!is.null(weights)) stop("Can't specify both array.weights and observational weights")
 		if(any(array.weights <= 0)) stop("array.weights must be positive")
 		if(length(array.weights) != n) stop("Length of array.weights doesn't match number of array")
 		design <- design*sqrt(array.weights)
@@ -300,30 +300,76 @@ roast.default <- function(y,iset=NULL,design=NULL,contrast=ncol(design),set.stat
 	new("Roast",list(p.value=out,var.prior=s02,df.prior=d0))
 }
 
-mroast <- function(y,iset=NULL,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE,sort="directional")
+mroast <- function(y,iset=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE,sort="directional")
 UseMethod("mroast")
 
-mroast.default <- function(y,iset=NULL,design,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE,sort="directional")
+mroast.EList <- function(y,iset=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE,sort="directional")
+# Gordon Smyth
+# Created 8 Jan 2013.
+{
+	if(is.null(design)) design <- y$design
+	if(is.null(weights) && is.null(array.weights)) weights <- y$weights
+	y <- as.matrix(y)
+	mroast(y=y,iset=iset,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,weights=weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,trend.var=trend.var,nrot=nrot)
+}
+
+mroast.MAList <- function(y,iset=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE,sort="directional")
+# Gordon Smyth
+# Created 8 Jan 2013.
+{
+	if(is.null(design)) design <- y$design
+	if(is.null(weights) && is.null(array.weights)) weights <- y$weights
+	y <- as.matrix(y)
+	mroast(y=y,iset=iset,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,weights=weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,trend.var=trend.var,nrot=nrot)
+}
+
+mroast.default <- function(y,iset=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE,sort="directional")
 #  Rotation gene set testing with multiple sets
 #  Gordon Smyth and Di Wu
-#  Created 28 Jan 2010. Last revised 3 Feb 2012.
-{ 
+#  Created 28 Jan 2010. Last revised 8 Feb 2012.
+{
+#	Check y
+	y <- as.matrix(y)
+
+#	Check iset
 	if(is.null(iset)) iset <- rep(TRUE,nrow(y))
 	if(!is.list(iset)) iset <- list(set = iset)
 	nsets <- length(iset)
 	if(is.null(names(iset))) names(iset) <- paste("set",1:nsets,sep="")
+
+#	Check design
+	if(is.null(design)) stop("No design matrix")
+	design <- as.matrix(design)
+
+#	Check gene.weights
 	if(!is.null(gene.weights)) if(length(gene.weights) != nrow(y)) stop("gene.weights must have length equal to nrow(y)")
 
-#	Estimate var.prior and df.prior if not preset
-	fit <- lmFit(y,design=design,weights=array.weights,block=block,correlation=correlation)
-	covariate <- NULL
-	if(trend.var) {
-		covariate <- fit$Amean
-		if(is.null(covariate)) covariate <- rowMeans(as.matrix(y))
+#	Check weights
+	if(!is.null(weights)) {
+		if(!is.null(array.weights)) stop("Can't specify both array weights and observational weights")
+		weights <- as.matrix(weights)
+		if(any(dim(weights) != dim(y))) stop("weights must have same dimensions as y")
 	}
-	sv <- squeezeVar(fit$sigma^2,df=fit$df.residual,covariate=covariate)
-	var.prior <- sv$var.prior
-	df.prior <- sv$df.prior
+
+#	Check array.weights
+	if(!is.null(array.weights)) {
+		if(length(array.weights) != ncol(y)) stop("array.weights wrong length")
+		weights <- array.weights
+	}
+
+#	Estimate var.prior and df.prior if not preset
+	if(is.null(var.prior) || is.null(df.prior)) {
+		fit <- lmFit(y,design=design,weights=weights,block=block,correlation=correlation)
+		if(trend.var) {
+			covariate <- fit$Amean
+			if(is.null(covariate)) covariate <- rowMeans(y)
+		} else {
+			covariate=NULL
+		}
+		sv <- squeezeVar(fit$sigma^2,df=fit$df.residual,covariate=covariate)
+		var.prior <- sv$var.prior
+		df.prior <- sv$df.prior
+	}
 
 	pv <- adjpv <- active <- array(0,c(nsets,3),dimnames=list(names(iset),c("Down","Up","Mixed")))
 	if(nsets<1) return(pv)
