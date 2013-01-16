@@ -18,7 +18,7 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 		}
 	}
 
-	source <- match.arg(source,c("generic","agilent","agilent.median","arrayvision","arrayvision.ARM","arrayvision.MTM","bluefuse","genepix","genepix.mean","genepix.median","genepix.custom","imagene","imagene9","quantarray","scanarrayexpress","smd.old","smd","spot","spot.close.open"))
+	source <- match.arg(source,c("generic","agilent","agilent.mean","agilent.median","arrayvision","arrayvision.ARM","arrayvision.MTM","bluefuse","genepix","genepix.mean","genepix.median","genepix.custom","imagene","imagene9","quantarray","scanarrayexpress","smd.old","smd","spot","spot.close.open"))
 #	source2 is the source type with qualifications removed
 	source2 <- strsplit(source,split=".",fixed=TRUE)[[1]][1]
 	if(is.null(quote)) if(source=="agilent") quote <- "" else quote <- "\""
