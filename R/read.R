@@ -144,18 +144,23 @@ getLayout2 <- function(galfile)
 readTargets <- function(file="Targets.txt",path=NULL,sep="\t",row.names=NULL,quote="\"",...)
 #	Read data frame of target information
 #	Gordon Smyth
-#	19 Oct 2003.  Last modified 17 Dec 2005.
+#	19 Oct 2003.  Last modified 24 Jan 2013.
 {
 	if(!is.null(path)) file <- file.path(path,file)
-	tab <- read.table(file,header=TRUE,as.is=TRUE,sep=sep,quote=quote,fill=TRUE,...)
+	tab <- read.table(file,header=TRUE,stringsAsFactors=FALSE,sep=sep,quote=quote,fill=TRUE,...)
 #	if(!all(c("Cy3","Cy5") %in% names(tab))) warning("File should contain columns: Cy3 and Cy5")
 	if(is.null(row.names)) {
-		rn <- try(row.names(tab) <- tab$Label, silent=TRUE)
-		if(inherits(rn,"try-error")) {
-			rn <- try(row.names(tab) <- removeExt(tab$FileName), silent=TRUE)
-		}
+		rn <- tab[["Label"]]
+		if(anyDuplicated(rn)) rn <- NULL
+		if(is.null(rn)) rn <- tab[["Labels"]]
+		if(anyDuplicated(rn)) rn <- NULL
+		if(is.null(rn)) rn <- tab[["FileName"]]
+		if(!is.null(rn)) rn <- removeExt(rn)
+		if(anyDuplicated(rn)) rn <- NULL
+		if(!is.null(rn)) row.names(tab) <- rn
 	} else {
-		if(row.names %in% names(tab)) row.names(tab) <- tab[,row.names]
+		row.names <- as.character(row.names)
+		if(row.names %in% names(tab)) row.names(tab) <- tab[[row.names]]
 	}
 	tab
 }

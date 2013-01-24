@@ -23,7 +23,7 @@ For a two-color experiment, the targets file will normally include columns label
 Other columns may contain any other covariate information associated with the arrays or targets used in the experiment.
 
 If \code{row.names} is non-null and there is a column by that name with unique values, then those values will be used as row names for the dataframe.
-If \code{row.names} is null, then the column \code{Labels} will be used if such exists or, failing that, the column \code{FileName}.
+If \code{row.names} is null, then the column \code{Label} will be used if such exists or, failing that, the column \code{FileName}.
 
 See the Limma User's Guide for examples of this function.
 }

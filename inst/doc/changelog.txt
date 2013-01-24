@@ -1,4 +1,12 @@
-16 Jan 2012: limma 3.15.12
+24 Jan 2013: limma 3.15.13
+
+- documentation added for fitGammaIntercept().
+
+- bug fix to readTargets() to avoid warning message when
+  targets$Label is used to set row names but targets$Label
+  contains duplicated entries.
+
+16 Jan 2013: limma 3.15.12
 
 - bug fix to read.maimages(), which was not accepting
   source="agilent.mean".
