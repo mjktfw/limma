@@ -6,10 +6,10 @@
 Gene set enrichment analysis for linear models using rotation tests (ROtation testing using MEan Ranks).
 }
 \usage{
-romer(iset,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,set.statistic="mean",nrot=9999)
+romer(index,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,set.statistic="mean",nrot=9999)
 }
 \arguments{
-  \item{iset}{list of indices specifying the rows of \code{y} in the gene sets. The list can be made using \link{symbols2indices}.}
+  \item{index}{list of indices specifying the rows of \code{y} in the gene sets. The list can be made using \link{symbols2indices}.}
   \item{y}{numeric matrix giving log-expression values.}
   \item{design}{design matrix}
   \item{contrast}{contrast for which the test is required. Can be an integer specifying a column of \code{design}, or else a contrast vector of length equal to the number of columns of \code{design}.}
@@ -91,12 +91,12 @@ Gene set enrichment analysis: a knowledge-based approach for interpreting genome
 \examples{
 y <- matrix(rnorm(100*4),100,4)
 design <- cbind(Intercept=1,Group=c(0,0,1,1))
-iset <- 1:5
-y[iset,3:4] <- y[iset,3:4]+3
+index <- 1:5
+y[index,3:4] <- y[index,3:4]+3
 
-iset1 <- 1:5
-iset2 <- 6:10
-r <- romer(iset=list(iset1=iset1,iset2=iset2),y=y,design=design,contrast=2,nrot=99)
+index1 <- 1:5
+index2 <- 6:10
+r <- romer(index=list(set1=index1,set2=index2),y=y,design=design,contrast=2,nrot=99)
 r
 topRomer(r,alt="up")
 topRomer(r,alt="down")

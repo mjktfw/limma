@@ -1,3 +1,10 @@
+24 Jan 2013: limma 3.15.14
+
+- To make the interfaces more consistent, all functions that perform
+  gene sets now use the argument 'index' to specify which genes 
+  are included in the test set.  Previously this argument was called
+  'iset' for roast() and romer() and 'indices' for camera().
+
 24 Jan 2013: limma 3.15.13
 
 - documentation added for fitGammaIntercept().

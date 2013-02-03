@@ -9,13 +9,13 @@
 Test whether a set of genes is highly ranked relative to other genes in terms of differential expression, accounting for inter-gene correlation.
 }
 \usage{
-\method{camera}{EList}(y, indices, design, contrast=ncol(design), weights=NULL, use.ranks=FALSE, allow.neg.cor=TRUE, trend.var=FALSE, sort=TRUE)
+\method{camera}{EList}(y, index, design, contrast=ncol(design), weights=NULL, use.ranks=FALSE, allow.neg.cor=TRUE, trend.var=FALSE, sort=TRUE)
 interGeneCorrelation(y, design)
 }
 \arguments{
   \item{y}{numeric matrix giving log-expression or log-ratio values for a series of microarrays, or any data object that can coerced to a matrix including \code{ExpressionSet}, \code{MAList}, \code{EList} or \code{PLMSet} objects.
   Rows correspond to probes and columns to samples.}
-  \item{indices}{an index vector or a list of index vectors.  Can be any vector such that \code{y[indices,]} selects the rows corresponding to the test set.}
+  \item{index}{an index vector or a list of index vectors.  Can be any vector such that \code{y[index,]} selects the rows corresponding to the test set.}
   \item{design}{design matrix.}
   \item{contrast}{contrast of the linear model coefficients for which the test is required. Can be an integer specifying a column of \code{design}, or else a numeric vector of same length as the number of columns of \code{design}.}
   \item{weights}{can be a numeric matrix of individual weights, of same size as \code{y}, or a numeric vector of array weights with length equal to \code{ncol(y)}.}
@@ -79,16 +79,16 @@ y <- matrix(rnorm(1000*6),1000,6)
 design <- cbind(Intercept=1,Group=c(0,0,0,1,1,1))
 
 # First set of 20 genes are genuinely differentially expressed
-iset1 <- 1:20
-y[iset1,4:6] <- y[iset1,4:6]+1
+index1 <- 1:20
+y[index1,4:6] <- y[index1,4:6]+1
 
 # Second set of 20 genes are not DE
-iset2 <- 21:40
+index2 <- 21:40
  
-camera(y, iset1, design)
-camera(y, iset2, design)
+camera(y, index1, design)
+camera(y, index2, design)
 
-camera(y, list(set1=iset1,set2=iset2), design)
+camera(y, list(set1=index1,set2=index2), design)
 }
 \keyword{htest}
 

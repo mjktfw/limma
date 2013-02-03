@@ -19,41 +19,41 @@ interGeneCorrelation <- function(y, design)
 	list(vif=vif,correlation=correlation)
 }
 
-camera <- function(y,indices,design=NULL,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,trend.var=FALSE,sort=TRUE)
+camera <- function(y,index,design=NULL,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,trend.var=FALSE,sort=TRUE)
 UseMethod("camera")
 
-camera.EList <- function(y,indices,design=NULL,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,trend.var=FALSE,sort=TRUE)
+camera.EList <- function(y,index,design=NULL,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,trend.var=FALSE,sort=TRUE)
 #	Gordon Smyth
-#  Created 4 Jan 2013
+#  Created 4 Jan 2013.  Last modified 22 Jan 2013
 {
 	if(is.null(design)) design <- y$design
 	if(is.null(weights)) weights <- y$weights
 	y <- y$E
-	camera(y=y,indices=indices,design=design,contrast=contrast,weights=weights,use.ranks=use.ranks,allow.neg.cor=allow.neg.cor,trend.var=trend.var,sort=sort)
+	camera(y=y,index=index,design=design,contrast=contrast,weights=weights,use.ranks=use.ranks,allow.neg.cor=allow.neg.cor,trend.var=trend.var,sort=sort)
 }
 
-camera.MAList <- function(y,indices,design=NULL,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,trend.var=FALSE,sort=TRUE)
+camera.MAList <- function(y,index,design=NULL,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,trend.var=FALSE,sort=TRUE)
 #	Gordon Smyth
-#  Created 4 Jan 2013
+#  Created 4 Jan 2013.  Last modified 22 Jan 2013
 {
 	if(is.null(design)) design <- y$design
 	if(is.null(weights)) weights <- y$weights
 	y <- y$M
-	camera(y=y,indices=indices,design=design,contrast=contrast,weights=weights,use.ranks=use.ranks,allow.neg.cor=allow.neg.cor,trend.var=trend.var,sort=sort)
+	camera(y=y,index=index,design=design,contrast=contrast,weights=weights,use.ranks=use.ranks,allow.neg.cor=allow.neg.cor,trend.var=trend.var,sort=sort)
 }
 
-camera.default <- function(y,indices,design=NULL,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,trend.var=FALSE,sort=TRUE)
+camera.default <- function(y,index,design=NULL,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,trend.var=FALSE,sort=TRUE)
 #	Competitive gene set test allowing for correlation between genes
 #	Gordon Smyth and Di Wu
-#  Created 2007.  Last modified 4 Jan 2013
+#  Created 2007.  Last modified 22 Jan 2013
 {
 #	Check y
 	y <- as.matrix(y)
 	G <- nrow(y)
 	n <- ncol(y)
 
-#	Check indices
-	if(!is.list(indices)) indices <- list(set1=indices)
+#	Check index
+	if(!is.list(index)) index <- list(set1=index)
 
 #	Check design
 	if(is.null(design)) stop("no design matrix")
@@ -130,17 +130,17 @@ camera.default <- function(y,indices,design=NULL,contrast=ncol(design),weights=N
 	meanStat <- mean(Stat)
 	varStat <- var(Stat)
 
-	nsets <- length(indices)
+	nsets <- length(index)
 	tab <- matrix(0,nsets,5)
-	rownames(tab) <- names(indices)
+	rownames(tab) <- names(index)
 	colnames(tab) <- c("NGenes","Correlation","Down","Up","TwoSided")
 	for (i in 1:nsets) {
-		index <- indices[[i]]
-		StatInSet <- Stat[index]
+		iset <- index[[i]]
+		StatInSet <- Stat[iset]
 		m <- length(StatInSet)
 		m2 <- G-m
 		if(m>1) {
-			Uset <- U[index,,drop=FALSE]
+			Uset <- U[iset,,drop=FALSE]
 			vif <- m * mean(colMeans(Uset)^2)
 			correlation <- (vif-1)/(m-1)
 		} else {
@@ -152,7 +152,7 @@ camera.default <- function(y,indices,design=NULL,contrast=ncol(design),weights=N
 		tab[i,2] <- correlation
 		if(use.ranks) {
 			if(!allow.neg.cor) correlation <- max(0,correlation)
-			tab[i,3:4] <- rankSumTestWithCorrelation(index,statistics=Stat,correlation=correlation,df=df.camera)
+			tab[i,3:4] <- rankSumTestWithCorrelation(iset,statistics=Stat,correlation=correlation,df=df.camera)
 		} else {	
 			if(!allow.neg.cor) vif <- max(1,vif)
 			meanStatInSet <- mean(StatInSet)

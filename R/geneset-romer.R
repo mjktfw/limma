@@ -6,33 +6,33 @@ symbols2indices <- function(gene.sets, symbols, remove.empty=TRUE)
 # 25 March 2009.  Last modified 21 March 2011.
 {
 	gene.sets <- as.list(gene.sets)
-	iset <- lapply(gene.sets, function(x) which(symbols %in% x))
+	index <- lapply(gene.sets, function(x) which(symbols %in% x))
 	if(remove.empty)
-		for (i in length(iset):1) if(!length(iset[[i]])) iset[[i]] <- NULL
-	iset
+		for (i in length(index):1) if(!length(index[[i]])) index[[i]] <- NULL
+	index
 }
 
-romer <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation=NULL,set.statistic="mean",nrot=9999)
+romer <- function(index,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation=NULL,set.statistic="mean",nrot=9999)
 # rotation mean-rank version of GSEA (gene set enrichment analysis) for linear models
 # Gordon Smyth and Yifang Hu
 # 27 March 2009.  Last modified 3 June 2010.
 {
 	set.statistic <- match.arg(set.statistic,c("mean","floormean","mean50"))
 	if(set.statistic=="mean50") {
-		return(.romer.mean50(iset=iset,y=y,design=design,contrast=contrast,array.weights=array.weights,block=block,correlation=correlation,nrot=nrot))
+		return(.romer.mean50(index=index,y=y,design=design,contrast=contrast,array.weights=array.weights,block=block,correlation=correlation,nrot=nrot))
 	} else {
-		return(.romer.mean.floormean(iset=iset,y=y,design=design,contrast=contrast,array.weights=array.weights,block=block,correlation=correlation,floor=(set.statistic=="floormean"),nrot=nrot))
+		return(.romer.mean.floormean(index=index,y=y,design=design,contrast=contrast,array.weights=array.weights,block=block,correlation=correlation,floor=(set.statistic=="floormean"),nrot=nrot))
 	}
 }
 
-.romer.mean50 <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,nrot=9999)
+.romer.mean50 <- function(index,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,nrot=9999)
 # rotation-mean50-rank version of GSEA (gene set enrichment analysis) for linear models
 # Gordon Smyth and Yifang Hu
 # 27 March 2009.  Last modified 15 Sep 2009.
 {
 #	Check input arguments
-	if(!is.list(iset)) iset <- list(set=iset)
-	nset<-length(iset)
+	if(!is.list(index)) index <- list(set=index)
+	nset<-length(index)
 	y <- as.matrix(y)
 	design <- as.matrix(design)
 	ngenes<-nrow(y)	
@@ -108,15 +108,15 @@ romer <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=N
 	modt.abs<-abs(modt)
 	s.abs.r <-rank(modt.abs)
 
-	m<-unlist(lapply(iset,length))
+	m<-unlist(lapply(index,length))
 	m<-floor((m+1)/2)
 
 	for(i in 1:nset)
 	{	
-		mh<-.meanHalf(s.r[iset[[i]]],m[i])
+		mh<-.meanHalf(s.r[index[[i]]],m[i])
 		s.rank.up[i] <-mh[2]	
 		s.rank.down[i]<-mh[1]
-  		s.rank.mixed[i]<-.meanHalf(s.abs.r[iset[[i]]],m[i])[2]
+  		s.rank.mixed[i]<-.meanHalf(s.abs.r[index[[i]]],m[i])[2]
 	}	
 
 #	Estimate hyper-parameters p0
@@ -176,11 +176,11 @@ romer <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=N
 	
 		for(j in 1:nset)
 		{
-			mh.2<-.meanHalf(s.r.2[iset[[j]]],m[j])
+			mh.2<-.meanHalf(s.r.2[index[[j]]],m[j])
 			
 			s.rank.up.2 <-mh.2[2]	
 			s.rank.down.2 <-mh.2[1]
-  			s.rank.mixed.2 <-.meanHalf(s.abs.r.2[iset[[j]]],m[j])[2]
+  			s.rank.mixed.2 <-.meanHalf(s.abs.r.2[index[[j]]],m[j])[2]
 		
 			if(s.rank.mixed.2>=s.rank.mixed[j]) p.value[j,1]<-p.value[j,1]+1
 			if(s.rank.up.2>=s.rank.up[j]) p.value[j,2]<-p.value[j,2]+1
@@ -190,13 +190,13 @@ romer <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=N
 
 	p.value <- (p.value+1)/(nrot+1)
 	colnames(p.value)<-c("Mixed","Up","Down")
-	SetNames <- names(iset)
+	SetNames <- names(index)
 	if(is.null(SetNames))
 		rownames(p.value) <- 1:nset
 	else
 		rownames(p.value) <- SetNames
-	len.iset<-as.numeric(lapply(iset,length))
-	cbind(NGenes=len.iset,p.value)
+	len.index<-as.numeric(lapply(index,length))
+	cbind(NGenes=len.index,p.value)
 }
 
 ## Return means of top half and bottom half of the ranks for romer2
@@ -211,14 +211,14 @@ romer <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=N
 	c(top,bottom)
 }
 
-.romer.mean.floormean <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,floor=FALSE,nrot=9999)
+.romer.mean.floormean <- function(index,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,floor=FALSE,nrot=9999)
 # rotation mean-rank version of GSEA (gene set enrichment analysis) for linear models
 # Gordon Smyth and Yifang Hu
 # 27 March 2009.  Last modified 5 Oct 2009.
 {
 #	Check input arguments
-	if(!is.list(iset)) iset <- list(set=iset)
-	nset<-length(iset)
+	if(!is.list(index)) index <- list(set=index)
+	nset<-length(index)
 	y <- as.matrix(y)
 	design <- as.matrix(design)
 	ngenes<-nrow(y)	
@@ -325,7 +325,7 @@ romer <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=N
 		obs.ranks[,3] <- rank(abs(modt))
 	}
 	obs.set.ranks <- matrix(0,nset,3)
-	for(i in 1:nset) obs.set.ranks[i,] <- colMeans(obs.ranks[iset[[i]],,drop=FALSE])
+	for(i in 1:nset) obs.set.ranks[i,] <- colMeans(obs.ranks[index[[i]],,drop=FALSE])
 
 #	Shrink contrast to be like a residual
 	Y[1,] <- Y[1,]*(sv$var.post/(sv$var.post+var.prior*pg))^(1/2)
@@ -359,19 +359,19 @@ romer <- function(iset,y,design,contrast=ncol(design),array.weights=NULL,block=N
 
 		for(k in 1:nset)
 		{
-			rot.set.ranks <- colMeans(rot.ranks[iset[[k]],,drop=FALSE])
+			rot.set.ranks <- colMeans(rot.ranks[index[[k]],,drop=FALSE])
 			p.value[k,] <- p.value[k,] + (rot.set.ranks >= obs.set.ranks[k,])
 		}
 	}	
 
 	p.value <- (p.value+1)/(nrot+1)
 	colnames(p.value)<-c("Up","Down","Mixed")
-	SetNames <- names(iset)
+	SetNames <- names(index)
 	if(is.null(SetNames))
 		rownames(p.value) <- 1:nset
 	else
 		rownames(p.value) <- SetNames
-	set.sizes <- unlist(lapply(iset,length))
+	set.sizes <- unlist(lapply(index,length))
 	cbind(NGenes=set.sizes,p.value)
 }
 
