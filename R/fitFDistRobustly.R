@@ -89,7 +89,7 @@ fitFDistRobustly <- function(x,df1,covariate=NULL,winsor.tail.p=c(0.05,0.1),trac
 
 #	Demean or Detrend
 	if(is.null(covariate)) {
-		ztrend <- mean(z,winsor.tail.p=winsor.tail.p[2])
+		ztrend <- mean(z,trim=winsor.tail.p[2])
 		zresid <- z-ztrend
 	} else {
 		lo <- loessFit(z,covariate,span=0.4)

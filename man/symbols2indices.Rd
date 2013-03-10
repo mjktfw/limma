@@ -21,6 +21,6 @@ Typically, \code{symbols} is the vector of symbols of genes on a microarray, and
 }
 
 \seealso{
-\code{\link{romer}},\code{\link{mroast}}
+\code{\link{romer}}, \code{\link{mroast}}, \code{\link{camera}}
 }
 \author{Gordon Smyth and Yifang Hu}

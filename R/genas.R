@@ -1,42 +1,42 @@
 ##  GENAS.R
 
 genas <- function(fit,coef=c(1,2),chooseMethod=NULL,plot=FALSE,alpha=0.4)
-#     Genuine association of gene expression profiles
-#     Belinda Phipson and Gordon Smyth
-#     21 September 2009. Last modified 2 December 2012.
+#	Genuine association of gene expression profiles
+#	Belinda Phipson and Gordon Smyth
+#	21 September 2009. Last modified 2 December 2012.
 {
-      if(ncol(fit)>2) fit<-fit[,coef]
-      if(length(fit$s2.prior)==1) trend<-FALSE else trend<-TRUE
-      fit <- eBayes(fit,trend=trend)
-      if(is.null(chooseMethod)) chooseMethod <- "n"
-      
-      x1<-fitGammaIntercept(fit$coeff[,1]^2/fit$s2.post,offset=fit$cov.coeff[1,1])
-      x2<-fitGammaIntercept(fit$coeff[,2]^2/fit$s2.post,offset=fit$cov.coeff[2,2])
-      if(x1 > 0 & x2 > 0){
-      	v0null<-matrix(c(x1,0,0,x2),2,2)
-      	C<-chol(v0null)
-      	x<-log(diag(C))
+	if(ncol(fit)>2) fit<-fit[,coef]
+	if(length(fit$s2.prior)==1) trend<-FALSE else trend<-TRUE
+	fit <- eBayes(fit,trend=trend)
+	if(is.null(chooseMethod)) chooseMethod <- "n"
+	
+	x1<-fitGammaIntercept(fit$coeff[,1]^2/fit$s2.post,offset=fit$cov.coeff[1,1])
+	x2<-fitGammaIntercept(fit$coeff[,2]^2/fit$s2.post,offset=fit$cov.coeff[2,2])
+	if(x1 > 0 & x2 > 0){
+		v0null<-matrix(c(x1,0,0,x2),2,2)
+		C<-chol(v0null)
+		x<-log(diag(C))
 	}
-      else x<-c(0,0)
+	else x<-c(0,0)
 
-      m<-2
-      fit.plot <- fit
-      fit <- .whichGenes(fit,chooseMethod)
-      fit <- eBayes(fit,trend=trend)
+	m<-2
+	fit.plot <- fit
+	fit <- .whichGenes(fit,chooseMethod)
+	fit <- eBayes(fit,trend=trend)
 
-      Q2 <- optim(x, .multTLogLikNull, fit = fit, m = m)
-      Q1 <- optim(c(Q2$par[1], Q2$par[2], 0),.multTLogLik,fit=fit,m=m)
-            
-      L<-matrix(c(1,Q1$par[3],0,1),2,2)
-      D<-matrix(c(exp(Q1$par[1]),0,0,exp(Q1$par[2])),2,2)
-      V0<-L%*%D%*%t(L)
-      rhobiol<-V0[2,1]/sqrt(V0[1,1]*V0[2,2])
+	Q2 <- optim(x, .multTLogLikNull, fit = fit, m = m)
+	Q1 <- optim(c(Q2$par[1], Q2$par[2], 0),.multTLogLik,fit=fit,m=m)
+		
+	L<-matrix(c(1,Q1$par[3],0,1),2,2)
+	D<-matrix(c(exp(Q1$par[1]),0,0,exp(Q1$par[2])),2,2)
+	V0<-L%*%D%*%t(L)
+	rhobiol<-V0[2,1]/sqrt(V0[1,1]*V0[2,2])
 
-      V<-fit$cov.coefficients
-      rhotech<-V[2,1]/sqrt(V[1,1]*V[2,2])
+	V<-fit$cov.coefficients
+	rhotech<-V[2,1]/sqrt(V[1,1]*V[2,2])
 
-      if(plot){
-      require(ellipse)
+	if(plot){
+	require(ellipse)
 	lim<-mean(c(sd(fit.plot$coeff[,1]),sd(fit.plot$coeff[,2])))
 	if(nrow(fit)<500) lim <- 1.5*lim else lim <- 2*lim
 	max<-max(c(fit.plot$coeff[,1],fit.plot$coeff[,2]))
@@ -44,7 +44,7 @@ genas <- function(fit,coef=c(1,2),chooseMethod=NULL,plot=FALSE,alpha=0.4)
 	max<-sign(max)*max(abs(min),abs(max))
 	min<-sign(min)*max(abs(min),abs(max))
 	if(abs(rhobiol)>abs(rhotech)){
-                plot(fit.plot$coeff[,1],fit.plot$coeff[,2],pch=16,cex=0.4,ylim=c(min,max),xlim=c(min,max),xlab=colnames(fit.plot$coeff)[1],ylab=colnames(fit.plot$coeff)[2])
+		plot(fit.plot$coeff[,1],fit.plot$coeff[,2],pch=16,cex=0.4,ylim=c(min,max),xlim=c(min,max),xlab=colnames(fit.plot$coeff)[1],ylab=colnames(fit.plot$coeff)[2])
 		polygon(ellipse(rhotech,scale=c(lim,lim)),col=rgb(0,0,1,alpha=alpha),border=rgb(0,0,1,alpha=alpha))
 		polygon(ellipse(rhobiol,scale=c(lim,lim)),col=rgb(0,1,0,alpha=alpha),border=rgb(0,1,0,alpha=alpha))
 		points(fit.plot$coeff[,1],fit.plot$coeff[,2],pch=16,cex=0.4)
@@ -61,12 +61,12 @@ genas <- function(fit,coef=c(1,2),chooseMethod=NULL,plot=FALSE,alpha=0.4)
 		legend(min,max,legend=bquote(rho[biol]==.(round(rhobiol,3))),col=rgb(0,1,0,alpha=alpha),pch=16,bty="n",cex=0.8)
 		legend(min,max-lim/2,legend=bquote(rho[tech]==.(round(rhotech,3))),col=rgb(0,0,1,alpha=alpha),pch=16,bty="n",cex=0.8)
 		}
-      	}
+		}
 
-      D<-abs(2*(Q2$value-Q1$value))
-      p.val<-pchisq(D,df=1,lower.tail=FALSE)
+	D<-abs(2*(Q2$value-Q1$value))
+	p.val<-pchisq(D,df=1,lower.tail=FALSE)
 
-      list(technical.correlation=rhotech,covariance.matrix=V0,biological.correlation=rhobiol,deviance=D,p.value=p.val,n=nrow(fit))
+	list(technical.correlation=rhotech,covariance.matrix=V0,biological.correlation=rhobiol,deviance=D,p.value=p.val,n=nrow(fit))
 }
 
 .multTLogLikNull <- function(x,fit,m) 
@@ -99,34 +99,34 @@ genas <- function(fit,coef=c(1,2),chooseMethod=NULL,plot=FALSE,alpha=0.4)
 
 
 .multTLogLik <- function(x,fit,m) 
-#            Calculate the log-likelihood with biological correlation
-#     	     Belinda Phipson and Gordon Smyth
-#    	     21 September 2009. Last modified 21 September 2009.
+#		Calculate the log-likelihood with biological correlation
+#			Belinda Phipson and Gordon Smyth
+#    		21 September 2009. Last modified 21 September 2009.
 {	
- 	     d0<-fit$df.prior
- 	     d<-fit$df.residual
-	     if(d0==Inf) d0 <- 999*d[1]
- 	     s<-fit$s2.post
- 	     B<-fit$coefficients
- 	     m<-m
- 	     V<-fit$cov.coefficients
- 	     a1<-x[1]
- 	     a2<-x[2]
- 	     b<-x[3]
- 	     L<-matrix(c(1,b,0,1),2,2)
- 	     D<-matrix(c(exp(a1),0,0,exp(a2)),2,2)
+		d0<-fit$df.prior
+		d<-fit$df.residual
+		if(d0==Inf) d0 <- 999*d[1]
+		s<-fit$s2.post
+		B<-fit$coefficients
+		m<-m
+		V<-fit$cov.coefficients
+		a1<-x[1]
+		a2<-x[2]
+		b<-x[3]
+		L<-matrix(c(1,b,0,1),2,2)
+		D<-matrix(c(exp(a1),0,0,exp(a2)),2,2)
 	
- 	     V0<-L %*% D %*% t(L)
+		V0<-L %*% D %*% t(L)
 	
- 	     R<-chol(V0+V)
- 	     Second<-sum(log(diag(R)))
+		R<-chol(V0+V)
+		Second<-sum(log(diag(R)))
 
- 	     W<-backsolve(R,t(B),transpose=TRUE)
- 	     Q<-colSums(W^2)
+		W<-backsolve(R,t(B),transpose=TRUE)
+		Q<-colSums(W^2)
 
- 	     Third<-0.5*(m+d0+d)*log(1+Q/(s*(d0+d)))
+		Third<-0.5*(m+d0+d)*log(1+Q/(s*(d0+d)))
 
- 	     sum(Second+Third)
+		sum(Second+Third)
 }
 
 
@@ -194,8 +194,8 @@ genas <- function(fit,coef=c(1,2),chooseMethod=NULL,plot=FALSE,alpha=0.4)
 	fit$coeff[,1] <- sign(fit$coeff[,1]) * (abs(fit$coeff[,1])-q1)
 	fit$coeff[,2] <- sign(fit$coeff[,2]) * (abs(fit$coeff[,2])-q2)
 	}
-  if(chooseMethod=="n") genes <- c(rep(TRUE,nrow(fit)))
- if(length(fit$df.prior)!=1) fit$df.prior <- fit$df.prior[genes]
- fit[genes,]
+	if(chooseMethod=="n") genes <- c(rep(TRUE,nrow(fit)))
+	if(length(fit$df.prior)!=1) fit$df.prior <- fit$df.prior[genes]
+	fit[genes,]
 }
 

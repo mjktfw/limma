@@ -16,7 +16,7 @@ convest(p, niter=100, plot=FALSE, report=FALSE, file="", tol=1e-6)
 
 \arguments{
   \item{p}{numeric vector of p-values.}
-  \item{method}{estimation method. Choices are \code{"lfdr"}, \code{"hist"} or \code{"convest"}.}
+  \item{method}{estimation method. Choices are \code{"lfdr"}, \code{"mean"}, \code{"hist"} or \code{"convest"}.}
   \item{nbins}{number of histogram bins (if \code{method="hist"}).}
   \item{niter}{number of iterations to be used in fitting the convex, decreasing density for the p-values.}
   \item{plot}{logical, should updated plots of fitted convex decreasing p-value density be produced at each iteration?}
@@ -32,9 +32,11 @@ This function estimates pi0 from a vector of p-values.
 
 \code{method="lfdr"} implements the method of Phipson (2013) based on averaging local false discovery rates across the p-values.
 
+\code{method="mean"} is a very simple method based on averaging the p-values.  It gives a slightly smaller estimate than \code{2*mean(p)}.
+
 \code{method="hist"} implements the histogram method of Mosig et al (2001) and Nettleton et al (2006).
 
-\code{method="convest"} is an alternative way to call \code{convest}, which implements the method of Langaas et al (2005) based on a convex decreasing density estimate.
+\code{method="convest"} calls \code{convest}, which implements the method of Langaas et al (2005) based on a convex decreasing density estimate.
 }
 
 \value{

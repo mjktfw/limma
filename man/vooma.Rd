@@ -1,5 +1,6 @@
 \name{vooma}
 \alias{vooma}
+\alias{voomaByGroup}
 
 \title{Convert Mean-Variance Trend to Observation-specific Precision Weights for Microarray Data}
 
@@ -9,6 +10,7 @@ Estimate the mean-variance relationship and use this to compute appropriate obse
 
 \usage{
 vooma(y, design=NULL, correlation, block=NULL, plot=FALSE, span=NULL)
+voomaByGroup(y, group, design=NULL, correlation, block=NULL, plot=FALSE, span=NULL, col=NULL)
 }
 \arguments{
   \item{y}{numeric \code{matrix}, \code{EList} object, or any similar object containing expression data that can be coerced to a matrix.}
@@ -17,6 +19,8 @@ vooma(y, design=NULL, correlation, block=NULL, plot=FALSE, span=NULL)
   \item{correlation}{intra-block correlation}
   \item{span}{width of the smoothing window, as a proportion of the data set.}
   \item{plot}{\code{logical} value indicating whether a plot of mean-variance trend should be displayed.}
+  \item{group}{categorical vector or factor giving group membership of columns of \code{y}.}
+  \item{col}{vector of colors for plotting group trends}
 }
 
 \details{

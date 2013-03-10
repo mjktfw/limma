@@ -55,11 +55,12 @@ Rows correspond to the alternative hypotheses mixed, up or down.}
   \item{df.prior}{prior degrees of freedom for residual variances.}
 
 \code{mroast} produces a data.frame with a row for each set and the following columns:
+  \item{NGenes}{number of genes in set}
 	\item{PropDown}{proportion of genes in set with \code{z < -sqrt(2)}}
 	\item{PropUp}{proportion of genes in set with \code{z > sqrt(2)}}
-	\item{Direction}{direction of change}
+	\item{Direction}{direction of change, \code{"Up"} or \code{"Down"}}
 	\item{PValue}{two-sided directional p-value}
-	\item{FDR}{directional false discovery rate}
+	\item{FDR}{two-sided directional false discovery rate}
 	\item{PValue.Mixed}{non-directional p-value}
 	\item{FDR.Mixed}{non-directional false discovery rate}
 }

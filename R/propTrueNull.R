@@ -3,9 +3,10 @@ propTrueNull <- function(p, method="lfdr", nbins=20, ...)
 #	Belinda Phipson and Gordon Smyth
 #	Created 23 May 2012. Last revised 2 Dec 2012.
 {
-	method <- match.arg(method, c("lfdr","hist","convest"))
+	method <- match.arg(method, c("lfdr","mean","hist","convest"))
 	switch(method,
 		lfdr = .propTrueNullByLocalFDR(p),
+		mean = .propTrueNullByMeanP(p),
 		hist = .propTrueNullFromHistogram(p, nbins=nbins),
 		convest = convest(p, ...)
 	)
@@ -20,10 +21,22 @@ propTrueNull <- function(p, method="lfdr", nbins=20, ...)
 	n <- length(p)
 	i <- n:1L
 	p <- sort(p, decreasing = TRUE)
-#	pi0 <- mean((1L:n)*p > 0.05)
 	q <- pmin(n/i * p, 1)
 	n1 <- n+1L
 	sum(i*q) / n/n1*2
+}
+
+.propTrueNullByMeanP <- function(p)
+#	Estimate proportion of null p-values
+#	by mean p-value
+#	Gordon Smyth
+#	12 Feb 2013.
+{
+	n <- length(p)
+	i <- 1:n
+	p <- sort(p)
+	q <- pmin(p, (i-0.5)/n)
+	2*mean(q)
 }
 
 .propTrueNullFromHistogram <- function(p, nbins=20) 

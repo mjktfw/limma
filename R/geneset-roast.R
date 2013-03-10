@@ -297,7 +297,7 @@ roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.sta
 #	Output
 	out <- data.frame(c(r2,r1,r1+r2),p)
 	dimnames(out) <- list(c("Down","Up","Mixed"),c("Active.Prop","P.Value"))
-	new("Roast",list(p.value=out,var.prior=s02,df.prior=d0))
+	new("Roast",list(p.value=out,var.prior=s02,df.prior=d0,ngenes.in.set=nset))
 }
 
 mroast <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE,sort="directional")
@@ -372,11 +372,13 @@ mroast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.st
 	}
 
 	pv <- adjpv <- active <- array(0,c(nsets,3),dimnames=list(names(index),c("Down","Up","Mixed")))
+	NGenes <- rep(0,nsets)
 	if(nsets<1) return(pv)
 	for(i in 1:nsets) {
-		out <- roast(y=y,index=index[[i]],design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,nrot=nrot)[[1]]
-		pv[i,] <- out$P.Value
-		active[i,] <- out$Active.Prop
+		out <- roast(y=y,index=index[[i]],design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,nrot=nrot)
+		pv[i,] <- out$p.value$P.Value
+		active[i,] <- out$p.value$Active.Prop
+		NGenes[i] <- out$ngenes.in.set
 	}
 
 #	Use mid-p-values or ordinary p-values?
@@ -394,6 +396,7 @@ mroast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.st
 	TwoSidedP <- pv[,"Down"]; TwoSidedP[Up] <- pv[Up,"Up"]; TwoSidedP <- 2*TwoSidedP
 	TwoSidedP2 <- pv2[,"Down"]; TwoSidedP2[Up] <- pv2[Up,"Up"]; TwoSidedP2 <- 2*TwoSidedP2
 	tab <- data.frame(
+		NGenes=NGenes,
 		PropDown=active[,"Down"],
 		PropUp=active[,"Up"],
 		Direction=Direction,
