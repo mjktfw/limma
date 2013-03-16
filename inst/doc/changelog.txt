@@ -1,7 +1,12 @@
+16 March 2013: limma 3.15.17
+
+- bug fix to vennDiagram(), which was not restoring the graphics
+  par() settings correctly on exit.
+
 16 March 2013: limma 3.15.16
 
 - bug fix to read.maimages().  Previously was not setting default
-  annotation columns when source="agilent.mean".
+  annotation columns for source="agilent.mean".
 
 10 March 2013: limma 3.15.15
 

@@ -70,7 +70,7 @@ vennDiagram <- function(object,include="both",names=NULL,mar=rep(1,4),cex=c(1.5,
 
 #	Set plot margins
 	old.par <- par()$mar
-	on.exit(par(old.par))
+	on.exit(par(mar=old.par))
 	par(mar=mar)
 
 	##############################################

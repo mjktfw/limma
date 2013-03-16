@@ -50,9 +50,11 @@ fit <- eBayes(lmFit(Y,design))
 results <- decideTests(fit)
 a <- vennCounts(results)
 print(a)
+mfrow.old <- par()$mfrow
 par(mfrow=c(1,2))
 vennDiagram(a)
 vennDiagram(results,include=c("up","down"),counts.col=c("red","green"))
+par(mfrow=mfrow.old)
 }
 
 \keyword{hplot}
