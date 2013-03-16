@@ -96,18 +96,18 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 		}
 	}
 	
-	if(is.null(annotation)) annotation <- switch(source,
-		agilent=,agilent.median = c("Row","Col","Start","Sequence","SwissProt","GenBank","Primate","GenPept","ProbeUID","ControlType","ProbeName","GeneName","SystematicName","Description"),
-		arrayvision=,arrayvision.ARM=,arrayvision.MTM = c("Spot labels","ID"),
+	if(is.null(annotation)) annotation <- switch(source2,
+		agilent = c("Row","Col","Start","Sequence","SwissProt","GenBank","Primate","GenPept","ProbeUID","ControlType","ProbeName","GeneName","SystematicName","Description"),
+		arrayvision = c("Spot labels","ID"),
 		bluefuse = c("ROW","COL","SUBGRIDROW","SUBGRIDCOL","BLOCK","NAME","ID"),   
-		genepix=,genepix.median=,genepix.custom = c("Block","Row","Column","ID","Name"),
+		genepix = c("Block","Row","Column","ID","Name"),
 		imagene9 = c("Meta Row","Meta Column","Row","Column","Gene ID"),
 		quantarray= c("Array Row","Array Column","Row","Column","Name"),
 		scanarrayexpress = c("Array Row","Array Column","Spot Row","Spot Column"), 	
 		smd = c("Spot","Clone ID","Gene Symbol","Gene Name","Cluster ID","Accession","Preferred name","Locuslink ID","Name","Sequence Type","X Grid Coordinate (within sector)","Y Grid Coordinate (within sector)","Sector","Failed","Plate Number","Plate Row","Plate Column","Clone Source","Is Verified","Is Contaminated","Luid"),
-		smd.old = c("SPOT","NAME","Clone ID","Gene Symbol","Gene Name","Cluster ID","Accession","Preferred name","SUID"),
 		NULL
 	)
+	if(source=="smd.old") annotation <- c("SPOT","NAME","Clone ID","Gene Symbol","Gene Name","Cluster ID","Accession","Preferred name","SUID")
 
 #	End checking input arguments
 

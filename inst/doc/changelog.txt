@@ -1,4 +1,9 @@
-10 Feb 2013: limma 3.15.15
+16 March 2013: limma 3.15.16
+
+- bug fix to read.maimages().  Previously was not setting default
+  annotation columns when source="agilent.mean".
+
+10 March 2013: limma 3.15.15
 
 - vennDiagram() can now plot up to five sets (previously limited to
   three).
