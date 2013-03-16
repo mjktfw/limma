@@ -38,7 +38,7 @@ RG.MA <- function(object) {
 normalizeWithinArrays <- function(object,layout=object$printer,method="printtiploess",weights=object$weights,span=0.3,iterations=4,controlspots=NULL,df=5,robust="M",bc.method="subtract",offset=0)
 #	Within array normalization
 #	Gordon Smyth
-#	2 March 2003.  Last revised 2 September 2006.
+#	2 March 2003.  Last revised 16 March 2013.
 {
 #	Check input arguments
 #	and get non-intensity dependent methods out of the way
@@ -135,7 +135,7 @@ normalizeWithinArrays <- function(object,layout=object$printer,method="printtipl
 			}
 		},
 		robustspline = {
-			if(is.null(layout)) stop("Layout argument not specified")
+#			if(is.null(layout)) stop("Layout argument not specified")
 			for (j in 1:narrays)
 				object$M[,j] <- normalizeRobustSpline(object$M[,j],object$A[,j],layout,df=df,method=robust)
 		}

@@ -1,3 +1,8 @@
+16 March 2013: limma 3.15.18
+
+- normalizeWithinArrays() with method="robustspline" now longer
+  requires the layout argument to be set.
+
 16 March 2013: limma 3.15.17
 
 - bug fix to vennDiagram(), which was not restoring the graphics
