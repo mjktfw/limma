@@ -37,10 +37,13 @@ The \code{plot} option is a logical argument that specifies whether or not to pl
 \code{\link{lmFit}}, \code{\link{eBayes}}, \code{\link{contrasts.fit}}
 }
 
-
 \author{Belinda Phipson and Gordon Smyth}
-\keyword{regression}
-\keyword{models}
+
+\references{
+Phipson, B. (2013).
+\emph{Empirical Bayes modelling of expression profiles and their associations}.
+PhD Thesis. University of Melbourne, Australia.
+}
 
 \examples{
 library(limma)

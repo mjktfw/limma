@@ -24,10 +24,13 @@ The predictive log fold changes are calculated as the posterior log fold changes
 \code{\link{lmFit}}, \code{\link{eBayes}}, \code{\link{contrasts.fit}}
 }
 
-
 \author{Belinda Phipson and Gordon Smyth}
-\keyword{regression}
-\keyword{models}
+
+\references{
+Phipson, B. (2013).
+\emph{Empirical Bayes modelling of expression profiles and their associations}.
+PhD Thesis. University of Melbourne, Australia.
+}
 
 \examples{
 library(limma)

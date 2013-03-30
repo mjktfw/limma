@@ -21,8 +21,11 @@ Numeric value giving intercept.
 \author{Gordon Smyth and Belinda Phipson}
 
 \references{
-Phipson, B. (2013). PhD Thesis. University of Melbourne, Australia.
+Phipson, B. (2013).
+\emph{Empirical Bayes modelling of expression profiles and their associations}.
+PhD Thesis. University of Melbourne, Australia.
 }
+
 \seealso{
 This function is called by \code{\link{genas}}.
 }

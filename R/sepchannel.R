@@ -37,7 +37,7 @@ lmscFit <- function(object,design,correlation)
 
 #	In future it may be necessary to allow for quality weights, this call does not
 	fit <- lm.fit(X,y)
-	fit$sigma <- sqrt(colSums(fit$effects[(fit$rank+1):ny,]^2) / fit$df.residual)
+	fit$sigma <- sqrt(colSums(fit$effects[(fit$rank+1):ny,,drop=FALSE]^2) / fit$df.residual)
 	fit$fitted.values <- fit$residuals <- fit$effects <- NULL
 	fit$coefficients <- t(fit$coefficients)
 	stdev.unscaled <- sqrt(diag(chol2inv(fit$qr$qr)))

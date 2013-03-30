@@ -46,5 +46,9 @@ An EList object with the following components:
 }
 
 \author{Charity Law and Gordon Smyth}
-\keyword{weights}
-\keyword{variance}
+
+\references{
+Law, C. (2013).
+\emph{Precision weights for gene expression analysis}.
+PhD Thesis. University of Melbourne, Australia.
+}
