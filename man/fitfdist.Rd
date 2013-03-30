@@ -39,8 +39,15 @@ Smyth, G. K. (2004). Linear models and empirical Bayes methods for
      \emph{Statistical Applications in Genetics and Molecular Biology}, \bold{3},
      No. 1, Article 3. \url{http://www.bepress.com/sagmb/vol3/iss1/art3}
 
-Phipson, B. (2013). PhD Thesis. University of Melbourne, Australia.
+Phipson, B. (2013).
+\emph{Empirical Bayes modelling of expression profiles and their associations}.
+PhD Thesis. University of Melbourne, Australia.
+
+Phipson, B., and Smyth, G. K. (2013).
+\emph{Robust empirical Bayes estimation protetcts against hyper-variable genes and improves power to detect differential expression in RNA-seq data}.
+Bioinformatics Division, Walter and Eliza Hall Institute of Medical Research, Australia
 }
+
 \seealso{
 This function is called by \code{\link{squeezeVar}}, and hence by \code{\link{ebayes}} and \code{\link{eBayes}}.
 

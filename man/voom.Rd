@@ -41,9 +41,6 @@ An EList object with the following components:
 \item{lib.size}{numeric vector of total library sizes}
 \item{genes}{dataframe of gene annotation, only if \code{counts} was a \code{DGEList} object}
  }
-\seealso{
-\code{\link{normalizeBetweenArrays}}
-}
 
 \author{Charity Law and Gordon Smyth}
 
@@ -51,4 +48,10 @@ An EList object with the following components:
 Law, C. (2013).
 \emph{Precision weights for gene expression analysis}.
 PhD Thesis. University of Melbourne, Australia.
+}
+
+\seealso{
+A \code{voom} case study is given in the User's Guide.
+
+\code{\link{vooma}} is a similar function but for microarrays instead of RNA-seq.
 }

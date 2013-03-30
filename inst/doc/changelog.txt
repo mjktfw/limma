@@ -1,3 +1,7 @@
+30 March 2013: limma 3.15.20
+
+- final edits to NEWS.Rd and other help pages before BioC 2.12 release.
+
 29 March 2013: limma 3.15.19
 
 - revise RNA-seq case study in User's Guide.
@@ -26,6 +30,9 @@
   annotation columns for source="agilent.mean".
 
 10 March 2013: limma 3.15.15
+
+- new function voomaByGroup(), similar to vooma() but with different
+  variances for different groups.
 
 - vennDiagram() can now plot up to five sets (previously limited to
   three).

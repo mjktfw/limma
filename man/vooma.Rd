@@ -12,6 +12,7 @@ Estimate the mean-variance relationship and use this to compute appropriate obse
 vooma(y, design=NULL, correlation, block=NULL, plot=FALSE, span=NULL)
 voomaByGroup(y, group, design=NULL, correlation, block=NULL, plot=FALSE, span=NULL, col=NULL)
 }
+
 \arguments{
   \item{y}{numeric \code{matrix}, \code{EList} object, or any similar object containing expression data that can be coerced to a matrix.}
   \item{design}{design matrix with rows corresponding to samples and columns to coefficients to be estimated.  Defaults to the unit vector meaning that samples are treated as replicates.}

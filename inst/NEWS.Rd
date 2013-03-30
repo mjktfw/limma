@@ -6,45 +6,12 @@
 \section{Version 3.16.0}{\itemize{
 
 \item
-New section on time course experiments with many time points added to
-User's Guide.
-The RNA-seq case study in User's Guide has been revised.
+New section in User's Guide on time course experiments with many time points.
+The RNA-seq case study in User's Guide has also been revised.
 
 \item
-Improvements to the help pages for read.maimages(), squeezeVar(), fitFDist(),
-  trigammaInverse(), normalizeRobustSpline(), genas(), roast().
-Fix a typo regarding the meaning of source="agilent" or read.maimages().
-
-\item
-vennDiagram() can now plot up to five sets (previously limited to
-  three).
-
-\item
-normalizeWithinArrays() with method="robustspline" now longer
-  requires the layout argument to be set.
-
-\item
-All the functions that perform gene set tests have been revised to make the input and arguments more consistent.
-
-To make the interfaces more consistent, all functions that perform
-  gene sets now use the argument 'index' to specify which genes 
-  are included in the test set.  Previously this argument was called
-  'iset' for roast() and romer() and 'indices' for camera().
-
-The order of arguments has been changed for roast(), mroast() and camera().
-The first argument is now y.
-
-roast(), mroast() and camera() are now S3 generic functions, with methods for EList and
-  MAList objects.
-
-camera() and mroast() produce a data.frames.
-Instead of separate up and down
-  p-value columns there is now a column indicating direction of
-  change.  A new column gives the FDR adjusted p-value.
-mroast() has a new argument 'weights' for observational weights,
-  to bring it into line with roast(),
-camera() and mroast() have a new argument 'sort' to indicate whether output
-  results should be sorted by p-value.
+Improvements to various help pages including read.maimages.Rd, squeezeVar.Rd, fitFDist.Rd, trigammaInverse.Rd, normalizeRobustSpline.Rd, genas.Rd and roast.Rd.
+Previously the meaning of source="agilent" was mis-stated in read.maimages.Rd.
 
 \item
 New robust method for estimating the empirical Bayes prior, called
@@ -60,72 +27,78 @@ New function fitFDistRobustly() estimates the parameters of a
   tail proportions for Winsorizing.
 
 \item
-fitFDist() now permits infinite values for covariate.  It also
-  gracefully handles cases where the covariate takes only a small
-  number of distinct values.  Similarly for eBayes() and squeezeVar()
-  that call fitFDist().  
+fitFDist() now permits infinite values for the covariate.
+It also gracefully handles cases where the covariate takes only a small number of distinct values.
+Similarly for eBayes() and squeezeVar() that call fitFDist().  
 
 \item
-New functionality for genas().
-genas() now optionally draws a plot in which ellipses are used to
-  represent the technical and biological components of correlation.
-It also now has the ability to automatically select which probes
-  are used for the correlation analysis.  A new argument controls the
-  method used for this selection.
+All the functions that perform gene set tests have been revised to make the input and output formats more consistent.
+
+roast(), mroast() and camera() are now S3 generic functions, with methods for EList and MAList objects.
+
+The order of arguments has been changed for roast(), mroast() and camera() so that the first argument is now y.
+
+All functions that perform gene sets now use the argument 'index' to specify which genes are included in the test set.
+Previously this argument was called 'iset' for roast() and romer() and 'indices' for camera().
+
+camera() and mroast() now produce a data.frames.
+Instead of separate up and down p-value columns, there is now a two-sided p-value and a column indicating direction of change.  
+There are new columns giving FDR values and the number of genes in each set.
+There is a new argument 'sort' to indicate whether output results should be sorted by p-value.
+
+mroast() has a new argument 'weights' for observational weights, to bring it into line with roast(),
+
+\item
+vennDiagram() can now plot up to five sets (previously limited to three).
+
+\item
+genas() now optionally draws a plot in which ellipses are used to represent the technical and biological components of correlation.
+It also now has the ability to automatically select which probes are used for the correlation analysis, and a new argument controls the method used for this selection.
 
 \item
 New options for the method argument of propTrueNull().
 
 \item
-New function vooma() for computing precision weights based on a
-  mean-variance trend.  This is similar to voom() but for microarray
-  data instead of RNA-Seq.
+New functions vooma() and voomaByGroup() for computing precision weights based on a mean-variance trend.
+vooma() is similar to voom() but for microarray data instead of RNA-Seq.
+voomaByGroup() allows different groups to have systematically different variances.
 
 \item
-New function predFCm() to compute predictive (shrunk) log
-  fold changes.
+New function predFCm() to compute predictive (shrunk) log fold changes.
 
 \item
-New function fitGammaIntercept() for estimating the intercept of
-  a gamma glm with an offset.
+New function fitGammaIntercept() for estimating the intercept of a gamma glm with an offset.
+Used by genas().
 
 \item
-New function zscoreHyper() for computing z-score equivalents of
-  deviates from a hypergeometric distribution.
+New function zscoreHyper() for computing z-score equivalents of deviates from a hypergeometric distribution.
 
 \item
 New function qqf() for qq-plots relative to an F-distribution.
 
 \item
-The layout argument for normalizeRobustSpline() now defaults to a
-  single print-tip group.
-
-\item
-Due to changes in R, loessFit() no longer makes direct calls
-  to foreign language code in the stats package, and instead calls R
-  functions.  This makes loessFit() about 25-30% slower than previously
-  when weights are used.
+normalizeWithinArrays() with method="robustspline" now longer requires the layout argument to be set.
+The layout argument for normalizeRobustSpline() now defaults to a single print-tip group.
 
 \item
 fitFDist() now coerces degrees of freedom df1 below 1e-15 to zero.
 
 \item
-Bug fix for contrasts.fit() when the covariance matrix of the 
-  coefficients (cov.coefficients) is not found in the fitted model
-  object.  This situation doesn't arise using any of the standard
-  limma analysis pipelines.
+Due to changes in R, loessFit() no longer makes direct calls to foreign language code in the stats package, and instead calls R functions.
+Unfortunately, this makes loessFit() about 25-30\% slower than previously when weights are used.
 
 \item
-bug fix to lmscFit() when the residual df = 1.
+Bug fix to read.maimages(), which was not accepting source="agilent.mean".
 
 \item
-bug fix to readTargets() to avoid warning message when
-  targets$Label is used to set row names but targets$Label
-  contains duplicated entries.
+Bug fix for contrasts.fit() when the covariance matrix of the coefficients (cov.coefficients) is not found in the fitted model object.
+This situation doesn't arise using any of the standard limma analysis pipelines.
 
 \item
-bug fix to read.maimages(), which was not accepting
-  source="agilent.mean".
+Bug fix to lmscFit() when the residual df = 1.
+
+\item
+Bug fix to readTargets() to avoid warning message when targets$Label is used to set row names but targets$Label contains duplicated entries.
 
 }}
 
