@@ -1,7 +1,9 @@
- 1 April 2013: limma 3.15.21
+31 March 2013: limma 3.15.21
  
 - minor change to fitFDistRobustly(), to ensure that df.prior for the
   largest statistic is not greater than the non-robust df.prior.
+
+- edit acknowledgements in User's Guide.
 
 30 March 2013: limma 3.15.20
 
