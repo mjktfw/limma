@@ -1,3 +1,8 @@
+ 1 April 2013: limma 3.15.21
+ 
+- minor change to fitFDistRobustly(), to ensure that df.prior for the
+  largest statistic is not greater than the non-robust df.prior.
+
 30 March 2013: limma 3.15.20
 
 - final edits to NEWS.Rd and other help pages before BioC 2.12 release.
