@@ -3,8 +3,13 @@
 treat <- function(fit, lfc=0, trend=FALSE)
 #  Moderated t-statistics with threshold
 #  Davis McCarthy, Gordon Smyth
-#  25 July 2008.  Last revised 24 February 2012.
+#  25 July 2008.  Last revised 7 April 2013.
 {
+#	Check fit
+	if(!is(fit,"MArrayLM")) stop("fit must be an MArrayLM object")
+	if(is.null(fit$coefficients)) stop("coefficients not found in fit object")
+	if(is.null(fit$stdev.unscaled)) stop("stdev.unscaled not found in fit object")
+
 	coefficients <- as.matrix(fit$coefficients)
 	stdev.unscaled <- as.matrix(fit$stdev.unscaled)
 	sigma <- fit$sigma

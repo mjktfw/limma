@@ -1,3 +1,11 @@
+ 7 April 2013: limma 3.17.1
+
+- topTable() and treat() now give more informative error messages
+  when the argument fit is not a valid MArrayLM object.
+
+ 4 April 2013: limma 3.17.0 (Bioconductor 2.13 Developmental Branch)
+ 4 April 2013: limma 3.16.0 (Bioconductor 2.12 Release Branch)
+
 31 March 2013: limma 3.15.21
  
 - minor change to fitFDistRobustly(), to ensure that df.prior for the

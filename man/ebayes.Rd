@@ -3,14 +3,15 @@
 \alias{eBayes}
 \alias{treat}
 \title{Empirical Bayes Statistics for Differential Expression}
-\description{Given a series of related parameter estimates and standard errors, compute moderated t-statistics, moderated F-statistic, and log-odds of differential expression by empirical Bayes shrinkage of the standard errors towards a common value.}
+\description{Given a microarray linear model fit, compute moderated t-statistics, moderated F-statistic, and log-odds of differential expression by empirical Bayes moderation of the standard errors towards a common value.}
 \usage{
 ebayes(fit, proportion=0.01, stdev.coef.lim=c(0.1,4), trend=FALSE, robust=FALSE, winsor.tail.p=c(0.05,0.1))
 eBayes(fit, proportion=0.01, stdev.coef.lim=c(0.1,4), trend=FALSE, robust=FALSE, winsor.tail.p=c(0.05,0.1))
 treat(fit, lfc=0, trend=FALSE)
 }
 \arguments{
-  \item{fit}{an \code{MArrayLM} fitted model object produced by \code{lmFit} or \code{contrasts.fit}, or an unclassed list produced by \code{lm.series}, \code{gls.series} or \code{mrlm} containing components \code{coefficients}, \code{stdev.unscaled}, \code{sigma} and \code{df.residual}}
+  \item{fit}{an \code{MArrayLM} fitted model object produced by \code{lmFit} or \code{contrasts.fit}.
+  For \code{ebayes} only, \code{fit} can alternatively be an unclassed list produced by \code{lm.series}, \code{gls.series} or \code{mrlm} containing components \code{coefficients}, \code{stdev.unscaled}, \code{sigma} and \code{df.residual}.}
   \item{proportion}{numeric value between 0 and 1, assumed proportion of genes which are differentially expressed}
   \item{stdev.coef.lim}{numeric vector of length 2, assumed lower and upper limits for the standard deviation of log2-fold-changes for differentially expressed genes}
   \item{trend}{logical, should an intensity-trend be allowed for the prior variance? Default is that the prior variance is constant.}
@@ -19,9 +20,7 @@ treat(fit, lfc=0, trend=FALSE)
   \item{lfc}{the minimum log2-fold-change that is considered scientifically meaningful}
 }
 \value{
-\code{eBayes} produces an object of class \code{MArrayLM} with the following components, see \code{\link{MArrayLM-class}}.
-\code{ebayes} produces an ordinary list without \code{F} or \code{F.p.value}.
-\code{treat} produces an \code{MArrayLM} object, but without \code{lods}, \code{var.prior}, \code{F} or \code{F.p.value}.
+\code{eBayes} produces an object of class \code{MArrayLM} (see \code{\link{MArrayLM-class}}) containing everything found in \code{fit} plus the following added components:
   \item{t}{numeric vector or matrix of moderated t-statistics}
   \item{p.value}{numeric vector of p-values corresponding to the t-statistics}
   \item{s2.prior}{estimated prior value for \code{sigma^2}. A vector if \code{covariate} is non-\code{NULL}, otherwise a scalar.}
@@ -32,6 +31,8 @@ treat(fit, lfc=0, trend=FALSE)
   \item{var.prior}{estimated prior value for the variance of the log2-fold-change for differentially expressed gene}
   \item{F}{numeric vector of moderated F-statistics for testing all contrasts defined by the columns of \code{fit} simultaneously equal to zero}
   \item{F.p.value}{numeric vector giving p-values corresponding to \code{F}}
+\code{treat} a produces an \code{MArrayLM} object similar to \code{eBayes} but without \code{lods}, \code{var.prior}, \code{F} or \code{F.p.value}.
+\code{ebayes} produces an ordinary list containing the above components except for \code{F} and \code{F.p.value}.
 }
 \details{
 These functions is used to rank genes in order of evidence for differential expression.
@@ -53,8 +54,10 @@ The F-statistics \code{F} are computed by \code{classifyTestsF} with \code{fstat
 \code{eBayes} doesn't compute ordinary (unmoderated) t-statistics by default, but these can be easily extracted from 
 the linear model output, see the example below.
 
-\code{ebayes} is the earlier and leaner function.
-\code{eBayes} is intended to have a more object-orientated flavor as it produces objects containing all the necessary components for downstream analysis.
+\code{ebayes} is the earlier and leaner function, kept for background capatability, while
+\code{eBayes} is the later more object-orientated version.
+The difference is that \code{ebayes} outputs only the empirical Bayes statistics whereas \code{eBayes} adds them to the fitted model object \code{fit}.
+\code{eBayes} is recommended for routine use as it produces objects containing all the necessary components for downstream analysis
 
 \code{treat} computes empirical Bayes moderated-t p-values relative to a minimum required fold-change threshold.
 Use \code{\link{topTreat}} to summarize output from \code{treat}.
@@ -87,17 +90,20 @@ M <- matrix(rnorm(100*6,sd=0.3),100,6)
 M[1,] <- M[1,] + 1
 fit <- lmFit(M)
 
-#  Ordinary t-statistic
-par(mfrow=c(1,2))
-ordinary.t <- fit$coef / fit$stdev.unscaled / fit$sigma
-qqt(ordinary.t,df=fit$df.residual,main="Ordinary t")
-abline(0,1)
-
 #  Moderated t-statistic
-eb <- eBayes(fit)
-qqt(eb$t,df=eb$df.prior+eb$df.residual,main="Moderated t")
-abline(0,1)
+fit <- eBayes(fit)
+topTable(fit)
+
+#  Ordinary t-statistic
+ordinary.t <- fit$coef / fit$stdev.unscaled / fit$sigma
+
+#  Q-Q plots of t statistics
 #  Points off the line may be differentially expressed
+par(mfrow=c(1,2))
+qqt(ordinary.t, df=fit$df.residual, main="Ordinary t")
+abline(0,1)
+qqt(fit$t, df=fit$df.total,main="Moderated t")
+abline(0,1)
 par(mfrow=c(1,1))
 }
 \keyword{htest}
