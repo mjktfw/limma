@@ -11,7 +11,7 @@ normalizeBetweenArrays(object, method=NULL, targets=NULL, cyclic.method="fast", 
 }
 
 \arguments{
-  \item{object}{a numeric \code{matrix}, \code{EListRaw}, \code{\link[limma:rglist]{RGList}} or \code{\link[limma:malist]{MAList}} object.}
+  \item{object}{a numeric \code{matrix}, \code{\link[limma:EList]{EListRaw}}, \code{\link[limma:rglist]{RGList}} or \code{\link[limma:malist]{MAList}} object.}
   \item{method}{character string specifying the normalization method to be used.
   Choices are \code{"none"}, \code{"scale"}, \code{"quantile"}, \code{"Aquantile"}, \code{"Gquantile"}, \code{"Rquantile"} or \code{"Tquantile"} or \code{"cyclicloess"}.
   A partial string sufficient to uniquely identify the choice is permitted.

@@ -1,7 +1,7 @@
 predFCm <- function(fit,coef=2,prob=TRUE,VarRel=NULL)
 # Belinda Phipson 29 May 2012. Updated 8 January 2013.
 {
- p <- 1-propTrueNull(fit$p.value[,coef])
+ p <- 1-propTrueNull(fit$p.value[,coef],method="lfdr")
  if(p==0) p<-1e-8
  if(length(fit$s2.prior)==1) trend<-FALSE else trend<-TRUE
  fit <- eBayes(fit,proportion = p,trend=trend)

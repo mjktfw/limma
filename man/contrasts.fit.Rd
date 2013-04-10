@@ -16,8 +16,8 @@ contrasts.fit(fit, contrasts=NULL, coefficients=NULL)
   An list object of the same class as \code{fit}, usually \code{\link[limma:marraylm]{MArrayLM}}. This is a list with components
   \item{coefficients}{numeric matrix containing the estimated coefficients for each contrast for each probe.}
   \item{stdev.unscaled}{numeric matrix conformal with \code{coef} containing the unscaled standard deviations for the coefficient estimators.}
-  \item{\code{cov.coefficients}:}{numeric \code{matrix} giving the unscaled covariance matrix of the estimable coefficients}
-  \item{...}{any other components input in \code{fit}}
+  \item{\code{cov.coefficients}}{numeric \code{matrix} giving the unscaled covariance matrix of the estimable coefficients.}
+  \item{\dots}{any other components found in \code{fit} are passed through unchanged.}
 }
 \details{
 This function accepts input from any of the functions \code{\link{lmFit}}, \code{lm.series}, \code{mrlm}, \code{gls.series} or \code{lmscFit}.
