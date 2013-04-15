@@ -358,8 +358,9 @@ residuals.MArrayLM <- function(object,y,...)
 getEAWP <- function(object)
 #	Given any microarray data object, extract basic information needed for
 #	linear modelling.
+#  From 14 April 2003, output expr matrix is required to have unique rownames.
 #	Gordon Smyth
-#  9 March 2008. Last modified 9 Feb 2012.
+#  9 March 2008. Last modified 15 Apr 2013.
 {
 	y <- list()
 	
@@ -375,22 +376,17 @@ getEAWP <- function(object)
 		}
 		y$weights <- object$weights
 		y$probes <- object$genes
-		if(is.null(y$probes) && !is.null(rownames(y$exprs))) y$probes <- data.frame(ID=rownames(y$exprs),stringsAsFactors=FALSE)
 		y$design <- object$design
 	} else {
 	if(is(object,"ExpressionSet")) {
 		y$exprs <- exprs(object)
-		if(length(object@featureData@data)) 
-			y$probes <- object@featureData@data
-		else
-			y$probes <- data.frame(ID=rownames(y$exprs),stringsAsFactors=FALSE)
+		if(length(object@featureData@data)) y$probes <- object@featureData@data
 		y$Amean <- rowMeans(y$exprs,na.rm=TRUE)
 	} else {
 	if(is(object,"PLMset")) {
 		y$exprs <- object@chip.coefs
 		if(length(y$exprs)==0) stop("chip.coefs has length zero")
 		if(length(object@se.chip.coefs)) y$weights <- 1/pmax(object@se.chip.coefs,1e-5)^2
-		if(!is.null(rownames(y$exprs))) y$probes <- data.frame(ID=rownames(y$exprs),stringsAsFactors=FALSE)
 		y$Amean <- rowMeans(y$exprs,na.rm=TRUE)
 	} else {
 	if(is(object,"marrayNorm")) {
@@ -404,11 +400,29 @@ getEAWP <- function(object)
 	} else {
 #		Default method for matrices, data.frames, vsn objects etc.
 		y$exprs <- as.matrix(object)
-		if(!is.null(rownames(y$exprs))) y$probes <- data.frame(ID=rownames(y$exprs),stringsAsFactors=FALSE)
 #		If exprs are positive, assume they are log-intensities rather than log-ratios
 		if(all(y$exprs>=0,na.rm=TRUE)) y$Amean <- rowMeans(y$exprs,na.rm=TRUE)
 	}}}}
+
+#	Check expression values are numeric
 	if(mode(y$exprs) != "numeric") stop("Data object doesn't contain numeric expression values")
+
+#	Check rownames are unique
+	rn <- rownames(y$exprs)
+	if(is.null(rn))
+		rownames(y$exprs) <- 1:nrow(y$exprs)
+	else
+		if(anyDuplicated(rn)>0) {
+			rownames(y$exprs) <- 1:nrow(y$exprs)
+			if(is.null(y$probes))
+				y$probes <- data.frame(ID=rn,stringsAsFactors=FALSE)
+			else
+				if("ID" %in% names(y$probes))
+					y$probes$ID0 <- rn
+				else
+					y$probes$ID <- rn
+		}
+
 	y
 }
 

@@ -17,8 +17,11 @@ In the case of two-color objects, the \code{Amean} is computed from the matrix o
 For single-channel objects, \code{Amean} is computed from the matrix of expression vales.
 \code{PLMset}, \code{vsn} and \code{ExpressionSet} are assumed to be single-channel for this purpose.
 
-If \code{object} is a matrix, it is assumed to contain log-intensities if the values are all positive and log-ratios otherwise.
-\code{Amean} is computed in the former case but not the latter.
+If \code{object} is a matrix, it is assumed to contain log-intensities, and \code{Amean} is computed from the row means.
+
+From April 2013, the output \code{exprs} matrix is ensured to have unique row names.
+If \code{object} has no row names, then the output row names of \code{exprs} are 1 to the number of rows.
+If \code{object} has row names but with duplicated names, then row names of \code{exprs} are set to 1 up to the number of rows and the original row names are preserved in the \code{ID} column of \code{probes}.
 }
 \value{
 A list with components

@@ -195,11 +195,11 @@ fitFDistRobustly <- function(x,df1,covariate=NULL,winsor.tail.p=c(0.05,0.1),trac
 			if(trace) cat("df2.outlier",df2.outlier,"\n")
 			if(df2.outlier < df2) {
 				df2.shrunk <- ProbNotOutlier*df2+ProbOutlier*df2.outlier
-				o <- order(Fstat,decreasing=TRUE)
+				o <- order(TailP)
 				df2.ordered <- df2.shrunk[o]
 				df2.ordered[1] <- min(df2.ordered[1],NonRobust$df2)
 				m <- cumsum(df2.ordered)
-				m <- 1/(1:n)
+				m <- m/(1:n)
 				imin <- which.min(m)
 				df2.ordered[1:imin] <- m[imin]
 				df2.shrunk[o] <- cummax(df2.ordered)

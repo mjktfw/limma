@@ -1,3 +1,13 @@
+15 April 2013: limma 3.17.2
+
+- getEAWP() now forces the output exprs matrix to have unique row
+  names.
+
+- fitFDistRobustly() now uses a smoother for the smallest df.prior
+  values.  This may result in smaller tail values than before when
+  a group of input x values appear to be outliers but the largest
+  value is not individually a stand-out value.
+
 10 April 2013: limma 3.17.2
 
 - improvements to help pages for data classes.
