@@ -117,6 +117,7 @@ toptable(fit)
 
 ### topTable
 
+rownames(M) <- LETTERS[1:10]
 fit <- lmFit(M,design)
 fit2 <- eBayes(contrasts.fit(fit,contrasts=contrast.matrix))
 topTable(fit2)

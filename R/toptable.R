@@ -86,37 +86,60 @@ topTableF <- function(fit,number=10,genelist=fit$genes,adjust.method="BH",sort.b
 toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.method="BH",sort.by="B",resort.by=NULL,p.value=1,lfc=0,confint=FALSE,...)
 #	Summary table of top genes
 #	Gordon Smyth
-#	21 Nov 2002. Last revised 30 Jan 2011.
+#	21 Nov 2002. Last revised 16 April 2013.
 {
-#	Check input
+#	Check fit
+	fit$coefficients <- as.matrix(fit$coefficients)
+	rn <- rownames(fit$coefficients)
+	if(is.null(rn)) rn <- 1:nrow(fit$coefficients)
+
+#	Check coef is length 1
 	if(length(coef)>1) coef <- coef[1]
+
+#	Ensure genelist is a data.frame
 	if(!is.null(genelist) && is.null(dim(genelist))) genelist <- data.frame(ID=genelist,stringsAsFactors=FALSE)
-	if(is.null(eb)) {
-		fit$coefficients <- as.matrix(fit$coefficients)[,coef]
-		fit$stdev.unscaled <- as.matrix(fit$stdev.unscaled)[,coef]
-		eb <- ebayes(fit,...)
-		coef <- 1
-	}
-	M <- as.matrix(fit$coefficients)[,coef]
-	if(is.null(A)) {
-		if(sort.by=="A") stop("Cannot sort by A-values as these have not been given")
-	} else {
-		if(NCOL(A)>1) A <- rowMeans(A,na.rm=TRUE)
-	}
-	tstat <- as.matrix(eb$t)[,coef]
-	P.Value <- as.matrix(eb$p.value)[,coef]
-	B <- as.matrix(eb$lods)[,coef]
-	rownum <- 1:length(M)
+
+#	Check sort.by
 	sort.by <- match.arg(sort.by,c("logFC","M","A","Amean","AveExpr","P","p","T","t","B","none"))
 	if(sort.by=="M") sort.by="logFC"
 	if(sort.by=="A" || sort.by=="Amean") sort.by <- "AveExpr"
 	if(sort.by=="T") sort.by <- "t"
 	if(sort.by=="p") sort.by <- "P"
 
+#	Check resort.by
+	if(!is.null(resort.by)) {
+		resort.by <- match.arg(resort.by,c("logFC","M","A","Amean","AveExpr","P","p","T","t","B"))
+		if(resort.by=="M") resort.by <- "logFC"
+		if(resort.by=="A" || resort.by=="Amean") resort.by <- "AveExpr"
+		if(resort.by=="p") resort.by <- "P"
+		if(resort.by=="T") resort.by <- "t"
+	}
+
+#	Check A
+	if(is.null(A)) {
+		if(sort.by=="A") stop("Cannot sort by A-values as these have not been given")
+	} else {
+		if(NCOL(A)>1) A <- rowMeans(A,na.rm=TRUE)
+	}
+
+#	Compute eb if not given, computing just the one column required
+	if(is.null(eb)) {
+		fit$coefficients <- fit$coefficients[,coef,drop=FALSE]
+		fit$stdev.unscaled <- as.matrix(fit$stdev.unscaled)[,coef,drop=FALSE]
+		eb <- ebayes(fit,...)
+		coef <- 1
+	}
+
+#	Extract statistics for table
+	M <- fit$coefficients[,coef]
+	tstat <- as.matrix(eb$t)[,coef]
+	P.Value <- as.matrix(eb$p.value)[,coef]
+	B <- as.matrix(eb$lods)[,coef]
+
 #	Apply multiple testing adjustment
 	adj.P.Value <- p.adjust(P.Value,method=adjust.method)
 
-#	Apply p.value or lfc thresholds	
+#	Thin out fit by p.value and lfc thresholds	
 	if(p.value < 1 | lfc > 0) {
 		sig <- (adj.P.Value < p.value) & (abs(M) > lfc)
 		if(any(is.na(sig))) sig[is.na(sig)] <- FALSE
@@ -128,8 +151,14 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 		P.Value <- P.Value[sig]
 		adj.P.Value <- adj.P.Value[sig]
 		B <- B[sig]
-		rownum <- rownum[sig]
+		rn <- rn[sig]
 	}
+
+#	Are enough rows left?
+	if(length(M) < number) number <- length(M)
+	if(number < 1) return(data.frame())
+
+#	Select top rows
 	ord <- switch(sort.by,
 		logFC=order(abs(M),decreasing=TRUE),
 		AveExpr=order(A,decreasing=TRUE),
@@ -138,9 +167,9 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 		B=order(B,decreasing=TRUE),
 		none=1:length(M)
 	)
-	if(length(M) < number) number <- length(M)
-	if(number < 1) return(data.frame())
 	top <- ord[1:number]
+
+#	Assemble output data.frame
 	if(is.null(genelist))
 		tab <- data.frame(logFC=M[top])
 	else {
@@ -153,13 +182,10 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 	}
 	if(!is.null(A)) tab <- data.frame(tab,AveExpr=A[top])
 	tab <- data.frame(tab,t=tstat[top],P.Value=P.Value[top],adj.P.Val=adj.P.Value[top],B=B[top])
-	rownames(tab) <- as.character(rownum)[top]
+	rownames(tab) <- rn[top]
+
+#	Resort table
 	if(!is.null(resort.by)) {
-		resort.by <- match.arg(resort.by,c("logFC","M","A","Amean","AveExpr","P","p","T","t","B"))
-		if(resort.by=="M") resort.by <- "logFC"
-		if(resort.by=="A" || resort.by=="Amean") resort.by <- "AveExpr"
-		if(resort.by=="p") resort.by <- "P"
-		if(resort.by=="T") resort.by <- "t"
 		ord <- switch(resort.by,
 			logFC=order(tab$logFC,decreasing=TRUE),
 			AveExpr=order(tab$AveExpr,decreasing=TRUE),
@@ -169,8 +195,7 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 		)
 		tab <- tab[ord,]
 	}
-#	attr(tab,"coef") <- coef
-#	attr(tab,"adjust.method") <- adjust.method
+
 	tab
 }
 

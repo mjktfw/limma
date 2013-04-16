@@ -1,25 +1,30 @@
 #  LINEAR MODELS
 
 lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation,weights=NULL,method="ls",...)
-#	Fit linear model
+#	Fit genewise linear models
 #	Gordon Smyth
-#	30 June 2003.  Last modified 6 Feb 2009.
+#	30 June 2003.  Last modified 16 Apr 2013.
 {
-#	Check arguments
+#	Extract components from y
 	y <- getEAWP(object)
+
+#	Check design matrix
+	if(is.null(design)) design <- y$design
 	if(is.null(design))
-		if(is.null(y$design))
-			design <- matrix(1,ncol(y$exprs),1)
-		else
-			design <- as.matrix(object$design)
-	else
+		design <- matrix(1,ncol(y$exprs),1)
+	else {
 		design <- as.matrix(design)
-	if(mode(design) != "numeric") stop("design must be a numeric matrix")
+		if(mode(design) != "numeric") stop("design must be a numeric matrix")
+	}
 	ne <- nonEstimable(design)
 	if(!is.null(ne)) cat("Coefficients not estimable:",paste(ne,collapse=" "),"\n")
+
+#	Look for missing arguments in y
 	if(missing(ndups) && !is.null(y$printer$ndups)) ndups <- y$printer$ndups
 	if(missing(spacing) && !is.null(y$printer$spacing)) spacing <- y$printer$spacing
 	if(missing(weights) && !is.null(y$weights)) weights <- y$weights
+
+#	Check method
 	method <- match.arg(method,c("ls","robust"))
 
 #	If duplicates are present, reduce probe-annotation and Amean to correct length
@@ -28,7 +33,7 @@ lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation,we
 		if(!is.null(y$Amean)) y$Amean <- rowMeans(unwrapdups(as.matrix(y$Amean),ndups=ndups,spacing=spacing),na.rm=TRUE)
 	}
 
-#	Dispath fitting algorithms
+#	Dispatch fitting algorithms
 	if(method=="robust")
 		fit <- mrlm(y$exprs,design=design,ndups=ndups,spacing=spacing,weights=weights,...)
 	else
@@ -56,31 +61,43 @@ lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation,we
 }
 
 lm.series <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL)
-{
 #	Fit linear model for each gene to a series of arrays
 #	Gordon Smyth
-#	18 Apr 2002. Revised 10 July 2008.
-
+#	18 Apr 2002. Revised 16 Apr 2013.
+{
+#	Check expression matrix
 	M <- as.matrix(M)
 	narrays <- ncol(M)
-	if(is.null(design)) design <- matrix(1,narrays,1)
-	design <- as.matrix(design)
+
+#	Check design
+	if(is.null(design))
+		design <- matrix(1,narrays,1)
+	else
+		design <- as.matrix(design)
 	nbeta <- ncol(design)
 	coef.names <- colnames(design)
+	if(is.null(coef.names)) coef.names <- paste("x",1:nbeta,sep="")
+
+#	Check weights
 	if(!is.null(weights)) {
 		weights <- asMatrixWeights(weights,dim(M))
 		weights[weights <= 0] <- NA
 		M[!is.finite(weights)] <- NA
 	}
+
+#	Reform duplicated rows into columns
 	if(ndups>1) {
 		M <- unwrapdups(M,ndups=ndups,spacing=spacing)
 		design <- design %x% rep(1,ndups)
 		if(!is.null(weights)) weights <- unwrapdups(weights,ndups=ndups,spacing=spacing)
 	}
+
+#	Initialize standard errors
 	ngenes <- nrow(M)
 	stdev.unscaled <- beta <- matrix(NA,ngenes,nbeta,dimnames=list(rownames(M),coef.names))
-	sigma <- rep(NA,ngenes)
-	df.residual <- rep(0,ngenes)
+
+#	Check whether QR-decomposition is constant for all genes
+#	If so, fit all genes in one sweep
 	NoProbeWts <- !any(is.na(M)) && (is.null(weights) || !is.null(attr(weights,"arrayweights")))
 	if(NoProbeWts) {
 		if(is.null(weights))
@@ -105,6 +122,11 @@ lm.series <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL)
 		fit$pivot <- fit$qr$pivot
 		return(fit)
 	}
+
+#	Genewise QR-decompositions are required, so iteration through genes
+	beta <- stdev.unscaled
+	sigma <- rep(NA,ngenes)
+	df.residual <- rep(0,ngenes)
 	for (i in 1:ngenes) {
 		y <- as.vector(M[i,])
 		obs <- is.finite(y)
@@ -128,10 +150,13 @@ lm.series <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL)
 					sigma[i] <- sqrt(sum(w*out$residuals^2)/out$df.residual)
 		}
 	}
+
+#	Correlation matrix of coefficients
 	QR <- qr(design)
 	cov.coef <- chol2inv(QR$qr,size=QR$rank)
 	est <- QR$pivot[1:QR$rank]
 	dimnames(cov.coef) <- list(coef.names[est],coef.names[est])
+
 	list(coefficients=drop(beta),stdev.unscaled=drop(stdev.unscaled),sigma=sigma,df.residual=df.residual,cov.coefficients=cov.coef,pivot=QR$pivot)
 }
 

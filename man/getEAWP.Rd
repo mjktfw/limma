@@ -17,7 +17,8 @@ In the case of two-color objects, the \code{Amean} is computed from the matrix o
 For single-channel objects, \code{Amean} is computed from the matrix of expression vales.
 \code{PLMset}, \code{vsn} and \code{ExpressionSet} are assumed to be single-channel for this purpose.
 
-If \code{object} is a matrix, it is assumed to contain log-intensities, and \code{Amean} is computed from the row means.
+If \code{object} is a matrix, it is assumed to contain log-intensities if the values are all positive and log-ratios otherwise.
+\code{Amean} is computed in the former case but not the latter. 
 
 From April 2013, the output \code{exprs} matrix is ensured to have unique row names.
 If \code{object} has no row names, then the output row names of \code{exprs} are 1 to the number of rows.
@@ -29,6 +30,8 @@ A list with components
 \item{weights}{numeric matrix of weights}
 \item{probes}{data.frame of probe-annotation}
 \item{Amean}{numeric vector of average log-expression for each probe}
+\code{exprs} is the only required component.
+The other components will be \code{NULL} if not found in the input object.
 }
 \author{Gordon Smyth}
 \seealso{
