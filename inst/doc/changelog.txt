@@ -1,7 +1,9 @@
-15 April 2013: limma 3.17.3
+15 April 2013: limma 3.17.4
 
 - toptable() and topTable() now preserve rownames of fit object in
   the rownames of the toptable.
+
+15 April 2013: limma 3.17.3
 
 - getEAWP() now forces the output exprs matrix to have unique row
   names.
