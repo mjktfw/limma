@@ -91,13 +91,30 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 #	Check fit
 	fit$coefficients <- as.matrix(fit$coefficients)
 	rn <- rownames(fit$coefficients)
-	if(is.null(rn)) rn <- 1:nrow(fit$coefficients)
 
 #	Check coef is length 1
-	if(length(coef)>1) coef <- coef[1]
+	if(length(coef)>1) {
+		coef <- coef[1]
+		warning("Treat is for single coefficients: only first value of coef being used")
+	}
 
 #	Ensure genelist is a data.frame
 	if(!is.null(genelist) && is.null(dim(genelist))) genelist <- data.frame(ID=genelist,stringsAsFactors=FALSE)
+
+#	Check rownames
+	if(is.null(rn))
+		rn <- 1:nrow(fit$coefficients)
+	else
+		if(anyDuplicated(rn)) {
+			rn <- 1:nrow(fit$coefficients)
+			if(is.null(genelist))
+				genelist <- data.frame(ID=rn,stringsAsFactors=FALSE)
+			else
+				if("ID" %in% names(genelist))
+					genelist$ID0 <- rn
+				else
+					genelist$ID <- rn
+		}
 
 #	Check sort.by
 	sort.by <- match.arg(sort.by,c("logFC","M","A","Amean","AveExpr","P","p","T","t","B","none"))
@@ -122,7 +139,7 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 		if(NCOL(A)>1) A <- rowMeans(A,na.rm=TRUE)
 	}
 
-#	Compute eb if not given, computing just the one column required
+#	Compute eb if not given, compute just the one column required
 	if(is.null(eb)) {
 		fit$coefficients <- fit$coefficients[,coef,drop=FALSE]
 		fit$stdev.unscaled <- as.matrix(fit$stdev.unscaled)[,coef,drop=FALSE]
@@ -180,7 +197,7 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 		tab$CI.025 <- M[top]-margin.error
 		tab$CI.975 <- M[top]+margin.error
 	}
-	if(!is.null(A)) tab <- data.frame(tab,AveExpr=A[top])
+	if(!is.null(A)) tab$AveExpr <- A[top]
 	tab <- data.frame(tab,t=tstat[top],P.Value=P.Value[top],adj.P.Val=adj.P.Value[top],B=B[top])
 	rownames(tab) <- rn[top]
 

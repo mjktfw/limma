@@ -1,3 +1,16 @@
+20 April 2013: limma 3.17.5
+
+- Reverting most of change to getEAWP() in version 3.17.3.  getEAWP()
+  now simply preserves the rownames found in object, specifically
+  those found in the expression matrix.  Null rownames are left null,
+  unless the probe annotation data.frame has row.names, in which case
+  these are used.
+
+- toptable(), topTable() and topTreat() now preserve the rownames of
+  the fit object, unless the fit object has duplicated names, in
+  which case the rownames are copied to the ID column.  Empty
+  rownames are replaced with 1:nrow(fit).
+
 15 April 2013: limma 3.17.4
 
 - toptable() and topTable() now preserve rownames of fit object in

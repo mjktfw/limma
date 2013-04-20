@@ -30,8 +30,11 @@ topTreat(fit, coef=1, number=10, genelist=fit$genes, adjust.method="BH",
   If \code{NULL}, this will be automatically generated.}
   \item{adjust.method}{method used to adjust the p-values for multiple testing.  Options, in increasing conservatism, include \code{"none"}, \code{"BH"}, \code{"BY"} and \code{"holm"}.
   See \code{\link{p.adjust}} for the complete list of options. A \code{NULL} value will result in the default adjustment method, which is \code{"BH"}.}
-  \item{sort.by}{character string specifying statistic to rank genes by.  Possibilities for \code{topTable} and \code{toptable} are \code{"logFC"}, \code{"AveExpr"}, \code{"t"}, \code{"P"}, \code{"p"}, \code{"B"} or \code{"none"}. \code{"M"} is allowed as a synonym for \code{"logFC"} for backward compatibility.  Other permitted synonyms are \code{"A"} or \code{"Amean"} for \code{"AveExpr"}, \code{"T"} for \code{"t"} and \code{"p"} for \code{"P"}.  Possibilities for \code{topTableF} are \code{"F"} or \code{"none"}.
-  Possibilities for \code{topTreat} are as for \code{topTable} minus \code{"B"}.}
+  \item{sort.by}{character string specifying statistic to rank genes by.
+  Possible values for \code{topTable} and \code{toptable} are \code{"logFC"}, \code{"AveExpr"}, \code{"t"}, \code{"P"}, \code{"p"}, \code{"B"} or \code{"none"}.
+  (Permitted synonyms are \code{"M"} for \code{"logFC"}, \code{"A"} or \code{"Amean"} for \code{"AveExpr"}, \code{"T"} for \code{"t"} and \code{"p"} for \code{"P"}.)
+  Possibilities for \code{topTableF} are \code{"F"} or \code{"none"}.
+  Possibilities for \code{topTreat} are as for \code{topTable} except for \code{"B"}.}
   \item{resort.by}{character string specifying statistic to sort the selected genes by in the output data.frame.  Possibilities are the same as for \code{sort.by}.}
   \item{p.value}{cutoff value for adjusted p-values. Only genes with lower p-values are listed.}
   \item{lfc}{minimum absolute log2-fold-change required. \code{topTable} and \code{topTableF} include only genes with (at least one) absolute log-fold-changes greater than \code{lfc}. \code{topTreat} does not remove genes but ranks genes by evidence that their log-fold-change exceeds \code{lfc}.}

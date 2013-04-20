@@ -383,9 +383,8 @@ residuals.MArrayLM <- function(object,y,...)
 getEAWP <- function(object)
 #	Given any microarray data object, extract basic information needed for
 #	linear modelling.
-#  From 14 April 2003, output expr matrix is required to have unique rownames.
 #	Gordon Smyth
-#  9 March 2008. Last modified 15 Apr 2013.
+#  9 March 2008. Last modified 20 April 2013.
 {
 	y <- list()
 	
@@ -432,21 +431,24 @@ getEAWP <- function(object)
 #	Check expression values are numeric
 	if(mode(y$exprs) != "numeric") stop("Data object doesn't contain numeric expression values")
 
+#	Get rownames from probes?
+	if(is.null(rownames(y$exprs)) && !is.null(row.names(y$probes))) rownames(y$exprs) <- row.names(y$probes)
+
 #	Check rownames are unique
-	rn <- rownames(y$exprs)
-	if(is.null(rn))
-		rownames(y$exprs) <- 1:nrow(y$exprs)
-	else
-		if(anyDuplicated(rn)>0) {
-			rownames(y$exprs) <- 1:nrow(y$exprs)
-			if(is.null(y$probes))
-				y$probes <- data.frame(ID=rn,stringsAsFactors=FALSE)
-			else
-				if("ID" %in% names(y$probes))
-					y$probes$ID0 <- rn
-				else
-					y$probes$ID <- rn
-		}
+#	rn <- rownames(y$exprs)
+#	if(is.null(rn))
+#		rownames(y$exprs) <- 1:nrow(y$exprs)
+#	else
+#		if(anyDuplicated(rn)>0) {
+#			rownames(y$exprs) <- 1:nrow(y$exprs)
+#			if(is.null(y$probes))
+#				y$probes <- data.frame(ID=rn,stringsAsFactors=FALSE)
+#			else
+#				if("ID" %in% names(y$probes))
+#					y$probes$ID0 <- rn
+#				else
+#					y$probes$ID <- rn
+#		}
 
 	y
 }
