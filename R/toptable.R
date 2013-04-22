@@ -37,48 +37,82 @@ topTable <- function(fit,coef=NULL,number=10,genelist=fit$genes,adjust.method="B
 topTableF <- function(fit,number=10,genelist=fit$genes,adjust.method="BH",sort.by="F",p.value=1,lfc=0)
 #	Summary table of top genes by F-statistic
 #	Gordon Smyth
-#	27 August 2006. Last modified 19 Jan 2012.
+#	27 August 2006. Last modified 22 April 2013.
 {
-#	Check input
-	if(is.null(fit$F)) stop("F-statistics not available. Try topTable for individual coef instead.")
+#	Check fit
+	if(is.null(fit$coefficients)) stop("Coefficients not found in fit")
+	M <- as.matrix(fit$coefficients)
+	rn <- rownames(M)
+	if(is.null(colnames(M))) colnames(M) <- paste("Coef",1:ncol(M),sep="")
+	Amean <- fit$Amean
+	Fstat <- fit$F
+	Fp <- fit$F.p.value
+	if(is.null(Fstat)) stop("F-statistics not found in fit")
+
+#	Ensure genelist is a data.frame
 	if(!is.null(genelist) && is.null(dim(genelist))) genelist <- data.frame(ProbeID=genelist,stringsAsFactors=FALSE)
+
+#	Check rownames
+	if(is.null(rn))
+		rn <- 1:nrow(M)
+	else
+		if(anyDuplicated(rn)) {
+			if(is.null(genelist))
+				genelist <- data.frame(ID=rn,stringsAsFactors=FALSE)
+			else
+				if("ID" %in% names(genelist))
+					genelist$ID0 <- rn
+				else
+					genelist$ID <- rn
+			rn <- 1:nrow(M)
+		}
+
+#	Check sort.by
 	sort.by <- match.arg(sort.by,c("F","none"))
 
-	M <- as.matrix(fit$coefficients)
-	if(is.null(colnames(M))) colnames(M) <- paste("Coef",1:ncol(M),sep="")
-	rn <- rownames(M)
-	if(is.null(rn) || length(rn) > length(unique(rn))) rn <- 1:nrow(M)
-	adj.P.Value <- p.adjust(fit$F.p.value,method=adjust.method)
+#	Apply multiple testing adjustment
+	adj.P.Value <- p.adjust(Fp,method=adjust.method)
 
-	if(lfc > 0) {
-		big <- apply(abs(M)>lfc,1,any)
-		big[is.na(big)] <- FALSE
-		if(any(!big)) {
-			fit <- fit[big,]
-			if(!is.null(genelist)) genelist <- genelist[big,,drop=FALSE]
-			M <- M[big,]
-			rn <- rn[big]
-			adj.P.Value <- adj.P.Value[big]
+#	Thin out fit by lfc and p.value thresholds
+	if(lfc > 0 || p.value < 1) {
+		if(lfc>0)
+			big <- rowSums(abs(M)>lfc,na.rm=TRUE)>0
+		else
+			big <- TRUE
+		if(p.value<1) {
+			sig <- adj.P.Value <= p.value
+			sig[is.na(sig)] <- FALSE
+		} else
+			sig <- TRUE
+		keep <- big & sig
+		if(!all(keep)) {
+			M <- M[keep,,drop=FALSE]
+			rn <- rn[keep]
+			Amean <- Amean[keep]
+			Fstat <- Fstat[keep]
+			Fp <- p.value[keep]
+			genelist <- genelist[keep,,drop=FALSE]
+			adj.P.Value <- adj.P.Value[keep]
 		}
 	}
-	if(nrow(fit) < number) number <- nrow(fit)
 
+#	Enough rows left?
+	if(nrow(fit) < number) number <- nrow(fit)
+	if(number < 1) return(data.frame())
+
+#	Find rows of top genes
 	if(sort.by=="F")
-		o <- order(fit$F.p.value,decreasing=FALSE)[1:number]
+		o <- order(Fp,decreasing=FALSE)[1:number]
 	else
 		o <- 1:number
 
-	if(p.value < 1) {
-		nsig <- sum(adj.P.Value[o] <= p.value,na.rm=TRUE)
-		if(nsig < number) o <- o[1:nsig]
-	}
-
+#	Assemble data.frame
 	if(is.null(genelist))
 		tab <- data.frame(M[o,,drop=FALSE])
 	else
 		tab <- data.frame(genelist[o,,drop=FALSE],M[o,,drop=FALSE])
-	if(!is.null(fit$Amean)) tab <- data.frame(tab,AveExpr=fit$Amean[o])
-	tab <- data.frame(tab,F=fit$F[o],P.Value=fit$F.p.value[o],adj.P.Val=adj.P.Value[o])
+	tab$AveExpr=fit$Amean[o]
+	tab <- data.frame(tab,F=Fstat[o],P.Value=Fp[o],adj.P.Val=adj.P.Value[o])
 	rownames(tab) <- rn[o]
 	tab
 }
@@ -106,7 +140,6 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 		rn <- 1:nrow(fit$coefficients)
 	else
 		if(anyDuplicated(rn)) {
-			rn <- 1:nrow(fit$coefficients)
 			if(is.null(genelist))
 				genelist <- data.frame(ID=rn,stringsAsFactors=FALSE)
 			else
@@ -114,6 +147,7 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 					genelist$ID0 <- rn
 				else
 					genelist$ID <- rn
+			rn <- 1:nrow(fit$coefficients)
 		}
 
 #	Check sort.by

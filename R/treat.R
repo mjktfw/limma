@@ -79,7 +79,6 @@ topTreat <- function(fit,coef=1,number=10,genelist=fit$genes,adjust.method="BH",
 		rn <- 1:nrow(M)
 	else
 		if(anyDuplicated(rn)) {
-			rn <- 1:nrow(M)
 			if(is.null(genelist))
 				genelist <- data.frame(ID=rn,stringsAsFactors=FALSE)
 			else
@@ -87,6 +86,7 @@ topTreat <- function(fit,coef=1,number=10,genelist=fit$genes,adjust.method="BH",
 					genelist$ID0 <- rn
 				else
 					genelist$ID <- rn
+			rn <- 1:nrow(M)
 		}
 
 #	Check sort.by

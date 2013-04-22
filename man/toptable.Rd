@@ -42,7 +42,7 @@ topTreat(fit, coef=1, number=10, genelist=fit$genes, adjust.method="BH",
   \item{...}{any other arguments are passed to \code{ebayes} if \code{eb} is \code{NULL}}
 }
 \value{
-  Produces a dataframe with a row for the \code{number} top genes and the following columns:
+  A dataframe with a row for the \code{number} top genes and the following columns:
   \item{genelist}{one or more columns of probe annotation, if genelist was included as input}
   \item{logFC}{estimate of the log2-fold-change corresponding to the effect or contrast (for \code{topTableF} there may be several columns of log-fold-changes)}
   \item{CI.025}{left limit of confidence interval for \code{logFC} (if \code{confint=TRUE})}
@@ -53,11 +53,15 @@ topTreat(fit, coef=1, number=10, genelist=fit$genes, adjust.method="BH",
   \item{P.Value}{raw p-value}
   \item{adj.P.Value}{adjusted p-value or q-value}
   \item{B}{log-odds that the gene is differentially expressed (omitted for \code{topTreat})}
+
+If \code{fit} had unique rownames, then the row.names of the above data.frame are the same in sorted order.
+Otherwise, the row.names of the data.frame indicate the row number in \code{fit}.
+If \code{fit} had duplicated row names, then these are preserved in the \code{ID} column of the data.frame, or in \code{ID0} if \code{genelist} already contained an \code{ID} column.
 }
 \details{
 \code{toptable} is an earlier interface and is retained only for backward compatibility.
 
-This function summarizes a linear model fit object produced by \code{lmFit}, \code{lm.series}, \code{gls.series} or \code{mrlm} by selecting the top-ranked genes for any given contrast.
+These functions summarize the linear model fit object produced by \code{lmFit}, \code{lm.series}, \code{gls.series} or \code{mrlm} by selecting the top-ranked genes for any given contrast.
 \code{topTable} and \code{topTableF} assume that the linear model fit has already been processed by \code{\link{eBayes}}.
 \code{topTreat} assumes that the fit has been processed by \code{\link{treat}}.
 

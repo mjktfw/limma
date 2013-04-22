@@ -1,3 +1,11 @@
+22 April 2013: limma 3.17.6
+
+- Further fixes to toptable(), topTableF() and topTreat() to
+  implement the changes begun in 3.17.5.
+
+- documentation about rownames and column names and the use of
+  rownames(fit) and colnames(fit) added to lmFit.Rd.
+
 20 April 2013: limma 3.17.5
 
 - Reverting most of change to getEAWP() in version 3.17.3.  getEAWP()
