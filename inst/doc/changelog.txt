@@ -1,9 +1,10 @@
 23 April 2013: limma 3.17.7
 
-- update Estrogen case study in User's Guide to reflect change in
+- Update Estrogen case study in User's Guide to reflect change in
   rownames of topTable output.
 
-- New MA-plot added to Nigerian RNA-seq case study in User's Guide.
+- Update Nigerian RNA-seq case study in User's Guide, adding new
+  MA-plot.
 
 22 April 2013: limma 3.17.6
 
