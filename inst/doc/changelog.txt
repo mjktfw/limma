@@ -1,3 +1,10 @@
+23 April 2013: limma 3.17.7
+
+- update Estrogen case study in User's Guide to reflect change in
+  rownames of topTable output.
+
+- New MA-plot added to Nigerian RNA-seq case study in User's Guide.
+
 22 April 2013: limma 3.17.6
 
 - Further fixes to toptable(), topTableF() and topTreat() to
@@ -59,7 +66,7 @@
 
 29 March 2013: limma 3.15.19
 
-- revise RNA-seq case study in User's Guide.
+- revise Nigerian RNA-seq case study in User's Guide.
 
 - bug fix to lmscFit() when the residual df = 1.
 

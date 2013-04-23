@@ -3,7 +3,7 @@
 plotMA <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
 #	MA-plot with color coding for controls
 #	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.
-#	Last modified 18 Aug 2011.
+#	Last modified 23 April 2013.
 {
 #	Convert to MAList if possible
 	if(class(MA)=="list") MA <- new("MAList",MA)
@@ -14,6 +14,14 @@ plotMA <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xl
 	if(is(MA,"EListRaw")) {
 		MA <- normalizeBetweenArrays(MA,method="none")
 	}
+
+#	Check legend
+	legend.position <- "topleft"
+	if(!is.logical(legend)) {
+		legend.position <- legend
+		legend <- TRUE
+	}
+	legend.position <- match.arg(legend.position,c("bottomright","bottom","bottomleft","left","topleft","top","topright","right","center"))
 
 	if(is(MA,"MAList")) {
 #		Data is two-color
@@ -104,9 +112,9 @@ plotMA <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xl
 		}
 		if(legend) {
 			if(is.list(pch))
-				legend(x=xlim[1],y=ylim[2],legend=values,fill=col,col=col,cex=0.9)
+				legend(legend.position,legend=values,fill=col,col=col,cex=0.9)
 			else
-				legend(x=xlim[1],y=ylim[2],legend=values,pch=pch,,col=col,cex=0.9)
+				legend(legend.position,legend=values,pch=pch,,col=col,cex=0.9)
 		}
 	}
 	invisible()

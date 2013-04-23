@@ -64,6 +64,8 @@ If \code{method="ls"} and there is no correlation structure, \code{lm.series} is
 }
 
 \seealso{
+\code{lmFit} uses \code{\link{getEAWP}} to extract expression values, gene annotation and so from the data \code{object}.
+
 An overview of linear model functions in limma is given by \link{06.LinearModels}.
 }
 
