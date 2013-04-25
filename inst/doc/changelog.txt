@@ -1,3 +1,8 @@
+25 April 2013: limma 3.17.8
+
+- Bug fix to fitFDistRobustly(), which affected the estimated scale
+  when df2 is estimated to be Inf.
+
 23 April 2013: limma 3.17.7
 
 - Update Estrogen case study in User's Guide to reflect change in
@@ -5,6 +10,9 @@
 
 - Update Nigerian RNA-seq case study in User's Guide, adding new
   MA-plot.
+
+- The legend argument to plotMA() can now take a character value
+  giving the position to place the legend.  
 
 22 April 2013: limma 3.17.6
 

@@ -14,7 +14,7 @@ loessFit(y, x, weights=NULL, span=0.3, bin=NULL, iterations=4, min.weight=1e-5, 
   \item{span}{positive numeric value between 0 and 1 specifying proportion of data to be used in the local regression moving window.
   Larger numbers give smoother fits.}
   \item{bin}{numeric value between 0 and 1 giving the proportion of the data that can be grouped in a single bin when doing local regression fit.
-  \code{bin=0} forces an exact local regression fit with no interpolation. Default is 0.005 with weights are 0.01 without weights.}
+  \code{bin=0} forces an exact local regression fit with no interpolation. Default is 0.005 with weights and 0.01 without weights.}
   \item{iterations}{number of iterations of loess fit. Values greater than 1 produce robust fits.}
   \item{min.weight}{minimum weight. Any lower weights will be reset.}
   \item{max.weight}{maxium weight. Any higher weights will be reset.}

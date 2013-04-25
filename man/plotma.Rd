@@ -27,7 +27,7 @@ plotMA(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, yli
   \item{cex}{numeric vector of plot symbol expansions, of the the same length as \code{values}. 
   Defaults to 0.3 for the most common status value and 1 for the others.
   Ignored if there is no \code{status} vector.}
-  \item{legend}{logical, should a legend of plotting symbols and colors be included. Ignored if there is no \code{status} vector.}
+  \item{legend}{logical, should a legend of plotting symbols and colors be included. Can also be a character string giving position to place legend. Ignored if there is no \code{status} vector.}
   \item{zero.weights}{logical, should spots with zero or negative weights be plotted?}
   \item{...}{any other arguments are passed to \code{plot}}
 }
