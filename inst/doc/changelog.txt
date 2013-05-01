@@ -1,3 +1,10 @@
+ 1 May 2013: limma 3.17.9
+
+- Bug fix to ebayes(), which was not passing the 'robust' argument
+  correctly on to squeezeVar().
+
+- Update of mammary stem cell case study in User's Guide.
+
 25 April 2013: limma 3.17.8
 
 - Bug fix to fitFDistRobustly(), which affected the estimated scale

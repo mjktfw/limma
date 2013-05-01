@@ -33,7 +33,7 @@ eBayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4),trend=FALSE,robus
 ebayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4),trend=FALSE,robust=FALSE,winsor.tail.p=c(0.05,0.1))
 #	Empirical Bayes statistics to select differentially expressed genes
 #	Gordon Smyth
-#	8 Sept 2002.  Last revised 20 November 2012.
+#	8 Sept 2002.  Last revised 1 May 2013.
 {
 	coefficients <- fit$coefficients
 	stdev.unscaled <- fit$stdev.unscaled
@@ -50,8 +50,7 @@ ebayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4),trend=FALSE,robus
 	}
 
 #	Moderated t-statistic
-	if(!robust) winsor.tail.p <- 0
-	out <- squeezeVar(sigma^2, df.residual, covariate=covariate, winsor.tail.p=winsor.tail.p)
+	out <- squeezeVar(sigma^2, df.residual, covariate=covariate, robust=robust, winsor.tail.p=winsor.tail.p)
 	out$s2.prior <- out$var.prior
 	out$s2.post <- out$var.post
 	out$var.prior <- out$var.post <- NULL
