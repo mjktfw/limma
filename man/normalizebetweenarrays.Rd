@@ -38,7 +38,7 @@ Cyclic loess is slower than quantile, but allows probe-wise weights and is more 
 
 The other normalization methods are for two-color arrays.
 Scale normalization was proposed by Yang et al (2001, 2002) and is further explained by Smyth and Speed (2003).
-The idea is simply to scale the log-ratios to have the same median-abolute-deviation (MAD) across arrays.
+The idea is simply to scale the log-ratios to have the same median-absolute-deviation (MAD) across arrays.
 This idea has also been implemented by the \code{maNormScale} function in the marray package.
 The implementation here is slightly different in that the MAD scale estimator is replaced with the median-absolute-value and the A-values are normalized as well as the M-values.
 

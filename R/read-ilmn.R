@@ -68,28 +68,41 @@ read.ilmn.targets <- function(targets, ...)
 	h <- readGenericHeader(fname,columns=expr)
 	skip <- h$NHeaderRecords
 	header <- h$ColumnNames
-	
+
 	elist <- new("EListRaw")
 	elist$source <- "illumina"
 	reqcol <- header[grep(tolower(paste(c(probeid, annotation, expr, other.columns), collapse="|")), tolower(header))]
 	reqcol <- trimWhiteSpace(reqcol)
-	
+
 	x <- read.columns(file=fname, required.col=reqcol, skip=skip, sep=sep, quote=quote, stringsAsFactors=FALSE,	...)
 	nprobes <- nrow(x)
-	
-	pids <- x[, grep(tolower(probeid), tolower(colnames(x)))]
-	snames <- colnames(x)[grep(tolower(expr), tolower(colnames(x)))]
+
+#	Match column names to find column numbers
+	cn <- tolower(colnames(x))
+	idcol <- grep(tolower(probeid), cn)
+	anncol <- grep(tolower(paste(annotation,collapse="|")), cn)
+	exprcol <- grep(tolower(expr), cn)
+
+#	Probe IDs
+	pids <- x[,idcol]
+
+#	Sample names
+	snames <- colnames(x)[exprcol]
 	snames <- unlist(strsplit(snames, paste("[.]*", expr, "-*", sep="")))
 	snames <- snames[snames != ""]
 	nsamples <- length(snames)
-	
-	elist$E <- data.matrix(x[, grep(tolower(expr), tolower(colnames(x)))])
+
+#	Expression matrix	
+	elist$E <- data.matrix(x[,exprcol])
 	colnames(elist$E) <- snames
 	rownames(elist$E) <- pids
-	
-	elist$genes <- x[, c(grep(tolower(probeid), tolower(colnames(x))), grep(tolower(paste(annotation,collapse="|")), tolower(colnames(x)))), drop=FALSE]
-	elist$targets <- data.frame(SampleNames=snames, stringsAsFactors=FALSE)
-	
+
+#	Add probe annotation	
+	if(length(anncol)) elist$genes <- x[,anncol,drop=FALSE]
+
+#	elist$targets <- data.frame(SampleNames=snames, stringsAsFactors=FALSE)
+
+#	Add other columns if required	
 	if(!is.null(other.columns)){
 		elist$other <- vector("list", length(other.columns))
 		for(i in 1:length(other.columns)){
@@ -102,5 +115,6 @@ read.ilmn.targets <- function(targets, ...)
 		}
 		names(elist$other) <- other.columns
 	}
+
 	elist
 }

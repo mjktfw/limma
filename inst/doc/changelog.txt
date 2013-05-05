@@ -1,3 +1,14 @@
+ 5 May 2013: limma 3.17.10
+ 
+- read.ilmn() no longer adds the probe IDs to the gene annotation
+  data.frame, leaving them instead as rownames of the expression
+  matrix.  It longer creates a targets file since the sample names
+  are already preserved as column names of the expression matrix.
+
+- Update mammmary stem cell case study in User's Guide.  As well
+  as reflecting changes to read.ilmn() and topTable(), this now
+  demonstrates how to find signature genes for particular cell type.
+
  1 May 2013: limma 3.17.9
 
 - Bug fix to ebayes(), which was not passing the 'robust' argument
