@@ -1,3 +1,7 @@
+ 9 May 2013: limma 3.17.11
+
+- new merge methods for EList and EListRaw objects.
+
  5 May 2013: limma 3.17.10
  
 - read.ilmn() no longer adds the probe IDs to the gene annotation

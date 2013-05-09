@@ -1,10 +1,10 @@
-# COMBINE AND MERGE
+# CBIND, RBIND AND MERGE
 
-cbind.RGList <- function(..., deparse.level=1) {
+cbind.RGList <- function(..., deparse.level=1)
 #  Combine RGList objects assuming same genelists
 #  Gordon Smyth
 #  27 June 2003. Last modified 6 Nov 2005.
-
+{
 	objects <- list(...)
 	nobjects <- length(objects)
 	out <- objects[[1]]
@@ -22,11 +22,11 @@ cbind.RGList <- function(..., deparse.level=1) {
 	out
 }
 
-cbind.MAList <- function(..., deparse.level=1) {
+cbind.MAList <- function(..., deparse.level=1)
 #  Combine MAList objects assuming same genelists
 #  Gordon Smyth
 #  27 June 2003. Last modified 6 Nov 2005.
-
+{
 	objects <- list(...)
 	nobjects <- length(objects)
 	out <- objects[[1]]
@@ -42,11 +42,11 @@ cbind.MAList <- function(..., deparse.level=1) {
 	out
 }
 
-cbind.EListRaw <- cbind.EList <- function(..., deparse.level=1) {
+cbind.EListRaw <- cbind.EList <- function(..., deparse.level=1)
 #  Combine EList objects assuming same genelists
 #  Gordon Smyth
 #  23 March 2009.  Last modified 21 October 2010.
-
+{
 	objects <- list(...)
 	nobjects <- length(objects)
 	out <- objects[[1]]
@@ -62,11 +62,11 @@ cbind.EListRaw <- cbind.EList <- function(..., deparse.level=1) {
 	out
 }
 
-rbind.RGList <- function(..., deparse.level=1) {
+rbind.RGList <- function(..., deparse.level=1)
 #  Combine RGList objects assuming same array lists
 #  Gordon Smyth
 #  6 Dec 2003. Last modified 6 Nov 2005.
-
+{
 	objects <- list(...)
 	nobjects <- length(objects)
 	out <- objects[[1]]
@@ -84,11 +84,11 @@ rbind.RGList <- function(..., deparse.level=1) {
 	out
 }
 
-rbind.MAList <- function(..., deparse.level=1) {
+rbind.MAList <- function(..., deparse.level=1)
 #  Combine MAList objects assuming same array lists
 #  Gordon Smyth
 #  7 Dec 2003. Last modified 6 Nov 2005.
-
+{
 	objects <- list(...)
 	nobjects <- length(objects)
 	out <- objects[[1]]
@@ -104,11 +104,11 @@ rbind.MAList <- function(..., deparse.level=1) {
 	out
 }
 
-rbind.EListRaw <- rbind.EList <- function(..., deparse.level=1) {
+rbind.EListRaw <- rbind.EList <- function(..., deparse.level=1)
 #  Combine EList objects assuming same array lists
 #  Gordon Smyth
 #  23 March 2009.  Last modified 26 October 2010.
-
+{
 	objects <- list(...)
 	nobjects <- length(objects)
 	out <- objects[[1]]
@@ -125,11 +125,11 @@ rbind.EListRaw <- rbind.EList <- function(..., deparse.level=1) {
 	out
 }
 
-makeUnique <- function(x) {
+makeUnique <- function(x)
 #  Add characters to the elements of a character vector to make all values unique
 #  Gordon Smyth
 #  10 April 2003
-
+{
 	x <- as.character(x)
 	tab <- table(x)
 	tab <- tab[tab>1]
@@ -144,11 +144,11 @@ makeUnique <- function(x) {
 	x
 }
 
-merge.RGList <- function(x,y,...) {
+merge.RGList <- function(x,y,...)
 #  Merge RGList y into x aligning by row names
 #  Gordon Smyth
 #  11 April 2003.  Last modified 28 Oct 2005.
-
+{
 	if(!is(y,"RGList")) stop("both x and y must be RGList objects")
 	genes1 <- rownames(x$R)
 	if(is.null(genes1)) genes1 <- rownames(x$G)
@@ -166,17 +166,61 @@ merge.RGList <- function(x,y,...) {
 	cbind(x,y[ord2,])
 }
 
-merge.MAList <- function(x,y,...) {
+merge.MAList <- function(x,y,...)
 #  Merge MAList y into x aligning by row names
 #  Gordon Smyth
 #  7 May 2004.  Last modified 28 Oct 2005.
-
+{
 	if(!is(y,"MAList")) stop("both x and y must be MAList objects")
 	genes1 <- rownames(x$M)
 	if(is.null(genes1)) genes1 <- rownames(x$A)
 	if(is.null(genes1)) genes1 <- x$genes$ID
 	genes2 <- rownames(y$M)
 	if(is.null(genes2)) genes2 <- rownames(y$A)
+	if(is.null(genes2)) genes2 <- y$genes$ID
+	if(is.null(genes1) || is.null(genes2)) stop("Need row names to align on") 
+
+	fields1 <- names(x)
+	fields2 <- names(y)
+	if(!identical(fields1,fields2)) stop("The two MALists have different components")
+
+	ord2 <- match(makeUnique(genes1), makeUnique(genes2))
+	cbind(x,y[ord2,])
+}
+
+merge.EListRaw <- function(x,y,...)
+#  Merge EListRaw y into x aligning by row names
+#  Gordon Smyth
+#  9 May 2013.  Last modified 9 May 2013.
+{
+	if(!is(y,"EListRaw")) stop("both x and y must be EListRaw objects")
+	genes1 <- rownames(x$E)
+	if(is.null(genes1)) genes1 <- row.names(x$genes)
+	if(is.null(genes1)) genes1 <- x$genes$ID
+	genes2 <- rownames(y$E)
+	if(is.null(genes2)) genes2 <- row.names(y$genes)
+	if(is.null(genes2)) genes2 <- y$genes$ID
+	if(is.null(genes1) || is.null(genes2)) stop("Need row names to align on") 
+
+	fields1 <- names(x)
+	fields2 <- names(y)
+	if(!identical(fields1,fields2)) stop("The two MALists have different components")
+
+	ord2 <- match(makeUnique(genes1), makeUnique(genes2))
+	cbind(x,y[ord2,])
+}
+
+merge.EList <- function(x,y,...)
+#  Merge EList y into x aligning by row names
+#  Gordon Smyth
+#  9 May 2013.  Last modified 9 May 2013.
+{
+	if(!is(y,"EList")) stop("both x and y must be EList objects")
+	genes1 <- rownames(x$E)
+	if(is.null(genes1)) genes1 <- row.names(x$genes)
+	if(is.null(genes1)) genes1 <- x$genes$ID
+	genes2 <- rownames(y$E)
+	if(is.null(genes2)) genes2 <- row.names(y$genes)
 	if(is.null(genes2)) genes2 <- y$genes$ID
 	if(is.null(genes1) || is.null(genes2)) stop("Need row names to align on") 
 
