@@ -1,6 +1,10 @@
+11 May 2013: limma 3.17.12
+
+- New references added for separate channel analysis and voom.
+
  9 May 2013: limma 3.17.11
 
-- new merge methods for EList and EListRaw objects.
+- New merge methods for EList and EListRaw objects.
 
  5 May 2013: limma 3.17.10
  
