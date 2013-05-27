@@ -1,3 +1,11 @@
+17 May 2013: limma 3.17.13
+
+- Update lmscFit reference.
+
+- Update voom reference.
+
+- Update voomByGroup documentation.
+
 11 May 2013: limma 3.17.12
 
 - New references added for separate channel analysis and voom.

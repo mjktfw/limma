@@ -29,7 +29,9 @@ voomaByGroup(y, group, design=NULL, correlation, block=NULL, plot=FALSE, span=NU
 
 \code{vooma} estimates the mean-variance relationship in the data, and uses this to compute appropriate weights for each observation.
 This done by estimating a mean-variance trend, then interpolating this trend to obtain a precision weight (inverse variance) for each observation.
-The weights can then used by other functions such as \code{lmFit} to adjust for heteroscedasticity. 
+The weights can then used by other functions such as \code{lmFit} to adjust for heteroscedasticity.
+
+\code{voomaByGroup} estimates precision weights separately for each group.  In other words, it allows for different mean-variance curves in different groups.
 }
 
 \value{
@@ -44,7 +46,7 @@ An EList object with the following components:
 \code{\link{voom}}
 }
 
-\author{Gordon Smyth and Charity Law}
+\author{Charity Law and Gordon Smyth}
 
 \references{
 Law, C. (2013).
