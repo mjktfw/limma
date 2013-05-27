@@ -1,10 +1,11 @@
-17 May 2013: limma 3.17.13
+27 May 2013: limma 3.17.13
 
-- Update lmscFit reference.
-
-- Update voom reference.
+- Update lmscFit and voom references.
 
 - Update voomByGroup documentation.
+
+- normexp.fit.detection.p() now tolerates some non-monotonicity in
+  the detection p-pvalues as a function of expression.
 
 11 May 2013: limma 3.17.12
 

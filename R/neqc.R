@@ -1,7 +1,7 @@
 normexp.fit.detection.p <- function(x,detection.p="Detection")
 #  Estimate normexp parameters using negative control probes which are derived from probes' detection p values
 #  Wei Shi and Gordon Smyth
-#  Created 27 October 2010.  Modified 3 Jan 2013.
+#  Created 27 October 2010.  Modified 27 May 2013.
 {
 	if(is(x,"EListRaw")){
 		if(is.character(detection.p)){
@@ -36,13 +36,13 @@ normexp.fit.detection.p <- function(x,detection.p="Detection")
 	for(i in 1:narrays){
 		y <- x[,i]
 		p <- detection.p[,i]
-		o <- order(y)
+		o <- order(p,y)
 		y <- y[o]
 		p <- p[o]
 		j <- which(!duplicated(p))[-1]
 		ync <- (y[j]+y[j-1])/2
 		d <- p[j]-p[j-1]
-		if(any(d<0)) stop("detection p-values are not monotonic in the expression values for array",i)
+#		if(any(d<0)) stop("detection p-values are not monotonic in the expression values for array",i)
 		freq <- d/min(d)
 		n <- sum(freq)
 		mu[i] <- weighted.mean(ync,freq)
