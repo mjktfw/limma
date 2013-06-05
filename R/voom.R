@@ -2,11 +2,11 @@ voom <- function(counts,design=NULL,lib.size=NULL,normalize.method="none",plot=F
 # Linear modelling of count data mean-variance modelling at the observational level.
 # Creates an EList object for entry to lmFit() etc in the limma pipeline.
 # Gordon Smyth and Charity Law
-# Created 22 June 2011.  Last modified 1 Nov 2012.
+# Created 22 June 2011.  Last modified 5 June 2013.
 {
 	out <- list()
 
-#	Check inputs
+#	Check counts
 	if(is(counts,"DGEList")) {
 		out$genes <- counts$genes
 		out$targets <- counts$samples
@@ -23,11 +23,15 @@ voom <- function(counts,design=NULL,lib.size=NULL,normalize.method="none",plot=F
 			counts <- as.matrix(counts)
 		}
 	}
+
+#	Check design
 	if(is.null(design)) {
 		design <- matrix(1,ncol(counts),1)
 		rownames(design) <- colnames(counts)
 		colnames(design) <- "GrandMean"
 	}
+
+#	Check lib.size
 	if(is.null(lib.size)) lib.size <- colSums(counts)
 
 #	Fit linear model to log2-counts-per-million
@@ -61,7 +65,7 @@ voom <- function(counts,design=NULL,lib.size=NULL,normalize.method="none",plot=F
 #	l$y <- c(var0, l$y)
 	f <- approxfun(l, rule=2)
 
-#	Find individual quarterroot fitted counts
+#	Find individual quarter-root fitted counts
 	if(fit$rank < ncol(design)) {
 		j <- fit$pivot[1:fit$rank]
 		fitted.values <- fit$coef[,j,drop=FALSE] %*% t(fit$design[,j,drop=FALSE])
@@ -80,7 +84,10 @@ voom <- function(counts,design=NULL,lib.size=NULL,normalize.method="none",plot=F
 	out$E <- y
 	out$weights <- w
 	out$design <- design
-	out$lib.size <- lib.size
+	if(is.null(out$targets))
+		out$targets <- data.frame(lib.size=lib.size)
+	else
+		out$targets$lib.size <- lib.size
 	new("EList",out)
 }
 

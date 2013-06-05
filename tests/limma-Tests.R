@@ -249,3 +249,12 @@ fit$df.residual[1]
 fit$df.prior
 fit$s2.prior
 summary(fit$s2.post)
+
+### voom
+
+y <- matrix(rpois(100*4,lambda=20),100,4)
+design <- cbind(Int=1,x=c(0,0,1,1))
+v <- voom(y,design)
+names(v)
+summary(v$E)
+summary(v$weights)

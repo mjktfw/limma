@@ -45,7 +45,7 @@ cbind.MAList <- function(..., deparse.level=1)
 cbind.EListRaw <- cbind.EList <- function(..., deparse.level=1)
 #  Combine EList objects assuming same genelists
 #  Gordon Smyth
-#  23 March 2009.  Last modified 21 October 2010.
+#  23 March 2009.  Last modified 5 June 2013.
 {
 	objects <- list(...)
 	nobjects <- length(objects)
@@ -57,6 +57,7 @@ cbind.EListRaw <- cbind.EList <- function(..., deparse.level=1)
 		out$Eb <- cbind(out$Eb,objects[[i]]$Eb)
 		out$weights <- cbind(out$weights,objects[[i]]$weights)
 		out$targets <- rbind(out$targets,objects[[i]]$targets)
+		out$design <- rbind(out$design,objects[[i]]$design)
 		for (a in other) out$other[[a]] <- cbind(out$other[[a]],objects[[i]]$other[[a]])
 	}
 	out

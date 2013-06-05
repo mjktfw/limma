@@ -41,11 +41,12 @@ plotMDS.MDS <- function(x,labels=colnames(x$distance.matrix),col=NULL,cex=1,dim.
 plotMDS.default <- function(x,top=500,labels=colnames(x),col=NULL,cex=1,dim.plot=c(1,2),ndim=max(dim.plot),gene.selection="pairwise",xlab=paste("Dimension",dim.plot[1]),ylab=paste("Dimension",dim.plot[2]),...)
 #	Multi-dimensional scaling with top-distance
 #	Di Wu and Gordon Smyth
-#	19 March 2009.  Last modified 6 Sep 2012.
+#	19 March 2009.  Last modified 29 May 2013.
 {
 #	Check x
 	x <- as.matrix(x)
 	nsamples <- ncol(x)
+	if(nsamples < 3) stop("Need at least 3 columns")
 	cn <- colnames(x)
 #	Remove rows with missing or Inf values
 	bad <- rowSums(is.finite(x)) < nsamples

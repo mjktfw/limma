@@ -1,3 +1,14 @@
+ 5 June 2013: limma 3.17.15
+
+- new function beadCountWeights() to estimate quantitative weights
+  from the bead counts for each probe for Illumina BeadArrays.
+
+- voom() now outputs lib.size as a column of targets instead of as a
+  separate component.
+
+- cbind for EList and EListRaw objects now recognizes a design matrix
+  if it is present.
+
 27 May 2013: limma 3.17.14
 
 - normexp.fit.detection.p() now tolerates some non-monotonicity in
