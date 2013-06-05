@@ -9,6 +9,9 @@
 - cbind for EList and EListRaw objects now recognizes a design matrix
   if it is present.
 
+- plotMDS() now checks explicitly that there are at least 3 samples
+  to plot.
+
 27 May 2013: limma 3.17.14
 
 - normexp.fit.detection.p() now tolerates some non-monotonicity in
