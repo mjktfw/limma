@@ -75,10 +75,10 @@ ebayes <- function(fit,proportion=0.01,stdev.coef.lim=c(0.1,4),trend=FALSE,robus
 	if(any(Infdf)) {
 		kernel <- t2*(1-1/r)/2
 		if(any(!Infdf)) {
-			t2 <- t2[!Infdf]
-			r <- r[!Infdf]
-			df.total <- df.total[!Infdf]
-			kernel[!Infdf] <- (1+df.total)/2*log((t2+df.total) / (t2/r+df.total))
+			t2.f <- t2[!Infdf]
+			r.f <- r[!Infdf]
+			df.total.f <- df.total[!Infdf]
+			kernel[!Infdf] <- (1+df.total.f)/2*log((t2.f+df.total.f) / (t2.f/r.f+df.total.f))
 		}
 	} else
 		kernel <- (1+df.total)/2*log((t2+df.total) / (t2/r+df.total))
