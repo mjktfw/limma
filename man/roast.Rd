@@ -79,7 +79,7 @@ If \code{contrast} is not specified, then the last coefficient in the linear mod
 
 The argument \code{gene.weights} allows directional weights to be set for individual genes in the set.
 This is often useful, because it allows each gene to be flagged as to its direction and magnitude of change based on prior experimentation.
-A typical use it to make the \code{gene.weights} \code{1} or \code{-1} depending on whether the gene is up or down-regulated in the pathway under consideration.
+A typical use is to make the \code{gene.weights} \code{1} or \code{-1} depending on whether the gene is up or down-regulated in the pathway under consideration.
 
 The arguments \code{array.weights}, \code{block} and \code{correlation} have the same meaning as for the \code{\link{lmFit}} function.
 The arguments \code{df.prior} and \code{var.prior} have the same meaning as in the output of the \code{\link{eBayes}} function.
