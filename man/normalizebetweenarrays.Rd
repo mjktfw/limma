@@ -11,24 +11,25 @@ normalizeBetweenArrays(object, method=NULL, targets=NULL, cyclic.method="fast", 
 }
 
 \arguments{
-  \item{object}{a numeric \code{matrix}, \code{\link[limma:EList]{EListRaw}}, \code{\link[limma:rglist]{RGList}} or \code{\link[limma:malist]{MAList}} object.}
+  \item{object}{a numeric \code{matrix}, \code{\link[limma:EList]{EListRaw}}, \code{\link[limma:rglist]{RGList}} or \code{\link[limma:malist]{MAList}} object containing un-normalized expression data.
+  \code{matrix} or \code{EListRaw} objects will be assumed to contain single-channel data, usually log-intensities, whereas \code{RGList} or \code{MAList} objects should contain two-color data.}
   \item{method}{character string specifying the normalization method to be used.
-  Choices are \code{"none"}, \code{"scale"}, \code{"quantile"}, \code{"Aquantile"}, \code{"Gquantile"}, \code{"Rquantile"} or \code{"Tquantile"} or \code{"cyclicloess"}.
+  Choices for single-channel data are \code{"none"}, \code{"scale"}, \code{"quantile"} or \code{"cyclicloess"}.
+  Choices for two-color data are those previously mentioned plus \code{"Aquantile"}, \code{"Gquantile"}, \code{"Rquantile"} or \code{"Tquantile"}.
   A partial string sufficient to uniquely identify the choice is permitted.
-  Default is \code{"Aquantile"} for two-color data objects or \code{"quantile"} for single-channel objects.}
+  The default is \code{"Aquantile"} for two-color data objects or \code{"quantile"} for single-channel objects.}
   \item{targets}{vector, factor or matrix of length twice the number of arrays, used to indicate target groups if \code{method="Tquantile"}}
   \item{cyclic.method}{character string indicating the variant of \code{normalizeCyclicLoess} to be used if \code{method=="cyclicloess"}, see \code{\link{normalizeCyclicLoess}} for possible values.}
   \item{...}{other arguments are passed to \code{normalizeQuantiles} or \code{normalizeCyclicLoess}}
 }
 
 \details{
-\code{normalizeWithinArrays} normalizes expression values to make intensities consistent within each array.
 \code{normalizeBetweenArrays} normalizes expression values to achieve consistency between arrays.
-For two-color arrays, normalization between arrays usually occurs after normalization within arrays.
-For single-channel arrays, within array normalization is not usually relevant.
+For two-color arrays, normalization between arrays is usually a follow-up step after normalization within arrays using \code{normalizeWithinArrays}.
+For single-channel arrays, within array normalization is not usually relevant and so \code{normalizeBetweenArrays} is the sole normalization step.
 
-If \code{object} is a \code{matrix} then the scale, quantile or cyclic loess normalization will be applied to the columns.
-Trying to apply other normalization methods when \code{object} is a \code{matrix} will produce an error.
+For single-channel data, the scale, quantile or cyclic loess normalization methods can be applied to the columns of data.
+Trying to apply other normalization methods when \code{object} is a \code{matrix} or \code{EListRaw} object will produce an error.
 If \code{object} is an \code{EListRaw} object, then normalization will be applied to the matrix \code{object$E} of expression values, which will then be log2-transformed.
 Scale (\code{method="scale"}) scales the columns to have the same median.
 Quantile and cyclic loess normalization was originally proposed by Bolstad et al (2003) for Affymetrix-style single-channel arrays.
@@ -82,6 +83,9 @@ In: D. R. Goldstein (ed.), \emph{Science and Statistics: A Festschrift for Terry
 
 \seealso{
   An overview of LIMMA functions for normalization is given in \link{05.Normalization}.
+
+  The \code{\link{neqc}} function provides a variation of quantile normalization that is customized for Illumina BeadChips.
+  This method uses control probes to refine the background correction and normalization steps.
 
   Note that vsn normalization, previously offered as a method of this function, is now performed by the \code{\link{normalizeVSN}} function.
 

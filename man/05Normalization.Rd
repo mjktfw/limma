@@ -24,6 +24,8 @@ For more details see the \link[=limmaUsersGuide]{LIMMA User's Guide} which inclu
 as well as an optional function for two-colour arrays.
 \code{normalizeBetweenArrays} uses utility functions \code{\link{normalizeMedianAbsValues}}, \code{\link{normalizeMedianAbsValues}}, \code{\link{normalizeQuantiles}} and \code{\link{normalizeCyclicLoess}}, none of which need to be called directly by users.
 
+\code{\link{neqc}} is a between array normalization function customized for Illumina BeadChips.
+
 The function \code{\link{normalizeVSN}} is also provided as a interface to the vsn package.
 It performs variance stabilizing normalization, an algorithm which includes background correction, within and between normalization together, and therefore doesn't fit into the paradigm of the other methods.
 

@@ -332,7 +332,7 @@ plotPrintorder <- function(object,layout,start="topleft",slide=1,method="loess",
 normalizeBetweenArrays <- function(object, method=NULL, targets=NULL, cyclic.method="fast", ...) {
 #	Normalize between arrays
 #	Gordon Smyth
-#	12 Apri 2003.  Last revised 2 Feb 2012.
+#	12 Apri 2003.  Last revised 21 July 2013.
 
 #	Default method
 	if(is.null(method)) {
@@ -350,7 +350,7 @@ normalizeBetweenArrays <- function(object, method=NULL, targets=NULL, cyclic.met
 
 #	Methods for matrices
 	if(is(object,"matrix")) {
-		if(!(method %in% c("none","scale","quantile","cyclicloess"))) stop("method not applicable to matrix objects")
+		if(!(method %in% c("none","scale","quantile","cyclicloess"))) stop("method not applicable to single-channel data")
 		return(switch(method,
 			none = object,
 			scale = normalizeMedianValues(object),
