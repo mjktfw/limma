@@ -15,7 +15,7 @@ genas(fit, coef=c(1,2), subset="all", plot=FALSE, alpha=0.4)
  \item{subset}{character string indicating which subset of genes to use for the correlation analysis.
        Choices are \code{"all"}, \code{"Fpval"}, \code{"p.union"}, \code{"p.int"}, \code{"logFC"} or \code{"predFC"}.}
  \item{plot}{logical, should a plot be produced showing the technical and biological correlation as ellipses?}
- \item{alpha}{a numeric value between 0 and 1 determining the transparency of the technical and biological ellipses if a plot is produced.
+ \item{alpha}{numeric value between 0 and 1 determining the transparency of the technical and biological ellipses if a plot is produced.
  \code{alpha=0} indicates fully transparent and \code{alpha=1} indicates fully opague.}
 }
 
