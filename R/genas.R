@@ -1,28 +1,41 @@
 ##  GENAS.R
 
-genas <- function(fit,coef=c(1,2),chooseMethod=NULL,plot=FALSE,alpha=0.4)
+genas <- function(fit,coef=c(1,2),subset="all",plot=FALSE,alpha=0.4)
 #	Genuine association of gene expression profiles
 #	Belinda Phipson and Gordon Smyth
-#	21 September 2009. Last modified 2 December 2012.
+#	21 September 2009. Last modified 26 July 2013.
 {
-	if(ncol(fit)>2) fit<-fit[,coef]
-	if(length(fit$s2.prior)==1) trend<-FALSE else trend<-TRUE
-	fit <- eBayes(fit,trend=trend)
-	if(is.null(chooseMethod)) chooseMethod <- "n"
-	
-	x1<-fitGammaIntercept(fit$coeff[,1]^2/fit$s2.post,offset=fit$cov.coeff[1,1])
-	x2<-fitGammaIntercept(fit$coeff[,2]^2/fit$s2.post,offset=fit$cov.coeff[2,2])
-	if(x1 > 0 & x2 > 0){
-		v0null<-matrix(c(x1,0,0,x2),2,2)
-		C<-chol(v0null)
-		x<-log(diag(C))
-	}
-	else x<-c(0,0)
+#	Check fit
+	if(is.null(fit$s2.post)) fit <- eBayes(fit)
+	trend <- (length(fit$s2.prior) > 1)
+	robust <- (length(fit$df.prior) > 1)
 
-	m<-2
+#	Check coef
+	if(length(coef) != 2) stop("coef should contain two column numbers")
+
+#	Check subset
+	if(subset=="n") subset <- "all"  # for backward compatibility
+	subset <- match.arg(subset, c("all","Fpval","p.union","p.int","logFC","predFC"))
+
+#	Keep only the two fit contrasts to be correlated
+	if(ncol(fit)>2) fit <- fit[,coef]
 	fit.plot <- fit
-	fit <- .whichGenes(fit,chooseMethod)
-	fit <- eBayes(fit,trend=trend)
+
+	x1 <- fitGammaIntercept(fit$coeff[,1]^2/fit$s2.post,offset=fit$cov.coeff[1,1])
+	x2 <- fitGammaIntercept(fit$coeff[,2]^2/fit$s2.post,offset=fit$cov.coeff[2,2])
+	if(x1 > 0 && x2 > 0) {
+		v0null <- matrix(c(x1,0,0,x2),2,2)
+		C <- chol(v0null)
+		x <- log(diag(C))
+	} else
+		x <- c(0,0)
+	m <- 2
+
+#	Subset to genes that show some differential expression
+	if(subset != "all") {
+		fit <- .whichGenes(fit,subset)
+		fit <- eBayes(fit,trend=trend,robust=robust)
+	}
 
 	Q2 <- optim(x, .multTLogLikNull, fit = fit, m = m)
 	Q1 <- optim(c(Q2$par[1], Q2$par[2], 0),.multTLogLik,fit=fit,m=m)
@@ -35,33 +48,32 @@ genas <- function(fit,coef=c(1,2),chooseMethod=NULL,plot=FALSE,alpha=0.4)
 	V<-fit$cov.coefficients
 	rhotech<-V[2,1]/sqrt(V[1,1]*V[2,2])
 
-	if(plot){
-	require(ellipse)
-	lim<-mean(c(sd(fit.plot$coeff[,1]),sd(fit.plot$coeff[,2])))
-	if(nrow(fit)<500) lim <- 1.5*lim else lim <- 2*lim
-	max<-max(c(fit.plot$coeff[,1],fit.plot$coeff[,2]))
-	min<-min(c(fit.plot$coeff[,1],fit.plot$coeff[,2]))
-	max<-sign(max)*max(abs(min),abs(max))
-	min<-sign(min)*max(abs(min),abs(max))
-	if(abs(rhobiol)>abs(rhotech)){
-		plot(fit.plot$coeff[,1],fit.plot$coeff[,2],pch=16,cex=0.4,ylim=c(min,max),xlim=c(min,max),xlab=colnames(fit.plot$coeff)[1],ylab=colnames(fit.plot$coeff)[2])
-		polygon(ellipse(rhotech,scale=c(lim,lim)),col=rgb(0,0,1,alpha=alpha),border=rgb(0,0,1,alpha=alpha))
-		polygon(ellipse(rhobiol,scale=c(lim,lim)),col=rgb(0,1,0,alpha=alpha),border=rgb(0,1,0,alpha=alpha))
-		points(fit.plot$coeff[,1],fit.plot$coeff[,2],pch=16,cex=0.4)
-		abline(h=0,v=0)
-		legend(min,max,legend=bquote(rho[biol]==.(round(rhobiol,3))),col=rgb(0,1,0,alpha=alpha),pch=16,bty="n",cex=0.8)
-		legend(min,max-lim/2,legend=bquote(rho[tech]==.(round(rhotech,3))),col=rgb(0,0,1,alpha=alpha),pch=16,bty="n",cex=0.8)
+	if(plot) {
+		require(ellipse)
+		lim <- mean(c(sd(fit.plot$coeff[,1]),sd(fit.plot$coeff[,2])))
+		if(nrow(fit)<500) lim <- 1.5*lim else lim <- 2*lim
+		max <- max(c(fit.plot$coeff[,1],fit.plot$coeff[,2]))
+		min <- min(c(fit.plot$coeff[,1],fit.plot$coeff[,2]))
+		max <- sign(max)*max(abs(min),abs(max))
+		min <- sign(min)*max(abs(min),abs(max))
+		if(abs(rhobiol)>abs(rhotech)){
+			plot(fit.plot$coeff[,1],fit.plot$coeff[,2],pch=16,cex=0.4,ylim=c(min,max),xlim=c(min,max),xlab=colnames(fit.plot$coeff)[1],ylab=colnames(fit.plot$coeff)[2])
+			polygon(ellipse(rhotech,scale=c(lim,lim)),col=rgb(0,0,1,alpha=alpha),border=rgb(0,0,1,alpha=alpha))
+			polygon(ellipse(rhobiol,scale=c(lim,lim)),col=rgb(0,1,0,alpha=alpha),border=rgb(0,1,0,alpha=alpha))
+			points(fit.plot$coeff[,1],fit.plot$coeff[,2],pch=16,cex=0.4)
+			abline(h=0,v=0)
+			legend(min,max,legend=bquote(rho[biol]==.(round(rhobiol,3))),col=rgb(0,1,0,alpha=alpha),pch=16,bty="n",cex=0.8)
+			legend(min,max-lim/2,legend=bquote(rho[tech]==.(round(rhotech,3))),col=rgb(0,0,1,alpha=alpha),pch=16,bty="n",cex=0.8)
+		} else {
+			plot(fit.plot$coeff[,1],fit.plot$coeff[,2],pch=16,cex=0.4,ylim=c(min,max),xlim=c(min,max),xlab=colnames(fit.plot$coeff)[1],ylab=colnames(fit.plot$coeff)[2])
+			polygon(ellipse(rhobiol,scale=c(lim,lim)),col=rgb(0,1,0,alpha=alpha),border=rgb(0,1,0,alpha=alpha))
+			polygon(ellipse(rhotech,scale=c(lim,lim)),col=rgb(0,0,1,alpha=alpha),border=rgb(0,0,1,alpha=alpha))
+			points(fit.plot$coeff[,1],fit.plot$coeff[,2],pch=16,cex=0.4)
+			abline(h=0,v=0)
+			legend(min,max,legend=bquote(rho[biol]==.(round(rhobiol,3))),col=rgb(0,1,0,alpha=alpha),pch=16,bty="n",cex=0.8)
+			legend(min,max-lim/2,legend=bquote(rho[tech]==.(round(rhotech,3))),col=rgb(0,0,1,alpha=alpha),pch=16,bty="n",cex=0.8)
 		}
-	else{
-		plot(fit.plot$coeff[,1],fit.plot$coeff[,2],pch=16,cex=0.4,ylim=c(min,max),xlim=c(min,max),xlab=colnames(fit.plot$coeff)[1],ylab=colnames(fit.plot$coeff)[2])
-		polygon(ellipse(rhobiol,scale=c(lim,lim)),col=rgb(0,1,0,alpha=alpha),border=rgb(0,1,0,alpha=alpha))
-		polygon(ellipse(rhotech,scale=c(lim,lim)),col=rgb(0,0,1,alpha=alpha),border=rgb(0,0,1,alpha=alpha))
-		points(fit.plot$coeff[,1],fit.plot$coeff[,2],pch=16,cex=0.4)
-		abline(h=0,v=0)
-		legend(min,max,legend=bquote(rho[biol]==.(round(rhobiol,3))),col=rgb(0,1,0,alpha=alpha),pch=16,bty="n",cex=0.8)
-		legend(min,max-lim/2,legend=bquote(rho[tech]==.(round(rhotech,3))),col=rgb(0,0,1,alpha=alpha),pch=16,bty="n",cex=0.8)
-		}
-		}
+	}
 
 	D<-abs(2*(Q2$value-Q1$value))
 	p.val<-pchisq(D,df=1,lower.tail=FALSE)
@@ -99,9 +111,9 @@ genas <- function(fit,coef=c(1,2),chooseMethod=NULL,plot=FALSE,alpha=0.4)
 
 
 .multTLogLik <- function(x,fit,m) 
-#		Calculate the log-likelihood with biological correlation
-#			Belinda Phipson and Gordon Smyth
-#    		21 September 2009. Last modified 21 September 2009.
+#  Calculate the log-likelihood with biological correlation
+#  Belinda Phipson and Gordon Smyth
+#  21 September 2009. Last modified 21 September 2009.
 {	
 		d0<-fit$df.prior
 		d<-fit$df.residual
@@ -130,72 +142,75 @@ genas <- function(fit,coef=c(1,2),chooseMethod=NULL,plot=FALSE,alpha=0.4)
 }
 
 
-.whichGenes <- function(fit,chooseMethod){
- if(chooseMethod=="Fpval"){
- 	p <- 1-propTrueNull(fit$F.p.value)
- 	R <- rank(fit$F.p.value)
- 	cut <- p*nrow(fit)
- 	genes <- R <= cut
-	if(sum(genes)==0){ 
-	 		# message("There is no evidence of differential expression. LogFC cut-off used instead.")
-	 		chooseMethod<-"logFC"
-	 		}
-	 	else	{
-	 		if(sum(genes)<500) message("Less than 500 DE genes. Correlation estimate may be inaccurate.")
-	 		}
-	}
- if(chooseMethod=="p.union"){
-	p1 <- 1-propTrueNull(fit$p.value[,1])
- 	p2 <- 1-propTrueNull(fit$p.value[,2])
-	cut1 <- p1*nrow(fit)
-	cut2 <- p2*nrow(fit)
-	if(p1==0 & p2==0){ 
-		# message("There is no evidence of differential expression. LogFC cut-off used instead.")
-		chooseMethod<-"logFC"
+.whichGenes <- function(fit,subset)
+{
+	if(subset=="all") return(genes)
+
+	if(subset=="Fpval") {
+		p <- 1-propTrueNull(fit$F.p.value)
+		R <- rank(fit$F.p.value)
+		cut <- p*nrow(fit)
+		genes <- (R <= cut)
+		if(sum(genes)==0){ 
+#			message("There is no evidence of differential expression. LogFC cut-off used instead.")
+			subset <- "logFC"
+		} else {
+			if(sum(genes)<500) message("Less than 500 DE genes. Correlation estimate may be inaccurate.")
 		}
-	else	{
-		if(cut1+cut2 < 500) message("Less than 500 DE genes. Correlation estimate may be inaccurate.")
+	}
+
+	if(subset=="p.union"){
+		p1 <- 1-propTrueNull(fit$p.value[,1])
+		p2 <- 1-propTrueNull(fit$p.value[,2])
+		cut1 <- p1*nrow(fit)
+		cut2 <- p2*nrow(fit)
+		if(p1==0 & p2==0){ 
+#			message("There is no evidence of differential expression. LogFC cut-off used instead.")
+			subset <- "logFC"
+		} else {
+			if(cut1+cut2 < 500) message("Less than 500 DE genes. Correlation estimate may be inaccurate.")
+			R1 <- rank(fit$p.value[,1])
+			R2 <- rank(fit$p.value[,2])
+			genes <- R1 <= cut1 | R2 <= cut2
+		}
+	}
+
+	if(subset=="p.int"){
+		p1 <- 1-propTrueNull(fit$p.value[,1])
+		p2 <- 1-propTrueNull(fit$p.value[,2])
 		R1 <- rank(fit$p.value[,1])
 		R2 <- rank(fit$p.value[,2])
-		genes <- R1 <= cut1 | R2 <= cut2
+		cut1 <- p1*nrow(fit)
+		cut2 <- p2*nrow(fit)
+		genes <- R1 <= cut1 & R2 <= cut2
+		if(sum(genes)==0) { 
+#			message("There is no evidence of differential expression. LogFC cut-off used instead.")
+			subset<-"logFC"
+		} else {
+			if(sum(genes)<500) message("Less than 500 DE genes. Correlation estimate may be inaccurate.")
 		}
 	}
- if(chooseMethod=="p.int"){
- 	p1 <- 1-propTrueNull(fit$p.value[,1])
-  	p2 <- 1-propTrueNull(fit$p.value[,2])
- 	R1 <- rank(fit$p.value[,1])
-	R2 <- rank(fit$p.value[,2])
-	cut1 <- p1*nrow(fit)
-	cut2 <- p2*nrow(fit)
- 	genes <- R1 <= cut1 & R2 <= cut2
- 	if(sum(genes)==0){ 
- 		# message("There is no evidence of differential expression. LogFC cut-off used instead.")
- 		chooseMethod<-"logFC"
- 		}
- 	else	{
- 		if(sum(genes)<500) message("Less than 500 DE genes. Correlation estimate may be inaccurate.")
- 		}
+ 
+ 	if(subset=="logFC") {
+		q1 <- quantile(abs(fit$coeff[,1]),probs=0.9)
+		q2 <- quantile(abs(fit$coeff[,2]),probs=0.9)
+		genes <- abs(fit$coeff[,1]) > q1 | abs(fit$coeff[,2]) > q2
+		fit$coeff[,1] <- sign(fit$coeff[,1]) * (abs(fit$coeff[,1])-q1)
+		fit$coeff[,2] <- sign(fit$coeff[,2]) * (abs(fit$coeff[,2])-q2)
 	}
- if(chooseMethod=="logFC"){
-	q1 <- quantile(abs(fit$coeff[,1]),probs=0.9)
-	q2 <- quantile(abs(fit$coeff[,2]),probs=0.9)
-	genes <- abs(fit$coeff[,1]) > q1 | abs(fit$coeff[,2]) > q2
-	fit$coeff[,1] <- sign(fit$coeff[,1]) * (abs(fit$coeff[,1])-q1)
-	fit$coeff[,2] <- sign(fit$coeff[,2]) * (abs(fit$coeff[,2])-q2)
+ 
+ 	if(subset=="predFC") {
+		pfc1 <- predFCm(fit, coef=1)
+		pfc2 <- predFCm(fit, coef=2)
+		q1 <- quantile(abs(pfc1),probs=0.9)
+		q2 <- quantile(abs(pfc2),probs=0.9)
+		genes <- abs(pfc1) > q1 | abs(pfc2) > q2
+		fit$coeff[,1] <- pfc1
+		fit$coeff[,2] <- pfc2
+		fit$coeff[,1] <- sign(fit$coeff[,1]) * (abs(fit$coeff[,1])-q1)
+		fit$coeff[,2] <- sign(fit$coeff[,2]) * (abs(fit$coeff[,2])-q2)
 	}
- if(chooseMethod=="predFC"){
-	pfc1 <- predFCm(fit, coef=1)
-	pfc2 <- predFCm(fit, coef=2)
-	q1 <- quantile(abs(pfc1),probs=0.9)
-	q2 <- quantile(abs(pfc2),probs=0.9)
-	genes <- abs(pfc1) > q1 | abs(pfc2) > q2
-	fit$coeff[,1] <- pfc1
-	fit$coeff[,2] <- pfc2
-	fit$coeff[,1] <- sign(fit$coeff[,1]) * (abs(fit$coeff[,1])-q1)
-	fit$coeff[,2] <- sign(fit$coeff[,2]) * (abs(fit$coeff[,2])-q2)
-	}
-	if(chooseMethod=="n") genes <- c(rep(TRUE,nrow(fit)))
-	if(length(fit$df.prior)!=1) fit$df.prior <- fit$df.prior[genes]
+
 	fit[genes,]
 }
 

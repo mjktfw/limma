@@ -1,3 +1,9 @@
+26 July 2013: limma 3.17.18
+
+- argument chooseMethod for genas() renamed to subset.  Option "n"
+  renamed to "all".  Some editing of help page and streamlining of
+  code for genas().
+
 21 July 2013: limma 3.17.17
 
 - edits to normalizeBetweenArrays help page (i) to further clarify
