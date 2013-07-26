@@ -5,7 +5,20 @@ genas <- function(fit,coef=c(1,2),subset="all",plot=FALSE,alpha=0.4)
 #	Belinda Phipson and Gordon Smyth
 #	21 September 2009. Last modified 26 July 2013.
 {
+	out <- list(
+		technical.correlation=NA,
+		covariance.matrix=matrix(NA,2,2),
+		biological.correlation=NA,
+		deviance=0,
+		p.value=1,
+		n=0
+	)
+
 #	Check fit
+	if(nrow(fit)<1) {
+		message("fit object has zero rows")
+		return(out)
+	}
 	if(is.null(fit$s2.post)) fit <- eBayes(fit)
 	trend <- (length(fit$s2.prior) > 1)
 	robust <- (length(fit$df.prior) > 1)
@@ -34,6 +47,10 @@ genas <- function(fit,coef=c(1,2),subset="all",plot=FALSE,alpha=0.4)
 #	Subset to genes that show some differential expression
 	if(subset != "all") {
 		fit <- .whichGenes(fit,subset)
+		if(nrow(fit)<1) {
+			message("No genes met criterion for inclusion in analysis")
+			return(out)
+		}
 		fit <- eBayes(fit,trend=trend,robust=robust)
 	}
 
@@ -151,12 +168,6 @@ genas <- function(fit,coef=c(1,2),subset="all",plot=FALSE,alpha=0.4)
 		R <- rank(fit$F.p.value)
 		cut <- p*nrow(fit)
 		genes <- (R <= cut)
-		if(sum(genes)==0){ 
-#			message("There is no evidence of differential expression. LogFC cut-off used instead.")
-			subset <- "logFC"
-		} else {
-			if(sum(genes)<500) message("Less than 500 DE genes. Correlation estimate may be inaccurate.")
-		}
 	}
 
 	if(subset=="p.union"){
@@ -165,10 +176,8 @@ genas <- function(fit,coef=c(1,2),subset="all",plot=FALSE,alpha=0.4)
 		cut1 <- p1*nrow(fit)
 		cut2 <- p2*nrow(fit)
 		if(p1==0 & p2==0){ 
-#			message("There is no evidence of differential expression. LogFC cut-off used instead.")
-			subset <- "logFC"
+			genes <- FALSE
 		} else {
-			if(cut1+cut2 < 500) message("Less than 500 DE genes. Correlation estimate may be inaccurate.")
 			R1 <- rank(fit$p.value[,1])
 			R2 <- rank(fit$p.value[,2])
 			genes <- R1 <= cut1 | R2 <= cut2
@@ -183,12 +192,6 @@ genas <- function(fit,coef=c(1,2),subset="all",plot=FALSE,alpha=0.4)
 		cut1 <- p1*nrow(fit)
 		cut2 <- p2*nrow(fit)
 		genes <- R1 <= cut1 & R2 <= cut2
-		if(sum(genes)==0) { 
-#			message("There is no evidence of differential expression. LogFC cut-off used instead.")
-			subset<-"logFC"
-		} else {
-			if(sum(genes)<500) message("Less than 500 DE genes. Correlation estimate may be inaccurate.")
-		}
 	}
  
  	if(subset=="logFC") {

@@ -1,3 +1,8 @@
+26 July 2013: limma 3.17.19
+
+- genas() now returns NA results and a message when no genes satisfy
+  the criterion for inclusion in the analysis.
+
 26 July 2013: limma 3.17.18
 
 - argument chooseMethod for genas() renamed to subset.  Option "n"
