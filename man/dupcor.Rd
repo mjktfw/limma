@@ -5,8 +5,8 @@
 Estimate the correlation between duplicate spots (regularly spaced replicate spots on the same array) or between technical replicates from a series of arrays.
 }
 \usage{
-duplicateCorrelation(object, design=rep(1,ncol(as.matrix(object))), ndups=2, spacing=1,
-                     block=NULL, trim=0.15, weights=NULL)
+duplicateCorrelation(object, design=NULL, ndups=2, spacing=1, block=NULL,
+                     trim=0.15, weights=NULL)
 }
 \arguments{
   \item{object}{a numeric matrix of expression values, or any data object from which \code{as.matrix} will extract a suitable matrix such as an \code{\link[limma:malist]{MAList}}, \code{marrayNorm} or \code{ExpressionSet} object.

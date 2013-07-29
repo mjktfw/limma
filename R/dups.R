@@ -1,5 +1,5 @@
 #  DUPS.R
-#  Functions to handle duplicate spots
+#  Functions to handle duplicate spots or blocking
 
 unwrapdups <- function(M,ndups=2,spacing=1) {
 #	Unwrap M matrix for a series of experiments so that all spots for a given gene are in one row
@@ -30,19 +30,48 @@ uniquegenelist <- function(genelist,ndups=2,spacing=1) {
 		return(genelist[i,,drop=FALSE])
 }
 
-duplicateCorrelation <- function(object,design=rep(1,ncol(as.matrix(object))),ndups=2,spacing=1,block=NULL,trim=0.15,weights=NULL)
+duplicateCorrelation <- function(object,design=NULL,ndups=2,spacing=1,block=NULL,trim=0.15,weights=NULL)
 #	Estimate the correlation between duplicates given a series of arrays
 #	Gordon Smyth
-#	25 Apr 2002. Last revised 14 Nov 2005.
+#	25 Apr 2002. Last revised 28 July 2013.
 {
-	M <- as.matrix(object)
-	if(is(object,"MAList")) {
-		if(missing(design) && !is.null(object$design)) design <- object$design
-		if(missing(ndups) && !is.null(object$printer$ndups)) ndups <- object$printer$ndups
-		if(missing(spacing) && !is.null(object$printer$spacing)) spacing <- object$printer$spacing
-		if(missing(weights) && !is.null(object$weights)) weights <- object$weights
-	}
+#	Extract components from y
+	y <- getEAWP(object)
+	M <- y$exprs
+	ngenes <- nrow(M)
 	narrays <- ncol(M)
+
+#	Check design matrix
+	if(is.null(design)) design <- y$design
+	if(is.null(design))
+		design <- matrix(1,ncol(y$exprs),1)
+	else {
+		design <- as.matrix(design)
+		if(mode(design) != "numeric") stop("design must be a numeric matrix")
+	}
+	if(nrow(design) != narrays) stop("Number of rows of design matrix does not match number of arrays")
+	ne <- nonEstimable(design)
+	if(!is.null(ne)) cat("Coefficients not estimable:",paste(ne,collapse=" "),"\n")
+	nbeta <- ncol(design)
+
+#	Weights and spacing arguments can be specified in call or stored in y
+#	Precedence for these arguments is
+#	1. Specified in function call
+#	2. Stored in object
+#	3. Default values
+	if(missing(ndups) && !is.null(y$printer$ndups)) ndups <- y$printer$ndups
+	if(missing(spacing) && !is.null(y$printer$spacing)) spacing <- y$printer$spacing
+	if(missing(weights) && !is.null(y$weights)) weights <- y$weights
+
+#	Check weights
+	if(!is.null(weights)) {
+		weights <- as.matrix(weights)
+		if(any(dim(weights) != dim(M))) weights <- array(weights,dim(M))
+		M[weights < 1e-15 ] <- NA
+		weights[weights < 1e-15] <- NA
+	}
+
+#	Setup spacing or blocking arguments
 	if(is.null(block)) {
 		if(ndups<2) {
 			warning("No duplicates: correlation between duplicates not estimable")
@@ -59,20 +88,16 @@ duplicateCorrelation <- function(object,design=rep(1,ncol(as.matrix(object))),nd
 		nspacing <- 1
 		Array <- block
 	}
-	require( "statmod" ) # need mixedModel2Fit function
-	design <- as.matrix(design)
-	if(nrow(design) != narrays) stop("Number of rows of design matrix does not match number of arrays")
-	if(!is.null(weights)) {
-		weights <- as.matrix(weights)
-		if(any(dim(weights) != dim(M))) weights <- array(weights,dim(M))
-		M[weights < 1e-15 ] <- NA
-		weights[weights < 1e-15] <- NA
+
+#	Unwrap data to get all data for a gene in one row
+	if(is.null(block)) {
+		M <- unwrapdups(M,ndups=ndups,spacing=spacing)
+		ngenes <- nrow(M)
+		if(!is.null(weights)) weights <- unwrapdups(weights,ndups=ndups,spacing=spacing)
+		design <- design %x% rep(1,ndups)
 	}
-	nbeta <- ncol(design)
-	M <- unwrapdups(M,ndups=ndups,spacing=spacing)
-	ngenes <- nrow(M)
-	if(!is.null(weights)) weights <- unwrapdups(weights,ndups=ndups,spacing=spacing)
-	design <- design %x% rep(1,ndups)
+
+	require( "statmod" ) # need mixedModel2Fit function
 	rho <- rep(NA,ngenes)
 	for (i in 1:ngenes) {
 		y <- drop(M[i,])
@@ -82,7 +107,7 @@ duplicateCorrelation <- function(object,design=rep(1,ncol(as.matrix(object))),nd
 		nblocks <- length(levels(A))
 		if(nobs>(nbeta+2) && nblocks>1 && nblocks<nobs-1) {
 			y <- y[o]
-			X <- design[o,]
+			X <- design[o,,drop=FALSE]
 			Z <- model.matrix(~0+A)
 			if(!is.null(weights)) {
 				w <- drop(weights[i,])[o]

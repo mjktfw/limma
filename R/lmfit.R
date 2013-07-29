@@ -3,7 +3,7 @@
 lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation,weights=NULL,method="ls",...)
 #	Fit genewise linear models
 #	Gordon Smyth
-#	30 June 2003.  Last modified 16 Apr 2013.
+#	30 June 2003.  Last modified 28 July 2013.
 {
 #	Extract components from y
 	y <- getEAWP(object)
@@ -19,7 +19,11 @@ lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation,we
 	ne <- nonEstimable(design)
 	if(!is.null(ne)) cat("Coefficients not estimable:",paste(ne,collapse=" "),"\n")
 
-#	Look for missing arguments in y
+#	Weights and spacing arguments can be specified in call or stored in y
+#	Precedence for these arguments is
+#	1. Specified in function call
+#	2. Stored in object
+#	3. Default values
 	if(missing(ndups) && !is.null(y$printer$ndups)) ndups <- y$printer$ndups
 	if(missing(spacing) && !is.null(y$printer$spacing)) spacing <- y$printer$spacing
 	if(missing(weights) && !is.null(y$weights)) weights <- y$weights

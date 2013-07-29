@@ -1,3 +1,8 @@
+29 July 2013: limma 3.17.20
+
+- duplicateCorrelation() now uses the weights matrix when block is
+  set.  Previously the weights were ignored when block was used.
+
 26 July 2013: limma 3.17.19
 
 - genas() now returns NA results and a message when no genes satisfy
