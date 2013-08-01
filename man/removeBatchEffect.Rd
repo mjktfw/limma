@@ -9,7 +9,7 @@ removeBatchEffect(x,batch=NULL,batch2=NULL,covariates=NULL,design=matrix(1,ncol(
 }
 \arguments{
   \item{x}{numeric matrix, or any object that can be coerced to a matrix by \code{as.matrix(x)}, containing log-expression intensities for a series of microarrays.
-  Rows correspond to probes and columns to arrays.}
+  Rows correspond to probes and columns to arrays. All values must be non-missing.}
   \item{batch}{factor or vector indicating batches.}
   \item{batch2}{factor or vector indicating batches.}
   \item{covariates}{matrix or vector of covariates to be adjusted for.}
@@ -19,7 +19,7 @@ removeBatchEffect(x,batch=NULL,batch2=NULL,covariates=NULL,design=matrix(1,ncol(
 A numeric matrix of log-expression values with batch and covariate effects removed.
 }
 \details{
-This function is useful for removing batch effects, associated with hybridization time or other technical variables, prior to clustering or unsupervised analysis such as PCA or heatmaps.
+This function is useful for removing batch effects, associated with hybridization time or other technical variables, prior to clustering or unsupervised analysis such as PCA, MDS or heatmaps.
 It is not intended to use with linear modelling.
 For linear modelling, it is better to include the batch factors in the linear model.
 
