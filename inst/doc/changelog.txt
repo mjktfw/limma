@@ -1,3 +1,7 @@
+3 August 2013: limma 3.17.21
+
+- fix typo in User's Guide.
+
 29 July 2013: limma 3.17.20
 
 - duplicateCorrelation() now uses the weights matrix when block is
