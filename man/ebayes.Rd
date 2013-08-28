@@ -64,6 +64,13 @@ Use \code{\link{topTreat}} to summarize output from \code{treat}.
 Instead of testing for genes which have log-fold-changes different from zero, it tests whether the log2-fold-change is greater than \code{lfc} in absolute value (McCarthy and Smyth, 2009).
 \code{treat} is concerned with p-values rather than posterior odds, so it does not compute the B-statistic \code{lods}.
 The idea of thresholding doesn't apply to F-statistics in a straightforward way, so moderated F-statistics are also not computed.
+
+If \code{trend=TRUE} then an intensity-dependent trend is fitted to the prior variances \code{s2.prior}.
+Specifically, \code{squeezeVar} is called with the \code{covariate} equal to \code{Amean}, the average log2-intensity for each gene.
+See \code{\link{squeezeVar}} for more details.
+
+If \code{robust=TRUE} then the robust empirical Bayes procedure of Phipson et al (2013) is used.
+See \code{\link{squeezeVar}} for more details.
 }
 \seealso{
 \code{\link{squeezeVar}}, \code{\link{fitFDist}}, \code{\link{tmixture.matrix}}.
@@ -77,8 +84,14 @@ McCarthy, D. J., and Smyth, G. K. (2009). Testing significance relative to a fol
 
 Loennstedt, I., and Speed, T. P. (2002). Replicated microarray data. \emph{Statistica Sinica} \bold{12}, 31-46.
 
+Phipson, B, Lee, S, Majewski, IJ, Alexander, WS, and Smyth, GK (2013).
+Empirical Bayes in the presence of exceptional cases, with application to microarray data.
+Bioinformatics Division, Walter and Eliza Hall Institute of Medical Research, Melbourne, Australia.
+\url{http://www.statsci.org/smyth/pubs/RobustEBayesPreprint.pdf}
+
 Smyth, G. K. (2004). Linear models and empirical Bayes methods for assessing differential expression in microarray experiments.
-\emph{Statistical Applications in Genetics and Molecular Biology}, Volume \bold{3}, Article 3. \url{http://www.bepress.com/sagmb/vol3/iss1/art3}
+\emph{Statistical Applications in Genetics and Molecular Biology}, Volume \bold{3}, Article 3.
+\url{http://www.statsci.org/smyth/pubs/ebayes.pdf}
 }
 \examples{
 #  See also lmFit examples

@@ -1,3 +1,11 @@
+22 August 2013: limma 3.17.22
+
+- Add Majewski et al reference to genas.Rd.
+
+- Add Phipson et al and Sartor et al references to squeezeVar.Rd.
+
+- Add Phipson et al reference to eBayes.Rd.
+
 3 August 2013: limma 3.17.21
 
 - fix typo in User's Guide.

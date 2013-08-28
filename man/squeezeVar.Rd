@@ -29,8 +29,13 @@ Specifically, the sample variances \code{var} are assumed to follow scaled chi-s
 and an scaled inverse chi-squared prior is assumed for the true variances.
 The scale and degrees of freedom of this prior distribution are estimated from the values of \code{var}.
 
-The effect of this function is to squeeze the variances towards a common value.
+The effect of this function is to squeeze the variances towards a common value, or to a global trend if a \code{covariate} is provided.
 The squeezed variances have a smaller expected mean square error to the true variances than do the sample variances themselves.
+
+If \code{covariate} is non-null, then the scale parameter of the prior distribution is assumed to depend on the covariate.
+If the covariate is average log-expression, then the effect is an intensity-dependent trend similar to that in Sartor et al (2006).
+
+\code{robust=TRUE} implements the robust empirical Bayes procedure of Phipson et al (2013) which allows some of the \code{var} values to be outliers.
 }
 
 \note{
@@ -48,6 +53,15 @@ A list with components
 \author{Gordon Smyth}
 
 \references{
+Phipson, B, Lee, S, Majewski, IJ, Alexander, WS, and Smyth, GK (2013).
+Empirical Bayes in the presence of exceptional cases, with application to microarray data.
+Bioinformatics Division, Walter and Eliza Hall Institute of Medical Research, Melbourne, Australia.
+\url{http://www.statsci.org/smyth/pubs/RobustEBayesPreprint.pdf}
+
+Sartor MA, Tomlinson CR, Wesselkamper SC, Sivaganesan S, Leikauf GD, Medvedovic M (2006).
+Intensity-based hierarchical Bayes method improves testing for differentially expressed genes in microarray experiments.
+BMC bioinformatics 7, 538.
+
 Smyth, G. K. (2004). Linear models and empirical Bayes methods for
      assessing differential expression in microarray experiments.
      \emph{Statistical Applications in Genetics and Molecular Biology}, \bold{3},

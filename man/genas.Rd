@@ -20,9 +20,12 @@ genas(fit, coef=c(1,2), subset="all", plot=FALSE, alpha=0.4)
 }
 
 \details{
-The biological correlation between the log fold changes of pairs of comparisons is computed. This method is to be applied when multiple groups (such as treatment groups, mutants or knock-outs) are compared back to the same control group.
-
-This method is an extension of the empirical Bayes method of \code{limma}. It aims to separate the technical correlation, which comes from comparing multiple treatment/mutant/knock-out groups to the same control group, from biological correlation, which is the true correlation of the gene expression profiles between two treatment/mutant/knock-out groups.
+The function estimates the biological correlation between two different contrasts in a linear model.
+By biological correlation, we mean the correlation that would exist between the log2-fold changes (logFC) for the two contrasts, if measurement error could be eliminated and the true log-fold-changes were known.
+This function is motivated by the fact that different contrasts for a linear model are often strongly correlated in a technical sense.
+For example, the estimated logFC for multiple treatment conditions compared back to the same control group will be positively correlated even in the absence of any biological effect.
+This function aims to separate the biological from the technical components of the correlation.
+The method is explained briefly in Majewski et al (2010) and in full detail in Phipson (2013).
 
 The \code{subset} argument specifies whether and how the fit object should be subsetted.
 Ideally, only genes that are truly differentially expressed for one or both of the contrasts should be used estimate the biological correlation.
@@ -55,6 +58,11 @@ The biological and technical correlations are overlaid on the scatterplot using 
 \author{Belinda Phipson and Gordon Smyth}
 
 \references{
+Majewski, IJ, Ritchie, ME, Phipson, B, Corbin, J, Pakusch, M, Ebert, A, Busslinger, M, Koseki, H, Hu, Y, Smyth, GK, Alexander, WS, Hilton, DJ, and Blewitt, ME (2010).
+Opposing roles of polycomb repressive complexes in hematopoietic stem and progenitor cells.
+\emph{Blood} 116, 731-739.
+\url{http://bloodjournal.hematologylibrary.org/content/116/5/731}
+
 Phipson, B. (2013).
 \emph{Empirical Bayes modelling of expression profiles and their associations}.
 PhD Thesis. University of Melbourne, Australia.
