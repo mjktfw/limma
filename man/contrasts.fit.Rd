@@ -9,7 +9,7 @@ contrasts.fit(fit, contrasts=NULL, coefficients=NULL)
 }
 \arguments{
   \item{fit}{an \code{\link[limma:marraylm]{MArrayLM}} object or a list object produced by the function \code{lm.series} or equivalent. Must contain components \code{coefficients} and \code{stdev.unscaled}.}
-  \item{contrasts}{numeric matrix with row corresponding to coefficients in \code{fit} and columns containing contrasts. May be a vector if there is only one contrast.}
+  \item{contrasts}{numeric matrix with rows corresponding to coefficients in \code{fit} and columns containing contrasts. May be a vector if there is only one contrast.}
   \item{coefficients}{vector indicating which coefficients are to be kept in the revised fit object. An alternative way to specify the \code{contrasts}.}
 }
 \value{

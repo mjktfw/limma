@@ -37,7 +37,7 @@ roast.MAList <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.stat
 roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999)
 # Rotation gene set testing for linear models
 # Gordon Smyth and Di Wu
-# Created 24 Apr 2008.  Last modified 22 Jan 2013.
+# Created 24 Apr 2008.  Last modified 1 Sep 2013.
 {
 #	Check y
 	y <- as.matrix(y)
@@ -104,13 +104,14 @@ roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.sta
 	}
 
 #	Reform design matrix so that contrast of interest is last column
-	qr <- qr(contrast)
-	Q <- qr.Q(qr,complete=TRUE)
-	sign1 <- sign(qr$qr[1,1])
-	Q <- cbind(Q[,-1],Q[,1])
-	X <- design %*% Q
+#	qr <- qr(contrast)
+#	Q <- qr.Q(qr,complete=TRUE)
+#	sign1 <- sign(qr$qr[1,1])
+#	Q <- cbind(Q[,-1],Q[,1])
+#	X <- design %*% Q
+	X <- contrastAsCoef(design, contrast, first=FALSE)$design
 	qr <- qr(X)
-	sign2 <- sign(qr$qr[p,p])
+	signc <- sign(qr$qr[p,p])
 
 	if(is.null(var.prior) || is.null(df.prior)) {
 #		Fit model to all genes
@@ -119,15 +120,15 @@ roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.sta
 		} else {
 			ws <- sqrt(weights)
 			effects <- matrix(0,n,ngenes)
-			sign2 <- rep.int(0,ngenes)
+			signc <- rep.int(0,ngenes)
 			for (g in 1:ngenes) {
 				wX <- X*ws[g,]
 				wy <- y[g,]*ws[g,]
 				qrX <- qr(wX)
-				sign2[g] <- sign(qrX$qr[p,p])
+				signc[g] <- sign(qrX$qr[p,p])
 				effects[,g] <- qr.qty(qrX,wy)
 			}
-			sign2 <- sign2[index]
+			signc <- signc[index]
 		}
 #		Estimate global parameters s0 and d0
 		s2 <- colMeans(effects[-(1:p),,drop=FALSE]^2)
@@ -152,12 +153,12 @@ roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.sta
 			ws <- sqrt(weights[index,,drop=FALSE])
 			nset <- nrow(y)
 			effects <- matrix(0,n,nset)
-			sign2 <- rep.int(0,nset)
+			signc <- rep.int(0,nset)
 			for (g in 1:nset) {
 				wX <- X*ws[g,]
 				wy <- y[g,]*ws[g,]
 				qrX <- qr(wX)
-				sign2[g] <- sign(qrX$qr[p,p])
+				signc[g] <- sign(qrX$qr[p,p])
 				effects[,g] <- qr.qty(qrX,wy)
 			}
 		}
@@ -176,7 +177,6 @@ roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.sta
 		Y <- effects
 	YY <- colSums(Y^2)
 	B <- Y[1,]
-	signc <- sign1*sign2
 	modt <- signc*B/sd.post
 
 	statobs <- p <- rep(0,3)

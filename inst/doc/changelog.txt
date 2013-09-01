@@ -1,3 +1,9 @@
+1 Sept 2013: limma 3.17.23
+
+- New function contrastAsCoef(), which reforms a design matrix so
+  that one or more specified contrasts become coefficients.  This
+  function is called by roast().
+
 22 August 2013: limma 3.17.22
 
 - Add Majewski et al reference to genas.Rd.
