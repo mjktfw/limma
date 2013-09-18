@@ -1,3 +1,9 @@
+19 Sept 2013: limma 3.17.24
+
+- roast() now calls mroast() if the index vector is a list.
+
+- Bug fix to mroast().  Was not using weights correctly.
+
 1 Sept 2013: limma 3.17.23
 
 - New function contrastAsCoef(), which reforms a design matrix so

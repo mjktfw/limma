@@ -37,7 +37,7 @@ roast.MAList <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.stat
 roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999)
 # Rotation gene set testing for linear models
 # Gordon Smyth and Di Wu
-# Created 24 Apr 2008.  Last modified 1 Sep 2013.
+# Created 24 Apr 2008.  Last modified 19 Sep 2013.
 {
 #	Check y
 	y <- as.matrix(y)
@@ -45,6 +45,7 @@ roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.sta
 	n <- ncol(y)
 
 #	Check index
+	if(is.list(index)) return(mroast(y=y,index=index,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,weights=weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,trend.var=trend.var,nrot=nrot))
 	if(is.null(index)) index <- rep.int(TRUE,ngenes)
 
 #	Check design
@@ -326,7 +327,7 @@ mroast.MAList <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.sta
 mroast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE,sort="directional")
 #  Rotation gene set testing with multiple sets
 #  Gordon Smyth and Di Wu
-#  Created 28 Jan 2010. Last revised 8 Feb 2012.
+#  Created 28 Jan 2010. Last revised 19 Sep 2013.
 {
 #	Check y
 	y <- as.matrix(y)
@@ -375,7 +376,7 @@ mroast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.st
 	NGenes <- rep(0,nsets)
 	if(nsets<1) return(pv)
 	for(i in 1:nsets) {
-		out <- roast(y=y,index=index[[i]],design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,nrot=nrot)
+		out <- roast(y=y,index=index[[i]],design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,weights=weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,nrot=nrot)
 		pv[i,] <- out$p.value$P.Value
 		active[i,] <- out$p.value$Active.Prop
 		NGenes[i] <- out$ngenes.in.set
