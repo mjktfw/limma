@@ -29,7 +29,7 @@ data.frame with twice as many rows as \code{targets}.
 Any pair of columns named by \code{channel.columns} will now be one column.
 }
 \seealso{
-\code{targetsA2C} is used by the \code{\link[convert:coerce]{coerce}} method from \code{RGList} for \code{ExpressionSet} in the convert package.
+\code{targetsA2C} is used by the \code{coerce} method from \code{RGList} to \code{ExpressionSet} in the convert package.
 
 An overview of methods for single channel analysis in limma is given by \link{07.SingleChannel}.
 }

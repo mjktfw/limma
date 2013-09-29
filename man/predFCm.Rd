@@ -30,6 +30,7 @@ The predictive log fold changes are calculated as the posterior log fold changes
 Phipson, B. (2013).
 \emph{Empirical Bayes modelling of expression profiles and their associations}.
 PhD Thesis. University of Melbourne, Australia.
+\url{http://repository.unimelb.edu.au/10187/17614}
 }
 
 \examples{

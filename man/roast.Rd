@@ -129,6 +129,7 @@ Rotation tests.
 Phipson B, and Smyth GK (2010).
 Permutation P-values should never be zero: calculating exact P-values when permutations are randomly drawn.
 \emph{Statistical Applications in Genetics and Molecular Biology}, Volume 9, Article 39.
+\url{http://www.statsci.org/smyth/pubs/PermPValuesPreprint.pdf}
 
 Routledge, RD (1994).
 Practicing safe statistics with the mid-p.

@@ -60,6 +60,7 @@ Estimating the number of true null hypotheses from a histogram of p values.
 Phipson, B (2013).
 Empirical Bayes Modelling of Expression Profiles and Their Associations.
 PhD Thesis, University of Melbourne, Australia.
+\url{http://repository.unimelb.edu.au/10187/17614}
 }
 
 \author{Belinda Phipson and Gordon Smyth for \code{propTrueNull}; Egil Ferkingstad, Mette Langaas and Marcus Davy for \code{convest}}

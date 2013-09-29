@@ -1,8 +1,30 @@
+29 Sept 2013: limma 3.17.25
+
+- loessFit() now uses the locfit.raw in the locfit package when
+  weights are provided instead of loess in the stats package.  The
+  function now runs very efficiently even on very long data vectors.
+  The output results will change slightly when weights are provided.
+
+- Roles of contributors now specified in author field of DESCRIPTION
+  file using standard codes.
+
+- Bug fix to subsetting for MArrayLM objects: the df.total component
+  was not being subsetted.
+
+- Removing defunct Berkeley Press links to published Smyth (2004)
+  article in several Rd files.  Replacing with link to Preprint.
+
+- Adding link to Phipson (2013) thesis in two Rd files.
+
+- Minor cleaning up of normexp.c source code.  Remove unused variable
+  and keep constant representing infinity within floating point 
+  range.
+
 19 Sept 2013: limma 3.17.24
 
 - roast() now calls mroast() if the index vector is a list.
 
-- Bug fix to mroast().  Was not using weights correctly.
+- Bug fix to mroast(), which had been ignoring the weights.
 
 1 Sept 2013: limma 3.17.23
 

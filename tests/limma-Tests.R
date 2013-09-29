@@ -48,7 +48,8 @@ w[1:50] <- 0.5
 out <- loessFit(y,x,weights=w)
 f2 <- quantile(out$fitted)
 r2 <- quantile(out$residual)
-w[1:80] <- 0
+w <- rep(1,100)
+w[2*(1:50)] <- 0
 out <- loessFit(y,x,weights=w)
 f3 <- quantile(out$fitted)
 r3 <- quantile(out$residual)

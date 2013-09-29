@@ -1,46 +1,52 @@
 \name{loessFit}
 \alias{loessFit}
-\title{Fast Simple Loess}
+\title{Univariate Lowess With Prior Weights}
+
 \description{
-Locally weighted linear regression when there is only one x-variable and only the fitted values and residuals are required.
+Univariate locally weighted linear regression allowing for prior weights.
+Returns fitted values and residuals.
 }
+
 \usage{
-loessFit(y, x, weights=NULL, span=0.3, bin=NULL, iterations=4, min.weight=1e-5, max.weight=1e5, equal.weights.as.null=TRUE)
+loessFit(y, x, weights=NULL, span=0.3, iterations=4, min.weight=1e-5, max.weight=1e5, equal.weights.as.null=TRUE)
 }
+
 \arguments{
   \item{y}{numeric vector of response values.  Missing values are allowed.}
   \item{x}{numeric vector of predictor values  Missing values are allowed.}
   \item{weights}{numeric vector of non-negative weights.  Missing values are treated as zero.}
   \item{span}{positive numeric value between 0 and 1 specifying proportion of data to be used in the local regression moving window.
   Larger numbers give smoother fits.}
-  \item{bin}{numeric value between 0 and 1 giving the proportion of the data that can be grouped in a single bin when doing local regression fit.
-  \code{bin=0} forces an exact local regression fit with no interpolation. Default is 0.005 with weights and 0.01 without weights.}
-  \item{iterations}{number of iterations of loess fit. Values greater than 1 produce robust fits.}
+  \item{iterations}{number of local regression fits. Values greater than 1 produce robust fits.}
   \item{min.weight}{minimum weight. Any lower weights will be reset.}
-  \item{max.weight}{maxium weight. Any higher weights will be reset.}
-  \item{equal.weights.as.null}{should equal weights be treated as if weights were \code{NULL}, so that \code{lowess} is used instead of \code{loess}? Applies even all weights are all zero.}
+  \item{max.weight}{maximum weight. Any higher weights will be reset.}
+  \item{equal.weights.as.null}{should equal weights be treated as if weights were \code{NULL}, so that \code{lowess} is called? Applies even if all weights are all zero.}
 }
 
 \details{
-This function calls the \code{lowess} function when \code{weights=NULL} and \code{stats:::simpleLoess} otherwise.
-Its purpose is to give a unified and streamlined interface to \code{lowess} and \code{loess} for use in \code{\link{normalizeWithinArrays}}.
-When \code{weights} is null, this function call \code{lowess} in the stats package with appropropriate choice of tuning parameters.
-When \code{weights} is non-null, it is in effect a call to \code{loess} with \code{degree=1}.
-See the help pages for those functions for references and credits.
+This function is essentially a wrapper function for \code{lowess} and \code{locfit.raw} with added error checking.
+The idea is to provide the classic univariate lowess algoritm of Cleveland (1979) but allowing for prior weights and missing values.
 
-Note that \code{lowess} is faster, needs less memory and has a more accurate interpolation scheme than \code{loess}, so it is desirable to use \code{lowess} whenever \code{loess} is not needed to handle quantitative weights.
+The venerable \code{lowess} code is fast, uses little memory and has an accurate interpolation scheme, so it is an advantage to use it when weights are not needed.
+This functions calls \code{lowess} when \code{weights=NULL}, but returns values in original rather than sorted order and allows missing values.
+The treatment of missing values is analogous to \code{na.exclude}.
 
-The arguments \code{span}, \code{cell} and \code{iterations} here have the same meaning as in \code{loess}.
-\code{span} is equivalent to the argument \code{f} of \code{lowess} and \code{iterations} is equivalent to \code{iter+1}.
+When \code{weights} are provided, this function makes repeated calls to \code{locfit.raw} with \code{deg=1}.
+Each iteration applies robustifying weights computed from the previous fit, as described by Cleveland (1981).
 
-The parameter \code{bin} is intended to give a uniform interface to the \code{delta} argument of \code{lowess} and the \code{cell} argument of \code{loess}.
-\code{bin} translates to \code{delta=bin*diff(range(x))} in a call to \code{lowess} or to \code{cell=bin/span} in a call to \code{loess}.
-This is an attempt to put the \code{delta} and \code{cell} arguments on comparable scales.
+By default, \code{weights} that are all equal (even all zero) are treated as if they were \code{NULL}.
 
-Unlike \code{lowess}, \code{loessFit} returns values in original rather than sorted order.
-Also unlike \code{lowess}, \code{loessFit} allows missing values, the treatment being analogous to \code{na.exclude}.
-Unlike \code{loess}, \code{loessFit} returns a linear regression fit if there are insufficient observations to estimate the loess curve.
+In principle this function gives analogous results to \code{loess(y~x,weights=weights,span=span,degree=1,family="symmetric")}.
+However \code{lowess} and \code{locfit.raw} scale up much more efficiently for long data vectors.
+
+The arguments \code{span} and \code{iterations} here have the same meaning as for \code{loess}.
+\code{span} is equivalent to the argument \code{f} of \code{lowess} while \code{iterations} is equivalent to \code{iter+1} for \code{lowess}.
+It gives the total number of fits rather than the number of robustifying fits.
+
+When there are insufficient observations to estimate the loess curve, \code{loessFit} returns a linear regression fit.
+This mimics the behavior of \code{lowess} but not that of \code{loess} or \code{locfit.raw}.
 }
+
 \value{
 A list with components
 \item{fitted}{numeric vector of same length as \code{y} giving the loess fit}
@@ -48,24 +54,38 @@ A list with components
 }
 
 \author{Gordon Smyth}
+
+\references{
+Cleveland, W. S. (1979).
+Robust locally weighted regression and smoothing scatterplots.
+\emph{Journal of the American Statistical Association} 74, 829-836.
+}
 
 \seealso{
-\code{\link[stats]{lowess}} and \code{\link[stats]{loess}} in the stats package.
+This function uses \code{\link{lowess}} and \code{\link[locfit]{locfit.raw}}.
+See the help pages of those functions for references and credits.
+
+Compare with \code{\link{loess}} in the stats package.
 
 See \link{05.Normalization} for an outline of the limma package normalization functions.
 }
 
 \examples{
-y <- rnorm(1000)
-x <- rnorm(1000)
-w <- rep(1,1000)
-# The following are equivalent apart from execution time
-# and interpolation inaccuracies
-fit1 <- loessFit(y,x)$fitted
-fit2 <- loessFit(y,x,w)$fitted
-fit3 <- fitted(loess(y~x,weights=w,span=0.3,family="symmetric",iterations=4))
-# The same but with sorted x-values
-fit4 <- lowess(x,y,f=0.3)$y
+x <- (1:100)/101
+y <- sin(2*pi*x)+rnorm(100,sd=0.4)
+out <- loessFit(y,x)
+plot(x,y)
+lines(x,out$fitted,col="red")
+
+# Example using weights
+
+y <- x-0.5
+w <- rep(c(0,1),50)
+y[w==0] <- rnorm(50,sd=0.1)
+pch <- ifelse(w>0,16,1)
+plot(x,y,pch=pch)
+out <- loessFit(y,x,weights=w)
+lines(x,out$fitted,col="red")
 }
 
 \keyword{models}

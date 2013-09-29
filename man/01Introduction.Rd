@@ -37,7 +37,8 @@ The function \code{\link{changeLog}} displays the record of changes to the packa
 Smyth, G. K., Yang, Y.-H., Speed, T. P. (2003). Statistical issues in microarray data analysis. \emph{Methods in Molecular Biology} 224, 111-136.
 
 Smyth, G. K. (2004). Linear models and empirical Bayes methods for assessing differential expression in microarray experiments.
-\emph{Statistical Applications in Genetics and Molecular Biology}, Volume \bold{3}, Article 3. \url{http://www.bepress.com/sagmb/vol3/iss1/art3}
+\emph{Statistical Applications in Genetics and Molecular Biology}, Volume \bold{3}, Article 3.
+\url{http://www.statsci.org/smyth/pubs/ebayes.pdf}
 
 Smyth, G. K. (2005). Limma: linear models for microarray data.
 In: \emph{Bioinformatics and Computational Biology Solutions using R and Bioconductor}.

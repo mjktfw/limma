@@ -46,7 +46,6 @@ double normexp_m2loglik_saddle(int m, double *par, void *ex){
   double thetaQuadratic;
   int keepRepeating = 1;
   int j,i;
-  double maxDeviation;
   int *hasConverged; // vector of 0/1 indicators,
   // hasConverged[i] = 0 if theta[i] has not yet converged,
   // hasConverged[i] = 1 if theta[i] has converged,
@@ -84,7 +83,6 @@ double normexp_m2loglik_saddle(int m, double *par, void *ex){
   j = 0;
   while(keepRepeating == 1){
     j++;
-    maxDeviation = 0.0;
     for(i = 0; i < *n; i++){
       // Only loop over entries of theta[.] that haven't yet converged
       if(hasConverged[i] == 0){
@@ -150,7 +148,7 @@ void fit_saddle_nelder_mead(double *par, double *X, int *N, int *fail, int *fnco
   parsOut[0] = par[0];
   parsOut[1] = par[1];
   parsOut[2] = par[2];
-  double abstol = -1e500; // infinity
+  double abstol = -1e308; // infinity
   double intol = 1.490116e-08; // square root of machine precision
   void ex();
   double alpha = 1.0;

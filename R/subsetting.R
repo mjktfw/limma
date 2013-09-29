@@ -151,7 +151,7 @@ assign("[.MArrayLM",
 function(object, i, j, ...)
 #  Subsetting for MArrayLM objects
 #  Gordon Smyth
-#  26 April 2005. Last modified 13 January 2010.
+#  26 April 2005. Last modified 28 September 2013.
 {
 	if(nargs() != 3) stop("Two subscripts required",call.=FALSE)
 	if(!is.null(object$coefficients)) object$coefficients <- as.matrix(object$coefficients)
@@ -208,6 +208,7 @@ function(object, i, j, ...)
 		}
 		object$df.residual <- object$df.residual[i]
 		if(length(object$df.prior)>1) object$df.prior <- object$df.prior[i]
+		object$df.total <- object$df.total[i]
 		object$sigma <- object$sigma[i]
 		object$s2.post <- object$s2.post[i]
 		object$Amean <- object$Amean[i]

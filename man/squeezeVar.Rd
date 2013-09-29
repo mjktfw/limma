@@ -63,9 +63,10 @@ Intensity-based hierarchical Bayes method improves testing for differentially ex
 BMC bioinformatics 7, 538.
 
 Smyth, G. K. (2004). Linear models and empirical Bayes methods for
-     assessing differential expression in microarray experiments.
-     \emph{Statistical Applications in Genetics and Molecular Biology}, \bold{3},
-     No. 1, Article 3. \url{http://www.bepress.com/sagmb/vol3/iss1/art3}
+assessing differential expression in microarray experiments.
+\emph{Statistical Applications in Genetics and Molecular Biology}, \bold{3},
+No. 1, Article 3.
+\url{http://www.statsci.org/smyth/pubs/ebayes.pdf}
 }
 
 \seealso{

@@ -4,13 +4,14 @@ alias2Symbol <- function(alias,species="Hs",expand.symbols=FALSE)
 #  Convert a set of alias names to official gene symbols
 #  via Entrez Gene identifiers
 #  Di Wu, Gordon Smyth and Yifang Hu
-#  4 Sep 2008. Last revised 15 Jan 2009
+#  4 Sep 2008. Last revised 29 September 2013
 {
 	alias <- as.character(alias)
 	species <- match.arg(species,c("Dm","Hs","Mm","Rn"))
 	DB <- paste("org",species,"eg","db",sep=".")
 	ALIAS2EG <- paste("org",species,"egALIAS2EG",sep=".")
 	SYMBOL <- paste("org",species,"egSYMBOL",sep=".")
+	suppressPackageStartupMessages(require("AnnotationDbi",character.only=TRUE))
 	suppressPackageStartupMessages(require(DB,character.only=TRUE))
 	if(expand.symbols)
 	{
@@ -32,13 +33,14 @@ alias2SymbolTable <- function(alias,species="Hs")
 #  Convert a vector of alias names to the vector of corresponding official gene symbols
 #  via Entrez Gene identifiers
 #  Di Wu, Gordon Smyth and Yifang Hu
-#  Created 3 Sep 2009.  Last modified 23 Dec 2012.
+#  Created 3 Sep 2009.  Last modified 29 September Dec 2013.
 {
 	alias <- as.character(alias)
 	species <- match.arg(species,c("Dm","Hs","Mm","Rn"))
 	DB <- paste("org",species,"eg","db",sep=".")
 	ALIAS2EG <- paste("org",species,"egALIAS2EG",sep=".")
 	SYMBOL <- paste("org",species,"egSYMBOL",sep=".")
+	suppressPackageStartupMessages(require("AnnotationDbi",character.only=TRUE))
 	suppressPackageStartupMessages(require(DB,character.only=TRUE))
 
 	isSymbol <- alias %in% Rkeys(get(SYMBOL))
