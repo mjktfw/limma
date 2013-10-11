@@ -1,4 +1,9 @@
-11 Oct 2013: limma 3.17.26
+11 Oct 2013: limma 3.17.28
+
+- Add comment to RNA-seq case study in User's Guide about conflict
+  with plotMA() function in BiocGenerics.
+
+11 Oct 2013: limma 3.17.27
 
 - plotMA() is now an S3 generic function.
 
