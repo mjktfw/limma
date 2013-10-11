@@ -1,20 +1,102 @@
-#  M-A PLOTS
+##  PLOTS-MA.R
+##  M-A PLOTS
 
-plotMA <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
+plotMA <- function(MA,...) UseMethod("plotMA")
+
+plotMA.RGList <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
 #	MA-plot with color coding for controls
 #	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.
 #	Last modified 23 April 2013.
 {
-#	Convert to MAList if possible
-	if(class(MA)=="list") MA <- new("MAList",MA)
-	if(is(MA,"RGList")) {
-		MA <- MA.RG(MA[,array])
-		array <- 1
-	}
-	if(is(MA,"EListRaw")) {
-		MA <- normalizeBetweenArrays(MA,method="none")
-	}
+	MA <- MA.RG(MA[,array])
+	plotMA(MA,array=1,xlab=ylab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,status=status,values=values,pch=pch,col=col,cex=cex,legend=legend,zero.weights=zero.weights,...)
+}
 
+plotMA.MAList <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
+#	MA-plot with color coding for controls
+#	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.
+#	Last modified 23 April 2013.
+{
+	x <- as.matrix(MA$A)[,array]
+	y <- as.matrix(MA$M)[,array]
+	if(is.null(MA$weights)) w <- NULL else w <- as.matrix(MA$weights)[,array]
+	if(missing(status)) status <- MA$genes$Status
+	if(!is.null(w) && !zero.weights) {
+		i <- is.na(w) | (w <= 0)
+		y[i] <- NA
+	}
+	.plotMAxy(x,y,xlab=ylab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,status=status,values=values,pch=pch,col=col,cex=cex,legend=legend, ...)
+}
+
+plotMA.MArrayLM <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
+#	MA-plot with color coding for controls
+#	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.
+#	Last modified 23 April 2013.
+{
+	if(is.null(MA$Amean)) stop("MA-plot not possible because Amean component is absent.")
+	x <- MA$Amean
+	y <- as.matrix(MA$coef)[,array]
+	if(is.null(MA$weights)) w <- NULL else w <- as.matrix(MA$weights)[,array]
+	if(missing(status)) status <- MA$genes$Status
+	if(!is.null(w) && !zero.weights) {
+		i <- is.na(w) | (w <= 0)
+		y[i] <- NA
+	}
+	.plotMAxy(x,y,xlab=ylab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,status=status,values=values,pch=pch,col=col,cex=cex,legend=legend, ...)
+}
+
+plotMA.EList <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
+#	MA-plot with color coding for controls
+#	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.
+#	Last modified 23 April 2013.
+{
+	MA$E <- as.matrix(MA$E)
+	narrays <- ncol(MA$E)
+	if(narrays < 2) stop("Need at least two arrays")
+	if(narrays > 5)
+		x <- apply(MA$E,1,median,na.rm=TRUE)
+	else
+		x <- rowMeans(MA$E,na.rm=TRUE)
+	y <- MA$E[,array]-x
+	if(is.null(MA$weights)) w <- NULL else w <- as.matrix(MA$weights)[,array]
+	if(missing(status)) status <- MA$genes$Status
+
+	if(!is.null(w) && !zero.weights) {
+		i <- is.na(w) | (w <= 0)
+		y[i] <- NA
+	}
+	.plotMAxy(x,y,xlab=ylab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,status=status,values=values,pch=pch,col=col,cex=cex,legend=legend, ...)
+}
+
+plotMA.default <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
+#	MA-plot with color coding for controls
+#	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.
+#	Last modified 23 April 2013.
+{
+#	Data is assumed to be single-channel
+	MA <- as.matrix(MA)
+	narrays <- ncol(MA)
+	if(narrays < 2) stop("Need at least two arrays")
+	if(narrays > 5)
+		x <- apply(MA,1,median,na.rm=TRUE)
+	else
+		x <- rowMeans(MA,na.rm=TRUE)
+	y <- MA[,array]-x
+	w <- NULL
+	if(missing(status)) status <- NULL
+
+	if(!is.null(w) && !zero.weights) {
+		i <- is.na(w) | (w <= 0)
+		y[i] <- NA
+	}
+	.plotMAxy(x,y,xlab=ylab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,status=status,values=values,pch=pch,col=col,cex=cex,legend=legend, ...)
+}
+
+.plotMAxy <- function(x, y, xlab="A", ylab="M", main=NULL, xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, ...)
+#	MA-plot with color coding for controls
+#	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.
+#	Last modified 23 April 2013.
+{
 #	Check legend
 	legend.position <- "topleft"
 	if(!is.logical(legend)) {
@@ -23,99 +105,74 @@ plotMA <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xl
 	}
 	legend.position <- match.arg(legend.position,c("bottomright","bottom","bottomleft","left","topleft","top","topright","right","center"))
 
-	if(is(MA,"MAList")) {
-#		Data is two-color
-		x <- as.matrix(MA$A)[,array]
-		y <- as.matrix(MA$M)[,array]
-		if(is.null(MA$weights)) w <- NULL else w <- as.matrix(MA$weights)[,array]
-		if(missing(status)) status <- MA$genes$Status
-	} else if(is(MA,"MArrayLM")) {
-		if(is.null(MA$Amean)) stop("MA-plot not possible because Amean component is absent.")
-		x <- MA$Amean
-		y <- as.matrix(MA$coef)[,array]
-		if(is.null(MA$weights)) w <- NULL else w <- as.matrix(MA$weights)[,array]
-		if(missing(status)) status <- MA$genes$Status
-	} else if(is(MA,"EList")) {
-		MA$E <- as.matrix(MA$E)
-		narrays <- ncol(MA$E)
-		if(narrays < 2) stop("Need at least two arrays")
-		if(narrays > 5)
-			x <- apply(MA$E,1,median,na.rm=TRUE)
-		else
-			x <- rowMeans(MA$E,na.rm=TRUE)
-		y <- MA$E[,array]-x
-		if(is.null(MA$weights)) w <- NULL else w <- as.matrix(MA$weights)[,array]
-		if(missing(status)) status <- MA$genes$Status
-	} else {
-#		Data is assumed to be single-channel
-		MA <- as.matrix(MA)
-		narrays <- ncol(MA)
-		if(narrays < 2) stop("Need at least two arrays")
-		if(narrays > 5)
-			x <- apply(MA,1,median,na.rm=TRUE)
-		else
-			x <- rowMeans(MA,na.rm=TRUE)
-		y <- MA[,array]-x
-		w <- NULL
-		if(missing(status)) status <- NULL
-	}
-
-	if(!is.null(w) && !zero.weights) {
-		i <- is.na(w) | (w <= 0)
-		y[i] <- NA
-	}
+#	Check xlim and ylim
 	if(is.null(xlim)) xlim <- range(x,na.rm=TRUE)
 	if(is.null(ylim)) ylim <- range(y,na.rm=TRUE)
-	plot(x,y,xlab=xlab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,type="n",...)
-	if(is.null(status) || all(is.na(status))) {
-		if(missing(pch)) pch=16
-		if(missing(cex)) cex=0.3
-		points(x,y,pch=pch[[1]],cex=cex[1])
-	} else {
-		if(missing(values)) {
-			if(is.null(attr(status,"values")))
-				values <- names(sort(table(status),decreasing=TRUE))
-			else
-				values <- attr(status,"values")
-		}
-#		Non-highlighted points
-		sel <- !(status %in% values)
-		nonhi <- any(sel)
-		if(nonhi) points(x[sel],y[sel],pch=16,cex=0.3)
 
-		nvalues <- length(values)
-		if(missing(pch)) {
-			if(is.null(attr(status,"pch")))
-				pch <- rep(16,nvalues)
-			else
-				pch <- attr(status,"pch")
-		}
-		if(missing(cex)) {
-			if(is.null(attr(status,"cex"))) {
-				cex <- rep(1,nvalues)
-				if(!nonhi) cex[1] <- 0.3
-			} else
-				cex <- attr(status,"cex")
-		}
-		if(missing(col)) {
-			if(is.null(attr(status,"col"))) {
-				col <- nonhi + 1:nvalues
-			} else
-				col <- attr(status,"col")
-		}
-		pch <- rep(pch,length=nvalues)
-		col <- rep(col,length=nvalues)
-		cex <- rep(cex,length=nvalues)
-		for (i in 1:nvalues) {
-			sel <- status==values[i]
-			points(x[sel],y[sel],pch=pch[[i]],cex=cex[i],col=col[i])
-		}
-		if(legend) {
-			if(is.list(pch))
-				legend(legend.position,legend=values,fill=col,col=col,cex=0.9)
-			else
-				legend(legend.position,legend=values,pch=pch,,col=col,cex=0.9)
-		}
+#	Setup plot axes
+	plot(x,y,xlab=xlab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,type="n",...)
+
+#	If no status information, just plot points normally
+	if(is.null(status) || all(is.na(status))) {
+		if(missing(pch)) pch <- 16
+		if(missing(cex)) cex <- 0.3
+		points(x,y,pch=pch[[1]],cex=cex[1])
+		return(invisible())
+	}
+
+#	From here, status is not NULL and not all missing
+
+#	Check values
+	if(missing(values)) {
+		if(is.null(attr(status,"values")))
+			values <- names(sort(table(status),decreasing=TRUE))
+		else
+			values <- attr(status,"values")
+	}
+	nvalues <- length(values)
+
+#	Plot non-highlighted points
+	sel <- !(status %in% values)
+	nonhi <- any(sel)
+	if(nonhi) points(x[sel],y[sel],pch=16,cex=0.3)
+
+	if(missing(pch)) {
+		if(is.null(attr(status,"pch")))
+			pch <- rep(16,nvalues)
+		else
+			pch <- attr(status,"pch")
+	}
+
+	if(missing(cex)) {
+		if(is.null(attr(status,"cex"))) {
+			cex <- rep(1,nvalues)
+			if(!nonhi) cex[1] <- 0.3
+		} else
+			cex <- attr(status,"cex")
+	}
+
+	if(missing(col)) {
+		if(is.null(attr(status,"col"))) {
+			col <- nonhi + 1:nvalues
+		} else
+			col <- attr(status,"col")
+	}
+
+	pch <- rep(pch,length=nvalues)
+	col <- rep(col,length=nvalues)
+	cex <- rep(cex,length=nvalues)
+
+#	Plot highlighted classes of points
+	for (i in 1:nvalues) {
+		sel <- status==values[i]
+		points(x[sel],y[sel],pch=pch[[i]],cex=cex[i],col=col[i])
+	}
+
+	if(legend) {
+		if(is.list(pch))
+			legend(legend.position,legend=values,fill=col,col=col,cex=0.9)
+		else
+			legend(legend.position,legend=values,pch=pch,,col=col,cex=0.9)
 	}
 	invisible()
 }

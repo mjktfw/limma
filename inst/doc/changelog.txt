@@ -1,3 +1,7 @@
+11 Oct 2013: limma 3.17.26
+
+- plotMA() is now an S3 generic function.
+
 2 Oct 2013: limma 3.17.26
 
 - Improved error message from loessFit() when locfit package is

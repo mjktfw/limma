@@ -1,14 +1,19 @@
 \title{MA-Plot}
 \name{plotMA}
 \alias{plotMA}
+\alias{plotMA.RGList}
+\alias{plotMA.MAList}
+\alias{plotMA.EList}
+\alias{plotMA.MArrayLM}
+\alias{plotMA.default}
 \description{
 Creates an MA-plot with color coding for control spots.
 }
 \usage{
-plotMA(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
+\method{plotMA}{MAList}(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
 }
 \arguments{
-  \item{MA}{an \code{RGList}, \code{MAList} or \code{MArrayLM} object, or any list with components \code{M} containing log-ratios and \code{A} containing average intensities.
+  \item{MA}{an \code{RGList}, \code{MAList}, \code{EList} or \code{MArrayLM} object.
   Alternatively a \code{matrix} or \code{ExpressionSet} object.}
   \item{array}{integer giving the array to be plotted. Corresponds to columns of \code{M} and \code{A}.}
   \item{xlab}{character string giving label for x-axis}
