@@ -2,6 +2,138 @@
 \title{limma News}
 \encoding{UTF-8}
 
+\section{Version 3.18.0}{\itemize{
+
+\item
+new function beadCountWeights() to estimate quantitative weights
+from the bead counts for each probe for Illumina BeadArrays.
+
+\item
+New function contrastAsCoef(), which reforms a design matrix so
+that one or more specified contrasts become coefficients.  This
+function is called by roast().
+
+\item
+plotMA() is now an S3 generic function.
+
+\item
+The legend argument to plotMA() can now take a character value
+giving the position to place the legend.  
+
+\item
+toptable(), topTable() and topTreat() now preserve the rownames of
+the fit object, unless the fit object has duplicated names, in
+which case the rownames are copied to the ID column.  Empty
+rownames are replaced with 1:nrow(fit).
+
+\item 
+read.ilmn() no longer adds the probe IDs to the gene annotation
+data.frame, leaving them instead as rownames of the expression
+matrix.  It longer creates a targets file since the sample names
+are already preserved as column names of the expression matrix.
+
+\item
+loessFit() now uses the locfit.raw in the locfit package when
+weights are provided instead of loess in the stats package.  The
+function now runs very efficiently even on very long data vectors.
+The output results will change slightly when weights are provided.
+
+\item
+voom() now outputs lib.size as a column of targets instead of as a
+separate component.
+
+\item
+cbind for EList and EListRaw objects now recognizes a design matrix
+if it is present.
+
+\item
+plotMDS() now checks explicitly that there are at least 3 samples
+to plot.
+
+\item
+normexp.fit.detection.p() now tolerates some non-monotonicity in
+the detection p-pvalues as a function of expression.
+
+\item
+fitFDistRobustly() now uses a smoother for the smallest df.prior
+values.  This may result in smaller tail values than before when
+a group of input x values appear to be outliers but the largest
+value is not individually a stand-out value.
+
+\item
+New merge methods for EList and EListRaw objects.
+
+\item
+topTable() and treat() now give more informative error messages
+when the argument fit is not a valid MArrayLM object.
+
+\item
+roast() now calls mroast() if the index vector is a list.
+Bug fix to mroast(), which had been ignoring the weights.
+
+\item
+Updates to genas() function.
+argument chooseMethod renamed to subset and option "n" renamed to "all". 
+Function now returns NA results and a message when no genes satisfy
+the criterion for inclusion in the analysis.
+Some editing of help page and streamlining of code.
+
+\item
+Roles of contributors now specified in author field of DESCRIPTION
+file using standard codes.
+
+\item
+Additions and updates to references in the help pages.
+Removed defunct Berkeley Press links to published Smyth (2004)
+article in several Rd files.  Replacing with link to Preprint.
+Added link to Phipson (2013) thesis in two Rd files.
+Add Majewski et al reference to genas.Rd.
+Add Phipson et al and Sartor et al references to squeezeVar.Rd.
+Add Phipson et al reference to eBayes.Rd.
+Update lmscFit and voom references.
+
+\item
+Update mammmary stem cell case study in User's Guide.  As well
+as reflecting changes to read.ilmn() and topTable(), this now
+demonstrates how to find signature genes for particular cell type.
+
+\item
+documentation about rownames and column names and the use of
+rownames(fit) and colnames(fit) added to lmFit.Rd.
+
+\item
+improvements to help pages for data classes.
+
+\item
+Edits to normalizeBetweenArrays help page (i) to further clarify
+which normalization methods are available for single-channel data
+and which are available for two-color data and (ii) to give a cross
+citation to the neqc() function for Illumina BeadChips.
+
+\item
+Edits to voomaByGroup help page.
+
+\item
+duplicateCorrelation() now uses the weights matrix when block is
+set.  Previously the weights were ignored when block was used.
+
+\item
+Bug fix to subsetting for MArrayLM objects: the df.total component
+was not being subsetted.
+
+\item
+bug fix to eBayes(robust=TRUE) when some of the df.prior values are
+infinite.
+
+\item
+Bug fix to ebayes(), which was not passing the 'robust' argument
+correctly on to squeezeVar().
+
+\item
+Bug fix to fitFDistRobustly(), which affected the estimated scale
+when df2 is estimated to be Inf.
+}}
+
 
 \section{Version 3.16.0}{\itemize{
 
@@ -15,16 +147,16 @@ Previously the meaning of source="agilent" was mis-stated in read.maimages.Rd.
 
 \item
 New robust method for estimating the empirical Bayes prior, called
-  by specifying robust=TRUE in the call to eBayes().  When this is
-  TRUE the output df.prior is now a vector instead of a scalar.
+by specifying robust=TRUE in the call to eBayes().  When this is
+TRUE the output df.prior is now a vector instead of a scalar.
 
 \item  
 New function fitFDistRobustly() estimates the parameters of a
-  scaled F-distribution robustly using Winsorized values.  Outlier
-  observations receive smaller values for df.prior than non-outliers.
-  This permits robust methods for squeezeVar(), ebayes() and eBayes(),
-  all of which now have a new argument wins.tail.p to specify the
-  tail proportions for Winsorizing.
+scaled F-distribution robustly using Winsorized values.  Outlier
+observations receive smaller values for df.prior than non-outliers.
+This permits robust methods for squeezeVar(), ebayes() and eBayes(),
+all of which now have a new argument wins.tail.p to specify the
+tail proportions for Winsorizing.
 
 \item
 fitFDist() now permits infinite values for the covariate.

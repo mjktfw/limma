@@ -1,4 +1,4 @@
-%\VignetteIndexEntry{Limma Vignette}
+%\VignetteIndexEntry{Limma One Page Introduction}
 %\VignetteDepends{}
 %\VignetteKeywords{microarray linear model}
 %\VignettePackage{limma}
@@ -12,9 +12,9 @@
 \headsep=0in
 
 \begin{document}
-\title{Limma Package Vignette}
+\title{Limma Package Introduction}
 \author{Gordon Smyth}
-\date{23 October 2004}
+\date{23 October 2004, Revised 21 October 2013}
 \maketitle
 
 Limma is an R package for the analysis of gene expression microarray data, especially the use of linear models for analysing designed experiments and the assessment of differential expression.

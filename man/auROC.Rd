@@ -13,17 +13,19 @@ auROC(truth, stat=NULL)
   If \code{NULL}, then \code{truth} is assumed to be already sorted in decreasing test statistic order.}
 }
 \details{
-This function computes the exact area under an empirical ROC curve.
-Cases are ranked by \code{stat} from largest to smallest.
-The number of true and false discoveries are determined by how well the true states represented by \code{truth} match up with the observed statistics given by \code{stat}.
+A receiver operating curve (ROC) is a plot of sensitivity (true positive rate) versus error (false positive rate) for a statistical test or binary classifier.
+The area under the ROC is a well accepted measure of test performance.
+It is equivalent to the probability that a randomly chosen pair of cases is corrected ranked.
+
+Here we consider a test statistic \code{stat}, with larger values being more significant, and a vector \code{truth} indicating whether the null hypothesis is in fact true.
+Correct ranking here means that \code{truth[i]} is greater than or equal to \code{truth[j]} when \code{stat[i]} is greater than \code{stat[j]}. 
+The function computes the exact area under the empirical ROC curve defined by \code{truth} when ordered by \code{stat}.
 }
 \value{
 Numeric vector giving area under the curve, 1 being perfect and 0 being the minimum, or \code{NULL} if \code{truth} has zero length.
 }
 \seealso{
 See \link{08.Tests} for other functions for testing and processing p-values.
-
-See also \code{\link[ROC]{AUC}} in the \code{ROC} package.
 }
 \examples{
 auROC(c(1,1,0,0,0))

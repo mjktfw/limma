@@ -1,3 +1,17 @@
+21 Oct 2013: limma 3.19.1
+
+- Update cross reference to affy package in
+  normalizeBetweenArrays.Rd.
+
+- Revise auROC.Rd help page.  Remove cross reference to ROC package.
+
+- limma.Rnw renamed to intro.Rnw and moved to vignette directory.
+
+- NEWS.Rd updated to reflect changes in Bioconductor 2.13 Release.
+
+15 Oct 2013: limma 3.19.0 (Bioconductor 2.14 Developmental Branch)
+15 Oct 2013: limma 3.18.0 (Bioconductor 2.13 Release Branch)
+
 11 Oct 2013: limma 3.17.28
 
 - Add comment to RNA-seq case study in User's Guide about conflict
@@ -109,7 +123,7 @@
 
 - Update lmscFit and voom references.
 
-- Update voomByGroup documentation.
+- Update voomaByGroup documentation.
 
 12 May 2013: limma 3.17.12
 
