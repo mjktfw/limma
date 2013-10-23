@@ -1,4 +1,4 @@
-21 Oct 2013: limma 3.19.1
+23 Oct 2013: limma 3.19.1
 
 - Update cross reference to affy package in
   normalizeBetweenArrays.Rd.
