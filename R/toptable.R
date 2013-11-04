@@ -37,7 +37,7 @@ topTable <- function(fit,coef=NULL,number=10,genelist=fit$genes,adjust.method="B
 topTableF <- function(fit,number=10,genelist=fit$genes,adjust.method="BH",sort.by="F",p.value=1,lfc=0)
 #	Summary table of top genes by F-statistic
 #	Gordon Smyth
-#	27 August 2006. Last modified 22 April 2013.
+#	27 August 2006. Last modified 4 November 2013.
 {
 #	Check fit
 	if(is.null(fit$coefficients)) stop("Coefficients not found in fit")
@@ -90,14 +90,14 @@ topTableF <- function(fit,number=10,genelist=fit$genes,adjust.method="BH",sort.b
 			rn <- rn[keep]
 			Amean <- Amean[keep]
 			Fstat <- Fstat[keep]
-			Fp <- p.value[keep]
+			Fp <- Fp[keep]
 			genelist <- genelist[keep,,drop=FALSE]
 			adj.P.Value <- adj.P.Value[keep]
 		}
 	}
 
 #	Enough rows left?
-	if(nrow(fit) < number) number <- nrow(fit)
+	if(nrow(M) < number) number <- nrow(M)
 	if(number < 1) return(data.frame())
 
 #	Find rows of top genes
