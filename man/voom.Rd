@@ -51,6 +51,7 @@ An \code{\link[limma:EList]{EList}} object with the following components:
 Law, CW (2013).
 \emph{Precision weights for gene expression analysis}.
 PhD Thesis. University of Melbourne, Australia.
+\url{http://repository.unimelb.edu.au/10187/17598}
 
 Law, CW, Chen, Y, Shi, W, Smyth, GK (2013).
 Voom! Precision weights unlock linear model analysis tools for RNA-seq read counts.

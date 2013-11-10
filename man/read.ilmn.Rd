@@ -59,8 +59,10 @@ An \code{\link{EListRaw-class}} object with the following components:
 
 \examples{
 \dontrun{
-x <- read.ilmn(files="sample probe profile.txt",ctrlfiles="control probe profile.txt")
+x <- read.ilmn(files="sample probe profile.txt",
+               ctrlfiles="control probe profile.txt")
 }
+# See neqc and beadCountWeights for other examples using read.ilmn
 }
 
 \keyword{IO}

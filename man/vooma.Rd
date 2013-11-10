@@ -52,4 +52,5 @@ An EList object with the following components:
 Law, C. (2013).
 \emph{Precision weights for gene expression analysis}.
 PhD Thesis. University of Melbourne, Australia.
+\url{http://repository.unimelb.edu.au/10187/17598}
 }

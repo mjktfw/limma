@@ -4,8 +4,10 @@
 \title{NormExp Background Correction and Normalization Using Control Probes}
 \description{Perform normexp background correction using negative control probes and quantile normalization using negative and positive control probes.}
 \usage{
-nec(x, status=NULL, negctrl="negative", regular="regular", offset=16, robust=FALSE,detection.p="Detection")
-neqc(x, status=NULL, negctrl="negative", regular="regular", offset=16, robust=FALSE, detection.p="Detection",...)
+nec(x, status=NULL, negctrl="negative", regular="regular", offset=16,
+    robust=FALSE, detection.p="Detection")
+neqc(x, status=NULL, negctrl="negative", regular="regular", offset=16,
+    robust=FALSE, detection.p="Detection", ...)
 }
 \arguments{
   \item{x}{object of class \code{EListRaw} or \code{matrix} containing raw intensities for regular and control probes from a series of microarrays.}
@@ -65,8 +67,9 @@ Optimizing the noise versus bias trade-off for Illumina Whole Genome Expression 
 \examples{
 \dontrun{
 # neqc normalization for data which include control probes
-x <- read.ilmn(files="sample probe profile.txt",ctrlfiles="control probe profile.txt")
+x <- read.ilmn(files="sample probe profile.txt", ctrlfiles="control probe profile.txt")
 y <- neqc(x)
+fit <- lmFit(y,design)
 
 # Same thing but in separate steps:
 x.b <- nec(x)

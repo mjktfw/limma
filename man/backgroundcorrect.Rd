@@ -6,8 +6,10 @@
 Background correct microarray expression intensities.
 }
 \usage{
-backgroundCorrect(RG, method="auto", offset=0, printer=RG$printer, normexp.method="saddle", verbose=TRUE)
-backgroundCorrect.matrix(E, Eb=NULL, method="auto", offset=0, printer=NULL, normexp.method="saddle", verbose=TRUE)
+backgroundCorrect(RG, method="auto", offset=0, printer=RG$printer,
+                  normexp.method="saddle", verbose=TRUE)
+backgroundCorrect.matrix(E, Eb=NULL, method="auto", offset=0, printer=NULL,
+                  normexp.method="saddle", verbose=TRUE)
 }
 \arguments{
   \item{RG}{a numeric matrix, \code{\link[limma:EList]{EListRaw}} or \code{\link[limma:rglist]{RGList}} object.}

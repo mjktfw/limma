@@ -12,8 +12,8 @@ beadCountWeights(y, x, design = NULL, bead.stdev = NULL, nbeads = NULL, array.cv
 }
 
 \arguments{
- \item{y}{any matrix-like object containing log-expression values that can be coerced to a matrix.}
- \item{x}{any matrix-like object containing raw expression values that can be coerced to a matrix.}
+ \item{y}{normalized log2-expression values.}
+ \item{x}{raw expression values.}
  \item{design}{the design matrix of the microarray experiment, with rows
            corresponding to arrays and columns to coefficients to be
            estimated.  Defaults to the unit vector meaning that the
@@ -25,15 +25,22 @@ beadCountWeights(y, x, design = NULL, bead.stdev = NULL, nbeads = NULL, array.cv
 }
 
 \details{
-The relative reliability of each gene on each array is measured by estimating its technical and biological variability.
+This function estimates optimum weights using the bead statistics for each probe for an Illumina expression BeadChip.
+It can be used with any Illumina expression BeadChip, but is most likely to be useful with HumanHT-12 BeadChips.
 
-The technical variance for each gene on each array is inversely proportional to the number of beads and is estimated using array-specific bead-level coefficients of variation.
+Arguments \code{x} and \code{y} are both required.
+\code{x} contains the raw expression values and \code{y} contains the corresponding log2 values for the same probes and the same arrays after background correction and normalization.
+\code{x} and \code{y} be any type of object that can be coerced to a matrix, with rows corresponding to probes and columns to arrays.
+\code{x} and \code{y} must contain the same rows and columns in the same order.
+
+The reliability of the normalized expression value for each probe on each array is measured by estimating its technical and biological variability.
+The bead number weights are the inverse sum of the technical and biological variances.
+
+The technical variance for each probe on each array is inversely proportional to the number of beads and is estimated using array-specific bead-level coefficients of variation.
 
 Coefficients of variation are calculated using raw expression values. 
 
-The biological variance for each gene across the arrays are estimated using Newton's iterations, with the assumption that the total residual deviance for each gene from \code{lmFit} is inversely proportional to the sum of the technical variance and biological variance. 
-
-The bead number weights are an inverse of the sum of estimates for technical variances and biological variances.
+The biological variance for each probe across the arrays are estimated using a Newton iteration, with the assumption that the total residual deviance for each probe from \code{lmFit} is inversely proportional to the sum of the technical variance and biological variance. 
 
 If any of the arguments \code{design}, \code{bead.stdev} or \code{nbeads} are set explicitly in the call they will over-ride the slots or components in the data \code{object}. The argument \code{design} does not normally need to be set in the call but will be extracted from the data \code{object} if available. If arguments \code{bead.stdev} and \code{nbeads} are not set explicitly in the call, it is necessary that they are available for extraction from the data \code{object}.
 }
@@ -52,9 +59,23 @@ A list object with the following components:
 Law, CW (2013).
 \emph{Precision weights for gene expression analysis}.
 PhD Thesis. University of Melbourne, Australia.
+\url{http://repository.unimelb.edu.au/10187/17598}
 }
 
 \author{Charity Law and Gordon Smyth}
+
+\examples{
+\dontrun{
+ps <- read.ilmn(files="probesummaryprofile.txt",
+     ctrfiles="controlprobesummary.txt",
+     other.columns=c("BEAD_STDEV","Avg_NBEADS"))
+y <- neqc(ps)
+x <- ps[ps$genes$Status=="regular",]
+bcw <- beadCountWeights(y,x,design)
+fit <- lmFit(y,design,weights=bcw$weights)
+fit <- eBayes(fit)
+}
+}
 
 \seealso{
 An overview of linear model functions in limma is given by \link{06.LinearModels}.

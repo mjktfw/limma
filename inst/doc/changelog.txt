@@ -1,3 +1,8 @@
+10 Nov 2013: limma 3.19.2
+
+- edits to help pages for read.ilmn, neqc, beadCountWeights, voom and
+  vooma.
+
  4 Nov 2013: limma 3.19.2
 
 - bug fix to topTable() and topTableF() when sorting by F-statistic
