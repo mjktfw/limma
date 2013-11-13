@@ -9,7 +9,7 @@ plotMA.RGList <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[arr
 #	Last modified 23 April 2013.
 {
 	MA <- MA.RG(MA[,array])
-	plotMA(MA,array=1,xlab=ylab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,status=status,values=values,pch=pch,col=col,cex=cex,legend=legend,zero.weights=zero.weights,...)
+	plotMA(MA,array=1,xlab=xlab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,status=status,values=values,pch=pch,col=col,cex=cex,legend=legend,zero.weights=zero.weights,...)
 }
 
 plotMA.MAList <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
@@ -25,7 +25,7 @@ plotMA.MAList <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[arr
 		i <- is.na(w) | (w <= 0)
 		y[i] <- NA
 	}
-	.plotMAxy(x,y,xlab=ylab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,status=status,values=values,pch=pch,col=col,cex=cex,legend=legend, ...)
+	.plotMAxy(x,y,xlab=xlab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,status=status,values=values,pch=pch,col=col,cex=cex,legend=legend, ...)
 }
 
 plotMA.MArrayLM <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
@@ -42,7 +42,7 @@ plotMA.MArrayLM <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[a
 		i <- is.na(w) | (w <= 0)
 		y[i] <- NA
 	}
-	.plotMAxy(x,y,xlab=ylab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,status=status,values=values,pch=pch,col=col,cex=cex,legend=legend, ...)
+	.plotMAxy(x,y,xlab=xlab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,status=status,values=values,pch=pch,col=col,cex=cex,legend=legend, ...)
 }
 
 plotMA.EList <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
@@ -65,7 +65,7 @@ plotMA.EList <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[arra
 		i <- is.na(w) | (w <= 0)
 		y[i] <- NA
 	}
-	.plotMAxy(x,y,xlab=ylab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,status=status,values=values,pch=pch,col=col,cex=cex,legend=legend, ...)
+	.plotMAxy(x,y,xlab=xlab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,status=status,values=values,pch=pch,col=col,cex=cex,legend=legend, ...)
 }
 
 plotMA.default <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
@@ -89,7 +89,7 @@ plotMA.default <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[ar
 		i <- is.na(w) | (w <= 0)
 		y[i] <- NA
 	}
-	.plotMAxy(x,y,xlab=ylab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,status=status,values=values,pch=pch,col=col,cex=cex,legend=legend, ...)
+	.plotMAxy(x,y,xlab=xlab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,status=status,values=values,pch=pch,col=col,cex=cex,legend=legend, ...)
 }
 
 .plotMAxy <- function(x, y, xlab="A", ylab="M", main=NULL, xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, ...)

@@ -13,7 +13,7 @@ Creates foreground-background plots.
 }
 \arguments{
   \item{x}{an \code{RGList} or \code{EListRaw} object.}
-  \item{array}{integer giving the array to be plotted. Corresponds to columns of \code{R}, \code{G}, \code{Rb} and \code{Gb}.}
+  \item{array}{integer giving the array to be plotted.}
   \item{lim}{character string indicating whether the red and green plots should have \code{"separate"} or \code{"common"} x- and y- co-ordinate limits.}
   \item{pch}{vector or list of plotting characters. Defaults to integer code 16.}
   \item{cex}{numeric vector of plot symbol expansions.} 
@@ -22,7 +22,7 @@ Creates foreground-background plots.
 
 \details{
 A foreground-background plot is a plot of log2-foreground vs log2-background for a particular array.
-For two-color arrasy, this function produces a pair of plots, one for the green channel and one for the red.
+For two-color arrays, this function produces a pair of plots, one for the green channel and one for the red.
 
 See \code{\link[graphics]{points}} for possible values for \code{pch}, \code{col} and \code{cex}.
 }

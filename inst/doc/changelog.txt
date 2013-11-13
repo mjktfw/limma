@@ -1,3 +1,9 @@
+13 Nov 2013: limma 3.19.5
+
+- NAMESPACE now exports plotFB methods.
+
+- bug fix to x-axis label for some plotMA methods.
+
 13 Nov 2013: limma 3.19.4
 
 - plotFB now an S3 generic function with methods for RGList and EList
