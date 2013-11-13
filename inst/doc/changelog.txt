@@ -26,7 +26,8 @@
 
 - Revise auROC.Rd help page.  Remove cross reference to ROC package.
 
-- limma.Rnw renamed to intro.Rnw and moved to vignette directory.
+- Vignette limma.Rnw renamed to intro.Rnw and moved to vignette
+  directory.
 
 - NEWS.Rd updated to reflect changes in Bioconductor 2.13 Release.
 
