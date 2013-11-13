@@ -1,4 +1,9 @@
-10 Nov 2013: limma 3.19.2
+13 Nov 2013: limma 3.19.4
+
+- plotFB now an S3 generic function with methods for RGList and EList
+  data objects.
+
+10 Nov 2013: limma 3.19.3
 
 - edits to help pages for read.ilmn, neqc, beadCountWeights, voom and
   vooma.
