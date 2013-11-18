@@ -13,10 +13,11 @@ Plot the density of expression values for multiple arrays on the same plot.
 \method{plotDensities}{RGList}(object, log=TRUE, group=NULL, col=NULL, main="RG Densities",...)
 \method{plotDensities}{MAList}(object, log=TRUE, group=NULL, col=NULL, main="RG Densities",...)
 \method{plotDensities}{EListRaw}(object, log=TRUE, group=NULL, col=NULL, main=NULL,...)
+\method{plotDensities}{EList}(object, log=TRUE, group=NULL, col=NULL, main=NULL,...)
 \method{plotDensities}{default}(object, group=NULL, col=NULL, main=NULL,...)
 }
 \arguments{
-  \item{object}{an \code{RGList}, \code{MAList} or \code{EList} object containing expression data.  Or any data object that can be coerced to a matrix.}
+  \item{object}{an \code{RGList}, \code{MAList}, \code{EListRaw} or \code{EList} object containing expression data.  Or any data object that can be coerced to a matrix.}
 
   \item{log}{logical, should densities be plotted on the log2 scale?}
 
