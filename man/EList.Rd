@@ -16,7 +16,9 @@ A list-based S4 classes for storing expression values (E-values) for a set of on
 \code{EList} objects can be created by \code{new("EList",E)} where \code{E} is a list.
 These classes contains no slots (other than \code{.Data}), but objects should contain a list component \code{E} as follows:
 \tabular{ll}{
-  \code{E} \tab numeric matrix containing the E-values (raw or log-2 expression ratios).  Rows correspond to probes and columns to arrays.
+  \code{E} \tab numeric matrix containing expression values.  Rows correspond to probes and columns to arrays.
+  In an \code{EListRaw} object, these are unlogged values. 
+  In an \code{EList} object, these are log2 values.
 }
 Optional components include:
 \tabular{ll}{
@@ -32,7 +34,7 @@ Valid \code{EList} or \code{EListRaw} objects may contain other optional compone
 These classes inherit directly from class \code{list} so any operation appropriate for lists will work on objects of this class.
 In addition, \code{EList} objects can be \link[limma:subsetting]{subsetted} and \link[limma:cbind]{combined}.
 \code{EList} objects will return dimensions and hence functions such as \code{\link[limma:dim]{dim}}, \code{\link[base:nrow]{nrow}} and \code{\link[base:nrow]{ncol}} are defined. 
-\code{ELists} also inherit a \code{\link[methods]{show}} method from the virtual class \code{\link[limma:LargeDataObject]{LargeDataObject}}, which means that \code{ELists} will print in a compact way.
+\code{EList}s also inherit a \code{\link[methods]{show}} method from the virtual class \code{\link[limma:LargeDataObject]{LargeDataObject}}, which means that \code{ELists} will print in a compact way.
 }
 
 \author{Gordon Smyth}

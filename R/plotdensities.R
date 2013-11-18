@@ -1,134 +1,99 @@
 #  PLOT DENSITIES
 
-plotDensities<-function(object,log=TRUE,arrays=NULL,singlechannels=NULL,groups=NULL,col=NULL)
+plotDensities <- function(object,...)
+UseMethod("plotDensities")
+
+plotDensities.RGList <- function(object,log=TRUE,group=NULL,col=NULL,main="RG Densities",...)
 #	Plot empirical single-channel densities
 #	Original version by Natalie Thorne, 9 September 2003
-#	Modified by Gordon Smyth.  Last modified 1 June 2005.  
+#	Modified by Gordon Smyth.  Last modified 18 Nov 2013.
 {
-	matDensities<-function(X){
-		densXY<-function(Z){
-			zd<-density(Z,na.rm=TRUE)
-			x<-zd$x
-			y<-zd$y
-			cbind(x,y)
-		}
-		out<-apply(X,2,densXY)
-		outx<-out[(1:(nrow(out)/2)),]
-		outy<-out[(((nrow(out)/2)+1):nrow(out)),]
-		list(X=outx,Y=outy)
-	}
-	
-	if(is(object,"MAList")) {
-		R <- object$A+object$M/2
-		G <- object$A-object$M/2
-		if(!log) {
-			R <- 2^R
-			G <- 2^G
-		}
+	object <- backgroundCorrect(object,method="subtract")
+	narray <- ncol(object)
+	E <- cbind(object$R,object$G)
+
+	if(log) E <- log2(E+1)
+
+	col2 <- col
+	if(is.null(group)) {
+		group2 <- factor(rep(1:2,c(narray,narray)),labels=c("R","G"))
+		if(is.null(col2)) col2 <- c("red","green")
 	} else {
-		R <- object$R
-		G <- object$G
-		if(!is.null(object$Rb)) R <- R-object$Rb
-		if(!is.null(object$Gb)) G <- G-object$Gb
-		if(log) {
-			R[R <= 0] <- NA
-			G[G <= 0] <- NA
-			R <- log(R,2)
-			G <- log(G,2)
-		}
+		group <- rep(group,narray)
+		group2 <- c(group,group)
 	}
 
-	if( is.null(arrays) & is.null(singlechannels) ){
-		arrays <- 1:(ncol(R))
-		x <- cbind(R,G)
-		if(is.null(groups)) {
-			groups <- c(length(arrays),length(arrays))
-			if(is.null(col))
-				cols <- rep(c("red","green"),groups)
-			if(!is.null(col)) {
-				if(length(col)!=2) {
-					warning("number of groups=2 not equal to number of col")
-					cols<-"black"
-				} else {
-					cols<-rep(col,groups)
-				}
-			}
-		} else {
-			if(!is.null(col)) {
-				if(length(as.vector(table(groups)))!=length(col)) {
-					warning("number of groups not equal to number of col")
-					cols <- col
-				} else {
-					cols <- col[groups]
-				}
-			} else {
-				warning("warning no cols in col specified for the groups")
-				cols <- "black"
-			}
-		} 
-	}else{	
-		if(!is.null(singlechannels)) {
-			if(!is.null(arrays)) warning("cannot index using arrays AND singlechannels")
-			x <- cbind(R,G)[,singlechannels]
-			if(is.null(groups)) {
-				groups <- c(length(intersect((1:ncol(R)),singlechannels)),
-			 length(intersect(((ncol(R)+1):ncol(cbind(G,R))),
-									singlechannels)))
-				if(is.null(col)) cols <- rep(c("red","green"),groups)
-				if(!is.null(col)) {
-					if(length(col)!=2) {
-						warning("number of groups=2 not equal to number of col")
-						cols<-"black"
-					} else {
-						cols<-rep(col,groups)
-					}
-				}
-			} else {
-				if(!is.null(col)) {
-					if(length(as.vector(table(groups)))!=length(col)) {
-						warning("number of groups not equal to number of col")
-						cols <- col
-					} else {
-						cols <- col[groups]
-					}
-				} else {
-					print("warning no cols in col specified for the groups")
-					cols <- "black"
-				}
-			}
-		}else{			
-			if(!is.null(arrays)) {
-				if(!is.null(singlechannels)) warning("cannot index using arrays AND singlechannels")
-				x <- cbind(R[,arrays],G[,arrays])
-				if(is.null(groups)) {
-					groups <- c(length(arrays),length(arrays))
-					if(is.null(col))
-						cols <- rep(c("red","green"),groups)
-					if(!is.null(col)) {
-						if(length(col)!=2) {
-							warning("number of groups=2 not equal to number of col")
-							cols<-"black"
-						} else {
-							cols <- rep(col,groups)
-						}
-					}
-				}else{
-					if(!is.null(col)) {
-						if(length(as.vector(table(groups)))!=length(col)){
-							warning("number of groups not equal to number of col")
-							cols <- "black"
-						}else{
-							cols <- col[groups]
-						}
-					}else{
-						warning("warning no cols in col specified for the groups")
-						cols <- "black"
-					}
-				}
-			}
-		}
+	plotDensities(E,group=group2,col=col2,main=main)
+}
+
+plotDensities.MAList <- function(object,log=TRUE,group=NULL,col=NULL,main="RG Densities",...)
+#	Plot empirical single-channel densities
+#	Original version by Natalie Thorne, 9 September 2003
+#	Modified by Gordon Smyth.  Last modified 18 Nov 2013.
+{
+	narray <- ncol(object)
+	E <- cbind(object$A+object$M/2, object$A-object$M/2)
+	if(!log) E <- 2^E
+
+	col2 <- col
+	if(is.null(group)) {
+		group2 <- factor(rep(1:2,c(narray,narray)),labels=c("R","G"))
+		if(is.null(col2)) col2 <- c("red","green")
+	} else {
+		group <- rep(group,narray)
+		group2 <- c(group,group)
 	}
 
-	dens.x<-matDensities(x)
-	matplot(dens.x$X,dens.x$Y,xlab="Intensity",ylab="Density",main="RG densities",type="l",col=cols,lwd=2,lty=1)
+	plotDensities(E,group=group2,col=col2,main=main)
+}
+
+plotDensities.EListRaw <- function(object,log=TRUE,group=NULL,col=NULL,main=NULL,...)
+{
+	object <- backgroundCorrect(object,method="subtract")
+	E <- object$E
+	if(log) E <- log2(E+1)
+	plotDensities(E,group=group,col=col,main=main)
+}
+
+plotDensities.EList <- function(object,log=TRUE,group=NULL,col=NULL,main=NULL,...)
+{
+	E <- object$E
+	if(!log) E <- 2^E
+	plotDensities(E,group=group,col=col,main=main)
+}
+
+plotDensities.default <- function(object,group=NULL,col=NULL,main=NULL,...)
+#	Plot empirical single-channel densities
+#	Gordon Smyth
+#	18 Nov 2013.  Last modified 18 Nov 2013.
+{
+#	Coerce object to matrix
+	E <- as.matrix(object)
+	narray <- ncol(E)
+
+#	Check group
+	if(is.null(group))  group <- colnames(E)
+	if(is.null(group))  group <- 1:narray
+	group <- as.factor(group)
+	ngroup <- nlevels(group)
+
+#	Check col
+	if(is.null(col)) col <- 1:ngroup
+	col <- rep(col,length=ngroup)
+
+#	Expand cols to number of arrays
+	arraycol <- group
+	levels(arraycol) <- col
+	arraycol <- as.vector(arraycol)
+
+	npoint <- 512
+	X <- Y <- matrix(0,npoint,narray)
+	for (a in 1:ncol(E)) {
+		d <- density(E[,a],n=npoint)
+		X[,a] <- d$x
+		Y[,a] <- d$y
+	}
+	matplot(X,Y,xlab="Intensity",ylab="Density",main=main,type="l",col=arraycol,lwd=2,lty=1)
+	if(ngroup>1) legend("topleft",lwd=2,legend=levels(group),col=col)
+	invisible(list(X=X,Y=Y))
 }
