@@ -2,6 +2,7 @@
 
 - bug fix to genas(), which was not handling vector df.prior
   correctly when the fit object was generated using robust=TRUE.
+
 - genas() now uses fit$df.total from the MArrayLM object.  This 
   prevents df.total from exceeding the total pooled residual df
   for the dataset.  The genas() results will change slightly for
