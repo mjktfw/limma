@@ -1,5 +1,12 @@
  2 Dec 2013: limma 3.19.7
 
+- bug fix to genas(), which was not handling vector df.prior
+  correctly when the fit object was generated using robust=TRUE.
+- genas() now uses fit$df.total from the MArrayLM object.  This 
+  prevents df.total from exceeding the total pooled residual df
+  for the dataset.  The genas() results will change slightly for
+  datasets for which df.prior was very lage.
+
 - bug fix to squeezeVar().  Previously there was an error when
   robust=TRUE and trend=FALSE and some of the estimated df.prior
   were infinite.
