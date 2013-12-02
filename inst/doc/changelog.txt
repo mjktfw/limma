@@ -1,3 +1,18 @@
+ 2 Dec 2013: limma 3.19.7
+
+- bug fix to squeezeVar().  Previously there was an error when
+  robust=TRUE and trend=FALSE and some of the estimated df.prior
+  were infinite.
+
+- The ctrlpath argument of read.ilmn() now defaults to the same as
+  path for regular probes.  This means that only one path setting
+  is required if the regular and control probe profiles are in the
+  same directory.
+
+- avereps() was never intended to be applied to RGList or EListRaw
+  objects.  It now gives an error when applied to these objects
+  instead of returning a matrix of questionable value.
+
 18 Nov 2013: limma 3.19.6
 
 - plotDensities() is now an S3 generic function with methods for

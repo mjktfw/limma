@@ -192,14 +192,15 @@ avedups.EList <- function(x,ndups=x$printer$ndups,spacing=x$printer$spacing,weig
 	y
 }
 
-avereps <- function(x,ID) UseMethod("avereps")
-#  4 June 2008
+avereps <- function(x,...)
+#	4 June 2008
+	UseMethod("avereps")
 
-avereps.default <- function(x,ID=rownames(x))
+avereps.default <- function(x,ID=rownames(x),...)
 #	Average over irregular replicate spots, for matrices or vectors
 #	Gordon Smyth
 #	Created 3 June 2008.  Last modified 1 Dec 2010.
-#  Revised 19 Aug 2009 following suggestions from Axel Klenk.
+#	Revised 19 Aug 2009 following suggestions from Axel Klenk.
 #	Revised 28 March 2010 following suggestion from Michael Lawrence.
 {
 	if(is.null(x)) return(NULL)
@@ -219,7 +220,7 @@ avereps.default <- function(x,ID=rownames(x))
 	y/n
 }
 
-avereps.MAList <- function(x,ID=NULL)
+avereps.MAList <- function(x,ID=NULL,...)
 #	Average over irregular replicate spots for MAList objects
 #	Gordon Smyth
 #	3 June 2008.  Last modified 8 Sep 2010.
@@ -236,11 +237,11 @@ avereps.MAList <- function(x,ID=NULL)
 	for (a in other) y$other[[a]] <- avereps(x$other[[a]],ID=ID)
 	y$weights <- avereps(x$weights,ID=ID)
 	y$genes <- x$genes[!duplicated(ID),]
-   y$printer <- NULL
+	y$printer <- NULL
 	y
 }
 
-avereps.EList <- function(x,ID=NULL)
+avereps.EList <- function(x,ID=NULL,...)
 #	Average over irregular replicate probes for EList objects
 #	Gordon Smyth
 #	2 April 2010.  Last modified 20 May 2011.
@@ -256,6 +257,25 @@ avereps.EList <- function(x,ID=NULL)
 	for (a in other) y$other[[a]] <- avereps(x$other[[a]],ID=ID)
 	y$weights <- avereps(x$weights,ID=ID)
 	y$genes <- x$genes[!duplicated(ID),]
-   y$printer <- NULL
+	y$printer <- NULL
 	y
+}
+
+avereps.RGList <- function(x,ID=NULL,...)
+#	Warn users that averaging should not be applied prior to normalization
+#	Gordon Smyth
+#	2 December 2013.
+{
+	stop("avereps should not be applied to an RGList object")
+	invisible()
+}
+
+
+avereps.EListRaw <- function(x,ID=NULL,...)
+#	Warn users that averaging should not be applied prior to normalization
+#	Gordon Smyth
+#	2 December 2013.
+{
+	stop("avereps should not be applied to an EListRaw object")
+	invisible()
 }

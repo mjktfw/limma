@@ -5,21 +5,21 @@
 \usage{
 read.ilmn(files=NULL, ctrlfiles=NULL, path=NULL, ctrlpath=NULL,
 probeid="Probe",  annotation=c("TargetID", "SYMBOL"), expr="AVG_Signal", other.columns="Detection", 
-sep="\t", quote="\"", verbose=TRUE, ...)
+sep="\t", quote="\"", verbose=TRUE, \dots)
 }
 \arguments{
-  \item{files}{ character vector giving the names of the summary probe profile files.}
-  \item{ctrlfiles}{ character vector giving the names of the summary control probe profile files.}
-  \item{path}{ character string giving the directory containing the summary probe profile files. The default is the current working directory.}
-  \item{ctrlpath}{ character string giving the directory containing the summary control probe profile files. The default is the current working directory.}
-  \item{probeid}{ character string giving the name of the probe identifier column.}
-  \item{annotation}{ character vector giving possible names of the annotation column. It could be called "TargetID" or "SYMBOL" depending on which version of BeadStudio is used.}
-  \item{expr}{ character string giving the keyword in the names of the expression intensity columns.}
-  \item{other.columns}{ character vector giving the keywords in the names of extra columns required, such as "Detection", "Avg_NBEADS", "BEAD_STDEV" etc. Each keyword corresponds to one type of columns. The detection p value columns will be read in by default.}
-  \item{sep}{ the field separator character.}
-  \item{quote}{ character string of characters to be treated as quote marks.}
-  \item{verbose}{ logical, \code{TRUE} to report names of profile files being read.}
-  \item{...}{ any other parameters are passed on to \code{\link{read.columns}}.}
+  \item{files}{character vector giving the names of the summary probe profile files.}
+  \item{ctrlfiles}{character vector giving the names of the summary control probe profile files.}
+  \item{path}{character string giving the directory containing the summary probe profile files. The default is the current working directory.}
+  \item{ctrlpath}{character string giving the directory containing the summary control probe profile files. Defaults to the same directory as for the probe profile files.}
+  \item{probeid}{character string giving the name of the probe identifier column.}
+  \item{annotation}{character vector giving possible names of the annotation column. It could be called "TargetID" or "SYMBOL" depending on which version of BeadStudio is used.}
+  \item{expr}{character string giving the keyword in the names of the expression intensity columns.}
+  \item{other.columns}{character vector giving the keywords in the names of extra columns required, such as "Detection", "Avg_NBEADS", "BEAD_STDEV" etc. Each keyword corresponds to one type of columns. The detection p value columns will be read in by default.}
+  \item{sep}{the field separator character.}
+  \item{quote}{character string of characters to be treated as quote marks.}
+  \item{verbose}{logical, \code{TRUE} to report names of profile files being read.}
+  \item{\dots}{any other parameters are passed on to \code{\link{read.columns}}.}
   }
 \details{
 Illumina BeadStudio ouputs probe intensities (regular probe intensities) and control probe intensities to summary probe profile files (containing regular probes) and summary control probe profile files, respectively.

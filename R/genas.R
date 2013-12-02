@@ -57,13 +57,13 @@ genas <- function(fit,coef=c(1,2),subset="all",plot=FALSE,alpha=0.4)
 	Q2 <- optim(x, .multTLogLikNull, fit = fit, m = m)
 	Q1 <- optim(c(Q2$par[1], Q2$par[2], 0),.multTLogLik,fit=fit,m=m)
 		
-	L<-matrix(c(1,Q1$par[3],0,1),2,2)
-	D<-matrix(c(exp(Q1$par[1]),0,0,exp(Q1$par[2])),2,2)
-	V0<-L%*%D%*%t(L)
-	rhobiol<-V0[2,1]/sqrt(V0[1,1]*V0[2,2])
+	L <- matrix(c(1,Q1$par[3],0,1),2,2)
+	D <- matrix(c(exp(Q1$par[1]),0,0,exp(Q1$par[2])),2,2)
+	V0 <- L%*%D%*%t(L)
+	rhobiol <- V0[2,1]/sqrt(V0[1,1]*V0[2,2])
 
-	V<-fit$cov.coefficients
-	rhotech<-V[2,1]/sqrt(V[1,1]*V[2,2])
+	V <- fit$cov.coefficients
+	rhotech <- V[2,1]/sqrt(V[1,1]*V[2,2])
 
 	if(plot) {
 		require(ellipse)
@@ -92,8 +92,8 @@ genas <- function(fit,coef=c(1,2),subset="all",plot=FALSE,alpha=0.4)
 		}
 	}
 
-	D<-abs(2*(Q2$value-Q1$value))
-	p.val<-pchisq(D,df=1,lower.tail=FALSE)
+	D <- abs(2*(Q2$value-Q1$value))
+	p.val <- pchisq(D,df=1,lower.tail=FALSE)
 
 	list(technical.correlation=rhotech,covariance.matrix=V0,biological.correlation=rhobiol,deviance=D,p.value=p.val,n=nrow(fit))
 }
@@ -101,61 +101,54 @@ genas <- function(fit,coef=c(1,2),subset="all",plot=FALSE,alpha=0.4)
 .multTLogLikNull <- function(x,fit,m) 
 #	Calculate the log-likelihood under the null hypothesis of no biological correlation
 #	Belinda Phipson and Gordon Smyth
-#	21 September 2009. Last modified 21 September 2009.
+#	21 September 2009. Last modified 2 December 2013.
 {
-	d0<-fit$df.prior
-	d<-fit$df.residual
-	if(d0==Inf) d0 <- 999*d[1]
-	s<-fit$s2.post
-	B<-fit$coefficients
-	m<-m
-	V<-fit$cov.coefficients
-	a1<-x[1]
-	a2<-x[2]
-	chol<-matrix(c(exp(a1),0,0,exp(a2)),2,2)
-	V0<-t(chol) %*% chol
+	df.total <- fit$df.total
+	s <- fit$s2.post
+	B <- fit$coefficients
+	V <- fit$cov.coefficients
+	a1 <- x[1]
+	a2 <- x[2]
+	chol <- matrix(c(exp(a1),0,0,exp(a2)),2,2)
+	V0 <- t(chol) %*% chol
 	
-	R<-chol(V0+V)
-	Second<-sum(log(diag(R)))
+	R <- chol(V0+V)
+	Second <- sum(log(diag(R)))
 
-	W<-backsolve(R,t(B),transpose=TRUE)
+	W <- backsolve(R,t(B),transpose=TRUE)
 	Q <- colSums(W^2)
 
-	Third<-0.5*(m+d0+d)*log(1+Q/(s*(d0+d)))
+	Third <- 0.5*(m+df.total)*log(1+Q/s/df.total)
 	
 	sum(Second+Third)
 }
 
 
 .multTLogLik <- function(x,fit,m) 
-#  Calculate the log-likelihood with biological correlation
-#  Belinda Phipson and Gordon Smyth
-#  21 September 2009. Last modified 21 September 2009.
+#	Calculate the log-likelihood with biological correlation
+#	Belinda Phipson and Gordon Smyth
+#	21 September 2009. Last modified 2 December 2013.
 {	
-		d0<-fit$df.prior
-		d<-fit$df.residual
-		if(d0==Inf) d0 <- 999*d[1]
-		s<-fit$s2.post
-		B<-fit$coefficients
-		m<-m
-		V<-fit$cov.coefficients
-		a1<-x[1]
-		a2<-x[2]
-		b<-x[3]
-		L<-matrix(c(1,b,0,1),2,2)
-		D<-matrix(c(exp(a1),0,0,exp(a2)),2,2)
-	
-		V0<-L %*% D %*% t(L)
-	
-		R<-chol(V0+V)
-		Second<-sum(log(diag(R)))
+	df.total <- fit$df.total
+	s <- fit$s2.post
+	B <- fit$coefficients
+	V <- fit$cov.coefficients
+	a1 <- x[1]
+	a2 <- x[2]
+	b <- x[3]
+	L <- matrix(c(1,b,0,1),2,2)
+	D <- matrix(c(exp(a1),0,0,exp(a2)),2,2)
+	V0 <- L %*% D %*% t(L)
 
-		W<-backsolve(R,t(B),transpose=TRUE)
-		Q<-colSums(W^2)
+	R <- chol(V0+V)
+	Second <- sum(log(diag(R)))
 
-		Third<-0.5*(m+d0+d)*log(1+Q/(s*(d0+d)))
+	W <- backsolve(R,t(B),transpose=TRUE)
+	Q <- colSums(W^2)
 
-		sum(Second+Third)
+	Third <- 0.5*(m+df.total)*log(1+Q/s/df.total)
+
+	sum(Second+Third)
 }
 
 
