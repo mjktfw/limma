@@ -110,9 +110,12 @@ lm.series <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL)
 			fit <- lm.wfit(design, t(M), weights[1,])
 			fit$weights <- NULL
 		}
-		if(fit$df.residual>0)
-			fit$sigma <- sqrt(colMeans(fit$effects[(fit$rank + 1):narrays,,drop=FALSE]^2))
-		else
+		if(fit$df.residual>0) {
+			if(is.matrix(fit$effects))
+				fit$sigma <- sqrt(colMeans(fit$effects[(fit$rank + 1):narrays,,drop=FALSE]^2))
+			else
+				fit$sigma <- sqrt(mean(fit$effects[(fit$rank + 1):narrays]^2))
+		} else
 			fit$sigma <- rep(NA,ngenes)
 		fit$fitted.values <- fit$residuals <- fit$effects <- NULL
 		fit$coefficients <- t(fit$coefficients)
@@ -147,11 +150,7 @@ lm.series <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL)
 			beta[i,] <- out$coef
 			stdev.unscaled[i,est] <- sqrt(diag(chol2inv(out$qr$qr,size=out$rank)))
 			df.residual[i] <- out$df.residual
-			if(df.residual[i] > 0)
-				if(is.null(weights))
-					sigma[i] <- sqrt(sum(out$residuals^2)/out$df.residual)
-				else
-					sigma[i] <- sqrt(sum(w*out$residuals^2)/out$df.residual)
+			if(df.residual[i] > 0) sigma[i] <- sqrt(mean(out$effects[-(1:out$rank)]^2))
 		}
 	}
 
@@ -276,9 +275,12 @@ gls.series <- function(M,design=NULL,ndups=2,spacing=1,block=NULL,correlation=NU
 		X <- backsolve(cholV,design,transpose=TRUE)
 		dimnames(X) <- dimnames(design)
 		fit <- lm.fit(X,y)
-		if(fit$df.residual>0)
-			fit$sigma <- sqrt(colMeans(fit$effects[-(1:fit$rank),,drop=FALSE]^2))
-		else
+		if(fit$df.residual>0) {
+			if(is.matrix(fit$effects))
+				fit$sigma <- sqrt(colMeans(fit$effects[-(1:fit$rank),,drop=FALSE]^2))
+			else
+				fit$sigma <- sqrt(mean(fit$effects[-(1:fit$rank)]^2))
+		} else
 			fit$sigma <- rep(NA,ngenes)
 		fit$fitted.values <- fit$residuals <- fit$effects <- NULL
 		fit$coefficients <- t(fit$coefficients)

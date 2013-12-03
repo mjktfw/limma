@@ -1,3 +1,8 @@
+ 3 Dec 2013: limma 3.19.8
+
+- lmFit() now works even when there is only one gene (one row of
+  data).
+
  2 Dec 2013: limma 3.19.7
 
 - bug fix to genas(), which was not handling vector df.prior
