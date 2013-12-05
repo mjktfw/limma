@@ -103,7 +103,7 @@ tmixture.matrix <- function(tstat,stdev.unscaled,df,proportion,v0.lim=NULL) {
 
 tmixture.vector <- function(tstat,stdev.unscaled,df,proportion,v0.lim=NULL) {
 #	Estimate scale factor in mixture of two t-distributions
-#	tstat is assumed to follow (v0+v1)/v1*t(df) with probability proportion and t(df) otherwise
+#	tstat is assumed to follow sqrt(1+v0/v1)*t(df) with probability proportion and t(df) otherwise
 #	v1 is stdev.unscaled^2 and v0 is to be estimated
 #	Gordon Smyth
 #	18 Nov 2002.  Last modified 13 Dec 2003.
@@ -123,7 +123,10 @@ tmixture.vector <- function(tstat,stdev.unscaled,df,proportion,v0.lim=NULL) {
 	p <- max(ntarget/ngenes,proportion)
 
 	tstat <- abs(tstat)
-	ttarget <- quantile(tstat,(ngenes-ntarget)/(ngenes-1))
+	if(ngenes>1)
+		ttarget <- quantile(tstat,(ngenes-ntarget)/(ngenes-1))
+	else
+		ttarget <- tstat
 	top <- (tstat >= ttarget)
 	tstat <- tstat[top]
 	v1 <- stdev.unscaled[top]^2
