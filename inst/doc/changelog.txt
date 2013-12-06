@@ -1,6 +1,11 @@
+ 7 Dec 2013: limma 3.19.10
+
+- Bug fix to topTreat().  Rownames were incorrectly ordered when p<1.
+
  6 Dec 2013: limma 3.19.9
 
 - Fix to tmixture.vector() to allow it work even with just one gene.
+  This allows the eBayes() to work on fit objects with just one row.
 
  3 Dec 2013: limma 3.19.8
 

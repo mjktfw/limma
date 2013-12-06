@@ -3,7 +3,7 @@
 topTable <- function(fit,coef=NULL,number=10,genelist=fit$genes,adjust.method="BH",sort.by="B",resort.by=NULL,p.value=1,lfc=0,confint=FALSE)
 #	Summary table of top genes, object-orientated version
 #	Gordon Smyth
-#	4 August 2003.  Last modified 7 April 2013.
+#	4 August 2003.  Last modified 7 Dec 2013.
 {
 #	Check fit
 	if(!is(fit,"MArrayLM")) stop("fit must be an MArrayLM object")
@@ -120,7 +120,7 @@ topTableF <- function(fit,number=10,genelist=fit$genes,adjust.method="BH",sort.b
 toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.method="BH",sort.by="B",resort.by=NULL,p.value=1,lfc=0,confint=FALSE,...)
 #	Summary table of top genes
 #	Gordon Smyth
-#	21 Nov 2002. Last revised 16 April 2013.
+#	21 Nov 2002. Last revised 7 Dec 2013.
 {
 #	Check fit
 	fit$coefficients <- as.matrix(fit$coefficients)
@@ -181,11 +181,20 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 		coef <- 1
 	}
 
+#	Check for lods compoent
+	if(is.null(eb$lods)) {
+		if(sort.by=="B") stop("Trying to sort.by B, but B-statistic (lods) not found in MArrayLM object",.call=FALSE)
+		if(!is.null(resort.by)) if(resort.by=="B") stop("Trying to resort.by B, but B-statistic (lods) not found in MArrayLM object",.call=FALSE)
+		include.B <- FALSE
+	} else {
+		include.B <- TRUE
+	}
+
 #	Extract statistics for table
 	M <- fit$coefficients[,coef]
 	tstat <- as.matrix(eb$t)[,coef]
 	P.Value <- as.matrix(eb$p.value)[,coef]
-	B <- as.matrix(eb$lods)[,coef]
+	if(include.B) B <- as.matrix(eb$lods)[,coef]
 
 #	Apply multiple testing adjustment
 	adj.P.Value <- p.adjust(P.Value,method=adjust.method)
@@ -201,7 +210,7 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 		tstat <- tstat[sig]
 		P.Value <- P.Value[sig]
 		adj.P.Value <- adj.P.Value[sig]
-		B <- B[sig]
+		if(include.B) B <- B[sig]
 		rn <- rn[sig]
 	}
 
@@ -232,7 +241,8 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 		tab$CI.975 <- M[top]+margin.error
 	}
 	if(!is.null(A)) tab$AveExpr <- A[top]
-	tab <- data.frame(tab,t=tstat[top],P.Value=P.Value[top],adj.P.Val=adj.P.Value[top],B=B[top])
+	tab <- data.frame(tab,t=tstat[top],P.Value=P.Value[top],adj.P.Val=adj.P.Value[top])
+	if(include.B) tab$B <- B[top]
 	rownames(tab) <- rn[top]
 
 #	Resort table

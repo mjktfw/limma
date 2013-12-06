@@ -55,110 +55,16 @@ topTreat <- function(fit,coef=1,number=10,genelist=fit$genes,adjust.method="BH",
 #	Gordon Smyth
 #	15 June 2009.  Last modified 20 April 2013.
 {
-#	Check fit object
-	M <- as.matrix(fit$coefficients)
-	rn <- rownames(M)
-	A <- fit$Amean
-	if(is.null(A)) {
-		if(sort.by=="A") stop("Cannot sort by A-values as these have not been given")
-	} else {
-		if(NCOL(A)>1) A <- rowMeans(A,na.rm=TRUE)
-	}
-
 #	Check coef is length 1
 	if(length(coef)>1) {
 		coef <- coef[1]
 		warning("Treat is for single coefficients: only first value of coef being used")
 	}
 
-#	Ensure genelist is a data.frame
-	if(!is.null(genelist) && is.null(dim(genelist))) genelist <- data.frame(ID=genelist,stringsAsFactors=FALSE)
+#	Check sort.by and resort.by
+	if(sort.by=="B") stop("Trying to sort.by B, but treat doesn't produce a B-statistic")
+	if(!is.null(resort.by)) if(resort.by=="B") stop("Trying to resort.by B, but treat doesn't produce a B-statistic")
 
-#	Check rownames
-	if(is.null(rn))
-		rn <- 1:nrow(M)
-	else
-		if(anyDuplicated(rn)) {
-			if(is.null(genelist))
-				genelist <- data.frame(ID=rn,stringsAsFactors=FALSE)
-			else
-				if("ID" %in% names(genelist))
-					genelist$ID0 <- rn
-				else
-					genelist$ID <- rn
-			rn <- 1:nrow(M)
-		}
-
-#	Check sort.by
-	sort.by <- match.arg(sort.by,c("logFC","M","A","Amean","AveExpr","P","p","T","t","none"))
-	if(sort.by=="M") sort.by="logFC"
-	if(sort.by=="A" || sort.by=="Amean") sort.by <- "AveExpr"
-	if(sort.by=="T") sort.by <- "t"
-	if(sort.by=="p") sort.by <- "P"
-
-#	Check resort.by
-	if(!is.null(resort.by)) {
-		resort.by <- match.arg(resort.by,c("logFC","M","A","Amean","AveExpr","P","p","T","t"))
-		if(resort.by=="M") resort.by <- "logFC"
-		if(resort.by=="A" || resort.by=="Amean") resort.by <- "AveExpr"
-		if(resort.by=="p") resort.by <- "P"
-		if(resort.by=="T") resort.by <- "t"
-	}
-
-#	Extract columns from fit
-	M <- M[,coef]
-	tstat <- as.matrix(fit$t)[,coef]
-	P.Value <- as.matrix(fit$p.value)[,coef]
-
-#	Apply multiple testing adjustment
-	adj.P.Value <- p.adjust(P.Value,method=adjust.method)
-
-#	Apply p.value threshold
-	if(p.value < 1) {
-		sig <- (adj.P.Value < p.value)
-		if(any(is.na(sig))) sig[is.na(sig)] <- FALSE
-		if(all(!sig)) return(data.frame())
-		genelist <- genelist[sig,,drop=FALSE]
-		M <- M[sig]
-		A <- A[sig]
-		tstat <- tstat[sig]
-		P.Value <- P.Value[sig]
-		adj.P.Value <- adj.P.Value[sig]
-	}
-	ord <- switch(sort.by,
-		logFC=order(abs(M),decreasing=TRUE),
-		AveExpr=order(A,decreasing=TRUE),
-		P=order(P.Value,decreasing=FALSE),
-		t=order(abs(tstat),decreasing=TRUE),
-		none=1:length(M)
-	)
-
-#	Enough rows left?
-	if(length(M) < number) number <- length(M)
-	if(number < 1) return(data.frame())
-
-#	Assemble data.frame of top genes
-	top <- ord[1:number]
-	if(is.null(genelist))
-		tab <- data.frame(logFC=M[top])
-	else {
-		tab <- data.frame(genelist[top,,drop=FALSE],logFC=M[top],stringsAsFactors=FALSE)
-	}
-	if(!is.null(A)) tab <- data.frame(tab,AveExpr=A[top])
-	tab <- data.frame(tab,t=tstat[top],P.Value=P.Value[top],adj.P.Val=adj.P.Value[top])
-	rownames(tab) <- rn[top]
-
-#	Resort
-	if(!is.null(resort.by)) {
-		ord <- switch(resort.by,
-			logFC=order(tab$logFC,decreasing=TRUE),
-			AveExpr=order(tab$AveExpr,decreasing=TRUE),
-			P=order(tab$P.Value,decreasing=FALSE),
-			t=order(tab$t,decreasing=TRUE)
-		)
-		tab <- tab[ord,]
-	}
-
-	tab
+	topTable(fit=fit,coef=coef,number=number,genelist=genelist,adjust.method=adjust.method,sort.by=sort.by,resort.by=sort.by,p.value=p.value)
 }
 
