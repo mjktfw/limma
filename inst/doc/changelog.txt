@@ -2,6 +2,9 @@
 
 - Bug fix to topTreat().  Rownames were incorrectly ordered when p<1.
 
+- topTable() will now work on an MArrayLM fit object that is missing
+  the lods component, for example as produced by treat().
+
  6 Dec 2013: limma 3.19.9
 
 - Fix to tmixture.vector() to allow it work even with just one gene.
