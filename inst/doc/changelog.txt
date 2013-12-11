@@ -1,3 +1,9 @@
+11 Dec 2013: limma 3.19.11
+
+- New function subsetListOfArrays(), which is used to simply the
+  subsetting code for RGList, MAList, EList, EListRaw and MArrayLM
+  objects.
+
  7 Dec 2013: limma 3.19.10
 
 - Bug fix to topTreat().  Rownames were incorrectly ordered when p<1.

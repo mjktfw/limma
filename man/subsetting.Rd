@@ -5,24 +5,29 @@
 \alias{[.EListRaw}
 \alias{[.EList}
 \alias{[.MArrayLM}
+\alias{subsetListOfArrays}
 \title{Subset RGList, MAList, EList or MArrayLM Objects}
 \description{
-Extract a subset of an \code{RGList}, \code{MAList}, \code{EList} or \code{MArrayLM} object.
+Return an \code{RGList}, \code{MAList}, \code{EList} or \code{MArrayLM} object with only selected rows and columns of the original object.
 }
 \usage{
-\method{[}{RGList}(object, i, j, \ldots)
+\method{[}{RGList}(object, i, j)
+subsetListOfArrays(object, i, j, IJ, IX, I, JX)
 }
 \arguments{
   \item{object}{object of class \code{RGList}, \code{MAList}, \code{EList} or \code{MArrayLM}}
   \item{i,j}{elements to extract. \code{i} subsets the probes or spots while \code{j} subsets the arrays}
-  \item{\ldots}{not used}
+  \item{IJ}{character vector giving names of components that should be subsetted by \code{i} and \code{j}.}
+  \item{IX}{character vector giving names of 2-dimensional components that should be subsetted by \code{i} only.}
+  \item{I}{character vector giving names of vector components that should be subsetted by \code{i}.}
+  \item{JX}{character vector giving names of 2-dimensional components whose row dimension corresponds to \code{j}.}
 }
 \details{
 \code{i,j} may take any values acceptable for the matrix components of \code{object}.
 See the \link[base]{Extract} help entry for more details on subsetting matrices.
 }
 \value{
-An object of the same class as \code{object} holding data from the specified subset of genes and arrays.
+An object of the same class as \code{object} holding data from the specified subset of rows and columns.
 }
 \author{Gordon Smyth}
 \seealso{
@@ -39,4 +44,3 @@ MA[1:2,]
 MA[1:2,2]
 MA[,2]
 }
-\keyword{manip}
