@@ -160,7 +160,7 @@ lm.series <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL)
 	est <- QR$pivot[1:QR$rank]
 	dimnames(cov.coef) <- list(coef.names[est],coef.names[est])
 
-	list(coefficients=drop(beta),stdev.unscaled=drop(stdev.unscaled),sigma=sigma,df.residual=df.residual,cov.coefficients=cov.coef,pivot=QR$pivot)
+	list(coefficients=beta,stdev.unscaled=stdev.unscaled,sigma=sigma,df.residual=df.residual,cov.coefficients=cov.coef,pivot=QR$pivot)
 }
 
 mrlm <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL,...)
@@ -210,7 +210,7 @@ mrlm <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL,...)
 	cov.coef <- chol2inv(QR$qr,size=QR$rank)
 	est <- QR$pivot[1:QR$rank]
 	dimnames(cov.coef) <- list(coef.names[est],coef.names[est])
-	list(coefficients=drop(beta),stdev.unscaled=drop(stdev.unscaled),sigma=sigma,df.residual=df.residual,cov.coefficients=cov.coef,pivot=QR$pivot)
+	list(coefficients=beta,stdev.unscaled=stdev.unscaled,sigma=sigma,df.residual=df.residual,cov.coefficients=cov.coef,pivot=QR$pivot)
 }
 
 gls.series <- function(M,design=NULL,ndups=2,spacing=1,block=NULL,correlation=NULL,weights=NULL,...)
@@ -336,7 +336,7 @@ gls.series <- function(M,design=NULL,ndups=2,spacing=1,block=NULL,correlation=NU
 	cov.coef <- chol2inv(QR$qr,size=QR$rank)
 	est <- QR$pivot[1:QR$rank]
 	dimnames(cov.coef) <- list(coef.names[est],coef.names[est])
-	list(coefficients=drop(beta),stdev.unscaled=drop(stdev.unscaled),sigma=sigma,df.residual=df.residual,ndups=ndups,spacing=spacing,block=block,correlation=correlation,cov.coefficients=cov.coef,pivot=QR$pivot)
+	list(coefficients=beta,stdev.unscaled=stdev.unscaled,sigma=sigma,df.residual=df.residual,ndups=ndups,spacing=spacing,block=block,correlation=correlation,cov.coefficients=cov.coef,pivot=QR$pivot)
 }
 
 is.fullrank <- function(x)

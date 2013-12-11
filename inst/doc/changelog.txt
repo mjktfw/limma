@@ -1,3 +1,11 @@
+12 Dec 2013: limma 3.19.12
+
+- linear model fit functions lm.series(), mrlm.series() and
+  gls.series() no longer drop the dimensions of the components of
+  the fitted object when there is just coefficient or just one gene.
+  Previously this was done inconsistently in some cases but not
+  others.  Now the matrix components always keep dimensions.
+
 11 Dec 2013: limma 3.19.11
 
 - New function subsetListOfArrays(), which is used to simply the
