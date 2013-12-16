@@ -113,25 +113,37 @@ function(object, i, j)
 	XJ <- "contrasts"
 	J  <- "var.prior"
 
+#	After subsetting by columns, a contrast component should always be present
+#	so that output is equivalent to that from contrasts.fit()
+	if(!missing(j) && is.null(object$contrasts) && !is.null(object$coefficients)) {
+		object$contrasts <- diag(ncol(object$coefficients))
+		cn <- colnames(object$contrasts)
+		dimnames(object$contrasts) <- list(Coefficient=cn,Contrast=cn)
+	}
+
 #	Ensure matrix or data.frame objects not dropped to vectors
-	for (a in c(IJ,JJ)) if(!is.null(object[[a]])) object[[a]] <- as.matrix(object[[a]])
+	for (a in c(IJ,JJ,XJ)) if(!is.null(object[[a]])) object[[a]] <- as.matrix(object[[a]])
 	for (a in c("targets","genes")) if(!is.null(object[[a]]) && is.null(dim(object[[a]]))) object[[a]] <- data.frame(object[[a]])
 
 	object <- subsetListOfArrays(object,i,j,IJ=IJ,IX=IX,I=I,JX=JX)
 
 #	Special treatment for JJ,XJ,J
 	if(!missing(j)) {
-		object$cov.coefficients <- object$cov.coefficients[j,j]
-		if(is.null(object$contrasts)) {
-			if(!is.null(object$coefficients)) {
-				object$contrasts <- diag(ncol(object$coefficients)) # Already subsetted
-				cn <- colnames(object$contrasts)
-				dimnames(object$contrasts) <- list(Coefficient=cn,Contrast=cn)
-			}
-		} else {
-			object$contrasts <- as.matrix(object$contrasts)[,j]
-		}
+		object$cov.coefficients <- object$cov.coefficients[j,j,drop=FALSE]
+		object$contrasts <- object$contrasts[,j,drop=FALSE]
 		object$var.prior <- object$var.prior[j]
+	}
+
+#	If columns have been subsetted, need to re-generate F
+	if(!is.null(object[["F"]]) && !missing(j)) {
+		F.stat <- classifyTestsF(object,fstat.only=TRUE)
+		object$F <- as.vector(F.stat)
+		df1 <- attr(F.stat,"df1")
+		df2 <- attr(F.stat,"df2")
+		if (df2[1] > 1e6) 
+			object$F.p.value <- pchisq(df1*object$F,df1,lower.tail=FALSE)
+		else
+			object$F.p.value <- pf(object$F,df1,df2,lower.tail=FALSE)
 	}
 
 	object

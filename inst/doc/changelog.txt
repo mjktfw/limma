@@ -1,3 +1,8 @@
+17 Dec 2013: limma 3.19.13
+
+- make sure that F is recomputed when the columns of an MArrayLM
+  are subsetted.
+
 12 Dec 2013: limma 3.19.12
 
 - linear model fit functions lm.series(), mrlm.series() and
