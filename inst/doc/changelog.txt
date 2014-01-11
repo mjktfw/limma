@@ -1,3 +1,12 @@
+11 Jan 2014: limma 3.19.14
+
+- update citation of Law et al (2014) reference for voom().
+
+- roast() and mroast() now permit array weights and observation
+  weights to both be specified.
+
+- bug fix to mroast() which was not accepting array.weights.
+
 17 Dec 2013: limma 3.19.13
 
 - make sure that F is recomputed when the columns of an MArrayLM

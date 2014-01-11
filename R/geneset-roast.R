@@ -37,7 +37,7 @@ roast.MAList <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.stat
 roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999)
 # Rotation gene set testing for linear models
 # Gordon Smyth and Di Wu
-# Created 24 Apr 2008.  Last modified 19 Sep 2013.
+# Created 24 Apr 2008.  Last modified 9 Jan 2014.
 {
 #	Check y
 	y <- as.matrix(y)
@@ -53,17 +53,8 @@ roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.sta
 	design <- as.matrix(design)
 	if(nrow(design) != n) stop("row dimension of design matrix must match column dimension of data")
 	p <- ncol(design)
-	p0 <- p-1
+	p0 <- p-1L
 	d <- n-p
-
-#	Check contrast
-	if(length(contrast) == 1) {
-		u <- rep.int(0,p)
-		u[contrast] <- 1
-		contrast <- u
-	}
-	if(length(contrast) != p) stop("length of contrast must match column dimension of design")
-	if(all(contrast==0)) stop("contrast all zero")
 
 #	Check set.statistic
 	set.statistic <- match.arg(set.statistic,c("mean","floormean","mean50","msq"))
@@ -71,19 +62,35 @@ roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.sta
 #	Check var.prior and df.prior
 	if(!is.null(var.prior) && var.prior<0) stop("var.prior must be non-negative")
 	if(!is.null(df.prior) && df.prior<0) stop("df.prior must be non-negative")
-	
-#	Check and divide out array weights
-	if(!is.null(array.weights)) {
-		if(!is.null(weights)) stop("Can't specify both array.weights and observational weights")
-		if(any(array.weights <= 0)) stop("array.weights must be positive")
-		if(length(array.weights) != n) stop("Length of array.weights doesn't match number of array")
-		design <- design*sqrt(array.weights)
-		y <- t(t(y)*sqrt(array.weights))
+
+#	Check observation weights
+	if(!is.null(weights)) {
+		weights <- as.matrix(weights)
+		dimw <- dim(weights)
+		if(dimw[1]!=ngenes || dimw[2]!=n) stop("weights must have same dimensions as y")
+		if(any(weights<=0)) stop("weights must be positive")
 	}
 
-#	Check and divide out block correlation
+#	Check array weights
+	if(!is.null(array.weights)) {
+		if(length(array.weights) != n) stop("Length of array.weights doesn't match number of array")
+		if(any(array.weights <= 0)) stop("array.weights must be positive")
+		if(!is.null(weights)) {
+			weights <- .matvec(weights,array.weights)
+			array.weights <- NULL
+		}
+	}
+
+#	Divide out array weights
+	if(!is.null(array.weights)) {
+		sw <- sqrt(array.weights)
+		design <- design*sw
+		y <- .matvec(y,sw)
+		array.weights <- NULL
+	}
+
+#	Divide out block correlation
 	if(!is.null(block)) {
-		if(!is.null(weights)) stop("Can't use block with weights")
 		block <- as.vector(block)
 		if (length(block) != n) stop("Length of block does not match number of arrays")
 		ub <- unique(block)
@@ -96,21 +103,21 @@ roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.sta
 		design <- backsolve(R, design, transpose = TRUE)
  	}
 
-#	Check weights
-	if(!is.null(weights)) {
-		weights <- as.matrix(weights)
-		dimw <- dim(weights)
-		if(dimw[1]!=ngenes || dimw[2]!=n) stop("weights must have same dimensions as y")
-		if(any(weights<=0)) stop("weights must be positive")
+#	Check contrast
+	if(all(contrast==0)) stop("contrast all zero")
+
+#	Reform design matrix so that contrast is last coefficient
+	if(length(contrast) == 1) {
+		contrast <- as.integer(contrast)
+		if(contrast < p)
+			X <- cbind(design[,-contrast,drop=FALSE],design[,contrast,drop=FALSE])
+		else
+			X <- design
+	} else {
+		if(length(contrast) != p) stop("length of contrast must match column dimension of design")
+		X <- contrastAsCoef(design, contrast, first=FALSE)$design
 	}
 
-#	Reform design matrix so that contrast of interest is last column
-#	qr <- qr(contrast)
-#	Q <- qr.Q(qr,complete=TRUE)
-#	sign1 <- sign(qr$qr[1,1])
-#	Q <- cbind(Q[,-1],Q[,1])
-#	X <- design %*% Q
-	X <- contrastAsCoef(design, contrast, first=FALSE)$design
 	qr <- qr(X)
 	signc <- sign(qr$qr[p,p])
 
@@ -327,10 +334,12 @@ mroast.MAList <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.sta
 mroast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE,sort="directional")
 #  Rotation gene set testing with multiple sets
 #  Gordon Smyth and Di Wu
-#  Created 28 Jan 2010. Last revised 19 Sep 2013.
+#  Created 28 Jan 2010. Last revised 9 Jan 2014.
 {
 #	Check y
 	y <- as.matrix(y)
+	ngenes <- nrow(y)
+	n <- ncol(y)
 
 #	Check index
 	if(is.null(index)) index <- rep(TRUE,nrow(y))
@@ -343,24 +352,50 @@ mroast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.st
 	design <- as.matrix(design)
 
 #	Check gene.weights
-	if(!is.null(gene.weights)) if(length(gene.weights) != nrow(y)) stop("gene.weights must have length equal to nrow(y)")
-
-#	Check weights
-	if(!is.null(weights)) {
-		if(!is.null(array.weights)) stop("Can't specify both array weights and observational weights")
-		weights <- as.matrix(weights)
-		if(any(dim(weights) != dim(y))) stop("weights must have same dimensions as y")
-	}
+	if(!is.null(gene.weights)) if(length(gene.weights) != ngenes) stop("gene.weights must have length equal to nrow(y)")
 
 #	Check array.weights
 	if(!is.null(array.weights)) {
 		if(length(array.weights) != ncol(y)) stop("array.weights wrong length")
-		weights <- array.weights
+		if(any(array.weights<=0)) stop("array.weights must be positive")
 	}
+
+#	Check weights
+	if(!is.null(weights)) {
+		weights <- as.matrix(weights)
+		if(any(dim(weights) != dim(y))) stop("weights must have same dimensions as y")
+		if(!is.null(array.weights)) {
+			weights <- .matvec(weights,array.weights)
+			array.weights <- NULL
+		}
+	}
+
+#	Divide out array.weights
+	if(!is.null(array.weights)) {
+		sw <- sqrt(array.weights)
+		design <- design*sw
+		y <- .matvec(y,sw)
+		array.weights <- NULL
+	}
+
+#	Divide out block correlation
+	if(!is.null(block)) {
+		block <- as.vector(block)
+		if (length(block) != n) stop("Length of block does not match number of arrays")
+		ub <- unique(block)
+		nblocks <- length(ub)
+		Z <- matrix(block,n,nblocks) == matrix(ub,n,nblocks,byrow = TRUE)
+		cormatrix <- Z %*% (correlation * t(Z))
+		diag(cormatrix) <- 1
+		R <- chol(cormatrix)
+		y <- t(backsolve(R, t(y), transpose = TRUE))
+		design <- backsolve(R, design, transpose = TRUE)
+		block <- NULL
+ 	}
 
 #	Estimate var.prior and df.prior if not preset
 	if(is.null(var.prior) || is.null(df.prior)) {
-		fit <- lmFit(y,design=design,weights=weights,block=block,correlation=correlation)
+		fit <- lmFit(y,design=design,weights=weights)
 		if(trend.var) {
 			covariate <- fit$Amean
 			if(is.null(covariate)) covariate <- rowMeans(y)
@@ -376,7 +411,7 @@ mroast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.st
 	NGenes <- rep(0,nsets)
 	if(nsets<1) return(pv)
 	for(i in 1:nsets) {
-		out <- roast(y=y,index=index[[i]],design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,weights=weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,nrot=nrot)
+		out <- roast(y=y,index=index[[i]],design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,weights=weights,var.prior=var.prior,df.prior=df.prior,nrot=nrot)
 		pv[i,] <- out$p.value$P.Value
 		active[i,] <- out$p.value$Active.Prop
 		NGenes[i] <- out$ngenes.in.set

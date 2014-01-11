@@ -53,9 +53,9 @@ Law, CW (2013).
 PhD Thesis. University of Melbourne, Australia.
 \url{http://repository.unimelb.edu.au/10187/17598}
 
-Law, CW, Chen, Y, Shi, W, Smyth, GK (2013).
-Voom! Precision weights unlock linear model analysis tools for RNA-seq read counts.
-Technical Report 1 May 2013, Bioinformatics Division, Walter and Eliza Hall Institute of Medical Reseach, Melbourne, Australia.
+Law, CW, Chen, Y, Shi, W, Smyth, GK (2014).
+Voom: precision weights unlock linear model analysis tools for RNA-seq read counts.
+\emph{Genome Biology} (Accepted 9 January 2014).
 \url{http://www.statsci.org/smyth/pubs/VoomPreprint.pdf}
 }
 

@@ -218,8 +218,12 @@ y[iset1,3:4] <- y[iset1,3:4]+3
 iset2 <- 6:10
 roast(y=y,iset1,design,contrast=2)
 roast(y=y,iset1,design,contrast=2,array.weights=c(0.5,1,0.5,1))
-mroast(y=y,list(set1=iset1,set2=iset2),design,contrast=2)
+w <- matrix(runif(100*4),100,4)
+roast(y=y,iset1,design,contrast=2,weights=w)
 mroast(y=y,list(set1=iset1,set2=iset2),design,contrast=2,gene.weights=runif(100))
+mroast(y=y,list(set1=iset1,set2=iset2),design,contrast=2,array.weights=c(0.5,1,0.5,1))
+mroast(y=y,list(set1=iset1,set2=iset2),design,contrast=2,weights=w)
+mroast(y=y,list(set1=iset1,set2=iset2),design,contrast=2,weights=w,array.weights=c(0.5,1,0.5,1))
 
 ### camera
 

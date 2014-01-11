@@ -8,7 +8,7 @@ topTable <- function(fit,coef=NULL,number=10,genelist=fit$genes,adjust.method="B
 #	Check fit
 	if(!is(fit,"MArrayLM")) stop("fit must be an MArrayLM object")
 	if(is.null(fit$coefficients)) stop("coefficients not found in fit object")
-	if(is.null(fit$stdev.unscaled)) stop("stdev.unscaled not found in fit object")
+	if(confint && is.null(fit$stdev.unscaled)) stop("stdev.unscaled not found in fit object")
 
 	if(is.null(coef)) coef <- 1:ncol(fit)
 	if(length(coef)>1) {
