@@ -1,3 +1,9 @@
+14 Jan 2014: limma 3.19.15
+
+- romer() now uses propTrueNull(method="lfdr") instead of convest().
+  This makes romer() substantially faster when the number of genes
+  is large.
+
 11 Jan 2014: limma 3.19.14
 
 - update citation of Law et al (2014) reference for voom().

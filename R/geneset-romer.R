@@ -116,29 +116,29 @@ romer <- function(index,y,design,contrast=ncol(design),array.weights=NULL,block=
 		mh<-.meanHalf(s.r[index[[i]]],m[i])
 		s.rank.up[i] <-mh[2]	
 		s.rank.down[i]<-mh[1]
-  		s.rank.mixed[i]<-.meanHalf(s.abs.r[index[[i]]],m[i])[2]
+		s.rank.mixed[i]<-.meanHalf(s.abs.r[index[[i]]],m[i])[2]
 	}	
 
 #	Estimate hyper-parameters p0
 	p.obs <- 2*pt(abs(modt),df=d0+d,lower.tail=FALSE)
-	p0.obs <- 1-convest(p.obs) # proportion of DE probes
-	
+	p0.obs <- 1-propTrueNull(p.obs) # proportion of DE probes
+
 #	Estimate hyper-paremeter v0
 	covmat <- chol2inv(qr$qr, size = qr$rank)
  	stdev.unscaled <- rep(sqrt(covmat[qr$rank,qr$rank]),ngenes)
-	
-	proportion<-p0.obs
+
+	proportion <- p0.obs
 	stdev.coef.lim <- c(0.1, 4)
-	
+
 	# get v0
 	df.total <- rep(d,ngenes) + sv$df.prior
 	var.prior.lim <- stdev.coef.lim^2/sv$var.prior
-	var.prior <- tmixture.vector(modt, stdev.unscaled, df.total,proportion, var.prior.lim)
+	var.prior <- tmixture.vector(modt, stdev.unscaled, df.total, proportion, var.prior.lim)
 	if (any(is.na(var.prior))) {
 		var.prior[is.na(var.prior)] <- 1/sv$var.prior
 		warning("Estimation of var.prior failed - set to default value")
 	}
-	
+
 #	Estimate posterior probability of DE
 	r <- rep(1, ngenes) %o% var.prior
 	r <- (stdev.unscaled^2 + r)/stdev.unscaled^2
@@ -180,7 +180,7 @@ romer <- function(index,y,design,contrast=ncol(design),array.weights=NULL,block=
 			
 			s.rank.up.2 <-mh.2[2]	
 			s.rank.down.2 <-mh.2[1]
-  			s.rank.mixed.2 <-.meanHalf(s.abs.r.2[index[[j]]],m[j])[2]
+			s.rank.mixed.2 <-.meanHalf(s.abs.r.2[index[[j]]],m[j])[2]
 		
 			if(s.rank.mixed.2>=s.rank.mixed[j]) p.value[j,1]<-p.value[j,1]+1
 			if(s.rank.up.2>=s.rank.up[j]) p.value[j,2]<-p.value[j,2]+1
@@ -256,7 +256,7 @@ romer <- function(index,y,design,contrast=ncol(design),array.weights=NULL,block=
 		R <- chol(cormatrix)
 		y <- t(backsolve(R, t(y), transpose = TRUE))
 		design <- backsolve(R, design, transpose = TRUE)
- 	}
+	}
 
 #	Reform design matrix so that contrast of interest is last column
 	qr <- qr(contrast)
@@ -288,7 +288,7 @@ romer <- function(index,y,design,contrast=ncol(design),array.weights=NULL,block=
 	
 #	Estimate hyper-parameter p0
 	p.obs <- 2*pt(abs(modt),df=d0+d,lower.tail=FALSE)
-	p0.obs <- 1-convest(p.obs) # proportion of DE probes
+	p0.obs <- 1-propTrueNull(p.obs) # proportion of DE probes
 	
 #	Estimate hyper-paremeter v0
 	covmat <- chol2inv(qr$qr, size = qr$rank)
@@ -375,7 +375,7 @@ romer <- function(index,y,design,contrast=ncol(design),array.weights=NULL,block=
 	cbind(NGenes=set.sizes,p.value)
 }
 
-topRomer<-function(x,n=10,alternative="up")
+topRomer <- function(x,n=10,alternative="up")
 # extracts a number of top gene sets results from the romer output.
 # Gordon Smyth and Yifang Hu.
 # 22 Mar 2010.  Last modified 5 Sep 2011.

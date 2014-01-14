@@ -12,7 +12,7 @@ normalizeBetweenArrays(object, method=NULL, targets=NULL, cyclic.method="fast", 
 
 \arguments{
   \item{object}{a numeric \code{matrix}, \code{\link[limma:EList]{EListRaw}}, \code{\link[limma:rglist]{RGList}} or \code{\link[limma:malist]{MAList}} object containing un-normalized expression data.
-  \code{matrix} or \code{EListRaw} objects will be assumed to contain single-channel data, usually log-intensities, whereas \code{RGList} or \code{MAList} objects should contain two-color data.}
+  If a matrix, then it is assumed to contain log-transformed single-channel data.}
   \item{method}{character string specifying the normalization method to be used.
   Choices for single-channel data are \code{"none"}, \code{"scale"}, \code{"quantile"} or \code{"cyclicloess"}.
   Choices for two-color data are those previously mentioned plus \code{"Aquantile"}, \code{"Gquantile"}, \code{"Rquantile"} or \code{"Tquantile"}.
