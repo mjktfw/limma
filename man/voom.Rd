@@ -13,7 +13,7 @@ voom(counts, design = NULL, lib.size = NULL, normalize.method = "none", plot = F
  \item{counts}{a numeric \code{matrix} containing raw counts, or an \code{ExpressionSet} containing raw counts, or a \code{DGEList} object.}
  \item{design}{design matrix with rows corresponding to samples and columns to coefficients to be estimated.  Defaults to the unit vector meaning that samples are treated as replicates.}
  \item{lib.size}{numeric vector containing total library sizes for each sample.
- If \code{NULL} and \code{counts} is a \code{DGEList} then, then normalized library sizes are taken from \code{counts}.
+ If \code{NULL} and \code{counts} is a \code{DGEList} then, the normalized library sizes are taken from \code{counts}.
  Otherwise library sizes are calculated from the columnwise counts totals.}
  \item{normalize.method}{normalization method to be applied to the logCPM values.
  Choices are as for the \code{method} argument of \code{normalizeBetweenArrays} when the data is single-channel.}

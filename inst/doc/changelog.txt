@@ -1,3 +1,29 @@
+31 January 2014: limma 3.19.16
+
+- treat() now has new arguments robust and winsor.tail.p which are
+  passed through to robust empirical Bayes estimation.
+
+- barcodeplot() has a new option to add enrichment worms to the plot.
+
+- vennDiagram() wasn't passing extra arguments (...) to plot() when
+  the number of sets was greater than 3.  Now fixed.
+
+- read.ilmn() now sets the same probe IDs as rownames for both the 
+  expression matrix E and the annotation data.frame genes.
+
+- beadCountWeights() can now work with either probe-wise standard
+  errors or probe-wise standard deviations.
+
+- new function weightedLoess() which fits a lowess curve with
+  prior weights.  Unlike previous implementations of lowess or loess,
+  the weights are used in calculating which neighbouring points to
+  include in each local regression as well as in the local
+  regression itself.
+
+- weightedLoess() now becomes the default method used by loessFit()
+  to fit the loess curve when there are weights.  The previous locfit
+  and loess() methods are offered as options.
+
 14 Jan 2014: limma 3.19.15
 
 - romer() now uses propTrueNull(method="lfdr") instead of convest().
@@ -28,7 +54,7 @@
 
 11 Dec 2013: limma 3.19.11
 
-- New function subsetListOfArrays(), which is used to simply the
+- New function subsetListOfArrays(), which is used to simplify the
   subsetting code for RGList, MAList, EList, EListRaw and MArrayLM
   objects.
 

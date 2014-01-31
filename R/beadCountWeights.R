@@ -1,17 +1,25 @@
-beadCountWeights <- function(y, x, design=NULL, bead.stdev=NULL, nbeads=NULL, array.cv=TRUE, scale=FALSE)
+beadCountWeights <- function(y, x, design=NULL, bead.stdev=NULL, bead.stderr=NULL, nbeads=NULL, array.cv=TRUE, scale=FALSE)
 #	Compute weights for BeadChips based on bead-level counts and standard deviations
 #	Charity Law and Gordon Smyth
-#	4 August 2010. Last modified 17 July 2012.
+#	4 August 2010. Last modified 19 Dec 2013.
 {
 	E <- as.matrix(y)
 	E.raw <- as.matrix(x)
-	if(is.null(bead.stdev)) {
-		bead.stdev <- y$other$BEAD_STDEV
-		if(is.null(bead.stdev)) stop("BEAD_STDEV not found in data object")
-	}
 	if(is.null(nbeads)) {
 		nbeads <- y$other$Avg_NBEADS
 		if(is.null(nbeads)) stop("NBEADS not found in data object")
+	}	
+	if(is.null(bead.stdev)) {
+		if (is.null(bead.stderr)) {
+			if (is.null(y$other$BEAD_STDEV)) {
+				y$other$BEAD_STDEV <- y$other$BEAD_STDERR*sqrt(nbeads)
+			} else {
+			bead.stdev <- y$other$BEAD_STDEV
+			}
+		} else {
+			bead.stdev <- bead.stderr*sqrt(nbeads)
+		}
+	if(is.null(bead.stdev)) stop("BEAD_STDEV and BEAD_STDERR are missing. At least one is required.")	
 	}
 	P <- nrow(E)
 	A <- ncol(E)

@@ -3,7 +3,7 @@
 read.ilmn <- function(files=NULL, ctrlfiles=NULL, path=NULL, ctrlpath=NULL, probeid="Probe", annotation=c("TargetID", "SYMBOL"), expr="AVG_Signal", other.columns="Detection",sep="\t", quote="\"", verbose=TRUE, ...)
 #	Read one or more files of Illumina BeadStudio output
 #	Wei Shi and Gordon Smyth.
-#  Created 15 July 2009. Last modified 27 November 2013.
+#	Created 15 July 2009. Last modified 24 January 2014.
 {
 	if(!is.null(files)){
 		f <- unique(files)
@@ -99,7 +99,10 @@ read.ilmn.targets <- function(targets, ...)
 	rownames(elist$E) <- pids
 
 #	Add probe annotation	
-	if(length(anncol)) elist$genes <- x[,anncol,drop=FALSE]
+	if(length(anncol)) {
+		elist$genes <- x[,anncol,drop=FALSE]
+		row.names(elist$genes) <- pids
+	}
 
 #	elist$targets <- data.frame(SampleNames=snames, stringsAsFactors=FALSE)
 

@@ -45,15 +45,22 @@ f1 <- quantile(out$fitted)
 r1 <- quantile(out$residual)
 w <- rep(1,100)
 w[1:50] <- 0.5
-out <- loessFit(y,x,weights=w)
+out <- loessFit(y,x,weights=w,method="weightedLowess")
 f2 <- quantile(out$fitted)
 r2 <- quantile(out$residual)
-w <- rep(1,100)
-w[2*(1:50)] <- 0
-out <- loessFit(y,x,weights=w)
+out <- loessFit(y,x,weights=w,method="locfit")
 f3 <- quantile(out$fitted)
 r3 <- quantile(out$residual)
-data.frame(f1,f2,f3,r1,r2,r3)
+out <- loessFit(y,x,weights=w,method="loess")
+f4 <- quantile(out$fitted)
+r4 <- quantile(out$residual)
+w <- rep(1,100)
+w[2*(1:50)] <- 0
+out <- loessFit(y,x,weights=w,method="weightedLowess")
+f5 <- quantile(out$fitted)
+r5 <- quantile(out$residual)
+data.frame(f1,f2,f3,f4,f5)
+data.frame(r1,r2,r3,r4,r5)
 
 ### normalizeWithinArrays
 

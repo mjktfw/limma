@@ -15,7 +15,7 @@ interGeneCorrelation(y, design)
 \arguments{
   \item{y}{numeric matrix giving log-expression or log-ratio values for a series of microarrays, or any data object that can coerced to a matrix including \code{ExpressionSet}, \code{MAList}, \code{EList} or \code{PLMSet} objects.
   Rows correspond to probes and columns to samples.}
-  \item{index}{an index vector or a list of index vectors.  Can be any vector such that \code{y[index,]} selects the rows corresponding to the test set.}
+  \item{index}{an index vector or a list of index vectors.  Can be any vector such that \code{y[index,]} selects the rows corresponding to the test set.  The list can be made using \link{symbols2indices}.}
   \item{design}{design matrix.}
   \item{contrast}{contrast of the linear model coefficients for which the test is required. Can be an integer specifying a column of \code{design}, or else a numeric vector of same length as the number of columns of \code{design}.}
   \item{weights}{can be a numeric matrix of individual weights, of same size as \code{y}, or a numeric vector of array weights with length equal to \code{ncol(y)}.}
@@ -71,7 +71,8 @@ Analyzing gene expression data in terms of gene sets: methodological issues.
 \code{\link{rankSumTestWithCorrelation}},
 \code{\link{geneSetTest}},
 \code{\link{roast}},
-\code{\link{romer}}.
+\code{\link{romer}},
+\code{\link{symbols2indices}}.
 }
 
 \examples{

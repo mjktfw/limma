@@ -1,5 +1,5 @@
 
-R version 3.0.2 (2013-09-25) -- "Frisbee Sailing"
+R Under development (unstable) (2013-11-30 r64358) -- "Unsuffered Consequences"
 Copyright (C) 2013 The R Foundation for Statistical Computing
 Platform: i386-w64-mingw32/i386 (32-bit)
 
@@ -591,21 +591,34 @@ $G
 > r1 <- quantile(out$residual)
 > w <- rep(1,100)
 > w[1:50] <- 0.5
-> out <- loessFit(y,x,weights=w)
+> out <- loessFit(y,x,weights=w,method="weightedLowess")
 > f2 <- quantile(out$fitted)
 > r2 <- quantile(out$residual)
-> w <- rep(1,100)
-> w[2*(1:50)] <- 0
-> out <- loessFit(y,x,weights=w)
+> out <- loessFit(y,x,weights=w,method="locfit")
 > f3 <- quantile(out$fitted)
 > r3 <- quantile(out$residual)
-> data.frame(f1,f2,f3,r1,r2,r3)
-              f1          f2          f3          r1          r2          r3
-0%   -0.78835384 -0.78957137 -0.64724211 -2.04434053 -2.02404318 -2.17625016
-25%  -0.18340154 -0.18979269 -0.38092221 -0.59321065 -0.58975649 -0.68935397
-50%  -0.11492924 -0.12087983 -0.16793705  0.05874864  0.08335198  0.07929677
-75%   0.01507921 -0.01857508  0.05351707  0.56010750  0.57618740  0.64831434
-100%  0.21653837  0.19214597  0.54678196  2.57936026  2.57549257  2.30629358
+> out <- loessFit(y,x,weights=w,method="loess")
+> f4 <- quantile(out$fitted)
+> r4 <- quantile(out$residual)
+> w <- rep(1,100)
+> w[2*(1:50)] <- 0
+> out <- loessFit(y,x,weights=w,method="weightedLowess")
+> f5 <- quantile(out$fitted)
+> r5 <- quantile(out$residual)
+> data.frame(f1,f2,f3,f4,f5)
+              f1           f2          f3          f4          f5
+0%   -0.78835384 -0.687432210 -0.78957137 -0.75758558 -0.63778292
+25%  -0.18340154 -0.179683572 -0.18979269 -0.16363329 -0.38064318
+50%  -0.11492924 -0.114796040 -0.12087983 -0.07318718 -0.15971879
+75%   0.01507921 -0.008145125 -0.01857508  0.03656491  0.07839396
+100%  0.21653837  0.145106033  0.19214597  0.23710498  0.51836274
+> data.frame(r1,r2,r3,r4,r5)
+              r1          r2          r3          r4          r5
+0%   -2.04434053 -2.05132680 -2.02404318 -2.09602100 -2.22280633
+25%  -0.59321065 -0.57200209 -0.58975649 -0.58142533 -0.71037756
+50%   0.05874864  0.04514326  0.08335198 -0.01037007  0.06785517
+75%   0.56010750  0.55124530  0.57618740  0.55704748  0.65383830
+100%  2.57936026  2.64549799  2.57549257  2.38180448  2.28648835
 > 
 > ### normalizeWithinArrays
 > 
@@ -1302,4 +1315,4 @@ Loading required package: splines
 > 
 > proc.time()
    user  system elapsed 
-   1.45    0.09    1.52 
+   1.29    0.12    1.40 

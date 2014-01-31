@@ -1,6 +1,6 @@
 ###  treat.R
 
-treat <- function(fit, lfc=0, trend=FALSE)
+treat <- function(fit, lfc=0, trend=FALSE, robust=FALSE, winsor.tail.p=c(0.05,0.1))
 #  Moderated t-statistics with threshold
 #  Davis McCarthy, Gordon Smyth
 #  25 July 2008.  Last revised 7 April 2013.
@@ -27,7 +27,7 @@ treat <- function(fit, lfc=0, trend=FALSE)
 	} else {
 		covariate <- NULL
 	}
-	sv <- squeezeVar(sigma^2, df.residual, covariate=covariate)
+	sv <- squeezeVar(sigma^2, df.residual, covariate=covariate, robust=robust, winsor.tail.p=winsor.tail.p)
 	fit$df.prior <- sv$df.prior
 	fit$s2.prior <- sv$var.prior
 	fit$s2.post <- sv$var.post

@@ -30,9 +30,9 @@ vennCounts <- function(x,include="both") {
 
 vennDiagram <- function(object,include="both",names=NULL,mar=rep(1,4),cex=c(1.5,1,0.7),lwd=1,circle.col=NULL,counts.col=NULL,show.include=NULL,...)
 #	Plot Venn diagram
-#	Gordon Smyth, James Wettenhall.
-#	Capabilities for multiple counts and colors by Francois Pepin.
-#	4 July 2003.  Last modified 10 March 2013.
+#	Gordon Smyth, James Wettenhall, Yifang Hu.
+#	Capabilities for multiple counts and colors uses code by Francois Pepin.
+#	4 July 2003.  Last modified 31 January 2014.
 {
 #	Check include
 	include <- as.character(include)
@@ -140,7 +140,7 @@ vennDiagram <- function(object,include="both",names=NULL,mar=rep(1,4),cex=c(1.5,
 	##############################################
 	
 #	Open plot
-	plot(c(-20, 420), c(-20, 420), type="n", axes=FALSE, ylab="", xlab="")
+	plot(c(-20, 420), c(-20, 420), type="n", axes=FALSE, ylab="", xlab="", ...)
 
 #	Function to turn and move ellipses
 	relocate_elp <- function(e, alpha, x, y)
