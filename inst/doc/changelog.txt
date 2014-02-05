@@ -1,3 +1,10 @@
+ 5 February 2014: limma 3.19.17
+
+- The change to read.ilmn() in 3.19.16 caused an error when the
+  Illumina probe IDs were not all unique.  The probe IDs are now used
+  as row.names for the annotation data.frame only when they are
+  unique.
+
 31 January 2014: limma 3.19.16
 
 - treat() now has new arguments robust and winsor.tail.p which are

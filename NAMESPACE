@@ -4,6 +4,8 @@ exportPattern("^[^\\.]")
 exportClasses("RGList","MAList","EListRaw","EList","MArrayLM","TestResults","LargeDataObject","Roast","MDS")
 exportMethods("show")
 
+import(methods)
+
 S3method("[",MAList)
 S3method("[",MArrayLM)
 S3method("[",RGList)
