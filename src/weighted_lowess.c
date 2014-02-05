@@ -180,6 +180,8 @@ SEXP weighted_lowess(SEXP covariate, SEXP response, SEXP weight, SEXP span, SEXP
 	if (!IS_NUMERIC(delta) || LENGTH(delta)!=1) { error("delta should be a double-precision scalar"); }
 	const double dv=NUMERIC_VALUE(delta); 
 
+	/*** NO MORE ERRORS AT THIS POINT, MEMORY ASSIGNMENTS ARE ACTIVE. ***/
+
 	/* Computing the span weight that each span must achieve. */
 	double totalweight=0;
 	int pt;
@@ -243,7 +245,7 @@ SEXP weighted_lowess(SEXP covariate, SEXP response, SEXP weight, SEXP span, SEXP
 		}
 		rsort_with_index(rsdptr, rorptr, npts);
 		current=0;
-		double cmad;
+		double cmad=THRESHOLD;
 		const double halfweight=totalweight/2;
 		for (pt=0; pt<npts; ++pt) {
 			current+=weiptr[rorptr[pt]];

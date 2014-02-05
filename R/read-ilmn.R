@@ -3,7 +3,7 @@
 read.ilmn <- function(files=NULL, ctrlfiles=NULL, path=NULL, ctrlpath=NULL, probeid="Probe", annotation=c("TargetID", "SYMBOL"), expr="AVG_Signal", other.columns="Detection",sep="\t", quote="\"", verbose=TRUE, ...)
 #	Read one or more files of Illumina BeadStudio output
 #	Wei Shi and Gordon Smyth.
-#	Created 15 July 2009. Last modified 24 January 2014.
+#	Created 15 July 2009. Last modified 27 November 2013.
 {
 	if(!is.null(files)){
 		f <- unique(files)
@@ -63,8 +63,8 @@ read.ilmn.targets <- function(targets, ...)
 
 .read.oneilmnfile <- function(fname, probeid, annotation, expr, other.columns, sep, quote, verbose, ...)
 #	Read a single file of Illumina BeadStudio output
-#  Wei Shi and Gordon Smyth
-#  Created 15 July 2009. Last modified 5 Jan 2011.
+#	Wei Shi and Gordon Smyth
+#	Created 15 July 2009. Last modified 5 February 2014.
 {
 	h <- readGenericHeader(fname,columns=expr)
 	skip <- h$NHeaderRecords
@@ -101,7 +101,7 @@ read.ilmn.targets <- function(targets, ...)
 #	Add probe annotation	
 	if(length(anncol)) {
 		elist$genes <- x[,anncol,drop=FALSE]
-		row.names(elist$genes) <- pids
+		if(!any(duplicated(pids))) row.names(elist$genes) <- pids
 	}
 
 #	elist$targets <- data.frame(SampleNames=snames, stringsAsFactors=FALSE)
