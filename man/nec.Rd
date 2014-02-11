@@ -16,21 +16,21 @@ neqc(x, status=NULL, negctrl="negative", regular="regular", offset=16,
   \item{regular}{character string identifier for regular probes, i.e., all probes other than control probes.}
   \item{offset}{numeric value added to the intensities after background correction.}
   \item{robust}{logical. Should robust estimators be used for the background mean and standard deviation?}
-  \item{detection.p}{a character string giving the name of the component which contains detection p value information in \code{x} or a numeric matrix giving detection p values, \code{Detection} by default}
+  \item{detection.p}{dection p-values.  Only used when no negative control probes can be found in the data.  Can be a numeric matrix or a character string giving the name of the component of \code{x$other} containing the matrix.}
   \item{...}{any other arguments are passed to \code{normalizeBetweenArrays.}}
   }
 \details{
-\code{neqc} performs background correction followed by quantile normalization, using negative control probes for background correction and both negative and positive controls for normalization.
+\code{neqc} performs background correction followed by quantile normalization, using negative control probes for background correction and both negative and positive controls for normalization (Shi et al, 2010).
 \code{nec} is similar but performs background correction only.
 
 When control data are available, these function call \code{\link{normexp.fit.control}} to estimate the parameters required by normal+exponential(normexp) convolution model with the help of negative control probes, followed by \code{\link{normexp.signal}} to perform the background correction.
 If \code{x} contains background intensities \code{x$Eb}, then these are first subtracted from the foreground intensities, prior to normexp background correction.
 After background correction, an \code{offset} is added to the data.
 
-When control data are not available, these functions call \code{\link{normexp.fit.detection.p}} to estimate the normexp parameters.
-\code{\link{normexp.fit.detection.p}} infers negative control probe intensities from regular probes by taking advantage of their detection p value information.
+When expression values for negative controls are not available, the \code{detection.p} argument is used instead,
+In that case, these functions call \code{\link{normexp.fit.detection.p}}, which infers the negative control probe intensities from the detection p-values associated with the regular probes.
 
-For more descriptions to parameters \code{x}, \code{status}, \code{negctrl}, \code{regular} and \code{detection.p}, please refer to functions \code{\link{normexp.fit.control}}, \code{\link{normexp.fit.detection.p}} and \code{\link{read.ilmn}}.
+For more detailed descriptions of the arguments \code{x}, \code{status}, \code{negctrl}, \code{regular} and \code{detection.p}, please refer to functions \code{\link{normexp.fit.control}}, \code{\link{normexp.fit.detection.p}} and \code{\link{read.ilmn}}.
 
 Both \code{nec} and \code{neqc} perform the above steps.
 \code{neqc} continues on to quantile normalize the background-corrected intensities, including control probes.

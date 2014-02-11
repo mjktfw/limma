@@ -1,3 +1,8 @@
+11 February 2014: limma 3.19.18
+
+- The new subsetting code of 13 Dec 2013 introduced a bug whereby
+  MArrayLM objects couldn't be subsetted by column name.  Now fixed.
+
  5 February 2014: limma 3.19.17
 
 - The change to read.ilmn() in 3.19.16 caused an error when the

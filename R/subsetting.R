@@ -102,7 +102,7 @@ assign("[.MArrayLM",
 function(object, i, j)
 #  Subsetting for MArrayLM objects
 #  Gordon Smyth
-#  26 April 2005. Last modified 11 Dec 2013.
+#  26 April 2005. Last modified 11 Feb 2014.
 {
 #	Recognized components
 	IJ <- c("coefficients","stdev.unscaled","t","p.value","lods","weights")
@@ -117,7 +117,7 @@ function(object, i, j)
 #	so that output is equivalent to that from contrasts.fit()
 	if(!missing(j) && is.null(object$contrasts) && !is.null(object$coefficients)) {
 		object$contrasts <- diag(ncol(object$coefficients))
-		cn <- colnames(object$contrasts)
+		cn <- colnames(object$coefficients)
 		dimnames(object$contrasts) <- list(Coefficient=cn,Contrast=cn)
 	}
 
