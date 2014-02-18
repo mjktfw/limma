@@ -179,9 +179,25 @@ plotMA.default <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[ar
 
 plotMA3by2 <- function(MA, prefix="MA", path=NULL, main=colnames(MA), zero.weights=FALSE, common.lim=TRUE, device="png", ...)
 #	Make files of MA-plots, six to a page
-#	Gordon Smyth  27 May 2004.  Last modified 9 June 2007.
+#	Gordon Smyth  27 May 2004.  Last modified 12 Feb 2014.
 {
 	if(is(MA,"RGList")) MA <- MA.RG(MA)
+	if(is(MA,"EListRaw")) {
+		A <- rowMeans(log2(MA$E))
+		MA$A <- array(A,dim(MA))
+		MA$M <- log2(MA$E)-MA$A
+		MA <- new("MAList",unclass(MA))
+	}
+	if(is(MA,"EList")) {
+		A <- rowMeans(MA$E)
+		MA$A <- array(A,dim(MA))
+		MA$M <- MA$E-MA$A
+		MA <- new("MAList",unclass(MA))
+	}
+	if(is.matrix(MA)) {
+		A <- rowMeans(MA)
+		MA <- new("MAList",list(M=MA-A, A=array(A,dim(MA))))
+	}
 	if(is.null(path)) path <- "."
 	prefix <- file.path(path,prefix)
 	narrays <- ncol(MA)

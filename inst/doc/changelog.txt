@@ -1,3 +1,10 @@
+18 February 2014: limma 3.19.19
+
+- Bug fix: the mroast methods for EList and MAList objects were
+  ignoring the midp, p.adjust and sorting arguments.
+
+- plotMA3by2() now accepts single channel data objects.
+
 11 February 2014: limma 3.19.18
 
 - The new subsetting code of 13 Dec 2013 introduced a bug whereby
@@ -412,6 +419,9 @@
   gene sets now use the argument 'index' to specify which genes 
   are included in the test set.  Previously this argument was called
   'iset' for roast() and romer() and 'indices' for camera().
+
+- When sorting results, mroast() now tries to break ties more
+  sensibly rather than keeping original order.
 
 - section on time course experiments with many time points added to
   User's Guide.

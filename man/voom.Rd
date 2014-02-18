@@ -55,8 +55,8 @@ PhD Thesis. University of Melbourne, Australia.
 
 Law, CW, Chen, Y, Shi, W, Smyth, GK (2014).
 Voom: precision weights unlock linear model analysis tools for RNA-seq read counts.
-\emph{Genome Biology} (Accepted 9 January 2014).
-\url{http://www.statsci.org/smyth/pubs/VoomPreprint.pdf}
+\emph{Genome Biology} 15, R29.
+\url{http://genomebiology.com/2014/15/2/R29}
 }
 
 \seealso{

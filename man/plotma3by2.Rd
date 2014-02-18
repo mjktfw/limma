@@ -8,7 +8,7 @@ Write MA-plots to files in PNG format, six plots to a file in a 3 by 2 grid arra
 plotMA3by2(MA, prefix="MA", path=NULL, main=colnames(MA), zero.weights=FALSE, common.lim=TRUE, device="png", ...)
 }
 \arguments{
-  \item{MA}{an \code{MAList} or \code{RGList} object, or any list with components \code{M} containing log-ratios and \code{A} containing average intensities}
+  \item{MA}{an \code{MAList}, \code{RGList}, \code{EListRaw} or \code{EList} object, or a matrix containing log-intensities.}
   \item{prefix}{character string giving prefix to attach to file names}
   \item{path}{character string specifying directory for output files}
   \item{main}{character vector giving titles for plots}

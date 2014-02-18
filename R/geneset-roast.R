@@ -313,28 +313,28 @@ UseMethod("mroast")
 
 mroast.EList <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE,sort="directional")
 # Gordon Smyth
-# Created 8 Jan 2013.
+# Created 8 Jan 2013.  Last revised 18 Feb 2014.
 {
 	if(is.null(design)) design <- y$design
 	if(is.null(weights) && is.null(array.weights)) weights <- y$weights
 	y <- as.matrix(y)
-	mroast(y=y,index=index,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,weights=weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,trend.var=trend.var,nrot=nrot)
+	mroast(y=y,index=index,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,weights=weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,trend.var=trend.var,nrot=nrot,adjust.method=adjust.method,midp=midp,sort=sort)
 }
 
 mroast.MAList <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE,sort="directional")
 # Gordon Smyth
-# Created 8 Jan 2013.
+# Created 8 Jan 2013.  Last revised 18 Feb 2014.
 {
 	if(is.null(design)) design <- y$design
 	if(is.null(weights) && is.null(array.weights)) weights <- y$weights
 	y <- as.matrix(y)
-	mroast(y=y,index=index,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,weights=weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,trend.var=trend.var,nrot=nrot)
+	mroast(y=y,index=index,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,weights=weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,trend.var=trend.var,nrot=nrot,adjust.method=adjust.method,midp=midp,sort=sort)
 }
 
 mroast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE,sort="directional")
 #  Rotation gene set testing with multiple sets
 #  Gordon Smyth and Di Wu
-#  Created 28 Jan 2010. Last revised 9 Jan 2014.
+#  Created 28 Jan 2010. Last revised 12 Feb 2014.
 {
 #	Check y
 	y <- as.matrix(y)
@@ -448,9 +448,9 @@ mroast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.st
 	sort <- match.arg(sort,c("directional","mixed","none"))
 	if(sort=="none") return(tab)
 	if(sort=="directional")
-		o <- order(tab$PValue)
+		o <- order(tab$PValue,tab$PValue.Mixed,-tab$NGenes)
 	else
-		o <- order(tab$PValue.Mixed)
+		o <- order(tab$PValue.Mixed,tab$PValue,-tab$NGenes)
 	tab[o,,drop=FALSE]
 }
 

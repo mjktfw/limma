@@ -15,6 +15,7 @@ read.imagene(files, path=NULL, ext=NULL, names=NULL, columns=NULL, other.columns
 }
 \arguments{
   \item{files}{character vector giving the names of the files containing image analysis output or, for Imagene data, a character matrix of names of files.
+  Alternatively, it can be a data.frame containing a column called \code{FileName}.
   If omitted, then all files with extension \code{ext} in the specified directory will be read in alphabetical order.}
   \item{source}{character string specifying the image analysis program which produced the output files.  Choices are \code{"generic"}, \code{"agilent"}, \code{"agilent.median"}, \code{"agilent.mean"}, \code{"arrayvision"}, \code{"arrayvision.ARM"}, \code{"arrayvision.MTM"}, \code{"bluefuse"}, \code{"genepix"}, \code{"genepix.custom"}, \code{"genepix.median"}, \code{"imagene"}, \code{"imagene9"}, \code{"quantarray"}, \code{"scanarrayexpress"}, \code{"smd.old"}, \code{"smd"}, \code{"spot"} or \code{"spot.close.open"}.}
   \item{path}{character string giving the directory containing the files.
@@ -112,7 +113,7 @@ For two-color data, an \code{\link[limma:rglist]{RGList}} object containing the 
   \item{weights}{spot quality weights, if \code{wt.fun} is given}
   \item{other}{list containing matrices corresponding to \code{other.columns} if given}
   \item{genes}{data frame containing annotation information about the probes, for example gene names and IDs and spatial positions on the array, currently set only if \code{source} is \code{"agilent"}, \code{"genepix"} or \code{source="imagene"} or if the \code{annotation} argument is set}
-  \item{targets}{data frame with column \code{FileName} giving the names of the files read}
+  \item{targets}{data frame with column \code{FileName} giving the names of the files read.  If \code{files} was a data.frame on input, then the whole data.frame is stored here on output.}
   \item{source}{character string giving the image analysis program name}
   \item{printer}{list of class \code{\link[=PrintLayout-class]{PrintLayout}}, currently set only if \code{source="imagene"}}
 }
