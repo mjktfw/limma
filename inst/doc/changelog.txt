@@ -1,3 +1,8 @@
+21 February 2014: limma 3.19.20
+
+- Bug fix: fitFDistRobustly() was failing when there were missing
+  values or zero df values and covariate was NULL.
+
 18 February 2014: limma 3.19.19
 
 - new function tricubeMovingAverage() for smoothing a time series.

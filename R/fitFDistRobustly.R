@@ -3,7 +3,7 @@ fitFDistRobustly <- function(x,df1,covariate=NULL,winsor.tail.p=c(0.05,0.1),trac
 #	given the first degrees of freedom, using first and second
 #	moments of Winsorized z-values
 #	Gordon Smyth and Belinda Phipson
-#	8 Sept 2002.  Last revised 25 April 2013.
+#	8 Sept 2002.  Last revised 20 February 2014.
 {
 #	Check x
 	n <- length(x)
@@ -29,7 +29,7 @@ fitFDistRobustly <- function(x,df1,covariate=NULL,winsor.tail.p=c(0.05,0.1),trac
 	ok <- !is.na(x) & is.finite(df1) & (df1 > 1e-6)
 	notallok <- !all(ok)
 	if(notallok) {
-		scale <- df2.shrunk <- x
+		df2.shrunk <- x
 		x <- x[ok]
 		if(length(df1)>1) df1 <- df1[ok]
 		if(!is.null(covariate)) {
@@ -39,8 +39,13 @@ fitFDistRobustly <- function(x,df1,covariate=NULL,winsor.tail.p=c(0.05,0.1),trac
 		fit <- Recall(x=x,df1=df1,covariate=covariate,winsor.tail.p=winsor.tail.p,trace=trace)
 		df2.shrunk[ok] <- fit$df2.shrunk
 		df2.shrunk[!ok] <- fit$df2
-		scale[ok] <- fit$scale
-		scale[!ok] <- exp(approx(covariate,log(fit$scale),xout=covariate2,rule=2)$y)
+		if(is.null(covariate))
+			scale <- fit$scale
+		else {
+			scale <- x
+			scale[ok] <- fit$scale
+			scale[!ok] <- exp(approx(covariate,log(fit$scale),xout=covariate2,rule=2)$y)
+		}
 		return(list(scale=scale,df2=fit$df2,df2.shrunk=df2.shrunk))
 	}
 

@@ -387,10 +387,10 @@ residuals.MArrayLM <- function(object,y,...)
 }
 
 getEAWP <- function(object)
-#	Given any microarray data object, extract basic information needed for
-#	linear modelling.
+#	Given any microarray data object, extract basic information needed
+#	for linear modelling.
 #	Gordon Smyth
-#  9 March 2008. Last modified 26 June 2013.
+#	9 March 2008. Last modified 26 June 2013.
 {
 	y <- list()
 	
