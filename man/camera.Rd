@@ -1,15 +1,12 @@
 \name{camera}
 \alias{camera}
-\alias{camera.EList}
-\alias{camera.MAList}
-\alias{camera.default}
 \alias{interGeneCorrelation}
 \title{Competitive Gene Set Test Accounting for Inter-gene Correlation}
 \description{
 Test whether a set of genes is highly ranked relative to other genes in terms of differential expression, accounting for inter-gene correlation.
 }
 \usage{
-\method{camera}{EList}(y, index, design, contrast=ncol(design), weights=NULL, use.ranks=FALSE, allow.neg.cor=TRUE, trend.var=FALSE, sort=TRUE)
+camera(y, index, design, contrast=ncol(design), weights=NULL, use.ranks=FALSE, allow.neg.cor=TRUE, trend.var=FALSE, sort=TRUE)
 interGeneCorrelation(y, design)
 }
 \arguments{
@@ -18,8 +15,8 @@ interGeneCorrelation(y, design)
   \item{index}{an index vector or a list of index vectors.  Can be any vector such that \code{y[index,]} selects the rows corresponding to the test set.  The list can be made using \link{symbols2indices}.}
   \item{design}{design matrix.}
   \item{contrast}{contrast of the linear model coefficients for which the test is required. Can be an integer specifying a column of \code{design}, or else a numeric vector of same length as the number of columns of \code{design}.}
-  \item{weights}{can be a numeric matrix of individual weights, of same size as \code{y}, or a numeric vector of array weights with length equal to \code{ncol(y)}.}
-  \item{use.ranks}{do a rank-based test (\code{TRUE}) or a parametric test (\code{FALSE}?}
+  \item{weights}{can be a numeric matrix of individual weights, of same size as \code{y}, or a numeric vector of array weights with length equal to \code{ncol(y)}, or a numeric vector of gene weights with length equal to \code{nrow(y)}.}
+  \item{use.ranks}{do a rank-based test (\code{TRUE}) or a parametric test (\code{FALSE})?}
   \item{allow.neg.cor}{should reduced variance inflation factors be allowed for negative correlations?}
   \item{trend.var}{logical, should an empirical Bayes trend be estimated?  See \code{\link{eBayes}} for details.}
   \item{sort}{logical, should the results be sorted by p-value?}

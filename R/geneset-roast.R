@@ -12,46 +12,33 @@ function(object) print(object$p.value)
 )
 
 roast <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999)
-UseMethod("roast")
-
-roast.EList <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999)
-# Gordon Smyth
-# Created 4 Jan 2013.  Last modified 22 Jan 2013.
-{
-	if(is.null(design)) design <- y$design
-	if(is.null(weights) && is.null(array.weights)) weights <- y$weights
-	y <- as.matrix(y)
-	roast(y=y,index=index,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,weights=weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,trend.var=trend.var,nrot=nrot)
-}
-
-roast.MAList <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999)
-# Gordon Smyth
-# Created 4 Jan 2013.  Last modified 22 Jan 2013.
-{
-	if(is.null(design)) design <- y$design
-	if(is.null(weights) && is.null(array.weights)) weights <- y$weights
-	y <- as.matrix(y)
-	roast(y=y,index=index,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,weights=weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,trend.var=trend.var,nrot=nrot)
-}
-
-roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999)
 # Rotation gene set testing for linear models
 # Gordon Smyth and Di Wu
-# Created 24 Apr 2008.  Last modified 9 Jan 2014.
+# Created 24 Apr 2008.  Last modified 24 Feb 2014.
 {
-#	Check y
-	y <- as.matrix(y)
-	ngenes <- nrow(y)
-	n <- ncol(y)
-
 #	Check index
 	if(is.list(index)) return(mroast(y=y,index=index,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,weights=weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,trend.var=trend.var,nrot=nrot))
+
+#	Extract components from y
+	y <- getEAWP(y)
+	ngenes <- nrow(y$exprs)
+	n <- ncol(y$exprs)
+
+#	Check index
 	if(is.null(index)) index <- rep.int(TRUE,ngenes)
 
 #	Check design
-	if(is.null(design)) stop("no design matrix")
-	design <- as.matrix(design)
+	if(is.null(design)) design <- y$design
+	if(is.null(design))
+		design <- matrix(1,n,1)
+	else {
+		design <- as.matrix(design)
+		if(mode(design) != "numeric") stop("design must be a numeric matrix")
+	}
 	if(nrow(design) != n) stop("row dimension of design matrix must match column dimension of data")
+	ne <- nonEstimable(design)
+	if(!is.null(ne)) cat("Coefficients not estimable:",paste(ne,collapse=" "),"\n")
+
 	p <- ncol(design)
 	p0 <- p-1L
 	d <- n-p
@@ -63,23 +50,27 @@ roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.sta
 	if(!is.null(var.prior) && var.prior<0) stop("var.prior must be non-negative")
 	if(!is.null(df.prior) && df.prior<0) stop("df.prior must be non-negative")
 
-#	Check observation weights
-	if(!is.null(weights)) {
-		weights <- as.matrix(weights)
-		dimw <- dim(weights)
-		if(dimw[1]!=ngenes || dimw[2]!=n) stop("weights must have same dimensions as y")
-		if(any(weights<=0)) stop("weights must be positive")
-	}
-
 #	Check array weights
 	if(!is.null(array.weights)) {
 		if(length(array.weights) != n) stop("Length of array.weights doesn't match number of array")
 		if(any(array.weights <= 0)) stop("array.weights must be positive")
-		if(!is.null(weights)) {
-			weights <- .matvec(weights,array.weights)
+	}
+
+#	Check observational weights
+	if(is.null(weights) && is.null(array.weights)) weights <- y$weights
+	if(!is.null(weights)) {
+		weights <- as.matrix(weights)
+		dimw <- dim(weights)
+		if(dimw[1] != ngenes || dimw[2] != n) stop("weights must have same dimensions as y")
+		if(any(weights <= 0)) stop("weights must be positive")
+		if(!is.null(array.weights)) {
+			weights <- .matvec(weights, array.weights)
 			array.weights <- NULL
 		}
 	}
+
+#	Reduce to numeric expression matrix
+	y <- y$exprs
 
 #	Divide out array weights
 	if(!is.null(array.weights)) {
@@ -104,7 +95,7 @@ roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.sta
  	}
 
 #	Check contrast
-	if(all(contrast==0)) stop("contrast all zero")
+	if(all(contrast == 0)) stop("contrast all zero")
 
 #	Reform design matrix so that contrast is last coefficient
 	if(length(contrast) == 1) {
@@ -194,7 +185,7 @@ roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.sta
 #	Convert to z-scores
 	modt <- zscoreT(modt,df=d0+d)
 
-#	Active proportions	
+#	Active proportions
 	if(!is.null(gene.weights)) {
 		lgw <- length(gene.weights)
 		if(lgw > nset && lgw==ngenes) {
@@ -260,7 +251,7 @@ roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.sta
 #		p-values
 		p <- (rowSums(t(statrot) >= statobs) + 1)/(nrot + 1)
 	}
-   
+
 	if(set.statistic=="floormean") { 
 #		Observed statistics
 		chimed <- qchisq(0.5,df=1)
@@ -284,7 +275,7 @@ roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.sta
 #		p-values
 		p <- (rowSums(t(statrot) >= statobs) + 1)/(nrot + 1)
 	}
-   
+
 	if(set.statistic=="mean") { 
 #		Observed statistics
 		if(!is.null(gene.weights)) modt <- gene.weights*modt
@@ -309,66 +300,57 @@ roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.sta
 }
 
 mroast <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE,sort="directional")
-UseMethod("mroast")
-
-mroast.EList <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE,sort="directional")
-# Gordon Smyth
-# Created 8 Jan 2013.  Last revised 18 Feb 2014.
-{
-	if(is.null(design)) design <- y$design
-	if(is.null(weights) && is.null(array.weights)) weights <- y$weights
-	y <- as.matrix(y)
-	mroast(y=y,index=index,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,weights=weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,trend.var=trend.var,nrot=nrot,adjust.method=adjust.method,midp=midp,sort=sort)
-}
-
-mroast.MAList <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE,sort="directional")
-# Gordon Smyth
-# Created 8 Jan 2013.  Last revised 18 Feb 2014.
-{
-	if(is.null(design)) design <- y$design
-	if(is.null(weights) && is.null(array.weights)) weights <- y$weights
-	y <- as.matrix(y)
-	mroast(y=y,index=index,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,weights=weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,trend.var=trend.var,nrot=nrot,adjust.method=adjust.method,midp=midp,sort=sort)
-}
-
-mroast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE,sort="directional")
 #  Rotation gene set testing with multiple sets
 #  Gordon Smyth and Di Wu
-#  Created 28 Jan 2010. Last revised 12 Feb 2014.
+#  Created 28 Jan 2010. Last revised 24 Feb 2014.
 {
-#	Check y
-	y <- as.matrix(y)
-	ngenes <- nrow(y)
-	n <- ncol(y)
+#	Extract components from y
+	y <- getEAWP(y)
+	ngenes <- nrow(y$exprs)
+	n <- ncol(y$exprs)
 
 #	Check index
-	if(is.null(index)) index <- rep(TRUE,nrow(y))
+	if(is.null(index)) index <- rep(TRUE,ngenes)
 	if(!is.list(index)) index <- list(set = index)
 	nsets <- length(index)
 	if(is.null(names(index))) names(index) <- paste("set",1:nsets,sep="")
 
-#	Check design
-	if(is.null(design)) stop("No design matrix")
-	design <- as.matrix(design)
+#	Check design matrix
+	if(is.null(design)) design <- y$design
+	if(is.null(design))
+		design <- matrix(1,n,1)
+	else {
+		design <- as.matrix(design)
+		if(mode(design) != "numeric") stop("design must be a numeric matrix")
+	}
+	if(nrow(design) != n) stop("row dimension of design matrix must match column dimension of data")
+	ne <- nonEstimable(design)
+	if(!is.null(ne)) cat("Coefficients not estimable:",paste(ne,collapse=" "),"\n")
 
 #	Check gene.weights
 	if(!is.null(gene.weights)) if(length(gene.weights) != ngenes) stop("gene.weights must have length equal to nrow(y)")
 
 #	Check array.weights
 	if(!is.null(array.weights)) {
-		if(length(array.weights) != ncol(y)) stop("array.weights wrong length")
-		if(any(array.weights<=0)) stop("array.weights must be positive")
+		if(length(array.weights) != n) stop("array.weights wrong length")
+		if(any(array.weights <= 0)) stop("array.weights must be positive")
 	}
 
 #	Check weights
+	if(is.null(weights) && is.null(array.weights)) weights <- y$weights
 	if(!is.null(weights)) {
 		weights <- as.matrix(weights)
-		if(any(dim(weights) != dim(y))) stop("weights must have same dimensions as y")
+		dimw <- dim(weights)
+		if(dimw[1] != ngenes || dimw[2] != n) stop("weights must have same dimensions as y")
+		if(any(weights <= 0)) stop("weights must be positive")
 		if(!is.null(array.weights)) {
 			weights <- .matvec(weights,array.weights)
 			array.weights <- NULL
 		}
 	}
+
+#	Reduce to numeric expression matrix
+	y <- y$exprs
 
 #	Divide out array.weights
 	if(!is.null(array.weights)) {

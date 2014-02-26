@@ -3,17 +3,17 @@
 \title{Linear Model for Series of Arrays}
 \description{Fit linear model for each gene given a series of arrays}
 \usage{
-lmFit(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation,weights=NULL,method="ls",...) 
+lmFit(object, design=NULL, ndups=1, spacing=1, block=NULL, correlation, weights=NULL, method="ls", ...) 
 }
 \arguments{
   \item{object}{object of class \code{numeric}, \code{matrix}, \code{MAList}, \code{EList}, \code{marrayNorm}, \code{ExpressionSet} or \code{PLMset} containing log-ratios or log-values of expression for a series of microarrays}
   \item{design}{the design matrix of the microarray experiment, with rows corresponding to arrays and columns to coefficients to be estimated.  Defaults to the unit vector meaning that the arrays are treated as replicates.} 
-  \item{ndups}{positive integer giving the number of times each gene is printed on an array}
-  \item{spacing}{positive integer giving the spacing between duplicate spots, \code{spacing=1} for consecutive spots}
+  \item{ndups}{positive integer giving the number of times each distinct probe is printed on each array.}
+  \item{spacing}{positive integer giving the spacing between duplicate occurrences of the same probe, \code{spacing=1} for consecutive rows.}
   \item{block}{vector or factor specifying a blocking variable on the arrays. Has length equal to the number of arrays. Must be \code{NULL} if \code{ndups>2}.}
   \item{correlation}{the inter-duplicate or inter-technical replicate correlation}
-  \item{weights}{optional numeric matrix containing weights for each spot}
-  \item{method}{character string, \code{"ls"} for least squares or \code{"robust"} for robust regression}
+  \item{weights}{non-negative observation weights.  Can be a numeric matrix of individual weights, of same size as the object expression matrix, or a numeric vector of array weights with length equal to \code{ncol} of the expression matrix, or a numeric vector of gene weights with length equal to \code{nrow} of the expression matrix.}
+  \item{method}{fitting method; \code{"ls"} for least squares or \code{"robust"} for robust regression}
   \item{...}{other optional arguments to be passed to \code{lm.series}, \code{gls.series} or \code{mrlm}}
 }
 

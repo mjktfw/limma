@@ -1,3 +1,14 @@
+27 February 2014: limma 3.19.21
+
+- camera(), roast() and mroast() now use getEAWP() to interpret the 
+  data object.  This means that they now work on any class of data
+  object that lmFit() will.  They are no longer generic functions.
+
+- topTable() with confint=TRUE now produces confidence intervals
+  based on the t-distribution instead of on the normal distribution.
+  It also now accepts a numeric value for the confint argument to 
+  specify a confidence level other the default of 0.95.
+
 21 February 2014: limma 3.19.20
 
 - Bug fix: fitFDistRobustly() was failing when there were missing
@@ -8,9 +19,11 @@
 - new function tricubeMovingAverage() for smoothing a time series.
 
 - The enrichment worms shown by barcodeplot() now use
-  tricubeMovingAverage().
+  tricubeMovingAverage().  This makes the worms much smoother than
+  previously.
 
-- plotMA3by2() now accepts single channel data objects.
+- plotMA3by2() now accepts single channel data objects as well as
+  two color.
 
 - Bug fix: the mroast methods for EList and MAList objects were
   ignoring the midp, p.adjust and sorting arguments.

@@ -20,46 +20,39 @@ interGeneCorrelation <- function(y, design)
 }
 
 camera <- function(y,index,design=NULL,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,trend.var=FALSE,sort=TRUE)
-UseMethod("camera")
-
-camera.EList <- function(y,index,design=NULL,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,trend.var=FALSE,sort=TRUE)
-#	Gordon Smyth
-#  Created 4 Jan 2013.  Last modified 22 Jan 2013
-{
-	if(is.null(design)) design <- y$design
-	if(is.null(weights)) weights <- y$weights
-	y <- y$E
-	camera(y=y,index=index,design=design,contrast=contrast,weights=weights,use.ranks=use.ranks,allow.neg.cor=allow.neg.cor,trend.var=trend.var,sort=sort)
-}
-
-camera.MAList <- function(y,index,design=NULL,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,trend.var=FALSE,sort=TRUE)
-#	Gordon Smyth
-#  Created 4 Jan 2013.  Last modified 22 Jan 2013
-{
-	if(is.null(design)) design <- y$design
-	if(is.null(weights)) weights <- y$weights
-	y <- y$M
-	camera(y=y,index=index,design=design,contrast=contrast,weights=weights,use.ranks=use.ranks,allow.neg.cor=allow.neg.cor,trend.var=trend.var,sort=sort)
-}
-
-camera.default <- function(y,index,design=NULL,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,trend.var=FALSE,sort=TRUE)
 #	Competitive gene set test allowing for correlation between genes
 #	Gordon Smyth and Di Wu
-#  Created 2007.  Last modified 22 Jan 2013
+#	Created 2007.  Last modified 25 Feb 2014
 {
-#	Check y
-	y <- as.matrix(y)
-	G <- nrow(y)
-	n <- ncol(y)
+#	Extract components from y
+	y <- getEAWP(y)
+	G <- nrow(y$exprs)
+	n <- ncol(y$exprs)
 
 #	Check index
 	if(!is.list(index)) index <- list(set1=index)
 
 #	Check design
-	if(is.null(design)) stop("no design matrix")
+	if(is.null(design)) design <- y$design
+	if(is.null(design))
+		design <- matrix(1,n,1)
+	else {
+		design <- as.matrix(design)
+		if(mode(design) != "numeric") stop("design must be a numeric matrix")
+	}
+	if(nrow(design) != n) stop("row dimension of design matrix must match column dimension of data")
+	ne <- nonEstimable(design)
+	if(!is.null(ne)) cat("Coefficients not estimable:",paste(ne,collapse=" "),"\n")
+
 	p <- ncol(design)
 	df.residual <- n-p
 	df.camera <- min(df.residual,G-2)
+
+#	Check weights
+	if(is.null(weights)) weights <- y$weights
+
+#	Reduce to numeric expression matrix
+	y <- y$exprs
 
 #	Check weights
 	if(!is.null(weights)) {

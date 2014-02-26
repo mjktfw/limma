@@ -236,7 +236,8 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 		tab <- data.frame(genelist[top,,drop=FALSE],logFC=M[top],stringsAsFactors=FALSE)
 	}
 	if(confint) {
-		margin.error <- sqrt(eb$s2.post[top])*fit$stdev.unscaled[top]*qnorm(0.975)
+		if(is.numeric(confint)) alpha <- (1+confint[1])/2 else alpha <- 0.975
+		margin.error <- sqrt(eb$s2.post[top])*fit$stdev.unscaled[top,coef]*qt(alpha,df=eb$df.total[top])
 		tab$CI.025 <- M[top]-margin.error
 		tab$CI.975 <- M[top]+margin.error
 	}
