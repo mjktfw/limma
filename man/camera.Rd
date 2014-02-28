@@ -1,18 +1,21 @@
 \name{camera}
 \alias{camera}
+\alias{camera.default}
 \alias{interGeneCorrelation}
 \title{Competitive Gene Set Test Accounting for Inter-gene Correlation}
 \description{
 Test whether a set of genes is highly ranked relative to other genes in terms of differential expression, accounting for inter-gene correlation.
 }
 \usage{
-camera(y, index, design, contrast=ncol(design), weights=NULL, use.ranks=FALSE, allow.neg.cor=TRUE, trend.var=FALSE, sort=TRUE)
+\S3method{camera}{default}(y, index, design, contrast=ncol(design), weights=NULL, use.ranks=FALSE, allow.neg.cor=TRUE, trend.var=FALSE, sort=TRUE, \dots)
 interGeneCorrelation(y, design)
 }
 \arguments{
-  \item{y}{numeric matrix giving log-expression or log-ratio values for a series of microarrays, or any data object that can coerced to a matrix including \code{ExpressionSet}, \code{MAList}, \code{EList} or \code{PLMSet} objects.
-  Rows correspond to probes and columns to samples.}
-  \item{index}{an index vector or a list of index vectors.  Can be any vector such that \code{y[index,]} selects the rows corresponding to the test set.  The list can be made using \link{symbols2indices}.}
+  \item{y}{a numeric matrix of log-expression values or log-ratios of expression values, or any data object containing such a matrix.
+  Rows correspond to probes and columns to samples.
+  Any type of object that can be processed by \code{\link{getEAWP}} is acceptable.
+  }
+  \item{index}{an index vector or a list of index vectors.  Can be any vector such that \code{y[index,]} selects the rows corresponding to the test set.  The list can be made using \code{\link{symbols2indices}}.}
   \item{design}{design matrix.}
   \item{contrast}{contrast of the linear model coefficients for which the test is required. Can be an integer specifying a column of \code{design}, or else a numeric vector of same length as the number of columns of \code{design}.}
   \item{weights}{can be a numeric matrix of individual weights, of same size as \code{y}, or a numeric vector of array weights with length equal to \code{ncol(y)}, or a numeric vector of gene weights with length equal to \code{nrow(y)}.}
@@ -20,6 +23,7 @@ interGeneCorrelation(y, design)
   \item{allow.neg.cor}{should reduced variance inflation factors be allowed for negative correlations?}
   \item{trend.var}{logical, should an empirical Bayes trend be estimated?  See \code{\link{eBayes}} for details.}
   \item{sort}{logical, should the results be sorted by p-value?}
+  \item{\dots}{other arguments are not currently used}
 }
 
 \details{
@@ -65,6 +69,8 @@ Analyzing gene expression data in terms of gene sets: methodological issues.
 }
 
 \seealso{
+\code{\link{getEAWP}}
+
 \code{\link{rankSumTestWithCorrelation}},
 \code{\link{geneSetTest}},
 \code{\link{roast}},

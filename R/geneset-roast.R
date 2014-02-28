@@ -11,7 +11,9 @@ setMethod("show","Roast",
 function(object) print(object$p.value)
 )
 
-roast <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999)
+roast <- function(y,...) UseMethod("roast")
+
+roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,...)
 # Rotation gene set testing for linear models
 # Gordon Smyth and Di Wu
 # Created 24 Apr 2008.  Last modified 24 Feb 2014.
@@ -299,7 +301,9 @@ roast <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="
 	new("Roast",list(p.value=out,var.prior=s02,df.prior=d0,ngenes.in.set=nset))
 }
 
-mroast <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE,sort="directional")
+mroast <- function(y,...) UseMethod("mroast")
+
+mroast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE,sort="directional",...)
 #  Rotation gene set testing with multiple sets
 #  Gordon Smyth and Di Wu
 #  Created 28 Jan 2010. Last revised 24 Feb 2014.

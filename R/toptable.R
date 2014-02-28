@@ -3,15 +3,29 @@
 topTable <- function(fit,coef=NULL,number=10,genelist=fit$genes,adjust.method="BH",sort.by="B",resort.by=NULL,p.value=1,lfc=0,confint=FALSE)
 #	Summary table of top genes, object-orientated version
 #	Gordon Smyth
-#	4 August 2003.  Last modified 7 Dec 2013.
+#	4 August 2003.  Last modified 27 February 2014.
 {
 #	Check fit
 	if(!is(fit,"MArrayLM")) stop("fit must be an MArrayLM object")
 	if(is.null(fit$coefficients)) stop("coefficients not found in fit object")
 	if(confint && is.null(fit$stdev.unscaled)) stop("stdev.unscaled not found in fit object")
 
-	if(is.null(coef)) coef <- 1:ncol(fit)
+	if(is.null(coef)) {
+		if(is.null(fit$treat.lfc)) {
+			coef <- 1:ncol(fit)
+			cn <- colnames(fit)
+			if(!is.null(cn)) {
+				i <- which(cn == "(Intercept)")
+				if(length(i)) {
+					coef <- coef[-i]
+					message("Removing intercept from test coefficients")
+				}
+			}
+		} else
+			coef <- ncol(fit)
+	}
 	if(length(coef)>1) {
+		if(!is.null(fit$treat.lfc)) stop("Treat p-values can only be displayed for single coefficients")
 		coef <- unique(coef)
 		if(length(fit$coef[1,coef]) < ncol(fit)) fit <- eBayes(fit[,coef])
 		if(sort.by=="B") sort.by <- "F"
@@ -238,8 +252,8 @@ toptable <- function(fit,coef=1,number=10,genelist=NULL,A=NULL,eb=NULL,adjust.me
 	if(confint) {
 		if(is.numeric(confint)) alpha <- (1+confint[1])/2 else alpha <- 0.975
 		margin.error <- sqrt(eb$s2.post[top])*fit$stdev.unscaled[top,coef]*qt(alpha,df=eb$df.total[top])
-		tab$CI.025 <- M[top]-margin.error
-		tab$CI.975 <- M[top]+margin.error
+		tab$CI.L <- M[top]-margin.error
+		tab$CI.R <- M[top]+margin.error
 	}
 	if(!is.null(A)) tab$AveExpr <- A[top]
 	tab <- data.frame(tab,t=tstat[top],P.Value=P.Value[top],adj.P.Val=adj.P.Value[top])

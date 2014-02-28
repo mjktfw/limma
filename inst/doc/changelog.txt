@@ -1,3 +1,10 @@
+28 February 2014: limma 3.19.22
+
+- topTreat() now includes ... argument which is passed to topTable().
+
+- camera(), roast() and mroast() restored as S3 generic functions
+  with a default method only.
+
 27 February 2014: limma 3.19.21
 
 - camera(), roast() and mroast() now use getEAWP() to interpret the 

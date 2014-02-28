@@ -11,11 +11,10 @@ Extract a table of the top-ranked genes from a linear model fit.
 topTable(fit, coef=NULL, number=10, genelist=fit$genes, adjust.method="BH",
          sort.by="B", resort.by=NULL, p.value=1, lfc=0, confint=FALSE)
 toptable(fit, coef=1, number=10, genelist=NULL, A=NULL, eb=NULL, adjust.method="BH",
-         sort.by="B", resort.by=NULL, p.value=1, lfc=0, confint=FALSE, ...)
+         sort.by="B", resort.by=NULL, p.value=1, lfc=0, confint=FALSE, \dots)
 topTableF(fit, number=10, genelist=fit$genes, adjust.method="BH",
          sort.by="F", p.value=1, lfc=0)
-topTreat(fit, coef=1, number=10, genelist=fit$genes, adjust.method="BH",
-         sort.by="p", resort.by=NULL, p.value=1)
+topTreat(fit, coef=1, sort.by="p", resort.by=NULL, \dots)
 }
 \arguments{
   \item{fit}{list containing a linear model fit produced by \code{lmFit}, \code{lm.series}, \code{gls.series} or \code{mrlm}.
@@ -38,15 +37,15 @@ topTreat(fit, coef=1, number=10, genelist=fit$genes, adjust.method="BH",
   \item{resort.by}{character string specifying statistic to sort the selected genes by in the output data.frame.  Possibilities are the same as for \code{sort.by}.}
   \item{p.value}{cutoff value for adjusted p-values. Only genes with lower p-values are listed.}
   \item{lfc}{minimum absolute log2-fold-change required. \code{topTable} and \code{topTableF} include only genes with (at least one) absolute log-fold-changes greater than \code{lfc}. \code{topTreat} does not remove genes but ranks genes by evidence that their log-fold-change exceeds \code{lfc}.}
-  \item{confint}{logical, should 95\% confidence intervals be output for \code{logFC}? Alternatively, can take a numeric value between zero and one specifying the confidence level required.}
-  \item{...}{any other arguments are passed to \code{ebayes} if \code{eb} is \code{NULL}}
+  \item{confint}{logical, should confidence 95\% intervals be output for \code{logFC}?  Alternatively, can take a numeric value between zero and one specifying the confidence level required.}
+  \item{\dots}{For \code{toptable}, other arguments are passed to \code{ebayes} (if \code{eb=NULL}).  For \code{topTreat}, other arguments are passed to \code{topTable}.}
 }
 \value{
   A dataframe with a row for the \code{number} top genes and the following columns:
   \item{genelist}{one or more columns of probe annotation, if genelist was included as input}
   \item{logFC}{estimate of the log2-fold-change corresponding to the effect or contrast (for \code{topTableF} there may be several columns of log-fold-changes)}
-  \item{CI.025}{left limit of confidence interval for \code{logFC} (if \code{confint=TRUE})}
-  \item{CI.975}{right limit of confidence interval for \code{logFC} (if \code{confint=TRUE})}
+  \item{CI.L}{left limit of confidence interval for \code{logFC} (if \code{confint=TRUE} or \code{confint} is numeric)}
+  \item{CI.R}{right limit of confidence interval for \code{logFC} (if \code{confint=TRUE} or \code{confint} is numeric)}
   \item{AveExpr}{average log2-expression for the probe over all arrays and channels, same as \code{Amean} in the \code{MarrayLM} object}
   \item{t}{moderated t-statistic (omitted for \code{topTableF})}
   \item{F}{moderated F-statistic (omitted for \code{topTable} unless more than one coef is specified)}

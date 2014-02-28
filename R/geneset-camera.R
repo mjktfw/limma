@@ -19,7 +19,9 @@ interGeneCorrelation <- function(y, design)
 	list(vif=vif,correlation=correlation)
 }
 
-camera <- function(y,index,design=NULL,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,trend.var=FALSE,sort=TRUE)
+camera <- function(y,...) UseMethod("camera")
+
+camera.default <- function(y,index,design=NULL,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,trend.var=FALSE,sort=TRUE,...)
 #	Competitive gene set test allowing for correlation between genes
 #	Gordon Smyth and Di Wu
 #	Created 2007.  Last modified 25 Feb 2014

@@ -1,14 +1,15 @@
 ###  treat.R
 
 treat <- function(fit, lfc=0, trend=FALSE, robust=FALSE, winsor.tail.p=c(0.05,0.1))
-#  Moderated t-statistics with threshold
-#  Davis McCarthy, Gordon Smyth
-#  25 July 2008.  Last revised 7 April 2013.
+#	Moderated t-statistics with threshold
+#	Davis McCarthy, Gordon Smyth
+#	25 July 2008.  Last revised 27 February 2014.
 {
 #	Check fit
 	if(!is(fit,"MArrayLM")) stop("fit must be an MArrayLM object")
 	if(is.null(fit$coefficients)) stop("coefficients not found in fit object")
 	if(is.null(fit$stdev.unscaled)) stop("stdev.unscaled not found in fit object")
+	fit$lods <- NULL
 
 	coefficients <- as.matrix(fit$coefficients)
 	stdev.unscaled <- as.matrix(fit$stdev.unscaled)
@@ -47,13 +48,16 @@ treat <- function(fit, lfc=0, trend=FALSE, robust=FALSE, winsor.tail.p=c(0.05,0.
 	fc.down <- (coefficients < -lfc)
 	fit$t[fc.up] <- tstat.right[fc.up]
 	fit$t[fc.down] <- -tstat.right[fc.down]
+	fit$treat.lfc <- lfc
 	fit
 }
 
-topTreat <- function(fit,coef=1,number=10,genelist=fit$genes,adjust.method="BH",sort.by="p",resort.by=NULL,p.value=1)
+topTreat <- function(fit,coef=1,sort.by="p",resort.by=NULL,...)
 #	Summary table of top genes by treat
 #	Gordon Smyth
-#	15 June 2009.  Last modified 20 April 2013.
+#	15 June 2009.  Last modified 27 February 2014.
+
+#	NOTE: This function may become deprecated soon as topTable() takes over
 {
 #	Check coef is length 1
 	if(length(coef)>1) {
@@ -65,6 +69,6 @@ topTreat <- function(fit,coef=1,number=10,genelist=fit$genes,adjust.method="BH",
 	if(sort.by=="B") stop("Trying to sort.by B, but treat doesn't produce a B-statistic")
 	if(!is.null(resort.by)) if(resort.by=="B") stop("Trying to resort.by B, but treat doesn't produce a B-statistic")
 
-	topTable(fit=fit,coef=coef,number=number,genelist=genelist,adjust.method=adjust.method,sort.by=sort.by,resort.by=sort.by,p.value=p.value)
+	topTable(fit=fit,coef=coef,sort.by=sort.by,...)
 }
 

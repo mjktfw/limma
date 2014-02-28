@@ -1,6 +1,8 @@
 \name{roast}
 \alias{roast}
+\alias{roast.default}
 \alias{mroast}
+\alias{mroast.default}
 \alias{Roast-class}
 \alias{show,Roast-method}
 \title{Rotation Gene Set Tests}
@@ -9,12 +11,13 @@ Rotation gene set testing for linear models.
 }
 
 \usage{
-roast(y, index=NULL, design=NULL, contrast=ncol(design), set.statistic="mean",
+\S3method{roast}{default}(y, index=NULL, design=NULL, contrast=ncol(design), set.statistic="mean",
      gene.weights=NULL, array.weights=NULL, weights=NULL, block=NULL, correlation,
-     var.prior=NULL, df.prior=NULL, trend.var=FALSE, nrot=999)
-mroast(y, index=NULL, design=NULL, contrast=ncol(design), set.statistic="mean",
+     var.prior=NULL, df.prior=NULL, trend.var=FALSE, nrot=999, \dots)
+\S3method{mroast}{default}(y, index=NULL, design=NULL, contrast=ncol(design), set.statistic="mean",
      gene.weights=NULL, array.weights=NULL, weights=NULL, block=NULL, correlation,
-     var.prior=NULL, df.prior=NULL, trend.var=FALSE, nrot=999, adjust.method="BH", midp=TRUE, sort="directional")
+     var.prior=NULL, df.prior=NULL, trend.var=FALSE, nrot=999, adjust.method="BH",
+     midp=TRUE, sort="directional", \dots)
 }
 
 \arguments{
@@ -37,13 +40,14 @@ mroast(y, index=NULL, design=NULL, contrast=ncol(design), set.statistic="mean",
   \item{nrot}{number of rotations used to estimate the p-values.}
   \item{adjust.method}{method used to adjust the p-values for multiple testing. See \code{\link{p.adjust}} for possible values.}
   \item{midp}{logical, should mid-p-values be used in instead of ordinary p-values when adjusting for multiple testing?}
-  \item{sort}{character, whether to sort output table by directional p-values (\code{"directional"}), non-directional p-value (\code{"mixed"}), or not at all (\code{"none"}).}
+  \item{sort}{character, whether to sort output table by directional p-value (\code{"directional"}), non-directional p-value (\code{"mixed"}), or not at all (\code{"none"}).}
+  \item{\dots}{other arguments not currently used.}
 }
 
 \value{
 \code{roast} produces an object of class \code{"Roast"}.
 This consists of a list with the following components:
-  \item{p.value}{data.frame with columns \code{Active.Prop} and \code{P.Value}, giving the proportion of genes in the set contributing meaningfully to significance and estimated p-values, respectively.
+  \item{p.value}{data.frame with columns \code{Active.Prop} and \code{P.Value}, giving the proportion of genes in the set contributing materially to significance and estimated p-values, respectively.
 Rows correspond to the alternative hypotheses mixed, up or down.}
   \item{var.prior}{prior value for residual variances.}
   \item{df.prior}{prior degrees of freedom for residual variances.}
