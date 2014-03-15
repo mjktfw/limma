@@ -10,12 +10,12 @@ sep="\t", quote="\"", verbose=TRUE, \dots)
 \arguments{
   \item{files}{character vector giving the names of the summary probe profile files.}
   \item{ctrlfiles}{character vector giving the names of the summary control probe profile files.}
-  \item{path}{character string giving the directory containing the summary probe profile files. The default is the current working directory.}
-  \item{ctrlpath}{character string giving the directory containing the summary control probe profile files. Defaults to the same directory as for the probe profile files.}
+  \item{path}{character string giving the directory containing the summary probe profile files. Default is the current working directory.}
+  \item{ctrlpath}{character string giving the directory containing the summary control probe profile files. Default is the same directory as for the probe profile files.}
   \item{probeid}{character string giving the name of the probe identifier column.}
-  \item{annotation}{character vector giving possible names of the annotation column. It could be called "TargetID" or "SYMBOL" depending on which version of BeadStudio is used.}
-  \item{expr}{character string giving the keyword in the names of the expression intensity columns.}
-  \item{other.columns}{character vector giving the keywords in the names of extra columns required, such as "Detection", "Avg_NBEADS", "BEAD_STDEV" etc. Each keyword corresponds to one type of columns. The detection p value columns will be read in by default.}
+  \item{annotation}{character vector giving possible column names for probe annotation.}
+  \item{expr}{character string giving a keyword identifying the expression intensity columns. Any input column with column name containing this key will be read as containing intensity values.}
+  \item{other.columns}{character vector giving keywords sufficient to identify any extra data columns that should be read in, such as "Detection", "Avg_NBEADS", "BEAD_STDEV" etc. The default of \code{Detection} is usually sufficient to identify the columns containing detection p-values.}
   \item{sep}{the field separator character.}
   \item{quote}{character string of characters to be treated as quote marks.}
   \item{verbose}{logical, \code{TRUE} to report names of profile files being read.}
@@ -38,10 +38,9 @@ Examples of keywords are "Detection", "Avg_NBEADS", "BEAD_STDEV" etc.
 
 \value{ 
 An \code{\link{EListRaw-class}} object with the following components:
-\item{E}{ numeric matrix of raw intensities.}
-\item{genes}{ data.frame of probe annotation.}
-\item{targets}{ data.frame of sample information.}
-\item{other}{ list of other column data.}
+\item{E}{numeric matrix of intensities.}
+\item{genes}{data.frame of probe annotation. Contains any columns specified by \code{annotation} that are found in the input files.}
+\item{other}{a list of matrices corresponding to any \code{other.columns} found in the input files.}
 }
 
 \author{Wei Shi and Gordon K Smyth}

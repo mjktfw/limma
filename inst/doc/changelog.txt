@@ -1,3 +1,8 @@
+15 February 2014: limma 3.19.23
+
+- new functions diffSplice(), topSplice() and plotSplice() to detect
+  differentially spliced genes from exon-level expression data.
+
 28 February 2014: limma 3.19.22
 
 - topTreat() now includes ... argument which is passed to topTable().
