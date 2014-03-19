@@ -1,7 +1,23 @@
-15 February 2014: limma 3.19.23
+20 March 2014: limma 3.19.25
+
+- improvements to plotSplice(), which now highlights signficant exons
+  and plots exon position annotation.
+
+- New Pasilla case study added to User's Guide, demonstrating
+  differential splicing analysis of RNA-seq data.
+
+- New topic help pages for Gene Set Testing and RNA-seq analysis.
+  The topic pages are now linked from the package introduction page
+  accessible by ?limma.
+
+15 March 2014: limma 3.19.24
 
 - new functions diffSplice(), topSplice() and plotSplice() to detect
   differentially spliced genes from exon-level expression data.
+
+5 March 2014: limma 3.19.23
+
+- biocViews updated in DESCRIPTION file.
 
 28 February 2014: limma 3.19.22
 

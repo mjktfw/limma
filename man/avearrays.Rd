@@ -27,7 +27,7 @@ For an \code{MAList} object, the components \code{M} and \code{A} are both avera
 If \code{x} is of mode \code{"character"}, then the replicate values are assumed to be equal and the first is taken as the average.
 }
 \value{
-A data object of the same class as \code{x} with a row for each unique value of \code{ID}.
+A data object of the same class as \code{x} with a column for each unique value of \code{ID}.
 }
 \author{Gordon Smyth}
 \seealso{
@@ -41,4 +41,3 @@ x <- matrix(rnorm(8*3),8,3)
 colnames(x) <- c("a","a","b")
 avearrays(x)
 }
-\keyword{array}

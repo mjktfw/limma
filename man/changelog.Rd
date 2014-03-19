@@ -16,6 +16,10 @@ changeLog(n=20)
 
 \author{Gordon Smyth}
 
+\examples{
+changeLog()
+}
+
 \seealso{
 \link{01.Introduction}
 }

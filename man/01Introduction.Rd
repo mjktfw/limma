@@ -44,4 +44,19 @@ Smyth, G. K. (2005). Limma: linear models for microarray data.
 In: \emph{Bioinformatics and Computational Biology Solutions using R and Bioconductor}.
 R. Gentleman, V. Carey, S. Dudoit, R. Irizarry, W. Huber (eds), Springer, New York, 2005.
 }
+
+\seealso{
+\link{02.Classes},
+\link{03.ReadingData},
+\link{04.Background},
+\link{05.Normalization},
+\link{06.LinearModels},
+\link{07.SingleChannel},
+\link{08.Tests},
+\link{09.Diagnostics},
+\link{10.Other},
+\link{GeneSetTesting},
+\link{RNAseq}
+}
+
 \keyword{package}
