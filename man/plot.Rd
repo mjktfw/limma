@@ -1,22 +1,21 @@
-\title{MA-Plot}
-\name{plotMA}
-\alias{plotMA}
-\alias{plotMA.RGList}
-\alias{plotMA.MAList}
-\alias{plotMA.EList}
-\alias{plotMA.MArrayLM}
-\alias{plotMA.default}
+\title{plot.MArrayLM}
+\name{plot.MArrayLM}
+\alias{plot.RGList}
+\alias{plot.MAList}
+\alias{plot.EList}
+\alias{plot.MArrayLM}
 \description{
-Creates an MA-plot with color coding for control spots.
+Plot methods for data or model fit objects.
+These represent the object by creating an MA-plot, with optional color coding for control spots.
 }
 \usage{
-\method{plotMA}{default}(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
-\method{plotMA}{MArrayLM}(MA, coef=ncol(MA), xlab="AveExpr", ylab="logFC", main=colnames(MA)[coef], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
+\method{plot}{MAList}(x, y, array=1, xlab="A", ylab="M", main=colnames(x)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, \dots)
+\method{plot}{MArrayLM}(x, y, coef=ncol(x), xlab="AveExpr", ylab="logFC", main=colnames(x)[coef], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, \dots)
 }
 \arguments{
-  \item{MA}{an \code{RGList}, \code{MAList}, \code{EList} or \code{MArrayLM} object.
-  Alternatively a \code{matrix} or \code{ExpressionSet} object.}
-  \item{array}{integer giving the array to be plotted.}
+  \item{x}{an \code{RGList}, \code{MAList}, \code{EList} or \code{MArrayLM} object.}
+  \item{y}{not used.}
+  \item{array}{integer giving the array to be plotted (if \code{x} is an \code{RGList}, \code{MAList} or \code{EList} object).}
   \item{coef}{integer giving the linear model coefficient to be plotted.}
   \item{xlab}{character string giving label for x-axis}
   \item{ylab}{character string giving label for y-axis}
@@ -36,15 +35,15 @@ Creates an MA-plot with color coding for control spots.
   Ignored if there is no \code{status} vector.}
   \item{legend}{logical, should a legend of plotting symbols and colors be included. Can also be a character string giving position to place legend. Ignored if there is no \code{status} vector.}
   \item{zero.weights}{logical, should spots with zero or negative weights be plotted?}
-  \item{...}{any other arguments are passed to \code{plot}}
+  \item{\dots}{any other arguments are passed to \code{plot.default}}
 }
 
 \details{
 An MA-plot is a plot of log-intensity ratios (M-values) versus log-intensity averages (A-values).
-If \code{MA} is an \code{RGList} or \code{MAList} then this function produces an ordinary within-array MA-plot.
-If \code{MA} is an \code{MArrayLM} object, then the plot is an fitted model MA-plot in which the estimated coefficient is on the y-axis and the average A-value is on the x-axis.
+If \code{x} is an \code{RGList} or \code{MAList} then this function produces an ordinary within-array MA-plot.
+If \code{x} is an \code{MArrayLM} object, then the plot is an fitted model MA-plot in which the estimated coefficient is on the y-axis and the average A-value is on the x-axis.
 
-If \code{MA} is a \code{matrix} or \code{ExpressionSet} object, then this function produces a between-array MA-plot.
+If \code{x} is a \code{EList} object, then this function produces a between-array MA-plot.
 In this case the A-values in the plot are the average log-intensities across the arrays and the M-values are the deviations of the log-intensities for the specified array from the average.
 If there are more than five arays, then the average is computed robustly using medians.
 With five or fewer arrays, it is computed by means.
@@ -53,7 +52,7 @@ The \code{status} vector is intended to specify the control status of each spot,
 The vector is usually computed using the function \code{\link{controlStatus}} and a spot-types file.
 However the function may be used to highlight any subset of spots.
 
-The \code{status} can be included as the component \code{MA$genes$Status} instead of being passed as an argument to \code{plotMA}.
+The \code{status} can be included as the component \code{x$genes$Status} instead of being passed as an argument to \code{plot}.
 The arguments \code{values}, \code{pch}, \code{col} and \code{cex} can be included as attributes to \code{status} instead of being passed as arguments to \code{plotMA}.
 
 See \code{\link[graphics]{points}} for possible values for \code{pch}, \code{col} and \code{cex}.
@@ -63,6 +62,8 @@ See \code{\link[graphics]{points}} for possible values for \code{pch}, \code{col
 \references{See \url{http://www.statsci.org/micrarra/refs/maplots.html}}
 \author{Gordon Smyth}
 \examples{
+# See also lmFit example
+
 MA <- new("MAList")
 MA$A <- runif(300,4,16)
 MA$M <- rt(300,df=3)
@@ -73,18 +74,19 @@ status[4:6] <- "M=3"
 MA$M[4:6] <- 3
 status[7:9] <- "M=-3"
 MA$M[7:9] <- -3
-plotMA(MA,main="MA-Plot with Simulated Data",status=status,values=c("M=0","M=3","M=-3"),col=c("blue","red","green"))
+plot(MA,main="MA-Plot with Simulated Data",status=status,values=c("M=0","M=3","M=-3"),col=c("blue","red","green"))
 
 #  Same as above
 attr(status,"values") <- c("M=0","M=3","M=-3")
 attr(status,"col") <- c("blue","red","green")
-plotMA(MA,main="MA-Plot with Simulated Data",status=status)
+plot(MA,main="MA-Plot with Simulated Data",status=status)
 
 #  Same as above
 MA$genes$Status <- status
-plotMA(MA,main="MA-Plot with Simulated Data")
+plot(MA,main="MA-Plot with Simulated Data")
 }
 \seealso{
-An overview of diagnostic functions available in LIMMA is given in \link{09.Diagnostics}.
+\code{\link[limma:plotma]{plotMA}}, \code{\link{plotFB}}, \code{\link{plotMDS}}, \code{\link{plotSA}}
+
+An overview of diagnostic plots available in LIMMA is given in \link{09.Diagnostics}.
 }
-\keyword{hplot}

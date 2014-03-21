@@ -28,15 +28,15 @@ plotMA.MAList <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[arr
 	.plotMAxy(x,y,xlab=xlab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,status=status,values=values,pch=pch,col=col,cex=cex,legend=legend, ...)
 }
 
-plotMA.MArrayLM <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
+plotMA.MArrayLM <- function(MA, coef=ncol(MA), xlab="AveExpr", ylab="logFC", main=colnames(MA)[coef], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
 #	MA-plot with color coding for controls
 #	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.
-#	Last modified 23 April 2013.
+#	Last modified 21 March 2014.
 {
 	if(is.null(MA$Amean)) stop("MA-plot not possible because Amean component is absent.")
 	x <- MA$Amean
-	y <- as.matrix(MA$coef)[,array]
-	if(is.null(MA$weights)) w <- NULL else w <- as.matrix(MA$weights)[,array]
+	y <- as.matrix(MA$coef)[,coef]
+	if(is.null(MA$weights)) w <- NULL else w <- as.matrix(MA$weights)[,coef]
 	if(missing(status)) status <- MA$genes$Status
 	if(!is.null(w) && !zero.weights) {
 		i <- is.na(w) | (w <= 0)
@@ -252,7 +252,7 @@ plotPrintTipLoess <- function(object,layout,array=1,span=0.4,...) {
 }
 
 mdplot <- function(x,...)
-#	Mean-different plot
+#	Mean-difference plot
 #	Gordon Smyth
 #	16 March 2005
 {

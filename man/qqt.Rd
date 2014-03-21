@@ -4,9 +4,9 @@
 \title{Student's t Quantile-Quantile Plot}
 \description{Plots the quantiles of a data sample against the theoretical quantiles of a Student's t distribution.}
 \usage{qqt(y, df = Inf, ylim = range(y), main = "Student's t Q-Q Plot", 
-    xlab = "Theoretical Quantiles", ylab = "Sample Quantiles", plot.it = TRUE, ...) 
+    xlab = "Theoretical Quantiles", ylab = "Sample Quantiles", plot.it = TRUE, \dots) 
 qqf(y, df1, df2, ylim=range(y), main= "F Distribution Q-Q Plot",
-    xlab = "Theoretical Quantiles", ylab = "Sample Quantiles", plot.it = TRUE,...)
+    xlab = "Theoretical Quantiles", ylab = "Sample Quantiles", plot.it = TRUE, \dots)
 }
 \arguments{
 \item{y}{a numeric vector or array containing the data sample}
@@ -18,7 +18,7 @@ qqf(y, df1, df2, ylim=range(y), main= "F Distribution Q-Q Plot",
 \item{xlab}{x-axis title for the plot}
 \item{ylab}{y-axis title for the plot}
 \item{plot.it}{whether or not to produce a plot}
-\item{...}{other arguments to be passed to \code{plot}}
+\item{\dots}{other arguments to be passed to \code{plot}}
 }
 \value{A list is invisibly returned containing the values plotted in the QQ-plot:
 \item{x}{theoretical quantiles of the t-distribution or F-distribution}

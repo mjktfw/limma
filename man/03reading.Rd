@@ -25,6 +25,8 @@ There are also a series of utility functions which read the header information f
 \code{\link{read.ilmn}} reads probe or gene summary profile files from Illumina BeadChips,
 and produces an \code{ElistRaw} object.
 
+\code{\link{read.idat}} reads Illumina files in IDAT format, and produces an \code{EListRaw} object.
+
 The function \link{as.MAList} can be used to convert a \code{marrayNorm} object to an \code{MAList} object if the data was read and normalized using the marray and marrayNorm packages.
 }
 

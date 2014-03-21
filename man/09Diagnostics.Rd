@@ -22,7 +22,7 @@ Produces a spatial picture of any spot-specific measure from an array image. If 
 \item{ \code{\link{plotFB}} }{
 Plots foreground versus background log-intensies.}
 
-\item{ \code{\link{plotMA}} }{
+\item{ \code{\link{plotMA}} or \code{\link{plot.MAList}} }{
 MA-plots.
 One of the most useful plots of a two-color array.
 \code{\link{plotMA3by2}} will write MA-plots to files, six plots to a page.
