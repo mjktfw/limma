@@ -1,6 +1,6 @@
 \name{06.LinearModels}
 \alias{06.LinearModels}
-\title{Linear Models for Microarrays}
+\title{Topic: Linear Models for Microarrays}
 
 \description{
 This page gives an overview of the LIMMA functions available to fit linear models and to interpret the results.

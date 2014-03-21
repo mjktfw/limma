@@ -1,6 +1,6 @@
 \name{04.Background}
 \alias{04.Background}
-\title{Background Correction}
+\title{Topic: Background Correction}
 
 \description{
 This page deals with background correction methods provided by the \code{\link{backgroundCorrect}}, \code{\link{kooperberg}} or \code{\link{neqc}} functions.

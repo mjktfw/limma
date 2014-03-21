@@ -1,6 +1,6 @@
 \name{09.Diagnostics}
 \alias{09.Diagnostics}
-\title{Diagnostics and Quality Assessment}
+\title{Topic: Diagnostics and Quality Assessment}
 
 \description{
 This page gives an overview of the LIMMA functions available for microarray quality assessment and diagnostic plots.

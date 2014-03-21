@@ -1,6 +1,6 @@
 \name{08.Tests}
 \alias{08.Tests}
-\title{Hypothesis Testing for Linear Models}
+\title{Topic: Hypothesis Testing for Linear Models}
 
 \description{
 LIMMA provides a number of functions for multiple testing across both contrasts and genes.

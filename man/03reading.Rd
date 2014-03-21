@@ -1,6 +1,6 @@
 \name{03.ReadingData}
 \alias{03.ReadingData}
-\title{Reading Microarray Data from Files}
+\title{Topic: Reading Microarray Data from Files}
 
 \description{
 This help page gives an overview of LIMMA functions used to read data from files.

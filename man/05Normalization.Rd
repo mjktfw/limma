@@ -1,6 +1,6 @@
 \name{05.Normalization}
 \alias{05.Normalization}
-\title{Normalization of Microarray Data}
+\title{Topic: Normalization of Microarray Data}
 
 \description{
 This page gives an overview of the LIMMA functions available to normalize data from single-channel or two-colour microarrays.

@@ -1,6 +1,6 @@
 \name{02.Classes}
 \alias{02.Classes}
-\title{Classes Defined by this Package}
+\title{Topic: Classes Defined by this Package}
 
 \description{
 

@@ -1,6 +1,6 @@
 \name{07.SingleChannel}
 \alias{07.SingleChannel}
-\title{Individual Channel Analysis of Two-Color Microarrays}
+\title{Topic: Individual Channel Analysis of Two-Color Microarrays}
 
 \description{
 This page gives an overview of the LIMMA functions fit linear models to two-color microarray data in terms of the log-intensities rather than log-ratios.
