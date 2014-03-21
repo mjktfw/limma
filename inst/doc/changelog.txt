@@ -1,3 +1,7 @@
+21 March 2014: limma 3.19.28
+
+- updating NEWS.Rd ready for Bioconductor 2.14 release.
+
 21 March 2014: limma 3.19.27
 
 - new function read.idat() to read files from Illumina expression

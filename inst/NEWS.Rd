@@ -2,6 +2,123 @@
 \title{limma News}
 \encoding{UTF-8}
 
+\section{Version 3.20.0}{\itemize{
+
+\item
+New functions diffSplice(), topSplice() and plotSplice() provide functionality to analyse differential splicing using exon-level expression data from either microarrays or RNA-seq.
+
+\item
+New Pasilla case study added to User's Guide, demonstrating differential splicing analysis of RNA-seq data.
+
+\item
+new function weightedLowess() which fits a lowess curve with prior weights.
+Unlike previous implementations of lowess or loess, the weights are used in calculating which neighbouring points to include in each local regression as well as in the local regression itself.
+
+\item
+weightedLoess() now becomes the default method used by loessFit() to fit the loess curve when there are weights.
+The previous locfit and loess() methods are offered as options.
+
+\item
+linear model fit functions lm.series(), mrlm.series() and gls.series() no longer drop the dimensions of the components of the fitted object when there is just coefficient or just one gene.
+Previously this was done inconsistently in some cases but not others.
+Now the matrix components always keep dimensions.
+
+\item
+The functions lmFit(), eBayes() and tmixture.vector() now work even when there is just one gene (one row of data).
+
+\item
+New function subsetListOfArrays(), which is used to simplify the subsetting code for RGList, MAList, EList, EListRaw and MArrayLM objects.
+
+\item
+new function tricubeMovingAverage() for smoothing a time series.
+
+\item
+barcodeplot() has a new option to add enrichment worms to the plot, making use of tricubeMovingAverage().
+
+\item
+New plot() methods for RGList, MAList, EList and MArrayLM class objects.  In each case, this produces a similar result to plotMA().
+When using plot() or plotMA() on an MArrayLM object, the column is now specified by the 'coef' argument instead of by 'array'.
+
+\item
+plotMA3by2() now works on single channel data objects as well as on MAList objects.
+
+\item
+New function read.idat() to read files from Illumina expression beadarrays in IDAT format.
+
+\item
+The ctrlpath argument of read.ilmn() now defaults to the same as path for regular probes.
+This means that only one path setting is required if the regular and control probe profiles are in the same directory.
+
+\item
+read.ilmn() now sets the same probe IDs as rownames for both the expression matrix E and the annotation data.frame genes, providing that the probe IDs are unique.
+
+\item
+beadCountWeights() can now work with either probe-wise standard errors or probe-wise standard deviations.
+
+\item
+treat() has new arguments robust and winsor.tail.p which are passed through to robust empirical Bayes estimation.
+
+\item
+topTreat() now includes ... argument which is passed to topTable().
+
+\item
+topTable() with confint=TRUE now produces confidence intervals based on the t-distribution instead of on the normal distribution.
+It also now accepts a numeric value for the confint argument to specify a confidence level other the default of 0.95.
+
+\item
+topTable() will now work on an MArrayLM fit object that is missing the lods component, for example as produced by treat().
+
+\item
+roast() and mroast() now permit array weights and observation weights to both be specified.
+
+\item
+camera(), roast() and mroast() now use getEAWP() to interpret the data object.  This means that they now work on any class of data object that lmFit() will.
+
+\item
+romer() now uses propTrueNull(method="lfdr") instead of convest().
+This makes it substantially faster when the number of genes is large.
+
+\item
+genas() now uses fit$df.total from the MArrayLM object.
+This prevents df.total from exceeding the total pooled residual df for the dataset.
+The genas() results will change slightly for datasets for which df.prior was very lage.
+
+\item
+plotDensities() is now an S3 generic function with methods for RGList, MAList, EListRaw and EList objects.
+
+\item
+plotFB is now an S3 generic function with methods for RGList and EList data objects.
+
+\item
+New topic help pages 10GeneSetTests.Rd and 11RNAseq.Rd.
+The page 10Other.Rd is deleted.
+All topic help pages are now listed under 'See also' in the package introduction page accessible by ?limma.
+
+\item
+avereps() was never intended to be applied to RGList or EListRaw objects.
+It now gives an error when applied to these objects instead of returning a matrix of questionable value.
+
+\item
+Bug fix: fitFDistRobustly() was failing when there were missing values or zero df values and covariate was NULL.
+
+\item
+Bug fix: vennDiagram() wasn't passing extra arguments (...) to plot() when the number of sets was greater than 3.
+
+\item
+Bug fix to topTreat().  Rownames were incorrectly ordered when p<1.
+
+\item
+bug fix to genas(), which was not handling vector df.prior correctly when the fit object was generated using robust=TRUE.
+
+\item
+bug fix to squeezeVar().
+Previously there was an error when robust=TRUE and trend=FALSE and some of the estimated df.prior were infinite.
+
+\item
+bug fix to topTable() and topTableF() when sorting by F-statistic combined with p-value or lfc cutoffs.
+}}
+
+
 \section{Version 3.18.0}{\itemize{
 
 \item
