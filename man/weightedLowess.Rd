@@ -55,31 +55,17 @@ provide greater robustness.
 }
 
 \examples{
-y <- rnorm(1000)
-x <- runif(1000)
-w<-round(runif(1000, 0, 10))
-head(y)
-out <- weightedLowess(x, y, w)
-head(out$fitted)
-out$delta
-
-y <- rnorm(1000, -5, 5)
-x <- y+runif(1000)
-w<-runif(1000, 0, 10)
-head(y)
-out <- weightedLowess(x, y, w)
-head(out$fitted)
-out$delta
-
-y <- rnorm(1e5, -5, 5)
-x <- y+rexp(1e5, 0.5)
-w<-runif(1e5, 0, 10)
-head(y)
-out <- weightedLowess(x, y, w)
-head(out$fitted)
-out$delta
+y <- rt(100,df=4)
+x <- runif(100)
+w <- runif(100)
+out <- weightedLowess(x, y, w, span=0.7)
+plot(x,y,cex=w)
+o <- order(x)
+lines(x[o],out$fitted[o],col="red")
 }
 
 \references{
-Cleveland, WS. (1979). Robust Locally Weighted Regression and Smoothing Scatterplots. \emph{Journal of the American Statistical Association} 74(368): 829-836
+Cleveland, W.S. (1979).
+Robust Locally Weighted Regression and Smoothing Scatterplots.
+\emph{Journal of the American Statistical Association} 74, 829-836.
 }

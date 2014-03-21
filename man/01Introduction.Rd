@@ -22,7 +22,7 @@ contents page.  The function \code{\link{limmaUsersGuide}} gives
 the file location of the User's Guide.\cr
 (2) \tab
 An overview of limma functions grouped by purpose is contained
-in the numbered chapters at the top of the LIMMA contents page,
+in the numbered chapters at the foot of the LIMMA package index page,
 of which this page is the first.\cr
 (3) \tab
 The LIMMA contents page gives an
@@ -54,9 +54,8 @@ R. Gentleman, V. Carey, S. Dudoit, R. Irizarry, W. Huber (eds), Springer, New Yo
 \link{07.SingleChannel},
 \link{08.Tests},
 \link{09.Diagnostics},
-\link{10.Other},
-\link{GeneSetTesting},
-\link{RNAseq}
+\link{10.GeneSetTests},
+\link{11.RNAseq}
 }
 
 \keyword{package}

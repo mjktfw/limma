@@ -111,7 +111,7 @@ The default setting for the set statistic was changed in limma 3.5.9 (3 June 201
 \seealso{
 \code{\link{camera}}, \code{\link{romer}}, \code{\link{geneSetTest}}, \code{\link{symbols2indices}}.
 
-An overview of tests in limma is given in \link{08.Tests}.
+There is a topic page on \link{10.GeneSetTests}.
 }
 \author{Gordon Smyth and Di Wu}
 
@@ -153,4 +153,3 @@ roast(y,index1,design,contrast=2)
 mroast(y,index1,design,contrast=2)
 mroast(y,list(set1=index1,set2=index2),design,contrast=2)
 }
-\keyword{htest}

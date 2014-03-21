@@ -1,7 +1,7 @@
 \name{alias2Symbol}
 \alias{alias2Symbol}
 \alias{alias2SymbolTable}
-\title{Convert Gene Alias to Official Gene Symbols}
+\title{Convert Gene Aliases to Official Gene Symbols}
 \description{
 Maps gene alias names to official gene symbols.
 }
@@ -23,7 +23,7 @@ The user needs to have the appropriate Bioconductor organism package installed.
 \code{alias2Symbol} maps a set of aliases to a set of symbols, without necessarily preserving order.
 The output vector may be longer or shorter than the original vector, because some aliases might not be found and some aliases may map to more than one symbol.
 \code{alias2SymbolTable} maps each alias to a gene symbol and returns a table with one row for each alias.
-If an alias maps to more than one symbol, then the first one found will be returned.
+If an alias maps to more than one symbol, then the first one found is returned.
 }
 \value{
 Character vector of gene symbols.
@@ -34,9 +34,8 @@ Character vector of gene symbols.
 \author{Gordon Smyth and Yifang Hu}
 \seealso{
 This function is often used to assist gene set testing, see
-\link{08.Tests}.
+\link{10.GeneSetTests}.
 }
 \examples{
 if(require("org.Hs.eg.db")) alias2Symbol(c("PUMA","NOXA","BIM"))
 }
-\keyword{character}

@@ -64,7 +64,7 @@ This statistic performs well in practice but is slightly slower to compute.
 \code{\link{roast}},
 \code{\link{wilcoxGST}}
 
-An overview of tests in limma is given in \link{08.Tests}.
+There is a topic page on \link{10.GeneSetTests}.
 }
 \author{Yifang Hu and Gordon Smyth}
 

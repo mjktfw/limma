@@ -1,3 +1,10 @@
+21 March 2014: limma 3.19.26
+
+- Updates to help pages.  The topic page 10Other.Rd is deleted.
+  The topic pages GeneSetTesting.Rd and RNAseq.Rd renamed to
+  10GeneSetTests.Rd and 11RNAseq.Rd and the content is expanded.
+  The example for weightedLowess.Rd is edited to take less time.
+
 20 March 2014: limma 3.19.25
 
 - improvements to plotSplice(), which now highlights signficant exons

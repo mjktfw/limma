@@ -24,5 +24,10 @@ This function takes the results from romer and returns a number of top gene set 
 # See romer for examples
 }
 
-\seealso{\code{\link{romer}}}
+\seealso{
+\code{\link{romer}}
+
+There is a topic page on \link{10.GeneSetTests}.
+}
+
 \author{Gordon Smyth and Yifang Hu}

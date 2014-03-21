@@ -76,6 +76,8 @@ Analyzing gene expression data in terms of gene sets: methodological issues.
 \code{\link{roast}},
 \code{\link{romer}},
 \code{\link{symbols2indices}}.
+
+There is a topic page on \link{10.GeneSetTests}.
 }
 
 \examples{

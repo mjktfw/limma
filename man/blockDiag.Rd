@@ -5,11 +5,15 @@
 \description{Form a block diagonal matrix from the given blocks.}
 
 \usage{
-blockDiag(...)
+blockDiag(\dots)
 }
 
 \arguments{
-\item{...}{numeric matrices}
+\item{\dots}{numeric matrices}
+}
+
+\details{
+This function is sometimes useful for constructing a design matrix for a disconnected two-color microarray experiment in conjunction with \code{modelMatrix}.
 }
 
 \value{A block diagonal matrix with dimensions equal to the sum of the input dimensions}
@@ -23,7 +27,5 @@ blockDiag(a,b)
 \author{Gordon Smyth}
 
 \seealso{
-\link{10.Other}
+\code{\link{modelMatrix}}
 }
-
-\keyword{array}
