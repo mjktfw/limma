@@ -1,3 +1,9 @@
+30 March 2014: limma 3.19.29
+
+- duplicateCorrelation() now traps errors arising from mixedModel2()
+  or La.svd().  Rows that produce errors are assigned an NA
+  correlation which does not contribute to the consensus value.
+
 21 March 2014: limma 3.19.28
 
 - updating NEWS.Rd ready for Bioconductor 2.14 release.

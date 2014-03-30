@@ -99,6 +99,7 @@ duplicateCorrelation <- function(object,design=NULL,ndups=2,spacing=1,block=NULL
 
 	require( "statmod" ) # need mixedModel2Fit function
 	rho <- rep(NA,ngenes)
+	nafun <- function(e) NA
 	for (i in 1:ngenes) {
 		y <- drop(M[i,])
 		o <- is.finite(y)
@@ -111,10 +112,10 @@ duplicateCorrelation <- function(object,design=NULL,ndups=2,spacing=1,block=NULL
 			Z <- model.matrix(~0+A)
 			if(!is.null(weights)) {
 				w <- drop(weights[i,])[o]
-				s <- mixedModel2Fit(y,X,Z,w,only.varcomp=TRUE,maxit=20)$varcomp
+				s <- tryCatch(mixedModel2Fit(y,X,Z,w,only.varcomp=TRUE,maxit=20)$varcomp,error=nafun)
 			} else
-				s <- mixedModel2Fit(y,X,Z,only.varcomp=TRUE,maxit=20)$varcomp
-			rho[i] <- s[2]/sum(s)
+				s <- tryCatch(mixedModel2Fit(y,X,Z,only.varcomp=TRUE,maxit=20)$varcomp,error=nafun)
+			if(!is.na(s[1])) rho[i] <- s[2]/sum(s)
 		}
 	}
 	arho <- atanh(pmax(-1,rho))
