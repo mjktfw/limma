@@ -1,3 +1,7 @@
+ 7 April 2014: limma 3.19.30
+
+- Updates to Pasilla case study in User's Guide.
+
 30 March 2014: limma 3.19.29
 
 - duplicateCorrelation() now traps errors arising from mixedModel2()
