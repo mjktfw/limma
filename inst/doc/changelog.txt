@@ -1,6 +1,13 @@
+12 April 2014: limma 3.21.1
+
+- Update to Pasilla case study in User's Guide.
+
+12 April 2014: limma 3.21.0 (Bioconductor 2.15 Developmental Branch)
+12 April 2014: limma 3.20.0 (Bioconductor 2.14 Release Branch)
+
  7 April 2014: limma 3.19.30
 
-- Updates to Pasilla case study in User's Guide.
+- Update to Pasilla case study in User's Guide.
 
 30 March 2014: limma 3.19.29
 
