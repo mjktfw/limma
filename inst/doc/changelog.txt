@@ -1,6 +1,6 @@
 13 May 2014: limma 3.12.2
 
-- Subsetting columns of a MArrayLM object was not subsetting the
+- Subsetting columns of a MArrayLM object should not subset the
   design matrix correctly.  Now fixed.
 
 12 April 2014: limma 3.21.1

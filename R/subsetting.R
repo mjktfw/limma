@@ -102,7 +102,7 @@ assign("[.MArrayLM",
 function(object, i, j)
 #  Subsetting for MArrayLM objects
 #  Gordon Smyth
-#  26 April 2005. Last modified 13 May 2014.
+#  26 April 2005. Last modified 14 May 2014.
 {
 #	Recognized components
 	IJ <- c("coefficients","stdev.unscaled","t","p.value","lods","weights")
@@ -110,7 +110,7 @@ function(object, i, j)
 	JX <- character(0)
 	I  <- c("Amean","sigma","df.residual","df.prior","df.total","s2.post","F","F.p.value")
 	JJ <- "cov.coefficients"
-	XJ <- c("contrasts","design")
+	XJ <- "contrasts"
 	J  <- "var.prior"
 
 #	After subsetting by columns, a contrast component should always be present
@@ -131,7 +131,6 @@ function(object, i, j)
 	if(!missing(j)) {
 		object$cov.coefficients <- object$cov.coefficients[j,j,drop=FALSE]
 		object$contrasts <- object$contrasts[,j,drop=FALSE]
-		object$design <- object$design[,j,drop=FALSE]
 		object$var.prior <- object$var.prior[j]
 	}
 
