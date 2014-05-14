@@ -1,7 +1,7 @@
-13 May 2014: limma 3.12.2
+13 May 2014: limma 3.21.2
 
 - Subsetting columns of a MArrayLM object should not subset the
-  design matrix correctly.  Now fixed.
+  design matrix.  Now fixed.
 
 12 April 2014: limma 3.21.1
 
