@@ -1,3 +1,8 @@
+19 May 2014: limma 3.21.3
+
+- Remove unnecessary call to eBayes() from topTable when ranking by
+  F-statistic for a subset of the coefficients.
+
 13 May 2014: limma 3.21.2
 
 - Subsetting columns of a MArrayLM object should not subset the

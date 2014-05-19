@@ -27,7 +27,7 @@ topTable <- function(fit,coef=NULL,number=10,genelist=fit$genes,adjust.method="B
 	if(length(coef)>1) {
 		if(!is.null(fit$treat.lfc)) stop("Treat p-values can only be displayed for single coefficients")
 		coef <- unique(coef)
-		if(length(fit$coef[1,coef]) < ncol(fit)) fit <- eBayes(fit[,coef])
+		if(length(fit$coef[1,coef]) < ncol(fit)) fit <- fit[,coef]
 		if(sort.by=="B") sort.by <- "F"
 		return(topTableF(fit,number=number,genelist=genelist,adjust.method=adjust.method,sort.by=sort.by,p.value=p.value,lfc=lfc))
 	}
