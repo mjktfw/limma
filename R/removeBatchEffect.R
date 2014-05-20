@@ -6,7 +6,7 @@
 removeBatchEffect <- function(x,batch=NULL,batch2=NULL,covariates=NULL,design=matrix(1,ncol(x),1))
 #  Remove batch effects from matrix of expression data
 #  Gordon Smyth and Carolyn de Graaf
-#  Created 1 Aug 2008. Last revised 4 Feb 2012.
+#  Created 1 Aug 2008. Last revised 20 May 2014.
 {
 	x <- as.matrix(x)
 	if(is.null(batch) && is.null(batch2) && is.null(covariates)) return(x)
@@ -22,7 +22,7 @@ removeBatchEffect <- function(x,batch=NULL,batch2=NULL,covariates=NULL,design=ma
 	}
 	if(!is.null(covariates)) covariates <- as.matrix(covariates)
 	X <- cbind(batch,batch2,covariates)
-	X <- qr.resid(qr(design),X)
-	t(qr.resid(qr(X),t(x)))
+	X.design <- qr.resid(qr(design),X)
+	beta <- qr.coef(qr(X.design),t(x))
+	x - t(X %*% beta)
 }
-

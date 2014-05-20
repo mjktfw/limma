@@ -1,3 +1,11 @@
+20 May 2014: limma 3.21.4
+
+- Change to removeBatchEffect() when there is a non-trivial design
+  matrix.  Previously batch adjustments were made only within the
+  treatment levels defined by the design matrix.  The behavior of
+  removeBatchEffect() is now more consistent that of linear modelling
+  with lmFit() with batches as additive effects.
+
 19 May 2014: limma 3.21.3
 
 - Remove unnecessary call to eBayes() from topTable when ranking by
