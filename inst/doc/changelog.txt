@@ -1,3 +1,12 @@
+1 June 2014: limma 3.21.5
+
+- Further change to removeBatchEffect(), which now calls lmFit() to
+  estimate the batch effect.  This means that removeBatchEffect() can
+  now take into account weights and other arguments that will affect
+  the linear model fit.  This also corrects a problem, introduced by
+  the previous change, when the batch effect was confounded with the
+  design matrix.
+
 20 May 2014: limma 3.21.4
 
 - Change to removeBatchEffect() when there is a non-trivial design

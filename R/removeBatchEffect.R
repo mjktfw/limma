@@ -3,13 +3,12 @@
 #  A refinement would be to empirical Bayes shrink
 #  the batch effects before subtracting them.
 
-removeBatchEffect <- function(x,batch=NULL,batch2=NULL,covariates=NULL,design=matrix(1,ncol(x),1))
+removeBatchEffect <- function(x,batch=NULL,batch2=NULL,covariates=NULL,design=matrix(1,ncol(x),1),...)
 #  Remove batch effects from matrix of expression data
 #  Gordon Smyth and Carolyn de Graaf
-#  Created 1 Aug 2008. Last revised 20 May 2014.
+#  Created 1 Aug 2008. Last revised 1 June 2014.
 {
-	x <- as.matrix(x)
-	if(is.null(batch) && is.null(batch2) && is.null(covariates)) return(x)
+	if(is.null(batch) && is.null(batch2) && is.null(covariates)) return(as.matrix(x))
 	if(!is.null(batch)) {
 		batch <- as.factor(batch)
 		contrasts(batch) <- contr.sum(levels(batch))
@@ -21,8 +20,9 @@ removeBatchEffect <- function(x,batch=NULL,batch2=NULL,covariates=NULL,design=ma
 		batch2 <- model.matrix(~batch2)[,-1,drop=FALSE]
 	}
 	if(!is.null(covariates)) covariates <- as.matrix(covariates)
-	X <- cbind(batch,batch2,covariates)
-	X.design <- qr.resid(qr(design),X)
-	beta <- qr.coef(qr(X.design),t(x))
-	x - t(X %*% beta)
+	X.batch <- cbind(batch,batch2,covariates)
+	fit <- lmFit(x,cbind(design,X.batch),...)
+	beta <- fit$coefficients[,-(1:ncol(design)),drop=FALSE]
+	beta[is.na(beta)] <- 0
+	as.matrix(x) - beta %*% t(X.batch)
 }
