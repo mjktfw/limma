@@ -3,7 +3,8 @@
 
 \title{Read Illumina expression data directly from IDAT files}
 
-\description{Read Illumina BeadArray data from IDAT and manifest (.bgx) files for gene expression platforms.}
+\description{Read Illumina BeadArray data from IDAT and manifest (.bgx) files for gene 
+expression platforms.}
 
 \usage{
 read.idat(idatfiles, bgxfile, dateinfo=FALSE)
@@ -17,12 +18,15 @@ read.idat(idatfiles, bgxfile, dateinfo=FALSE)
 
 \details{
      Illumina's BeadScan/iScan software ouputs probe intensities in IDAT
-     format (encrypted XML files) and probe info in a platform specific manifest file (.bgx).
-     These files can be processed using the low-level functions \code{readIDAT} and \code{readBGX} 
+     format (encrypted XML files) and probe info in a platform specific manifest file 
+(.bgx).
+     These files can be processed using the low-level functions \code{readIDAT} and 
+\code{readBGX} 
      from the \code{illuminaio} package (Smith et al. 2013).  
 
      The \code{read.idat} function provides a convenient way to read these files.
-     into R and store them in an \code{EListRaw-class} object (similar to \code{read.ilmn}, 
+     into R and store them in an \code{EListRaw-class} object (similar to 
+\code{read.ilmn}, 
      which imports data output by Illumina's GenomeStudio software) that can be used 
      by downstream processing functions in \code{limma}.
 
@@ -33,7 +37,8 @@ read.idat(idatfiles, bgxfile, dateinfo=FALSE)
 \value{
   An \code{EListRaw-class} object with the following components:
   \item{E}{ numeric matrix of raw intensities.}
-  \item{other}{ list containing matrices of \code{NumBeads} and \code{STDEV} for each probe.}
+  \item{other}{ list containing matrices of \code{NumBeads} and \code{STDEV} for each 
+probe.}
   \item{genes}{ data.frame of probe annotation.}
   \item{targets}{ data.frame of sample information.}
 }

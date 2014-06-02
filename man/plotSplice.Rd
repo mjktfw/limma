@@ -9,7 +9,8 @@ plotSplice(fit, coef=ncol(fit), geneid=NULL, rank=1L, FDR = 0.05)
 }
 \arguments{
   \item{fit}{\code{MArrayLM} fit object produced by \code{diffSplice}.}
-  \item{coef}{the coefficient (column) of fit for which differentially splicing is assessed.}
+  \item{coef}{the coefficient (column) of fit for which differentially splicing is 
+assessed.}
   \item{geneid}{character string, ID of the gene to plot.}
   \item{rank}{integer, if \code{geneid=NULL} then this ranked gene will be plotted.}
   \item{FDR}{numeric, mark exons with false discovery rate less than this cutoff.}

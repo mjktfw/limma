@@ -20,14 +20,17 @@ nonEstimable(x)
 \value{
 \code{is.fullrank} returns \code{TRUE} or \code{FALSE}.
 
-\code{nonEstimable} returns a character vector of names for the columns of \code{x} which are linearly dependent on previous columns.
+\code{nonEstimable} returns a character vector of names for the columns of \code{x} which 
+are linearly dependent on previous columns.
 If \code{x} has full column rank, then the value is \code{NULL}.
 }
 
 \details{
-\code{is.fullrank} is used to check the integrity of design matrices in limma, for example after \link[limma:subsetting]{subsetting} operations.
+\code{is.fullrank} is used to check the integrity of design matrices in limma, for 
+example after \link[limma:subsetting]{subsetting} operations.
 
-\code{nonEstimable} is used by \code{\link{lmFit}} to report which coefficients in a linear model cannot be estimated.
+\code{nonEstimable} is used by \code{\link{lmFit}} to report which coefficients in a 
+linear model cannot be estimated.
 }
 
 \author{Gordon Smyth}

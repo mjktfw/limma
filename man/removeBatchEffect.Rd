@@ -9,7 +9,8 @@ removeBatchEffect(x, batch=NULL, batch2=NULL, covariates=NULL,
                   design=matrix(1,ncol(x),1), \dots)
 }
 \arguments{
-  \item{x}{numeric matrix, or any object that can be coerced to a matrix by \code{as.matrix(x)}, containing log-expression values for a series of samples.
+  \item{x}{numeric matrix, or any object that can be coerced to a matrix by 
+\code{as.matrix(x)}, containing log-expression values for a series of samples.
   Rows correspond to probes and columns to samples.}
   \item{batch}{factor or vector indicating batches.}
   \item{batch2}{factor or vector indicating batches.}
@@ -21,15 +22,20 @@ removeBatchEffect(x, batch=NULL, batch2=NULL, covariates=NULL,
 A numeric matrix of log-expression values with batch and covariate effects removed.
 }
 \details{
-This function is useful for removing batch effects, associated with hybridization time or other technical variables, prior to clustering or unsupervised analysis such as PCA, MDS or heatmaps.
+This function is useful for removing batch effects, associated with hybridization time or 
+other technical variables, prior to clustering or unsupervised analysis such as PCA, MDS 
+or heatmaps.
 It is not intended to use with linear modelling.
 For linear modelling, it is better to include the batch factors in the linear model.
 
-The design matrix is used to describe comparisons between the samples, for example treatment effects, which should not be removed.
+The design matrix is used to describe comparisons between the samples, for example 
+treatment effects, which should not be removed.
 
-The function (in effect) fits a linear model to the data, including both batches and regular treatments, then removes the component due to the batch effects.
+The function (in effect) fits a linear model to the data, including both batches and 
+regular treatments, then removes the component due to the batch effects.
 
-The data object \code{x} can be of any class for which \code{lmFit} and \code{as.matrix} work.
+The data object \code{x} can be of any class for which \code{lmFit} and \code{as.matrix} 
+work.
 If \code{x} contains weights, then these will be used in estimating the batch effects.
 }
 

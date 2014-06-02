@@ -10,18 +10,22 @@
 Plot the density of expression values for multiple arrays on the same plot.
 }
 \usage{
-\method{plotDensities}{RGList}(object, log=TRUE, group=NULL, col=NULL, main="RG Densities",...)
-\method{plotDensities}{MAList}(object, log=TRUE, group=NULL, col=NULL, main="RG Densities",...)
+\method{plotDensities}{RGList}(object, log=TRUE, group=NULL, col=NULL, 
+main="RG Densities",...)
+\method{plotDensities}{MAList}(object, log=TRUE, group=NULL, col=NULL, 
+main="RG Densities",...)
 \method{plotDensities}{EListRaw}(object, log=TRUE, group=NULL, col=NULL, main=NULL,...)
 \method{plotDensities}{EList}(object, log=TRUE, group=NULL, col=NULL, main=NULL,...)
 \method{plotDensities}{default}(object, group=NULL, col=NULL, main=NULL,...)
 }
 \arguments{
-  \item{object}{an \code{RGList}, \code{MAList}, \code{EListRaw} or \code{EList} object containing expression data.  Or any data object that can be coerced to a matrix.}
+  \item{object}{an \code{RGList}, \code{MAList}, \code{EListRaw} or \code{EList} object 
+containing expression data.  Or any data object that can be coerced to a matrix.}
 
   \item{log}{logical, should densities be plotted on the log2 scale?}
 
-  \item{group}{optional vector or factor classifying the arrays into groups.  Should be same length as \code{ncol(object)}.}
+  \item{group}{optional vector or factor classifying the arrays into groups.  Should be 
+same length as \code{ncol(object)}.}
 
   \item{col}{optional vector of colors of the same length as the number of groups.}
 
@@ -31,7 +35,8 @@ Plot the density of expression values for multiple arrays on the same plot.
 }
 
 \details{
-This function is useful to display and contrast the distribution of expression values on different arrays.
+This function is useful to display and contrast the distribution of expression values on 
+different arrays.
 It can for example be used to display the effects of between-array normalization.
 See the section on between-array normalization in the LIMMA User's Guide.
 }
@@ -39,7 +44,8 @@ See the section on between-array normalization in the LIMMA User's Guide.
 \author{Natalie Thorne and Gordon Smyth}
 \seealso{
 An overview of diagnostic plots in LIMMA is given in \link{09.Diagnostics}.
-There is a section using \code{plotDensities} in conjunction with between-array normalization
+There is a section using \code{plotDensities} in conjunction with between-array 
+normalization
 in the \link[=limmaUsersGuide]{LIMMA User's Guide}.
 
 This function uses \code{\link{density}} and \code{\link{matplot}}.

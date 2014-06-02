@@ -21,8 +21,10 @@ zscoreHyper(q, m, n, k)
 
 \arguments{
 \item{q, x}{numeric vector or matrix giving deviates of a random variable}
-\item{distribution}{character name of probabability distribution for which a cumulative distribution function exists}
-\item{\ldots}{other arguments specify distributional parameters and are passed to the cumulative distribution function}
+\item{distribution}{character name of probabability distribution for which a cumulative 
+distribution function exists}
+\item{\ldots}{other arguments specify distributional parameters and are passed to the 
+cumulative distribution function}
 \item{shape}{gamma shape parameter (>0)}
 \item{rate}{gamma rate parameter (>0)}
 \item{scale}{gamma scale parameter (>0)}
@@ -38,15 +40,21 @@ The exception is \code{tZscore} which gives deviates from the specified t-distri
 }
 
 \details{
-These functions compute the standard normal deviates which have the same quantiles as the given values in the specified distribution.
-For example, if \code{z <- zscoreT(x,df=df)} then \code{pnorm(z)} equals \code{pt(x,df=df)}.
+These functions compute the standard normal deviates which have the same quantiles as the 
+given values in the specified distribution.
+For example, if \code{z <- zscoreT(x,df=df)} then \code{pnorm(z)} equals 
+\code{pt(x,df=df)}.
 
-\code{zscore} works for any distribution for which a cumulative distribution function (like \code{pnorm}) exists in R.
-The argument \code{distribution} is the name of the cumulative distribution function with the \code{"p"} removed.
+\code{zscore} works for any distribution for which a cumulative distribution function 
+(like \code{pnorm}) exists in R.
+The argument \code{distribution} is the name of the cumulative distribution function with 
+the \code{"p"} removed.
 
-\code{zscoreGamma}, \code{zscoreT} and \code{zscoreHyper} are specific functions for the gamma, t and hypergeometric distributions respectively.
+\code{zscoreGamma}, \code{zscoreT} and \code{zscoreHyper} are specific functions for the 
+gamma, t and hypergeometric distributions respectively.
 
-\code{tZscore} is the inverse of \code{zscoreT}, and computes t-distribution equivalents for standard normal deviates.
+\code{tZscore} is the inverse of \code{zscoreT}, and computes t-distribution equivalents 
+for standard normal deviates.
 
 Care is taken to do the computations accurately in both tails of the distributions.
 }

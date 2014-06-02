@@ -9,7 +9,8 @@ getSpacing(spacing, layout)
 }
 \arguments{
   \item{spacing}{character string or integer.
-  Acceptable character strings are \code{"columns"}, \code{"rows"}, \code{"subarrays"} or \code{"topbottom"}.
+  Acceptable character strings are \code{"columns"}, \code{"rows"}, \code{"subarrays"} or 
+\code{"topbottom"}.
   Integer values are simply passed through.}
   \item{layout}{list containing printer layout information}
 }
@@ -20,7 +21,8 @@ These will be recorded in consecutive rows in the data object.
 \code{"columns"} means that duplicate spots are printed side-by-sidy by columns.
 These will be separated in the data object by \code{layout$nspot.r} rows.
 
-\code{"subarrays"} means that a number of sub-arrays, with identical probes in the same arrangement, are printed on each array.
+\code{"subarrays"} means that a number of sub-arrays, with identical probes in the same 
+arrangement, are printed on each array.
 The spacing therefore will be the size of a sub-array.
 
 \code{"topbottom"} is the same as \code{"subarrays"} when there are two sub-arrays.

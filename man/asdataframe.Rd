@@ -19,7 +19,8 @@ Turn a \code{MArrayLM} object into a \code{data.frame}.
   \item{\dots}{additional arguments to be passed to or from methods.}
 }
 \details{
-This method combines all the components of \code{x} which have a row for each probe on the array into a \code{data.frame}.
+This method combines all the components of \code{x} which have a row for each probe on 
+the array into a \code{data.frame}.
 }
 \value{
 A data.frame.

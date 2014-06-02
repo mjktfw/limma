@@ -7,7 +7,8 @@
 \alias{avereps.RGList}
 \title{Average Over Irregular Replicate Probes}
 \description{
-Condense a microarray data object so that values for within-array replicate probes are replaced with their average.
+Condense a microarray data object so that values for within-array replicate probes are 
+replaced with their average.
 }
 \usage{
 \method{avereps}{default}(x, ID=rownames(x), \dots)
@@ -20,18 +21,24 @@ Condense a microarray data object so that values for within-array replicate prob
   \item{\dots}{other arguments are not currently used.}
 }
 \details{
-A new data object is computed in which each probe ID is represented by the average of its replicate spots or features.
+A new data object is computed in which each probe ID is represented by the average of its 
+replicate spots or features.
 
-For an \code{MAList} object, the components \code{M} and \code{A} are both averaged in this way, as are \code{weights} and any matrices found in \code{object$other}.
-For an \code{MAList} object, \code{ID} defaults to \code{MA$genes$ID} is that exists, otherwise to \code{rownames(MA$M)}.
+For an \code{MAList} object, the components \code{M} and \code{A} are both averaged in 
+this way, as are \code{weights} and any matrices found in \code{object$other}.
+For an \code{MAList} object, \code{ID} defaults to \code{MA$genes$ID} is that exists, 
+otherwise to \code{rownames(MA$M)}.
 
-\code{EList} objects are similar, except that the \code{E} component is averaged instead of \code{M} and \code{A}.
+\code{EList} objects are similar, except that the \code{E} component is averaged instead 
+of \code{M} and \code{A}.
 
-If \code{x} is of mode \code{"character"}, then the replicate values are assumed to be equal and the first is taken as the average.
+If \code{x} is of mode \code{"character"}, then the replicate values are assumed to be 
+equal and the first is taken as the average.
 }
 
 \note{
-This function should only be applied to normalized log-expression values, and not to raw unlogged expression values.
+This function should only be applied to normalized log-expression values, and not to raw 
+unlogged expression values.
 It will generate an error message if applied to \code{RGList} or \code{EListRaw} objects.
 }
 
@@ -41,7 +48,8 @@ A data object of the same class as \code{x} with a row for each unique value of 
 
 \author{Gordon Smyth}
 \seealso{
-  \code{\link{avedups}}, \code{\link{avearrays}}. Also \code{\link[base]{rowsum}} in the base package.
+  \code{\link{avedups}}, \code{\link{avearrays}}. Also \code{\link[base]{rowsum}} in the 
+base package.
   
   \link{02.Classes} gives an overview of data classes used in LIMMA.
 }

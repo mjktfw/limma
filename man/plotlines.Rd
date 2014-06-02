@@ -24,6 +24,7 @@ Plots a line for each probe.
 \value{A plot is created on the current graphics device.}
 \author{Gordon Smyth}
 \seealso{
-An overview of modeling functions and associated plots available in LIMMA is given in \link{06.LinearModels}.
+An overview of modeling functions and associated plots available in LIMMA is given in 
+\link{06.LinearModels}.
 }
 \keyword{hplot}

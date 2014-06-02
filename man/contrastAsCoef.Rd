@@ -2,15 +2,19 @@
 \alias{contrastAsCoef}
 \title{Reform a Design Matrix to that Contrasts Become Coefficients}
 \description{
-Reform a design matrix so that one or more coefficients from the new matrix correspond to specified contrasts of coefficients from the old matrix.
+Reform a design matrix so that one or more coefficients from the new matrix correspond to 
+specified contrasts of coefficients from the old matrix.
 }
 \usage{
 contrastAsCoef(design, contrast=NULL, first=TRUE)
 }
 \arguments{
   \item{design}{numeric design matrix.}
-  \item{contrast}{numeric matrix with rows corresponding to columns of the design matrix (coefficients) and columns containing contrasts. May be a vector if there is only one contrast.}
-  \item{first}{logical, should coefficients corresponding to contrasts be the first columns (\code{TRUE}) or last columns (\code{FALSE}) of the output design matrix.}
+  \item{contrast}{numeric matrix with rows corresponding to columns of the design matrix 
+(coefficients) and columns containing contrasts. May be a vector if there is only one 
+contrast.}
+  \item{first}{logical, should coefficients corresponding to contrasts be the first 
+columns (\code{TRUE}) or last columns (\code{FALSE}) of the output design matrix.}
 }
 
 \details{

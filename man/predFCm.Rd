@@ -9,16 +9,26 @@ Calculates the predictive log fold change for a particular coefficient from a fi
 predFCm(fit,coef=2,prob=TRUE,VarRel=NULL)
 }
 \arguments{
- \item{fit}{an \code{MArrayLM} fitted model object produced by \code{lmFit} or \code{contrasts.fit} and followed by \code{eBayes}}
+ \item{fit}{an \code{MArrayLM} fitted model object produced by \code{lmFit} or 
+\code{contrasts.fit} and followed by \code{eBayes}}
  \item{coef}{integer indicating which contrasts/columns in the fit object are to be used}
- \item{prob}{logical, whether the probability that the gene is differentially expressed should be taken into account}
+ \item{prob}{logical, whether the probability that the gene is differentially expressed 
+should be taken into account}
  \item{VarRel}{string, options are "Independent" or "Increasing"}
   }
 \details{
-The predictive log fold changes are calculated as the posterior log fold changes in the empirical Bayes hierarchical model. The log fold changes are shrunk towards zero depending on how variable they are. The \code{VarRel} argument specifies whether the prior belief is that the log fold changes are independent of the variability of the genes (option "Independent"), or whether the log fold changes increase with increasing variability of the genes (option "Increasing"). The \code{prob} argument is a logical argument indicating whether the probability that a particular gene is differentially expressed should be taken into account.
+The predictive log fold changes are calculated as the posterior log fold changes in the 
+empirical Bayes hierarchical model. The log fold changes are shrunk towards zero 
+depending on how variable they are. The \code{VarRel} argument specifies whether the 
+prior belief is that the log fold changes are independent of the variability of the genes 
+(option "Independent"), or whether the log fold changes increase with increasing 
+variability of the genes (option "Increasing"). The \code{prob} argument is a logical 
+argument indicating whether the probability that a particular gene is differentially 
+expressed should be taken into account.
 }
 \value{
-	\code{predFCm} produces a numeric vector corresponding to the predictive or posterior log fold changes of the specified contrast
+	\code{predFCm} produces a numeric vector corresponding to the predictive or 
+posterior log fold changes of the specified contrast
  }
  \seealso{
 \code{\link{lmFit}}, \code{\link{eBayes}}, \code{\link{contrasts.fit}}

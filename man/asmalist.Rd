@@ -20,9 +20,11 @@ Object of class \code{\link[=MAList-class]{MAList}}
 
 \details{
 The \code{marrayNorm} class is defined in the \code{marray} package.
-This function converts a normalized two color microarray data object created by the \code{marray} package into the corresponding limma data object.
+This function converts a normalized two color microarray data object created by the 
+\code{marray} package into the corresponding limma data object.
 
-Note that such conversion is not necessary to access the limma linear modelling functions, because \code{lmFit} will operate on a \code{marrayNorm} data object directly.
+Note that such conversion is not necessary to access the limma linear modelling 
+functions, because \code{lmFit} will operate on a \code{marrayNorm} data object directly.
 }
 
 \author{Gordon Smyth}

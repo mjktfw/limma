@@ -2,7 +2,8 @@
 \alias{readSpotTypes}
 \title{Read Spot Types File}
 \description{
-Read a table giving regular expressions to identify different types of spots in the gene-dataframe.
+Read a table giving regular expressions to identify different types of spots in the 
+gene-dataframe.
 }
 \usage{
 readSpotTypes(file="SpotTypes.txt",path=NULL,sep="\t",check.names=FALSE,...)
@@ -12,11 +13,15 @@ readSpotTypes(file="SpotTypes.txt",path=NULL,sep="\t",check.names=FALSE,...)
   \item{path}{character string giving the directory containing the file.
        Can be omitted if the file is in the current working irectory.} 
   \item{sep}{the field separator character}
-  \item{check.names}{logical, if \code{FALSE} column names will not be converted to valid variable names, for example spaces in column names will not be left as is}
+  \item{check.names}{logical, if \code{FALSE} column names will not be converted to valid 
+variable names, for example spaces in column names will not be left as is}
   \item{\dots}{any other arguments are passed to \code{read.table}}
 }
 \details{
-The file is a text file with rows corresponding to types of spots and the following columns: \code{SpotType} gives the name for the spot type, \code{ID} is a regular expression matching the ID column, \code{Name} is a regular expression matching the Name column, and \code{Color} is the R name for the color to be associated with this type.
+The file is a text file with rows corresponding to types of spots and the following 
+columns: \code{SpotType} gives the name for the spot type, \code{ID} is a regular 
+expression matching the ID column, \code{Name} is a regular expression matching the Name 
+column, and \code{Color} is the R name for the color to be associated with this type.
 }
 \value{
 A data frame with columns

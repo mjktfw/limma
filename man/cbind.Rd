@@ -18,25 +18,33 @@ Combine a set of \code{RGList}, \code{MAList}, \code{EList} or \code{EListRaw} o
 }
 \arguments{
   \item{\dots}{\code{RGList}, \code{MAList}, \code{EList} or \code{EListRaw} objects.}
-  \item{deparse.level}{not currently used, see \code{\link[base]{cbind}} in the base package}
+  \item{deparse.level}{not currently used, see \code{\link[base]{cbind}} in the base 
+package}
 }
 \details{
-\code{cbind} combines data objects assuming the same probes in the same order but different arrays.
-\code{rbind} combines data objects assuming equivalent arrays, i.e., the same RNA targets, but different probes.
+\code{cbind} combines data objects assuming the same probes in the same order but 
+different arrays.
+\code{rbind} combines data objects assuming equivalent arrays, i.e., the same RNA 
+targets, but different probes.
 
 For \code{cbind}, the matrices of expression data from the individual objects are cbinded.
 The data.frames of target information, if they exist, are rbinded.
-The combined data object will preserve any additional components or attributes found in the first object to be combined.
-For \code{rbind}, the matrices of expression data are rbinded while the target information, in any, is unchanged.
+The combined data object will preserve any additional components or attributes found in 
+the first object to be combined.
+For \code{rbind}, the matrices of expression data are rbinded while the target 
+information, in any, is unchanged.
 }
 \value{
-An \code{\link[limma:rglist]{RGList}}, \code{\link[limma:malist]{MAList}}, \code{\link[limma:EList]{EList}} or \code{\link[limma:EList]{EListRaw}} object holding data from all the arrays and all genes from the individual objects.
+An \code{\link[limma:rglist]{RGList}}, \code{\link[limma:malist]{MAList}}, 
+\code{\link[limma:EList]{EList}} or \code{\link[limma:EList]{EListRaw}} object holding 
+data from all the arrays and all genes from the individual objects.
 }
 \author{Gordon Smyth}
 \seealso{
   \code{\link[base]{cbind}} in the base package.
   
-  \link{03.ReadingData} gives an overview of data input and manipulation functions in LIMMA.
+  \link{03.ReadingData} gives an overview of data input and manipulation functions in 
+LIMMA.
 }
 \examples{
 M <- A <- matrix(11:14,4,2)

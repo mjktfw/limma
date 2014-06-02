@@ -7,11 +7,14 @@ Estimates relative quality weights for each array in a multi-array
 experiment.
 }
 \usage{
-arrayWeights(object, design = NULL, weights = NULL, method = "genebygene", maxiter = 50, tol = 1e-10, trace=FALSE)
-arrayWeightsSimple(object, design = NULL, maxiter = 100, tol = 1e-6, maxratio = 100, trace=FALSE)
+arrayWeights(object, design = NULL, weights = NULL, method = "genebygene", maxiter = 50, 
+tol = 1e-10, trace=FALSE)
+arrayWeightsSimple(object, design = NULL, maxiter = 100, tol = 1e-6, maxratio = 100, 
+trace=FALSE)
 }
 \arguments{
- \item{object}{object of class \code{numeric}, \code{matrix}, \code{MAList}, \code{marrayNorm},
+ \item{object}{object of class \code{numeric}, \code{matrix}, \code{MAList}, 
+\code{marrayNorm},
            \code{ExpressionSet} or \code{PLMset} containing log-ratios or log-values of
             expression for a series of microarrays.}
  \item{design}{the design matrix of the microarray experiment, with rows
@@ -23,9 +26,11 @@ arrayWeightsSimple(object, design = NULL, maxiter = 100, tol = 1e-6, maxratio = 
           are \code{"genebygene"} and \code{"reml"}.}
  \item{maxiter}{maximum number of iterations allowed.}
  \item{tol}{convergence tolerance.}
- \item{maxratio}{maximum ratio between largest and smallest weights before iteration stops}
+ \item{maxratio}{maximum ratio between largest and smallest weights before iteration 
+stops}
  \item{trace}{logical variable. If true then output diagnostic information
-          at each iteration of the '"reml"' algorithm, or at every 1000th iteration of the 
+          at each iteration of the '"reml"' algorithm, or at every 1000th iteration of 
+the 
           '"genebygene"' algorithm.}
   }
 \details{
@@ -41,18 +46,22 @@ scoring iterations, or using an efficient gene-by-gene update algorithm.
 The final estimates of these array variances are converted to weights.
 
 The data object \code{object} is interpreted as for \code{lmFit}.
-In particular, the arguments \code{design} and \code{weights} will be extracted from the data 
+In particular, the arguments \code{design} and \code{weights} will be extracted from the 
+data 
 \code{object} if available and do not normally need to be set explicitly in 
 the call; if any of these are set in the call then they will over-ride 
 the slots or components in the data \code{object}.
 
-\code{arrayWeightsSimple} is a fast version of \code{arrayWeights} with \code{method="reml"}, no prior weights and no missing values.
+\code{arrayWeightsSimple} is a fast version of \code{arrayWeights} with 
+\code{method="reml"}, no prior weights and no missing values.
 }
 \value{
 	A vector of array weights.
  }
 \references{
-Ritchie, M. E., Diyagama, D., Neilson, van Laar, R., J., Dobrovic, A., Holloway, A., and Smyth, G. K. (2006). Empirical array quality weights in the analysis of microarray data. BMC Bioinformatics 7, 261. \url{http://www.biomedcentral.com/1471-2105/7/261/abstract}
+Ritchie, M. E., Diyagama, D., Neilson, van Laar, R., J., Dobrovic, A., Holloway, A., and 
+Smyth, G. K. (2006). Empirical array quality weights in the analysis of microarray data. 
+BMC Bioinformatics 7, 261. \url{http://www.biomedcentral.com/1471-2105/7/261/abstract}
 }
 \seealso{
 An overview of linear model functions in limma is given by \link{06.LinearModels}.
