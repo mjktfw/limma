@@ -1,24 +1,18 @@
 \name{selectModel}
 \alias{selectModel}
 \title{Select Appropriate Linear Model}
-\description{Select the best fitting linear model for each gene by minimizing an 
-information criterion.}
+\description{Select the best fitting linear model for each gene by minimizing an information criterion.}
 \usage{
 selectModel(y, designlist, criterion="aic", df.prior=0, s2.prior=NULL, s2.true=NULL, ...)
 }
 \arguments{
-  \item{y}{a matrix-like data object, containing log-ratios or log-values of expression 
-for a series of microarrays.
-  Any object class which can be coerced to matrix is acceptable including \code{numeric}, 
-\code{matrix}, \code{MAList}, \code{marrayNorm}, \code{ExpressionSet} or \code{PLMset}.}
+  \item{y}{a matrix-like data object, containing log-ratios or log-values of expression for a series of microarrays.
+  Any object class which can be coerced to matrix is acceptable including \code{numeric}, \code{matrix}, \code{MAList}, \code{marrayNorm}, \code{ExpressionSet} or \code{PLMset}.}
   \item{designlist}{list of design matrices} 
-  \item{criterion}{information criterion to be used for model selection, \code{"aic"}, 
-\code{"bic"} or \code{"mallowscp"}.}
-  \item{df.prior}{prior degrees of freedom for residual variances. See 
-\code{\link{squeezeVar}}}
+  \item{criterion}{information criterion to be used for model selection, \code{"aic"}, \code{"bic"} or \code{"mallowscp"}.}
+  \item{df.prior}{prior degrees of freedom for residual variances. See \code{\link{squeezeVar}}}
   \item{s2.prior}{prior value for residual variances, to be used if \code{df.prior}>0.}
-  \item{s2.true}{numeric vector of true variances, to be used if 
-\code{criterion="mallowscp"}.}
+  \item{s2.true}{numeric vector of true variances, to be used if \code{criterion="mallowscp"}.}
   \item{...}{other optional arguments to be passed to \code{lmFit}}
 }
 
@@ -29,13 +23,10 @@ List with components
 }
 
 \details{
-This function chooses, for each probe, the best fitting model out of a set of alternative 
-models represented by a list of design matrices.
-Selection is by Akaike's Information Criterion (AIC), Bayesian Information Criterion 
-(BIC) or by Mallow's Cp.
+This function chooses, for each probe, the best fitting model out of a set of alternative models represented by a list of design matrices.
+Selection is by Akaike's Information Criterion (AIC), Bayesian Information Criterion (BIC) or by Mallow's Cp.
 
-The criteria have been generalized slightly to accommodate an information prior on the 
-variances represented by \code{s2.prior} and \code{df.prior} or by \code{s2.post}.
+The criteria have been generalized slightly to accommodate an information prior on the variances represented by \code{s2.prior} and \code{df.prior} or by \code{s2.post}.
 Suitable values for these parameters can be estimated using \code{\link{squeezeVar}}.
 }
 

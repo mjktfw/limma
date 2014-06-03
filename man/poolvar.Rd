@@ -3,8 +3,7 @@
 
 \title{Pool Sample Variances with Unequal Variances}
 \description{
-Compute the Satterthwaite (1946) approximation to the distribution of a weighted sum of 
-sample variances.
+Compute the Satterthwaite (1946) approximation to the distribution of a weighted sum of sample variances.
 }
 
 \usage{
@@ -20,14 +19,11 @@ poolVar(var, df=n-1, multiplier=1/n, n)
 
 \details{
 The sample variances \code{var} are assumed to follow scaled chi-square distributions.
-A scaled chi-square approximation is found for the distribution of \code{sum(multiplier * 
-var)} by equating first and second moments.
-On output the sum to be approximated is equal to \code{multiplier * var} which follows 
-approximately a scaled chisquare distribution on \code{df} degrees of freedom.
+A scaled chi-square approximation is found for the distribution of \code{sum(multiplier * var)} by equating first and second moments.
+On output the sum to be approximated is equal to \code{multiplier * var} which follows approximately a scaled chisquare distribution on \code{df} degrees of freedom.
 The approximation was proposed by Satterthwaite (1946).
 
-If there are only two groups and the degrees of freedom are one less than the sample 
-sizes then this gives the denominator of Welch's t-test for unequal variances.
+If there are only two groups and the degrees of freedom are one less than the sample sizes then this gives the denominator of Welch's t-test for unequal variances.
 }
 
 \value{
@@ -40,20 +36,16 @@ A list with components
 \author{Gordon Smyth}
 
 \references{
-Welch, B. L. (1938). The significance of the difference between two means when the 
-population variances are unequal.
+Welch, B. L. (1938). The significance of the difference between two means when the population variances are unequal.
 \emph{Biometrika} \bold{29}, 350-362.
 
-Satterthwaite, F. E. (1946). An approximate distribution of estimates of variance 
-components.
+Satterthwaite, F. E. (1946). An approximate distribution of estimates of variance components.
 \emph{Biometrics Bulletin} \bold{2}, 110-114.
 
-Welch, B. L. (1947). The generalization of 'Student's' problem when several different 
-population variances are involved.
+Welch, B. L. (1947). The generalization of 'Student's' problem when several different population variances are involved.
 \emph{Biometrika} \bold{34}, 28-35.
 
-Welch, B. L. (1949). Further note on Mrs. Aspin's tables and on certain approximations to 
-the tabled function. \emph{Biometrika} \bold{36}, 293-296.
+Welch, B. L. (1949). Further note on Mrs. Aspin's tables and on certain approximations to the tabled function. \emph{Biometrika} \bold{36}, 293-296.
 }
 
 \examples{

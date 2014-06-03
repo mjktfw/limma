@@ -4,65 +4,43 @@
 \alias{interGeneCorrelation}
 \title{Competitive Gene Set Test Accounting for Inter-gene Correlation}
 \description{
-Test whether a set of genes is highly ranked relative to other genes in terms of 
-differential expression, accounting for inter-gene correlation.
+Test whether a set of genes is highly ranked relative to other genes in terms of differential expression, accounting for inter-gene correlation.
 }
 \usage{
-\S3method{camera}{default}(y, index, design, contrast=ncol(design), weights=NULL, 
-use.ranks=FALSE, allow.neg.cor=TRUE, trend.var=FALSE, sort=TRUE, \dots)
+\S3method{camera}{default}(y, index, design, contrast=ncol(design), weights=NULL, use.ranks=FALSE, allow.neg.cor=TRUE, trend.var=FALSE, sort=TRUE, \dots)
 interGeneCorrelation(y, design)
 }
 \arguments{
-  \item{y}{a numeric matrix of log-expression values or log-ratios of expression values, 
-or any data object containing such a matrix.
+  \item{y}{a numeric matrix of log-expression values or log-ratios of expression values, or any data object containing such a matrix.
   Rows correspond to probes and columns to samples.
   Any type of object that can be processed by \code{\link{getEAWP}} is acceptable.
   }
-  \item{index}{an index vector or a list of index vectors.  Can be any vector such that 
-\code{y[index,]} selects the rows corresponding to the test set.  The list can be made 
-using \code{\link{symbols2indices}}.}
+  \item{index}{an index vector or a list of index vectors.  Can be any vector such that \code{y[index,]} selects the rows corresponding to the test set.  The list can be made using \code{\link{symbols2indices}}.}
   \item{design}{design matrix.}
-  \item{contrast}{contrast of the linear model coefficients for which the test is 
-required. Can be an integer specifying a column of \code{design}, or else a numeric 
-vector of same length as the number of columns of \code{design}.}
-  \item{weights}{can be a numeric matrix of individual weights, of same size as \code{y}, 
-or a numeric vector of array weights with length equal to \code{ncol(y)}, or a numeric 
-vector of gene weights with length equal to \code{nrow(y)}.}
-  \item{use.ranks}{do a rank-based test (\code{TRUE}) or a parametric test 
-(\code{FALSE})?}
-  \item{allow.neg.cor}{should reduced variance inflation factors be allowed for negative 
-correlations?}
-  \item{trend.var}{logical, should an empirical Bayes trend be estimated?  See 
-\code{\link{eBayes}} for details.}
+  \item{contrast}{contrast of the linear model coefficients for which the test is required. Can be an integer specifying a column of \code{design}, or else a numeric vector of same length as the number of columns of \code{design}.}
+  \item{weights}{can be a numeric matrix of individual weights, of same size as \code{y}, or a numeric vector of array weights with length equal to \code{ncol(y)}, or a numeric vector of gene weights with length equal to \code{nrow(y)}.}
+  \item{use.ranks}{do a rank-based test (\code{TRUE}) or a parametric test (\code{FALSE})?}
+  \item{allow.neg.cor}{should reduced variance inflation factors be allowed for negative correlations?}
+  \item{trend.var}{logical, should an empirical Bayes trend be estimated?  See \code{\link{eBayes}} for details.}
   \item{sort}{logical, should the results be sorted by p-value?}
   \item{\dots}{other arguments are not currently used}
 }
 
 \details{
-\code{camera} and \code{interGeneCorrelation} implement methods proposed by Wu and Smyth 
-(2012).
-\code{camera} performs a \emph{competitive} test in the sense defined by Goeman and 
-Buhlmann (2007).
-It tests whether the genes in the set are highly ranked in terms of differential 
-expression relative to genes not in the set.
+\code{camera} and \code{interGeneCorrelation} implement methods proposed by Wu and Smyth (2012).
+\code{camera} performs a \emph{competitive} test in the sense defined by Goeman and Buhlmann (2007).
+It tests whether the genes in the set are highly ranked in terms of differential expression relative to genes not in the set.
 It has similar aims to \code{geneSetTest} but accounts for inter-gene correlation.
 See \code{\link{roast}} for an analogous \emph{self-contained} gene set test.
 
-The function can be used for any microarray experiment which can be represented by a 
-linear model.
-The design matrix for the experiment is specified as for the \code{\link{lmFit}} 
-function, and the contrast of interest is specified as for the 
-\code{\link{contrasts.fit}} function.
-This allows users to focus on differential expression for any coefficient or contrast in 
-a linear model by giving the vector of test statistic values.
+The function can be used for any microarray experiment which can be represented by a linear model.
+The design matrix for the experiment is specified as for the \code{\link{lmFit}} function, and the contrast of interest is specified as for the \code{\link{contrasts.fit}} function.
+This allows users to focus on differential expression for any coefficient or contrast in a linear model by giving the vector of test statistic values.
 
-\code{camera} estimates p-values after adjusting the variance of test statistics by an 
-estimated variance inflation factor.
-The inflation factor depends on estimated genewise correlation and the number of genes in 
-the gene set.
+\code{camera} estimates p-values after adjusting the variance of test statistics by an estimated variance inflation factor.
+The inflation factor depends on estimated genewise correlation and the number of genes in the gene set.
 
-\code{interGeneCorrelation} estimates the mean pair-wise correlation between a set of 
-genes.
+\code{interGeneCorrelation} estimates the mean pair-wise correlation between a set of genes.
 }
 
 \value{
@@ -81,8 +59,7 @@ genes.
 \author{Di Wu and Gordon Smyth}
 
 \references{
-Wu, D, and Smyth, GK (2012). Camera: a competitive gene set test accounting for 
-inter-gene correlation.
+Wu, D, and Smyth, GK (2012). Camera: a competitive gene set test accounting for inter-gene correlation.
 \emph{Nucleic Acids Research} 40, e133.
 \url{http://nar.oxfordjournals.org/content/40/17/e133}
 

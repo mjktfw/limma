@@ -20,8 +20,7 @@ isNumeric(x)
 This function is used to check the validity of arguments for numeric functions.
 It is an attempt to emulate the behavior of internal generic math functions.
 
-\code{isNumeric} differs from \code{is.numeric} in that data.frames with all columns 
-numeric are accepted as numeric.
+\code{isNumeric} differs from \code{is.numeric} in that data.frames with all columns numeric are accepted as numeric.
 }
 
 \author{Gordon Smyth}

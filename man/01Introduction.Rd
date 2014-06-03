@@ -5,16 +5,11 @@
 \alias{limma-package}
 \title{Introduction to the LIMMA Package}
 \description{
-LIMMA is a library for the analysis of gene expression microarray data, especially the 
-use of linear models for analysing designed experiments and the assessment of 
-differential expression.
-LIMMA provides the ability to analyse comparisons between many RNA targets simultaneously 
-in arbitrary complicated designed experiments.
-Empirical Bayesian methods are used to provide stable results even when the number of 
-arrays is small.
+LIMMA is a library for the analysis of gene expression microarray data, especially the use of linear models for analysing designed experiments and the assessment of differential expression.
+LIMMA provides the ability to analyse comparisons between many RNA targets simultaneously in arbitrary complicated designed experiments.
+Empirical Bayesian methods are used to provide stable results even when the number of arrays is small.
 The normalization and data analysis functions are for two-colour spotted microarrays.
-The linear model and differential expression functions apply to all microarrays including 
-Affymetrix and other multi-array oligonucleotide experiments.
+The linear model and differential expression functions apply to all microarrays including Affymetrix and other multi-array oligonucleotide experiments.
 }
 
 \details{
@@ -39,13 +34,10 @@ The function \code{\link{changeLog}} displays the record of changes to the packa
 
 \author{Gordon Smyth}
 \references{
-Smyth, G. K., Yang, Y.-H., Speed, T. P. (2003). Statistical issues in microarray data 
-analysis. \emph{Methods in Molecular Biology} 224, 111-136.
+Smyth, G. K., Yang, Y.-H., Speed, T. P. (2003). Statistical issues in microarray data analysis. \emph{Methods in Molecular Biology} 224, 111-136.
 
-Smyth, G. K. (2004). Linear models and empirical Bayes methods for assessing differential 
-expression in microarray experiments.
-\emph{Statistical Applications in Genetics and Molecular Biology}, Volume \bold{3}, 
-Article 3.
+Smyth, G. K. (2004). Linear models and empirical Bayes methods for assessing differential expression in microarray experiments.
+\emph{Statistical Applications in Genetics and Molecular Biology}, Volume \bold{3}, Article 3.
 \url{http://www.statsci.org/smyth/pubs/ebayes.pdf}
 
 Smyth, G. K. (2005). Limma: linear models for microarray data.

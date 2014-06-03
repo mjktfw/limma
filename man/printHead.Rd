@@ -16,10 +16,8 @@ printHead(x)
 }
 
 \details{
-If \code{x} is a vector with more than 20 elements, then \code{printHead(x)} prints only 
-the first 5 elements.
-If \code{x} is a matrix or data.frame with more than 10 rows, then \code{printHead(x)} 
-prints only the first 5 rows.
+If \code{x} is a vector with more than 20 elements, then \code{printHead(x)} prints only the first 5 elements.
+If \code{x} is a matrix or data.frame with more than 10 rows, then \code{printHead(x)} prints only the first 5 rows.
 Any other type of object is printed normally.
 }
 

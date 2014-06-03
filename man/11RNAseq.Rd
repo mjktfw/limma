@@ -7,10 +7,8 @@ This page gives an overview of the LIMMA functions available to analyze RNA-seq 
 
 \describe{
 \item{ \code{\link{voom}} }{
-	Transform RNA-seq or ChIP-seq counts to log counts per million (log-cpm) with 
-associated precision weights.
-	After this tranformation, RNA-seq or ChIP-seq data can be analyzed using the same 
-functions as would be used for microarray data.}
+	Transform RNA-seq or ChIP-seq counts to log counts per million (log-cpm) with associated precision weights.
+	After this tranformation, RNA-seq or ChIP-seq data can be analyzed using the same functions as would be used for microarray data.}
 
 \item{ \code{\link{diffSplice}} }{
 	Test for differential splicing of exons between experimental conditions.}

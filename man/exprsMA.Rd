@@ -12,11 +12,9 @@ exprs.MA(MA)
 }
 \details{
 Converts M and A-values to log-expression values.
-The output matrix will have two columns for each array, in the order green, red for each 
-array.
+The output matrix will have two columns for each array, in the order green, red for each array.
 
-This contrasts with \code{as.matrix.MAList} which extracts the M-values only, or 
-\code{RG.MA} which converts to expression values in \code{RGList} form.
+This contrasts with \code{as.matrix.MAList} which extracts the M-values only, or \code{RG.MA} which converts to expression values in \code{RGList} form.
 }
 \value{
 A numeric matrix with twice the columns of the input.

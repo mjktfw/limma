@@ -7,13 +7,11 @@ Estimates relative quality weights for each sub-array in a multi-array
 experiment.
 }
 \usage{
-printtipWeights(object, design = NULL, weights = NULL, method = "genebygene", layout, 
-maxiter = 50, tol = 1e-10, trace=FALSE)
+printtipWeights(object, design = NULL, weights = NULL, method = "genebygene", layout, maxiter = 50, tol = 1e-10, trace=FALSE)
 
 }
 \arguments{
- \item{object}{object of class \code{numeric}, \code{matrix}, \code{MAList}, 
-\code{marrayNorm},
+ \item{object}{object of class \code{numeric}, \code{matrix}, \code{MAList}, \code{marrayNorm},
            or \code{ExpressionSet} containing log-ratios or log-values of
            expression for a series of spotted microarrays.}
  \item{design}{the design matrix of the microarray experiment, with rows
@@ -23,8 +21,7 @@ maxiter = 50, tol = 1e-10, trace=FALSE)
  \item{weights}{optional numeric matrix containing prior weights for each spot.}
  \item{method}{character string specifying the estimating algorithm to be used. Choices
           are \code{"genebygene"} and \code{"reml"}.}
- \item{layout}{list specifying the dimensions of the spot matrix and the grid matrix. For 
-details see \code{\link[limma:PrintLayout]{PrintLayout-class}}.}
+ \item{layout}{list specifying the dimensions of the spot matrix and the grid matrix. For details see \code{\link[limma:PrintLayout]{PrintLayout-class}}.}
  \item{maxiter}{maximum number of iterations allowed.}
  \item{tol}{convergence tolerance.}
  \item{trace}{logical variable. If true then output diagnostic information
@@ -53,9 +50,7 @@ will over-ride the slots or components in the data \code{object}.
 	A matrix of sub-array weights which can be passed to \code{lmFit}.
  }
 \references{
-Ritchie, M. E., Diyagama, D., Neilson, van Laar, R., J., Dobrovic, A., Holloway, A., and 
-Smyth, G. K. (2006). Empirical array quality weights in the analysis of microarray data. 
-BMC Bioinformatics 7, 261. \url{http://www.biomedcentral.com/1471-2105/7/261/abstract}
+Ritchie, M. E., Diyagama, D., Neilson, van Laar, R., J., Dobrovic, A., Holloway, A., and Smyth, G. K. (2006). Empirical array quality weights in the analysis of microarray data. BMC Bioinformatics 7, 261. \url{http://www.biomedcentral.com/1471-2105/7/261/abstract}
 }
 \seealso{
 An overview of linear model functions in limma is given by \link{06.LinearModels}.

@@ -8,13 +8,11 @@ fitGammaIntercept(y,offset=0,maxit=1000)
 }
 \arguments{
   \item{y}{numeric vector of positive response values.}
-  \item{offset}{numeric vector giving known part of the expected value of \code{y}. Can 
-be a single value, or else a vector of the same length as \code{y}.}
+  \item{offset}{numeric vector giving known part of the expected value of \code{y}. Can be a single value, or else a vector of the same length as \code{y}.}
   \item{maxit}{maximum number of Newton iterations to be done.}
 }
 \details{
-The values \code{y} are assumed to follow a gamma distribution with common shape 
-parameter and with expected values given by \code{x+offset}.
+The values \code{y} are assumed to follow a gamma distribution with common shape parameter and with expected values given by \code{x+offset}.
 The function implements a globally convergent Newton iteration to estimate \code{x}.
 }
 \value{

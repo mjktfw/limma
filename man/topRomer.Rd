@@ -10,18 +10,14 @@ topRomer(x,n=10,alternative="up")
 \arguments{
   \item{x}{matrix which is the output from \link{romer}.}
   \item{n}{number of top gene set testing results to be extracted.}
-  \item{alternative}{character which can be one of the three possible alternative p 
-values: "up", "down" or "mixed". }
+  \item{alternative}{character which can be one of the three possible alternative p values: "up", "down" or "mixed". }
 }
 \value{
-matrix, which is sorted by the "up", "down" or "mixed" p values, with the rows 
-corresponding to estimated p-values for the top number of gene sets and 
-the columns corresponding to the number of genes for each gene set and the alternative 
-hypotheses mixed, up, down.
+matrix, which is sorted by the "up", "down" or "mixed" p values, with the rows corresponding to estimated p-values for the top number of gene sets and 
+the columns corresponding to the number of genes for each gene set and the alternative hypotheses mixed, up, down.
 }
 \details{
-This function takes the results from romer and returns a number of top gene set testing 
-results that are sorted by the p values.
+This function takes the results from romer and returns a number of top gene set testing results that are sorted by the p values.
 }
 
 \examples{

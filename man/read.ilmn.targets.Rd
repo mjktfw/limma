@@ -11,18 +11,14 @@ read.ilmn.targets(targets, ...)
   }
 \details{
 \code{targets} is often created by calling the function \code{\link{readTargets}}.
-Rows in \code{targets} are arrays and columns contain related array or RNA sample 
-information.
+Rows in \code{targets} are arrays and columns contain related array or RNA sample information.
 
-At least one of the two columns called \code{files} and/or \code{ctrlfiles} should be 
-present in \code{targets}, which includes names of summary probe profile files and names 
-of summary control probe profile files respectively.
+At least one of the two columns called \code{files} and/or \code{ctrlfiles} should be present in \code{targets}, which includes names of summary probe profile files and names of summary control probe profile files respectively.
 This function calls \code{\link{read.ilmn}} to read in the data.
 }
 
 \value{ 
-An \code{\link{EListRaw-class}} object. See return value of the function 
-\code{\link{read.ilmn}} for details.
+An \code{\link{EListRaw-class}} object. See return value of the function \code{\link{read.ilmn}} for details.
 }
 
 \author{Wei Shi}

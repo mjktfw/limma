@@ -13,14 +13,11 @@ protectMetachar(x)
 }
 
 \details{
-This function is used to protect strings containing metacharacters so that the 
-metacharacters can be treated as ordinary characters in string matching functions 
-operations.
+This function is used to protect strings containing metacharacters so that the metacharacters can be treated as ordinary characters in string matching functions operations.
 }
 
 \value{
-A character vector of the same length as \code{x} in which two backslashes have been 
-inserted before any metacharacter.
+A character vector of the same length as \code{x} in which two backslashes have been inserted before any metacharacter.
 }
 
 \seealso{

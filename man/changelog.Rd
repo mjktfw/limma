@@ -12,8 +12,7 @@ changeLog(n=20)
   \item{n}{integer, number of lines to write of changelog.}
 }
 
-\value{No value is produced, but a number of lines of text are written to standard 
-output.}
+\value{No value is produced, but a number of lines of text are written to standard output.}
 
 \author{Gordon Smyth}
 

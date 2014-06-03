@@ -9,8 +9,7 @@ Prompt the user to choose one of these to display the help document.
 helpMethods(genericFunction)
 }
 \arguments{
-  \item{genericFunction}{a generic function or a character string giving the name of a 
-generic function}
+  \item{genericFunction}{a generic function or a character string giving the name of a generic function}
 }
 \author{Gordon Smyth}
 \seealso{

@@ -13,8 +13,7 @@ trimWhiteSpace(x)
 }
 
 \value{
-A character vector of the same length as \code{x} in which leading and trailing white 
-space has been stripped off each value.
+A character vector of the same length as \code{x} in which leading and trailing white space has been stripped off each value.
 }
 
 \seealso{

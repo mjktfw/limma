@@ -14,14 +14,11 @@ tricubeMovingAverage(x,span=0.5,full.length=TRUE)
   \item{full.length}{logical value, should output have same number of length as input?}
 }
 \details{
-This function smooths a vector (considered as a time series) using moving average with 
-tricube weights.
+This function smooths a vector (considered as a time series) using moving average with tricube weights.
 It is similar to a loess curve of degree zero, with a couple of differences:
-a continuity correction is applied when computing the neighbouring points and, when 
-\code{full.length=TRUE}, the span halves at the end points.
+a continuity correction is applied when computing the neighbouring points and, when \code{full.length=TRUE}, the span halves at the end points.
 
-The \code{filter} function in the stats package is called to do the low-level 
-calculations.
+The \code{filter} function in the stats package is called to do the low-level calculations.
 }
 \value{
 Numeric vector of smoothed values.

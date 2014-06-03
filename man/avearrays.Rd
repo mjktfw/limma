@@ -5,8 +5,7 @@
 \alias{avearrays.EList}
 \title{Average Over Replicate Arrays}
 \description{
-Condense a microarray data object so that technical replicate arrays are replaced with 
-(weighted) averages.
+Condense a microarray data object so that technical replicate arrays are replaced with (weighted) averages.
 }
 \usage{
 \method{avearrays}{default}(x, ID=colnames(x), weights=NULL)
@@ -19,21 +18,16 @@ Condense a microarray data object so that technical replicate arrays are replace
   \item{weights}{numeric matrix of non-negative weights}
 }
 \details{
-A new data object is computed in which technical replicate arrays are replaced by their 
-(weighted) averages.
+A new data object is computed in which technical replicate arrays are replaced by their (weighted) averages.
 
-For an \code{MAList} object, the components \code{M} and \code{A} are both averaged in 
-this way, as are \code{weights} and any matrices found in \code{object$other}.
+For an \code{MAList} object, the components \code{M} and \code{A} are both averaged in this way, as are \code{weights} and any matrices found in \code{object$other}.
 
-\code{EList} objects are similar, except that the \code{E} component is averaged instead 
-of \code{M} and \code{A}.
+\code{EList} objects are similar, except that the \code{E} component is averaged instead of \code{M} and \code{A}.
 
-If \code{x} is of mode \code{"character"}, then the replicate values are assumed to be 
-equal and the first is taken as the average.
+If \code{x} is of mode \code{"character"}, then the replicate values are assumed to be equal and the first is taken as the average.
 }
 \value{
-A data object of the same class as \code{x} with a column for each unique value of 
-\code{ID}.
+A data object of the same class as \code{x} with a column for each unique value of \code{ID}.
 }
 \author{Gordon Smyth}
 \seealso{

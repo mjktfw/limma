@@ -13,8 +13,7 @@ blockDiag(\dots)
 }
 
 \details{
-This function is sometimes useful for constructing a design matrix for a disconnected 
-two-color microarray experiment in conjunction with \code{modelMatrix}.
+This function is sometimes useful for constructing a design matrix for a disconnected two-color microarray experiment in conjunction with \code{modelMatrix}.
 }
 
 \value{A block diagonal matrix with dimensions equal to the sum of the input dimensions}

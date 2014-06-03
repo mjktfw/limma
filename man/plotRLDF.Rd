@@ -8,33 +8,21 @@ Plot of regularized linear discriminant functions for microarray data.
 plotRLDF(y,design=NULL,z=NULL,labels.y=NULL,labels.z=NULL,col.y=1,col.z=1,
 df.prior=5,show.dimensions=c(1,2),main=NULL,nprobes=500,...)}
 \arguments{
- \item{y}{any data object which can be coerced to a matrix, such as \code{ExpressionSet} 
-or \code{EList}. The training dataset.}
- \item{z}{any data object which can be coerced to a matrix, such as \code{ExpressionSet} 
-or \code{EList}. The dataset to be classified.}
- \item{design}{the design matrix ofthe microarray experiment for \code{y}, with rows 
-corresponding to arrays and columns to coefficients to be estimated. Defaults to the unit 
-vector meaning that the arrays are treated as replicates.}
- \item{labels.y}{character vector of sample names or labels in \code{y}. Default is 
-integers starting from 1.}
- \item{labels.z}{character vector of sample names or labels in \code{z}. Default is 
-\code{letters}.}
-  \item{col.y}{numeric or character vector of colors for the plotting characters of 
-\code{y}. Default is black.}
- \item{col.z}{numeric or character vector of colors for the plotting characters of 
-\code{z}. Default is black.}
+ \item{y}{any data object which can be coerced to a matrix, such as \code{ExpressionSet} or \code{EList}. The training dataset.}
+ \item{z}{any data object which can be coerced to a matrix, such as \code{ExpressionSet} or \code{EList}. The dataset to be classified.}
+ \item{design}{the design matrix ofthe microarray experiment for \code{y}, with rows corresponding to arrays and columns to coefficients to be estimated. Defaults to the unit vector meaning that the arrays are treated as replicates.}
+ \item{labels.y}{character vector of sample names or labels in \code{y}. Default is integers starting from 1.}
+ \item{labels.z}{character vector of sample names or labels in \code{z}. Default is \code{letters}.}
+  \item{col.y}{numeric or character vector of colors for the plotting characters of \code{y}. Default is black.}
+ \item{col.z}{numeric or character vector of colors for the plotting characters of \code{z}. Default is black.}
  \item{df.prior}{prior degrees of freedom for residual variances. Used in gene selection.}
- \item{show.dimensions}{which two dimensions should be plotted, numeric vector of length 
-two.}
+ \item{show.dimensions}{which two dimensions should be plotted, numeric vector of length two.}
  \item{main}{title of the plot.}
- \item{nprobes}{number of probes to be used for the calculations. Selected by moderated F 
-tests.}
+ \item{nprobes}{number of probes to be used for the calculations. Selected by moderated F tests.}
  \item{...}{any other arguments are passed to \code{plot}.}
 }
 \details{
-This function is a variation on the plot of usual linear discriminant fuction, in that 
-the within-group covariance matrix is regularized to ensure that it is invertible, with 
-eigenvalues bounded away from zero.
+This function is a variation on the plot of usual linear discriminant fuction, in that the within-group covariance matrix is regularized to ensure that it is invertible, with eigenvalues bounded away from zero.
 A diagonal regulation using \code{df.prior} and the median within-group variance is used.
 
 The calculations are based on a filtered list of probes.
