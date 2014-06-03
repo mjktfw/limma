@@ -5,7 +5,8 @@
 Plot log residual standard deviation versus average log expression for a fitted microarray linear model.
 }
 \usage{
-plotSA(fit, xlab="Average log-expression", ylab="log2(sigma)", zero.weights=FALSE, pch=16, cex=0.2, ...)
+plotSA(fit, xlab="Average log-expression", ylab="log2(sigma)",
+       zero.weights=FALSE, pch=16, cex=0.2, ...)
 }
 \arguments{
   \item{fit}{an \code{MArrayLM} object.}

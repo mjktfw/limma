@@ -7,7 +7,8 @@
 Test whether a set of genes is highly ranked relative to other genes in terms of differential expression, accounting for inter-gene correlation.
 }
 \usage{
-\S3method{camera}{default}(y, index, design, contrast=ncol(design), weights=NULL, use.ranks=FALSE, allow.neg.cor=TRUE, trend.var=FALSE, sort=TRUE, \dots)
+\S3method{camera}{default}(y, index, design, contrast=ncol(design), weights=NULL,
+       use.ranks=FALSE, allow.neg.cor=TRUE, trend.var=FALSE, sort=TRUE, \dots)
 interGeneCorrelation(y, design)
 }
 \arguments{

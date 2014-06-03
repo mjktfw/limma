@@ -57,7 +57,9 @@ If \code{tstat} is an \code{MArrayLM} object, then all arguments except for \cod
 \code{cor.matrix} is the same as the correlation matrix of the coefficients from which the t-statistics are calculated.
 If \code{cor.matrix} is not specified, then it is calculated from \code{design} and \code{contrasts} if at least \code{design} is specified or else defaults to the identity matrix.
 In terms of \code{design} and \code{contrasts}, \code{cor.matrix} is obtained by standardizing the matrix
+
 \code{ t(contrasts) \%*\% solve(t(design) \%*\% design) \%*\% contrasts }
+
 to a correlation matrix.
 }
 \seealso{

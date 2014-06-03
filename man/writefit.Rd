@@ -8,7 +8,8 @@ Write a microarray linear model fit to a file.
 }
 
 \usage{
-write.fit(fit, results=NULL, file, digits=3, adjust="none", method="separate", F.adjust="none", sep="\t", ...)
+write.fit(fit, results=NULL, file, digits=3, adjust="none", method="separate",
+          F.adjust="none", sep="\t", ...)
 }
 
 \arguments{

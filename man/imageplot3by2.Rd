@@ -5,7 +5,8 @@
 Write imageplots to files in PNG format, six plots to a file in a 3 by 2 grid arrangement.
 }
 \usage{
-imageplot3by2(RG, z="Gb", prefix=paste("image",z,sep="-"), path=NULL, zlim=NULL, common.lim=TRUE, ...)
+imageplot3by2(RG, z="Gb", prefix=paste("image",z,sep="-"), path=NULL,
+              zlim=NULL, common.lim=TRUE, ...)
 }
 \arguments{
   \item{RG}{an \code{RGList} or \code{MAList} object, or any list with component named by \code{z}}

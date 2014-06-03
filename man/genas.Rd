@@ -43,7 +43,7 @@ The biological and technical correlations are overlaid on the scatterplot using 
 }
 
 \value{
-	\code{genas} produces a list with the following components.
+	\code{genas} produces a list with the following components:
 	  \item{technical.correlation}{estimate of the technical correlation}
 	  \item{biological.correlation}{estimate of the biological correlation}
 	  \item{covariance.matrix}{estimate of the covariance matrix from which the biological correlation is obtained}

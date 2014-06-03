@@ -5,7 +5,8 @@
 Write MA-plots to files in PNG format, six plots to a file in a 3 by 2 grid arrangement.
 }
 \usage{
-plotMA3by2(MA, prefix="MA", path=NULL, main=colnames(MA), zero.weights=FALSE, common.lim=TRUE, device="png", ...)
+plotMA3by2(MA, prefix="MA", path=NULL, main=colnames(MA),
+           zero.weights=FALSE, common.lim=TRUE, device="png", ...)
 }
 \arguments{
   \item{MA}{an \code{MAList}, \code{RGList}, \code{EListRaw} or \code{EList} object, or a matrix containing log-intensities.}

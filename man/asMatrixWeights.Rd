@@ -36,4 +36,3 @@ asMatrixWeights(1:4,c(4,3))
 
 An overview of functions in LIMMA used for fitting linear models is given in \link{06.LinearModels}.
 }
-\keyword{hplot}

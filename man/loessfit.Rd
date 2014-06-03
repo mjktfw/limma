@@ -8,7 +8,8 @@ Returns fitted values and residuals.
 }
 
 \usage{
-loessFit(y, x, weights=NULL, span=0.3, iterations=4L, min.weight=1e-5, max.weight=1e5, equal.weights.as.null=TRUE, method="weightedLowess")
+loessFit(y, x, weights=NULL, span=0.3, iterations=4L, min.weight=1e-5, max.weight=1e5,
+         equal.weights.as.null=TRUE, method="weightedLowess")
 }
 
 \arguments{

@@ -13,10 +13,10 @@ function(object) print(object$p.value)
 
 roast <- function(y,...) UseMethod("roast")
 
-roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,...)
+roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,approx.zscore=TRUE,...)
 # Rotation gene set testing for linear models
 # Gordon Smyth and Di Wu
-# Created 24 Apr 2008.  Last modified 24 Feb 2014.
+# Created 24 Apr 2008.  Last modified 2 June 2014.
 {
 #	Check index
 	if(is.list(index)) return(mroast(y=y,index=index,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,weights=weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,trend.var=trend.var,nrot=nrot))
@@ -185,7 +185,7 @@ roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.sta
 	statrot <- array(0,c(nrot,3),dimnames=list(NULL,names(p)))
 
 #	Convert to z-scores
-	modt <- zscoreT(modt,df=d0+d)
+	modt <- zscoreT(modt,df=d0+d,approx=approx.zscore)
 
 #	Active proportions
 	if(!is.null(gene.weights)) {
@@ -213,7 +213,7 @@ roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.sta
 	else
 		sdr.post <- sqrt(s02)
 	modtr <- signc*Br/sdr.post
-	modtr <- zscoreT(modtr,df=d0+d)
+	modtr <- zscoreT(modtr,df=d0+d,approx=approx.zscore)
 
 	if(set.statistic=="msq") {
 #		Observed statistics
@@ -303,7 +303,7 @@ roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.sta
 
 mroast <- function(y,...) UseMethod("mroast")
 
-mroast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,adjust.method="BH",midp=TRUE,sort="directional",...)
+mroast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,approx.zscore=TRUE,adjust.method="BH",midp=TRUE,sort="directional",...)
 #  Rotation gene set testing with multiple sets
 #  Gordon Smyth and Di Wu
 #  Created 28 Jan 2010. Last revised 24 Feb 2014.
@@ -397,7 +397,7 @@ mroast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.st
 	NGenes <- rep(0,nsets)
 	if(nsets<1) return(pv)
 	for(i in 1:nsets) {
-		out <- roast(y=y,index=index[[i]],design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,weights=weights,var.prior=var.prior,df.prior=df.prior,nrot=nrot)
+		out <- roast(y=y,index=index[[i]],design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,weights=weights,var.prior=var.prior,df.prior=df.prior,nrot=nrot,approx.zscore=approx.zscore,...)
 		pv[i,] <- out$p.value$P.Value
 		active[i,] <- out$p.value$Active.Prop
 		NGenes[i] <- out$ngenes.in.set

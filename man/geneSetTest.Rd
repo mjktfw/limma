@@ -7,7 +7,8 @@ Test whether a set of genes is highly ranked relative to other genes in terms of
 Genes are assumed to be independent.
 }
 \usage{
-geneSetTest(index, statistics, alternative="mixed", type="auto", ranks.only=TRUE, nsim=9999)
+geneSetTest(index, statistics, alternative = "mixed", type= "auto",
+            ranks.only = TRUE, nsim=9999)
 wilcoxGST(index, statistics, ...)
 }
 

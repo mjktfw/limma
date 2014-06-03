@@ -6,8 +6,12 @@
 Creates a heat diagram showing the co-regulation of genes under one condition with a range of other conditions.
 }
 \usage{
-heatDiagram(results,coef,primary=1,names=NULL,treatments=colnames(coef),limit=NULL,orientation="landscape",low="green",high="red",cex=1,mar=NULL,ncolors=123,...)
-heatdiagram(stat,coef,primary=1,names=NULL,treatments=colnames(stat),critical.primary=4,critical.other=3,limit=NULL,orientation="landscape",low="green",high="red",cex=1,mar=NULL,ncolors=123,...)
+heatDiagram(results, coef, primary=1, names=NULL, treatments=colnames(coef), limit=NULL,
+            orientation="landscape", low="green", high="red", cex=1, mar=NULL,
+            ncolors=123, ...)
+heatdiagram(stat, coef, primary=1, names=NULL, treatments=colnames(stat),
+            critical.primary=4, critical.other=3, limit=NULL, orientation="landscape",
+            low="green", high="red", cex=1, mar=NULL, ncolors=123, ...)
 }
 \arguments{
   \item{results}{\code{TestResults} matrix, containing elements -1, 0 or 1, from \code{\link{decideTests}}}

@@ -1,12 +1,12 @@
 \name{romer}
 \alias{romer}
-\alias{romer2}
 \title{Rotation Gene Set Enrichment Analysis}
 \description{
 Gene set enrichment analysis for linear models using rotation tests (ROtation testing using MEan Ranks).
 }
 \usage{
-romer(index,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,set.statistic="mean",nrot=9999)
+romer(index, y, design, contrast=ncol(design), array.weights=NULL, block=NULL,
+      correlation, set.statistic="mean", nrot=9999)
 }
 \arguments{
   \item{index}{list of indices specifying the rows of \code{y} in the gene sets. The list can be made using \link{symbols2indices}.}
@@ -101,4 +101,4 @@ r
 topRomer(r,alt="up")
 topRomer(r,alt="down")
 }
-\keyword{htest}
+\concept{gene set test}

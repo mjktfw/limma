@@ -5,7 +5,8 @@
 Plot positions of one or two gene sets in a ranked list of statistics.
 }
 \usage{
-barcodeplot(statistics, index, index2=NULL, labels=c("Up","Down"), quantiles=c(-1,1), col.bars=NULL, worm=TRUE, span.worm=0.45, ...)
+barcodeplot(statistics, index, index2=NULL, labels=c("Up","Down"), quantiles=c(-1,1),
+            col.bars=NULL, worm=TRUE, span.worm=0.45, ...)
 }
 \arguments{
   \item{index}{index vector for the gene set.  This can be a vector of indices, or a logical vector of the same length as \code{statistics} or, in general, any vector such that \code{statistic[index]} gives the statistic values for the gene set to be tested.}

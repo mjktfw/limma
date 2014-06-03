@@ -8,9 +8,12 @@
 Normalize intensity values on one or more spotted microarrays to adjust for print-order effects.
 }
 \usage{
-normalizeForPrintorder(object, layout, start="topleft", method = "loess", separate.channels = FALSE, span = 0.1, plate.size = 32)
-normalizeForPrintorder.rg(R, G, printorder, method = "loess", separate.channels = FALSE, span = 0.1, plate.size = 32, plot = FALSE)
-plotPrintorder(object, layout, start="topleft", slide = 1, method = "loess", separate.channels = FALSE, span = 0.1, plate.size = 32)
+normalizeForPrintorder(object, layout, start="topleft", method = "loess",
+                       separate.channels = FALSE, span = 0.1, plate.size = 32)
+normalizeForPrintorder.rg(R, G, printorder, method = "loess", separate.channels = FALSE,
+                          span = 0.1, plate.size = 32, plot = FALSE)
+plotPrintorder(object, layout, start="topleft", slide = 1, method = "loess",
+               separate.channels = FALSE, span = 0.1, plate.size = 32)
 }
 \arguments{
   \item{object}{an \code{RGList} or \code{list} object containing components \code{R} and \code{G} which are matrices containing the red and green channel intensities for a series of arrays}

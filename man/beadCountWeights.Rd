@@ -8,7 +8,8 @@ Estimates weights which account for biological variation and technical variation
 }
 
 \usage{
-beadCountWeights(y, x, design = NULL, bead.stdev = NULL, bead.stderr = NULL, nbeads = NULL, array.cv = TRUE, scale = FALSE)
+beadCountWeights(y, x, design = NULL, bead.stdev = NULL, bead.stderr = NULL,
+                 nbeads = NULL, array.cv = TRUE, scale = FALSE)
 }
 
 \arguments{

@@ -6,7 +6,8 @@
 \description{Fit robust lowess curves of degree 1 to weighted covariates and responses.}
 
 \usage{
-weightedLowess(x, y, weights = rep(1, length(y)), delta=NULL, npts = 200, span = 0.3, iterations = 4) 
+weightedLowess(x, y, weights = rep(1, length(y)),
+               delta=NULL, npts = 200, span = 0.3, iterations = 4)
 }
 
 \arguments{

@@ -7,7 +7,8 @@ The data are then ready for linear modelling.
 }
 
 \usage{
-voom(counts, design = NULL, lib.size = NULL, normalize.method = "none", plot = FALSE, span=0.5, ...)
+voom(counts, design = NULL, lib.size = NULL, normalize.method = "none",
+     plot = FALSE, span=0.5, ...)
 }
 \arguments{
  \item{counts}{a numeric \code{matrix} containing raw counts, or an \code{ExpressionSet} containing raw counts, or a \code{DGEList} object.}

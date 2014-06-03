@@ -6,7 +6,8 @@
 Convert a two-color targets dataframe with one row per array to one with one row per channel.
 }
 \usage{
-targetsA2C(targets, channel.codes=c(1,2), channel.columns=list(Target=c("Cy3","Cy5")), grep=FALSE)
+targetsA2C(targets, channel.codes = c(1,2), channel.columns = list(Target=c("Cy3","Cy5")),
+           grep = FALSE)
 }
 \arguments{
   \item{targets}{data.frame with one row per array giving information about target samples associated covariates.}
@@ -38,4 +39,4 @@ targets <- data.frame(FileName=c("file1.gpr","file2.gpr"),Cy3=c("WT","KO"),Cy5=c
 targetsA2C(targets)
 }
 \author{Gordon Smyth}
-\keyword{htest}
+\concept{separate channel analysis}

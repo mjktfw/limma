@@ -1,3 +1,17 @@
+3 June 2014: limma 3.21.6
+
+- roast() and mroast() have a new argument 'approx.zscore'.  By
+  default they now use approx=TRUE when calling zscoreT().
+
+- zscoreT() can now optionally use a fast approximation instead of
+  the slower exact calculation.
+
+- plotMDS() can now optionally plot samples using symbols instead of
+  text labels.
+
+- many Rd files have been reformated to avoid over long lines in the
+  pdf manual.
+
 1 June 2014: limma 3.21.5
 
 - Further change to removeBatchEffect(), which now calls lmFit() to

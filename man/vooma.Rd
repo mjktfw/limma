@@ -10,7 +10,8 @@ Estimate the mean-variance relationship and use this to compute appropriate obse
 
 \usage{
 vooma(y, design=NULL, correlation, block=NULL, plot=FALSE, span=NULL)
-voomaByGroup(y, group, design=NULL, correlation, block=NULL, plot=FALSE, span=NULL, col=NULL)
+voomaByGroup(y, group, design=NULL, correlation, block=NULL,
+             plot=FALSE, span=NULL, col=NULL)
 }
 
 \arguments{

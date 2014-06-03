@@ -3,7 +3,8 @@
 \title{Linear Model for Series of Arrays}
 \description{Fit linear model for each gene given a series of arrays}
 \usage{
-lmFit(object, design=NULL, ndups=1, spacing=1, block=NULL, correlation, weights=NULL, method="ls", ...) 
+lmFit(object, design=NULL, ndups=1, spacing=1, block=NULL, correlation, weights=NULL,
+      method="ls", ...)
 }
 \arguments{
   \item{object}{object of class \code{numeric}, \code{matrix}, \code{MAList}, \code{EList}, \code{marrayNorm}, \code{ExpressionSet} or \code{PLMset} containing log-ratios or log-values of expression for a series of microarrays}

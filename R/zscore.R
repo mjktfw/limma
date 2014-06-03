@@ -31,16 +31,27 @@ zscoreGamma <- function(q, shape, rate = 1, scale = 1/rate)
 	z
 }
 
-zscoreT <- function(x, df)
+zscoreT <- function(x, df, approx=FALSE)
 #  Z-score equivalents for t distribution deviates
 #  Gordon Smyth
-#  24 August 2003
+#  24 August 2003. Last modified 3 June 2014.
 {
-	z <- x
-	df <- rep(df,length.out=length(x))
-	pos <- x>0
-	if(any(pos)) z[pos] <- qnorm(pt(x[pos],df=df[pos],lower.tail=FALSE,log.p=TRUE),lower.tail=FALSE,log.p=TRUE) 
-	if(any(!pos)) z[!pos] <- qnorm(pt(x[!pos],df=df[!pos],lower.tail=TRUE,log.p=TRUE),lower.tail=TRUE,log.p=TRUE)
+	if(approx) {
+		if(all(df > 10000)) return(x)
+
+#		Approximation from Hill (1970)
+		A <- df-0.5
+		B <- 48*A*A
+		W <- A*log1p(x*x/df)
+		z <- (((((-0.4*W-3.3)*W-24)*W-85.5)/(0.8*W*W+100+B)+W+3)/B+1)*sqrt(W)
+		z[x<0] <- -z[x<0]
+	} else {
+		z <- x
+		df <- rep(df,length.out=length(x))
+		pos <- x>0
+		if(any(pos)) z[pos] <- qnorm(pt(x[pos],df=df[pos],lower.tail=FALSE,log.p=TRUE),lower.tail=FALSE,log.p=TRUE) 
+		if(any(!pos)) z[!pos] <- qnorm(pt(x[!pos],df=df[!pos],lower.tail=TRUE,log.p=TRUE),lower.tail=TRUE,log.p=TRUE)
+	}
 	z
 }
 

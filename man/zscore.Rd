@@ -14,22 +14,23 @@ Compute z-score equivalents of non-normal random deviates.
 \usage{
 zscore(q, distribution, ...)
 zscoreGamma(q, shape, rate = 1, scale = 1/rate) 
-zscoreT(x, df)
+zscoreT(x, df, approx=FALSE)
 tZscore(x, df)
 zscoreHyper(q, m, n, k) 
 }
 
 \arguments{
-\item{q, x}{numeric vector or matrix giving deviates of a random variable}
-\item{distribution}{character name of probabability distribution for which a cumulative distribution function exists}
-\item{\ldots}{other arguments specify distributional parameters and are passed to the cumulative distribution function}
-\item{shape}{gamma shape parameter (>0)}
-\item{rate}{gamma rate parameter (>0)}
-\item{scale}{gamma scale parameter (>0)}
-\item{df}{degrees of freedom (>0 for \code{zscoreT} or >=1 for \code{tZscore})}
-\item{m}{as for \code{\link{qhyper}}}
-\item{n}{as for \code{\link{qhyper}}}
-\item{k}{as for \code{\link{qhyper}}}
+  \item{q, x}{numeric vector or matrix giving deviates of a random variable}
+  \item{distribution}{character name of probabability distribution for which a cumulative distribution function exists}
+  \item{\ldots}{other arguments specify distributional parameters and are passed to the cumulative distribution function}
+  \item{shape}{gamma shape parameter (>0)}
+  \item{rate}{gamma rate parameter (>0)}
+  \item{scale}{gamma scale parameter (>0)}
+  \item{df}{degrees of freedom (>0 for \code{zscoreT} or >=1 for \code{tZscore})}
+  \item{approx}{logical, if \code{TRUE} then a fast approximation is used to convert t-statistics into z-scores. If \code{FALSE}, z-scores will be exact.}
+  \item{m}{as for \code{\link{qhyper}}}
+  \item{n}{as for \code{\link{qhyper}}}
+  \item{k}{as for \code{\link{qhyper}}}
 }
 
 \value{
@@ -48,10 +49,23 @@ The argument \code{distribution} is the name of the cumulative distribution func
 
 \code{tZscore} is the inverse of \code{zscoreT}, and computes t-distribution equivalents for standard normal deviates.
 
-Care is taken to do the computations accurately in both tails of the distributions.
+The transformation to z-scores is done by converting to log tail probabilities, and then using \code{qnorm}.
+For numerical accuracy, the left or right tail is used, depending on which is likely to be smaller.
+
+If \code{approx=TRUE}, then the approximation from Hill (1970) is used to convert t-statistics to z-scores directly without computing tail probabilities.
+Brophy (1987) showed this to be most accurate of a variety of possible closed-form transformations.
 }
 
 \author{Gordon Smyth}
+
+\references{
+Hill, GW (1970). Algorithm 395: Student's t-distribution.
+\emph{Communications of the ACM} 13, 617-620.
+
+Brophy, AL (1987).
+Efficient estimation of probabilities in the t distribution.
+\emph{Behavior Research Methods} 19, 462--466.
+}
 
 \seealso{
 \code{\link{qnorm}}, \code{\link{pgamma}}, \code{\link{pt}} in the stats package.

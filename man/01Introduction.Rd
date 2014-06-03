@@ -14,17 +14,17 @@ The linear model and differential expression functions apply to all microarrays 
 
 \details{
 There are three types of documentation available:
-\tabular{ll}{
-(1) \tab
+\enumerate{
+\item
 The \emph{LIMMA User's Guide} can be reached through the "User
 Guides and Package Vignettes" links at the top of the LIMMA
 contents page.  The function \code{\link{limmaUsersGuide}} gives
 the file location of the User's Guide.\cr
-(2) \tab
+\item
 An overview of limma functions grouped by purpose is contained
 in the numbered chapters at the foot of the LIMMA package index page,
 of which this page is the first.\cr
-(3) \tab
+\item
 The LIMMA contents page gives an
 alphabetical index of detailed help topics.\cr
 }
@@ -32,9 +32,11 @@ alphabetical index of detailed help topics.\cr
 The function \code{\link{changeLog}} displays the record of changes to the package.
 }
 
-\author{Gordon Smyth}
+\author{Gordon Smyth, with contributions from many colleagues}
+
 \references{
-Smyth, G. K., Yang, Y.-H., Speed, T. P. (2003). Statistical issues in microarray data analysis. \emph{Methods in Molecular Biology} 224, 111-136.
+Smyth, G. K., Yang, Y.-H., Speed, T. P. (2003). Statistical issues in microarray data analysis.
+\emph{Methods in Molecular Biology} 224, 111-136.
 
 Smyth, G. K. (2004). Linear models and empirical Bayes methods for assessing differential expression in microarray experiments.
 \emph{Statistical Applications in Genetics and Molecular Biology}, Volume \bold{3}, Article 3.

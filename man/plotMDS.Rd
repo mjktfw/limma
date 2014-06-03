@@ -5,20 +5,25 @@
 \alias{plotMDS.default}
 \alias{MDS-class}
 \alias{show,MDS-method}
+
 \description{
-Plot the sample relations based on MDS.
+Plot the sample relations based on multi-dimensional scaling (MDS).
 Distances on the plot can be interpreted in terms of \emph{leading log2-fold-change}.
 }
-\usage{
-\method{plotMDS}{default}(x, top=500, labels=colnames(x), col=NULL, cex=1, dim.plot=c(1,2), ndim=max(dim.plot), gene.selection="pairwise",
-        xlab=paste("Dimension",dim.plot[1]), ylab=paste("Dimension",dim.plot[2]), ...)
-\method{plotMDS}{MDS}(x, labels=colnames(x$distance.matrix), col=NULL, cex=1, dim.plot=x$dim.plot, xlab=paste("Dimension",dim.plot[1]), ylab=paste("Dimension",dim.plot[2]),...)
 
+\usage{
+\method{plotMDS}{default}(x, top=500, labels=NULL, pch=NULL, col=NULL, cex=1,
+     dim.plot=c(1,2), ndim=max(dim.plot), gene.selection="pairwise",
+     xlab=paste("Dimension",dim.plot[1]), ylab=paste("Dimension",dim.plot[2]), ...)
+\method{plotMDS}{MDS}(x, labels=NULL, pch=NULL, col=NULL, cex=1, dim.plot=x$dim.plot,
+     xlab=paste("Dimension",dim.plot[1]), ylab=paste("Dimension",dim.plot[2]),...)
 }
+
 \arguments{
   \item{x}{any data object which can be coerced to a matrix, such as \code{ExpressionSet} or \code{EList}.}
   \item{top}{number of top genes used to calculate pairwise distances.}
   \item{labels}{character vector of sample names or labels. If \code{x} has no column names, then defaults the index of the samples.}
+  \item{pch}{plotting symbol or symbols. See \code{\link{points}} for possible values. Ignored if \code{labels} is non-\code{NULL}.}
   \item{col}{numeric or character vector of colors for the plotting characters.}
   \item{cex}{numeric vector of plot symbol expansions.}
   \item{dim.plot}{which two dimensions should be plotted, numeric vector of length two.}
@@ -76,5 +81,3 @@ mds <- plotMDS(x,  col=c(rep("black",3), rep("red",3)) )
 # or labels can be provided, here group indicators:
 plotMDS(mds,  col=c(rep("black",3), rep("red",3)), labels= c(rep("Grp1",3), rep("Grp2",3)))
 }
-
-\keyword{hplot}

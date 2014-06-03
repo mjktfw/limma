@@ -2,14 +2,16 @@
 \alias{printtipWeights}
 \alias{printtipWeightsSimple}
 \title{Sub-array Quality Weights}
-\description{
-Estimates relative quality weights for each sub-array in a multi-array
-experiment.
-}
-\usage{
-printtipWeights(object, design = NULL, weights = NULL, method = "genebygene", layout, maxiter = 50, tol = 1e-10, trace=FALSE)
 
+\description{
+Estimates relative quality weights for each sub-array in a multi-array experiment.
 }
+
+\usage{
+printtipWeights(object, design = NULL, weights = NULL, method = "genebygene", layout,
+                maxiter = 50, tol = 1e-10, trace=FALSE)
+}
+
 \arguments{
  \item{object}{object of class \code{numeric}, \code{matrix}, \code{MAList}, \code{marrayNorm},
            or \code{ExpressionSet} containing log-ratios or log-values of
@@ -24,17 +26,17 @@ printtipWeights(object, design = NULL, weights = NULL, method = "genebygene", la
  \item{layout}{list specifying the dimensions of the spot matrix and the grid matrix. For details see \code{\link[limma:PrintLayout]{PrintLayout-class}}.}
  \item{maxiter}{maximum number of iterations allowed.}
  \item{tol}{convergence tolerance.}
- \item{trace}{logical variable. If true then output diagnostic information
-          at each iteration of '"reml"' algorithm.}
-  }
+ \item{trace}{logical variable. If true then output diagnostic information at each iteration of \code{"reml"} algorithm.}
+}
+
 \details{
 The relative reliability of each sub-array (print-tip group) is estimated by measuring how
 well the expression values for that sub-array follow the linear model.
 
 The method described in Ritchie et al (2006) and implemented in 
 the \code{arrayWeights} function is adapted for this purpose.A heteroscedastic model is fitted to the expression values for 
-each gene by calling the function \code{lm.wfit}.  The dispersion model 
-is fitted to the squared residuals from the mean fit, and is set up to 
+each gene by calling the function \code{lm.wfit}.
+The dispersion model is fitted to the squared residuals from the mean fit, and is set up to 
 have sub-array specific coefficients, which are updated in either full REML 
 scoring iterations, or using an efficient gene-by-gene update algorithm.  
 The final estimates of the sub-array variances are converted to weights.
@@ -44,17 +46,21 @@ In particular, the arguments \code{design}, \code{weights} and \code{layout} wil
 be extracted from the data \code{object} if available and do not normally need to 
 be set explicitly in the call; if any of these are set in the call then they 
 will over-ride the slots or components in the data \code{object}.
+}
 
-}
-\value{
-	A matrix of sub-array weights which can be passed to \code{lmFit}.
- }
+\value{A matrix of sub-array weights.}
+
 \references{
-Ritchie, M. E., Diyagama, D., Neilson, van Laar, R., J., Dobrovic, A., Holloway, A., and Smyth, G. K. (2006). Empirical array quality weights in the analysis of microarray data. BMC Bioinformatics 7, 261. \url{http://www.biomedcentral.com/1471-2105/7/261/abstract}
+Ritchie, M. E., Diyagama, D., Neilson, van Laar, R., J., Dobrovic, A., Holloway, A., and Smyth, G. K. (2006).
+Empirical array quality weights in the analysis of microarray data.
+\emph{BMC Bioinformatics} 7, 261.
+\url{http://www.biomedcentral.com/1471-2105/7/261/abstract}
 }
+
 \seealso{
 An overview of linear model functions in limma is given by \link{06.LinearModels}.
 }
+
 \examples{
 \dontrun{
 # This example is designed for work on a subset of the data

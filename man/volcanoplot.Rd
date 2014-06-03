@@ -5,7 +5,8 @@
 Creates a volcano plot of log-fold changes versus log-odds of differential expression.
 }
 \usage{
-volcanoplot(fit, coef=1, highlight=0, names=fit$genes$ID, xlab="Log Fold Change", ylab="Log Odds", pch=16, cex=0.35, ...)
+volcanoplot(fit, coef=1, highlight=0, names=fit$genes$ID,
+            xlab="Log Fold Change", ylab="Log Odds", pch=16, cex=0.35, ...)
 }
 \arguments{
   \item{fit}{an \code{MArrayLM} fitted linear model object}
@@ -31,4 +32,3 @@ An overview of presentation plots following the fitting of a linear model in LIM
 \examples{
 #  See lmFit examples
 }
-\keyword{hplot}

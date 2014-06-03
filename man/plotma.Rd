@@ -10,8 +10,12 @@
 Creates an MA-plot with color coding for control spots.
 }
 \usage{
-\method{plotMA}{default}(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
-\method{plotMA}{MArrayLM}(MA, coef=ncol(MA), xlab="AveExpr", ylab="logFC", main=colnames(MA)[coef], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
+\method{plotMA}{default}(MA, array = 1, xlab = "A", ylab = "M", main = colnames(MA)[array],
+       xlim = NULL, ylim = NULL, status, values, pch, col, cex, legend = TRUE,
+       zero.weights = FALSE, ...)
+\method{plotMA}{MArrayLM}(MA, coef = ncol(MA), xlab = "AveExpr", ylab = "logFC",
+       main = colnames(MA)[coef], xlim = NULL, ylim = NULL, status, values, pch, col,
+       cex, legend = TRUE, zero.weights = FALSE, ...)
 }
 \arguments{
   \item{MA}{an \code{RGList}, \code{MAList}, \code{EList} or \code{MArrayLM} object.
@@ -73,7 +77,8 @@ status[4:6] <- "M=3"
 MA$M[4:6] <- 3
 status[7:9] <- "M=-3"
 MA$M[7:9] <- -3
-plotMA(MA,main="MA-Plot with Simulated Data",status=status,values=c("M=0","M=3","M=-3"),col=c("blue","red","green"))
+plotMA(MA,main="MA-Plot with Simulated Data",
+       status=status,values=c("M=0","M=3","M=-3"),col=c("blue","red","green"))
 
 #  Same as above
 attr(status,"values") <- c("M=0","M=3","M=-3")

@@ -3,9 +3,9 @@
 \title{Read Illumina Expression Data}
 \description{Read Illumina summary probe profile files and summary control probe profile files}
 \usage{
-read.ilmn(files=NULL, ctrlfiles=NULL, path=NULL, ctrlpath=NULL,
-probeid="Probe",  annotation=c("TargetID", "SYMBOL"), expr="AVG_Signal", other.columns="Detection", 
-sep="\t", quote="\"", verbose=TRUE, \dots)
+read.ilmn(files=NULL, ctrlfiles=NULL, path=NULL, ctrlpath=NULL, probeid="Probe",
+          annotation=c("TargetID", "SYMBOL"), expr="AVG_Signal",
+          other.columns="Detection", sep="\t", quote="\"", verbose=TRUE, \dots)
 }
 \arguments{
   \item{files}{character vector giving the names of the summary probe profile files.}
@@ -64,4 +64,4 @@ x <- read.ilmn(files="sample probe profile.txt",
 # See neqc and beadCountWeights for other examples using read.ilmn
 }
 
-\keyword{IO}
+\concept{illumina microarrays}

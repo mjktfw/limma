@@ -27,4 +27,4 @@ An \code{\link{EListRaw-class}} object. See return value of the function \code{\
 \code{\link{read.ilmn}}
 }
 
-\keyword{IO}
+\concept{illumina microarrays}

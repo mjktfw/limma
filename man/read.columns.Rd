@@ -5,7 +5,8 @@
 Reads specified columns from a file in table format and creates a data frame from it, with cases corresponding to lines and variables to fields in the file. 
 }
 \usage{
-read.columns(file,required.col=NULL,text.to.search="",sep="\t",quote="\"",skip=0,fill=TRUE,blank.lines.skip=TRUE,comment.char="",allowEscapes=FALSE,...)
+read.columns(file, required.col=NULL, text.to.search="", sep="\t", quote="\"", skip=0,
+             fill=TRUE, blank.lines.skip=TRUE, comment.char="", allowEscapes=FALSE, ...)
 }
 \arguments{
   \item{file}{the name of the file which the data are to be read from.}
@@ -46,4 +47,5 @@ A data frame (data.frame) containing a representation of the data in the file.
 An overview of LIMMA functions for reading data is given in \link{03.ReadingData}.
 }
 
+\keyword{IO}
 \keyword{file}

@@ -56,8 +56,10 @@ A comparison of background correction methods for two-colour microarrays.
 #  given GenePix Results (gpr) files in the working directory (data not
 #  provided).
 \dontrun{
-genepixFiles <- dir(pattern="*\\\\.gpr$") # get the names of the GenePix image analysis output files in the current directory
-RG <- read.maimages(genepixFiles, source="genepix", other.columns=c("F635 SD","B635 SD","F532 SD","B532 SD","B532 Mean","B635 Mean","F Pixels","B Pixels"))
+# get the names of the GenePix image analysis output files in the current directory
+genepixFiles <- dir(pattern="*\\\\.gpr$")
+RG <- read.maimages(genepixFiles, source="genepix", other.columns=c("F635 SD","B635 SD",
+                    "F532 SD","B532 SD","B532 Mean","B635 Mean","F Pixels","B Pixels"))
 RGmodel <- kooperberg(RG)
 MA <- normalizeWithinArrays(RGmodel)
 }

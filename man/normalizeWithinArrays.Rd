@@ -7,7 +7,9 @@
 Normalize the expression log-ratios for one or more two-colour spotted microarray experiments so that the log-ratios average to zero within each array or sub-array.
 }
 \usage{
-normalizeWithinArrays(object, layout, method="printtiploess", weights=object$weights, span=0.3, iterations=4, controlspots=NULL, df=5, robust="M", bc.method="subtract", offset=0)
+normalizeWithinArrays(object, layout, method="printtiploess", weights=object$weights,
+                      span=0.3, iterations=4, controlspots=NULL, df=5, robust="M",
+                      bc.method="subtract", offset=0)
 MA.RG(object, bc.method="subtract", offset=0)
 RG.MA(object)
 }

@@ -10,12 +10,18 @@ setMethod("show","MDS",function(object) {
 
 plotMDS <- function(x,...) UseMethod("plotMDS")
 
-plotMDS.MDS <- function(x,labels=colnames(x$distance.matrix),col=NULL,cex=1,dim.plot=x$dim.plot,xlab=paste("Dimension",dim.plot[1]),ylab=paste("Dimension",dim.plot[2]),...)
+plotMDS.MDS <- function(x,labels=NULL,pch=NULL,col=NULL,cex=1,dim.plot=x$dim.plot,xlab=paste("Dimension",dim.plot[1]),ylab=paste("Dimension",dim.plot[2]),...)
 #	Method for MDS objects
 #	Create a new plot using MDS coordinates or distances previously created
-#	Gordon Smyth
-#	21 May 2011.  Last modified 6 Sep 2012.
+#	Gordon Smyth and Yifang Hu
+#	21 May 2011.  Last modified 2 June 2014
 {
+#	Check labels
+	if(is.null(labels) & is.null(pch)) {
+		labels <- colnames(x$distance.matrix)
+		if(is.null(labels)) labels <- 1:length(x$x)
+	}
+
 #	Are new dimensions requested?
 	if(!all(dim.plot==x$dim.plot)) {
 		ndim <- max(dim.plot)
@@ -24,24 +30,28 @@ plotMDS.MDS <- function(x,labels=colnames(x$distance.matrix),col=NULL,cex=1,dim.
 		x$y <- x$cmdscale.out[,dim.plot[2]]
 	}
 
-#	Estimate width of labels in plot coordinates.
-#	Estimate will be ok for default plot width, but maybe too small for smaller plots.
-	if(is.null(labels)) labels <- 1:length(x$x)
-	labels <- as.character(labels)
-	StringRadius <- 0.01*cex*nchar(labels)
-	left.x <- x$x-StringRadius
-	right.x <- x$x+StringRadius
+#	Make the plot
+	if(is.null(labels)){
+#		Plot symbols instead of text
+		plot(x$x, x$y, pch = pch, xlab = xlab, ylab = ylab, col = col, cex = cex, ...)
+	} else {
+#		Plot text.  Need to estimate width of labels in plot coordinates.
+#		Estimate will be ok for default plot width, but maybe too small for smaller plots.
+		labels <- as.character(labels)
+		StringRadius <- 0.01*cex*nchar(labels)
+		left.x <- x$x-StringRadius
+		right.x <- x$x+StringRadius
+		plot(c(left.x, right.x), c(x$y, x$y), type = "n", xlab = xlab, ylab = ylab, ...)
+		text(x$x, x$y, labels = labels, col = col, cex = cex)
+	}
 
-#	Redo plot
-	plot(c(left.x,right.x),c(x$y,x$y),type="n",xlab=xlab,ylab=ylab,...)
-	text(x$x,x$y,labels=labels,col=col,cex=cex)
 	return(invisible(x))
 }
 
-plotMDS.default <- function(x,top=500,labels=colnames(x),col=NULL,cex=1,dim.plot=c(1,2),ndim=max(dim.plot),gene.selection="pairwise",xlab=paste("Dimension",dim.plot[1]),ylab=paste("Dimension",dim.plot[2]),...)
+plotMDS.default <- function(x,top=500,labels=NULL,pch=NULL,col=NULL,cex=1,dim.plot=c(1,2),ndim=max(dim.plot),gene.selection="pairwise",xlab=paste("Dimension",dim.plot[1]),ylab=paste("Dimension",dim.plot[2]),...)
 #	Multi-dimensional scaling with top-distance
 #	Di Wu and Gordon Smyth
-#	19 March 2009.  Last modified 29 May 2013.
+#	19 March 2009.  Last modified 22 May 2014
 {
 #	Check x
 	x <- as.matrix(x)
@@ -56,13 +66,16 @@ plotMDS.default <- function(x,top=500,labels=colnames(x),col=NULL,cex=1,dim.plot
 #	Check top
 	top <- min(top,nprobes)
 
-#	Check labels
-	if(is.null(labels)) labels <- 1:nsamples
-	labels <- as.character(labels)
+#	Check labels and pch
+	if(is.null(pch) & is.null(labels)) {
+		labels <- colnames(x)
+		if(is.null(labels)) labels <- 1:nsamples
+	}
+	if(!is.null(labels)) labels <- as.character(labels)
 
 #	Check dim
 	if(ndim < 2) stop("Need at least two dim.plot")
-	if(nsamples < ndim) stop("Two few samples")
+	if(nsamples < ndim) stop("Too few samples")
 	if(nprobes < ndim) stop("Too few rows")
 
 #	Check gene.selection
@@ -92,5 +105,5 @@ plotMDS.default <- function(x,top=500,labels=colnames(x),col=NULL,cex=1,dim.plot
 	mds <- new("MDS",list(dim.plot=dim.plot,distance.matrix=dd,cmdscale.out=a1,top=top,gene.selection=gene.selection))
 	mds$x <- a1[,dim.plot[1]]
 	mds$y <- a1[,dim.plot[2]]
-	plotMDS(mds,labels=labels,col=col,cex=cex,xlab=xlab,ylab=ylab,...)
+	plotMDS(mds,labels=labels,pch=pch,col=col,cex=cex,xlab=xlab,ylab=ylab,...)
 }

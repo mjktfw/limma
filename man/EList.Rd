@@ -13,20 +13,21 @@ A list-based S4 classes for storing expression values (E-values) for a set of on
 }
 
 \section{Components}{
-\code{EList} objects can be created by \code{new("EList",E)} where \code{E} is a list.
-These classes contains no slots (other than \code{.Data}), but objects should contain a list component \code{E} as follows:
-\tabular{ll}{
-  \code{E} \tab numeric matrix containing expression values.  Rows correspond to probes and columns to arrays.
-  In an \code{EListRaw} object, these are unlogged values. 
-  In an \code{EList} object, these are log2 values.
-}
+\code{EList} objects can be created by \code{new("EList",x)} where \code{x} is a list.
+These classes contains no slots (other than \code{.Data}), but objects should contain a list component \code{E},
+which is a numeric matrix containing expression values.
+Rows correspond to probes and columns to arrays.
+In an \code{EListRaw} object, \code{E} contains unlogged values. 
+In an \code{EList} object, \code{E} contains log2 values.
+
 Optional components include:
-\tabular{ll}{
-  \code{weights} \tab numeric matrix of same dimensions as \code{E} containing relative spot quality weights.  Elements should be non-negative.\cr
-  \code{other} \tab list containing other matrices, all of the same dimensions as \code{E}.\cr
-  \code{genes} \tab data.frame containing probe information. Should have one row for each probe. May have any number of columns.\cr
-  \code{targets} \tab data.frame containing information on the target RNA samples.  Rows correspond to arrays.  May have any number of columns.
+\describe{
+  \item{\code{weights}}{numeric matrix of same dimensions as \code{E} containing relative spot quality weights.  Elements should be non-negative.}
+  \item{\code{other}}{list containing other matrices, all of the same dimensions as \code{E}.}
+  \item{\code{genes}}{data.frame containing probe information. Should have one row for each probe. May have any number of columns.}
+  \item{\code{targets}}{data.frame containing information on the target RNA samples.  Rows correspond to arrays.  May have any number of columns.}
 }
+
 Valid \code{EList} or \code{EListRaw} objects may contain other optional components, but all probe or array information should be contained in the above components.
 }
 

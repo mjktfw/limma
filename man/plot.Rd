@@ -9,8 +9,12 @@ Plot methods for data or model fit objects.
 These represent the object by creating an MA-plot, with optional color coding for control spots.
 }
 \usage{
-\method{plot}{MAList}(x, y, array=1, xlab="A", ylab="M", main=colnames(x)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, \dots)
-\method{plot}{MArrayLM}(x, y, coef=ncol(x), xlab="AveExpr", ylab="logFC", main=colnames(x)[coef], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, \dots)
+\method{plot}{MAList}(x, y, array = 1, xlab= "A", ylab= "M", main = colnames(x)[array],
+     xlim = NULL, ylim = NULL, status, values, pch, col, cex, legend = TRUE,
+     zero.weights = FALSE, \dots)
+\method{plot}{MArrayLM}(x, y, coef = ncol(x), xlab="AveExpr", ylab="logFC",
+     main = colnames(x)[coef], xlim=NULL, ylim=NULL, status, values, pch, col, cex,
+     legend = TRUE, zero.weights = FALSE, \dots)
 }
 \arguments{
   \item{x}{an \code{RGList}, \code{MAList}, \code{EList} or \code{MArrayLM} object.}
@@ -74,7 +78,8 @@ status[4:6] <- "M=3"
 MA$M[4:6] <- 3
 status[7:9] <- "M=-3"
 MA$M[7:9] <- -3
-plot(MA,main="MA-Plot with Simulated Data",status=status,values=c("M=0","M=3","M=-3"),col=c("blue","red","green"))
+plot(MA,main="MA-Plot with Simulated Data",status=status,
+     values=c("M=0","M=3","M=-3"),col=c("blue","red","green"))
 
 #  Same as above
 attr(status,"values") <- c("M=0","M=3","M=-3")
