@@ -64,9 +64,9 @@ read.ilmn.targets <- function(targets, ...)
 .read.oneilmnfile <- function(fname, probeid, annotation, expr, other.columns, sep, quote, verbose, ...)
 #	Read a single file of Illumina BeadStudio output
 #	Wei Shi and Gordon Smyth
-#	Created 15 July 2009. Last modified 5 February 2014.
+#	Created 15 July 2009. Last modified 16 June 2014.
 {
-	h <- readGenericHeader(fname,columns=expr)
+	h <- readGenericHeader(fname,columns=expr,sep=sep)
 	skip <- h$NHeaderRecords
 	header <- h$ColumnNames
 
