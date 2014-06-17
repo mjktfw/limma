@@ -64,4 +64,6 @@ x <- read.ilmn(files="sample probe profile.txt",
 # See neqc and beadCountWeights for other examples using read.ilmn
 }
 
+\keyword{file}
 \concept{illumina microarrays}
+\concept{microarray data file}

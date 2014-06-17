@@ -60,9 +60,11 @@ read.idat(idatfiles, bgxfile, dateinfo=FALSE)
 \dontrun{
 idatfiles = dir(pattern="idat")
 bgxfile = dir(pattern="bgx")
-data = read.idat.ilmn(idatfiles, bgxfile)
+data = read.idat(idatfiles, bgxfile)
 propexpr(data)
 datanorm = neqc(data)
 }
 }
-\keyword{IO}
+\keyword{file}
+\concept{illumina microarrays}
+\concept{microarray data file}

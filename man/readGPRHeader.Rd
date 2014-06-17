@@ -2,9 +2,9 @@
 \alias{readGenericHeader}
 \alias{readGPRHeader}
 \alias{readSMDHeader}
-\title{Read Header Information from Image Analysis Raw Data File}
+\title{Read Header Information from Microarray Raw Data File}
 \description{
-Read the header information from a GenePix Results (GPR) file or from an SMD raw data file.
+Read the header information from a microarray raw data file, as output from an image analysis software program such as GenePix.
 These functions are used internally by \code{read.maimages} and are not usually called directly by users.
 }
 \usage{
@@ -29,11 +29,9 @@ A key component is \code{NHeaderRecords} which gives the number of lines in the 
 All other components are character vectors.
 }
 \references{
-See \url{http://www.axon.com/gn_GenePix_File_Formats.html} for GenePix formats.
+See \url{http://www.moleculardevices.com/Products/Software/GenePix-Pro.html} for GenePix formats.
 
-See \url{http://www.bluegnome.co.uk} for information on BlueFuse.
-
-See \url{http://genome-www.stanford.edu/Microarray} for the SMD.
+See \url{http://http://smd.princeton.edu} for the SMD.
 }
 \author{Gordon Smyth}
 \seealso{\code{\link{read.maimages}}
@@ -41,3 +39,5 @@ See \url{http://genome-www.stanford.edu/Microarray} for the SMD.
 An overview of LIMMA functions to read data is given in \link{03.ReadingData}.
 }
 \keyword{file}
+\concept{microarray data file}
+

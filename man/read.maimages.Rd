@@ -142,4 +142,6 @@ RG <- read.maimages(files,"genepix",wt.fun=wtflags(0.1))}
 \dontrun{files <- dir(pattern="*\\\\.spot$")
 RG <- read.maimages(files,"spot",wt.fun=wtarea(150))}
 }
+
 \keyword{file}
+\concept{microarray data file}
