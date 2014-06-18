@@ -1,5 +1,5 @@
 
-R Under development (unstable) (2014-01-30 r64901) -- "Unsuffered Consequences"
+R version 3.1.0 (2014-04-10) -- "Spring Dance"
 Copyright (C) 2014 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -1156,37 +1156,40 @@ c  0.3482980 -0.4820695 -0.3841313
 > y[iset1,3:4] <- y[iset1,3:4]+3
 > iset2 <- 6:10
 > roast(y=y,iset1,design,contrast=2)
-      Active.Prop P.Value
-Down            0   0.996
-Up              1   0.005
-Mixed           1   0.008
+         Active.Prop     P.Value
+Down               0 0.996498249
+Up                 1 0.004002001
+UpOrDown           1 0.008000000
+Mixed              1 0.008000000
 > roast(y=y,iset1,design,contrast=2,array.weights=c(0.5,1,0.5,1))
-      Active.Prop P.Value
-Down            0   0.999
-Up              1   0.002
-Mixed           1   0.003
+         Active.Prop    P.Value
+Down               0 0.99899950
+Up                 1 0.00150075
+UpOrDown           1 0.00300000
+Mixed              1 0.00300000
 > w <- matrix(runif(100*4),100,4)
 > roast(y=y,iset1,design,contrast=2,weights=w)
-      Active.Prop P.Value
-Down            0   0.999
-Up              1   0.002
-Mixed           1   0.002
+         Active.Prop   P.Value
+Down               0 0.9994997
+Up                 1 0.0010005
+UpOrDown           1 0.0020000
+Mixed              1 0.0020000
 > mroast(y=y,list(set1=iset1,set2=iset2),design,contrast=2,gene.weights=runif(100))
-     NGenes PropDown PropUp Direction PValue   FDR PValue.Mixed FDR.Mixed
-set1      5        0      1        Up  0.006 0.010        0.008    0.0150
-set2      5        0      0        Up  0.948 0.947        0.687    0.6865
+     NGenes PropDown PropUp Direction PValue    FDR PValue.Mixed FDR.Mixed
+set1      5        0      1        Up  0.008 0.0150        0.008    0.0150
+set2      5        0      0        Up  0.959 0.9585        0.687    0.6865
 > mroast(y=y,list(set1=iset1,set2=iset2),design,contrast=2,array.weights=c(0.5,1,0.5,1))
-     NGenes PropDown PropUp Direction PValue   FDR PValue.Mixed FDR.Mixed
-set1      5        0      1        Up  0.006 0.010        0.004    0.0070
-set2      5        0      0        Up  0.716 0.715        0.658    0.6575
+     NGenes PropDown PropUp Direction PValue    FDR PValue.Mixed FDR.Mixed
+set1      5        0      1        Up  0.004 0.0070        0.004    0.0070
+set2      5        0      0        Up  0.679 0.6785        0.658    0.6575
 > mroast(y=y,list(set1=iset1,set2=iset2),design,contrast=2,weights=w)
-     NGenes PropDown PropUp Direction PValue   FDR PValue.Mixed FDR.Mixed
-set1      5      0.0      1        Up  0.004 0.006        0.003    0.0050
-set2      5      0.2      0      Down  0.984 0.983        0.250    0.2495
+     NGenes PropDown PropUp Direction PValue    FDR PValue.Mixed FDR.Mixed
+set1      5      0.0      1        Up  0.003 0.0050        0.003    0.0050
+set2      5      0.2      0      Down  0.950 0.9495        0.250    0.2495
 > mroast(y=y,list(set1=iset1,set2=iset2),design,contrast=2,weights=w,array.weights=c(0.5,1,0.5,1))
-     NGenes PropDown PropUp Direction PValue   FDR PValue.Mixed FDR.Mixed
-set1      5        0      1        Up  0.002 0.002        0.001    0.0010
-set2      5        0      0      Down  0.772 0.771        0.146    0.1455
+     NGenes PropDown PropUp Direction PValue    FDR PValue.Mixed FDR.Mixed
+set1      5        0      1        Up  0.001 0.0010        0.001    0.0010
+set2      5        0      0      Down  0.791 0.7905        0.146    0.1455
 > 
 > ### camera
 > 
@@ -1202,10 +1205,11 @@ set2      5   0.1719094      Down 0.9068364381 0.90683644
 > 
 > y <- new("EList",list(E=y))
 > roast(y=y,iset1,design,contrast=2)
-      Active.Prop P.Value
-Down            0   0.998
-Up              1   0.003
-Mixed           1   0.006
+         Active.Prop     P.Value
+Down               0 0.997498749
+Up                 1 0.003001501
+UpOrDown           1 0.006000000
+Mixed              1 0.006000000
 > camera(y=y,iset1,design,contrast=2)
      NGenes Correlation Direction       PValue
 set1      5  -0.2481655        Up 0.0009047749
@@ -1315,4 +1319,4 @@ Loading required package: splines
 > 
 > proc.time()
    user  system elapsed 
-   1.37    0.06    1.42 
+   1.23    0.12    1.34 

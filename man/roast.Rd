@@ -49,7 +49,7 @@ Rotation gene set testing for linear models.
 \code{roast} produces an object of class \code{"Roast"}.
 This consists of a list with the following components:
   \item{p.value}{data.frame with columns \code{Active.Prop} and \code{P.Value}, giving the proportion of genes in the set contributing materially to significance and estimated p-values, respectively.
-Rows correspond to the alternative hypotheses mixed, up or down.}
+Rows correspond to the alternative hypotheses Down, Up, UpOrDown (two-sided) and Mixed.}
   \item{var.prior}{prior value for residual variances.}
   \item{df.prior}{prior degrees of freedom for residual variances.}
 

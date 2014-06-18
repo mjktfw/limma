@@ -1,3 +1,13 @@
+18 June 2014: limma 3.21.8
+
+- improvements to roast() and mroast().  The directional (up and
+  down) tests done by roast() now use both the original rotations
+  and their opposite signs, effectively doubling the number of
+  effective rotations.  The two-sided tests are now done explicitly
+  by rotation instead of doubling the smallest one-sided p-value.
+  The two-sided p-value is now called "UpOrDown" in the roast()
+  output.
+
 16 June 2014: limma 3.21.7
 
 - bug fix to read.ilmn() when sep=",".
