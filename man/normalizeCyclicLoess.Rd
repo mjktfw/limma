@@ -55,4 +55,4 @@ An overview of LIMMA functions for normalization is given in \link{05.Normalizat
 \link[affy]{normalize.loess} in the affy package also implements cyclic loess normalization, without weights.
 }  
 
-\keyword{models}
+\keyword{normalization}

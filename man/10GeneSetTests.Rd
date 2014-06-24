@@ -18,8 +18,8 @@ This page gives an overview of the LIMMA functions for gene set testing and path
 \item{ \code{\link{romer}} }{
 	Gene set enrichment analysis.}
 
-\item{ \code{\link{symbols2indices}} }{
-	Convert gene sets consisting of vectors of symbols into a list of indices suitable for use in the above functions.}
+\item{ \code{\link{ids2indices}} }{
+	Convert gene sets consisting of vectors of gene identifiers into a list of indices suitable for use in the above functions.}
 
 \item{ \code{\link{alias2Symbol}} and \code{\link{alias2SymbolTable}} }{
 	Convert gene symbols or aliases to current official symbols.}

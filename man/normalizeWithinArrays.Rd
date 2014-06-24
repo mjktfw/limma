@@ -84,4 +84,4 @@ The original loess normalization function was the \code{statma} funtion in the s
 A different implementation of loess normalization methods, with potentially different behavior, is provided by the \code{\link[marray:maNorm]{maNorm}} in the marray package.
 }
 
-\keyword{models}
+\keyword{normalization}

@@ -1,3 +1,17 @@
+23 June 2014: limma 3.21.9
+
+- new function goana() for gene ontology analysis of DE results from
+  a linear model fit.
+
+- symbols2indices() renamed to ids2indices().
+
+- update to helpMethods().
+
+- keyword entries revised for many Rd files.
+
+- bug fix to topTableF() and topTable() ordering of Amean values when
+  ranking is by F-statistic and a lfc or p.value filter has been set.
+
 18 June 2014: limma 3.21.8
 
 - improvements to roast() and mroast().  The directional (up and

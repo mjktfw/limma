@@ -43,7 +43,7 @@ The data frame will be sorted so that \code{Column} is the fastest moving index,
 An overview of LIMMA functions for reading data is given in \link{03.ReadingData}.
 }
 \references{
-\url{http://www.axon.com/gn_GenePix_File_Formats.html}
+\url{http://www.cryer.co.uk/file-types/a/atf/genepix_file_formats.htm}
 }
 \examples{
 # readGAL()
@@ -51,3 +51,5 @@ An overview of LIMMA functions for reading data is given in \link{03.ReadingData
 # found in the current working directory
 }
 \keyword{IO}
+\keyword{file}
+

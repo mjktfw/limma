@@ -58,7 +58,7 @@ blockDiag <- function(...)
 helpMethods <- function(genericFunction) {
 #	Prompt user for help topics on methods for generic function
 #	Gordon Smyth
-#	21 April 2003.  Last revised 28 Oct 2003.
+#	21 April 2003.  Last revised 24 June 2014.
 
 	objectclass <- class(genericFunction)
  	if(objectclass != "standardGeneric") {
@@ -70,7 +70,7 @@ helpMethods <- function(genericFunction) {
 		}
 	}
 	functionname <- genericFunction@generic
-	methodnames <- names(getMethods(genericFunction)@methods)
+	methodnames <- names(findMethods(genericFunction))
 	nmethods <- length(methodnames)
 	if(nmethods == 0) {
 		cat("No available methods\n")
@@ -80,7 +80,7 @@ helpMethods <- function(genericFunction) {
 	for (i in 1:nmethods) cat(i,": ",aliasnames[i],"\n",sep="")
 	cat("Type number to choose help topic: ")
 	n <- as.integer(readline())
-	if(n > 0 && n <= nmethods)
+	if(!is.na(n) && n > 0 && n <= nmethods)
 		eval(parse(text=paste("help(\"",aliasnames[n],"\")",sep="")))
 	else {
 	 	cat("No topic chosen\n")

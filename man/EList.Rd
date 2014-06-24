@@ -47,4 +47,4 @@ In addition, \code{EList} objects can be \link[limma:subsetting]{subsetted} and 
 }
 
 \keyword{classes}
-\keyword{data}
+

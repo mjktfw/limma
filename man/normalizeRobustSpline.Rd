@@ -50,4 +50,5 @@ normalized.M <- normalizeRobustSpline(M,A)
 # Usual usage
 \dontrun{MA <- normalizeWithinArrays(RG, method="robustspline")}
 }
-\keyword{models}
+
+\keyword{normalization}

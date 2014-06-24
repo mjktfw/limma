@@ -75,4 +75,4 @@ plotPrintorder(RG,layout,slide=1,separate=TRUE)
 RG <- normalizeForPrintorder(mouse.data,mouse.setup)
 }
 }
-\keyword{models}
+\keyword{normalization}

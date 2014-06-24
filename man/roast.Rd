@@ -25,7 +25,7 @@ Rotation gene set testing for linear models.
   Rows correspond to probes and columns to samples.
   If either \code{var.prior} or \code{df.prior} are null, then \code{y} should contain values for all genes on the arrays. If both prior parameters are given, then only \code{y} values for the test set are required.}
   \item{index}{index vector specifying which rows (probes) of \code{y} are in the test set.  This can be a vector of indices, or a logical vector of the same length as \code{statistics}, or any vector such as \code{y[index,]} contains the values for the gene set to be tested.
-  For \code{mroast}, \code{index} is a list of index vectors. The list can be made using \link{symbols2indices}.}
+  For \code{mroast}, \code{index} is a list of index vectors. The list can be made using \link{ids2indices}.}
   \item{design}{design matrix}
   \item{contrast}{contrast for which the test is required. Can be an integer specifying a column of \code{design}, or else a contrast vector of length equal to the number of columns of \code{design}.}
   \item{set.statistic}{summary set statistic. Possibilities are \code{"mean"},\code{"floormean"},\code{"mean50"} or \code{"msq"}.}
@@ -110,7 +110,7 @@ The default setting for the set statistic was changed in limma 3.5.9 (3 June 201
 }
 
 \seealso{
-\code{\link{camera}}, \code{\link{romer}}, \code{\link{geneSetTest}}, \code{\link{symbols2indices}}.
+\code{\link{camera}}, \code{\link{romer}}, \code{\link{geneSetTest}}, \code{\link{ids2indices}}.
 
 There is a topic page on \link{10.GeneSetTests}.
 }
@@ -154,3 +154,7 @@ roast(y,index1,design,contrast=2)
 mroast(y,index1,design,contrast=2)
 mroast(y,list(set1=index1,set2=index2),design,contrast=2)
 }
+
+\keyword{gene set test}
+\concept{gene set test}
+\concept{gene set enrichment analysis}

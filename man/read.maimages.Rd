@@ -143,5 +143,5 @@ RG <- read.maimages(files,"genepix",wt.fun=wtflags(0.1))}
 RG <- read.maimages(files,"spot",wt.fun=wtarea(150))}
 }
 
-\keyword{file}
+\keyword{reading data}
 \concept{microarray data file}

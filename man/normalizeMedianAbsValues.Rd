@@ -30,4 +30,4 @@ Here the median-absolute value is used for preference to as to not re-center the
 M <- cbind(Array1=rnorm(10),Array2=2*rnorm(10))
 normalizeMedianAbsValues(M)
 }
-\keyword{array}
+\keyword{normalization}

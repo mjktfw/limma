@@ -65,6 +65,7 @@ propexpr(data)
 datanorm = neqc(data)
 }
 }
-\keyword{file}
+
+\keyword{reading data}
 \concept{illumina microarrays}
 \concept{microarray data file}

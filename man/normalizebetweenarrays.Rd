@@ -100,5 +100,4 @@ x <- matrix(rnorm(ngenes*narrays),100,4)
 y <- normalizeBetweenArrays(x)
 }
 
-\keyword{models}
-\keyword{multivariate}
+\keyword{normalization}

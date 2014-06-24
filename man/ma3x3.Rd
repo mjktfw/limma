@@ -33,4 +33,5 @@ ma3x3.matrix(x,FUN="mean")
 ma3x3.matrix(x,FUN="min")
 }
 \author{Gordon Smyth}
-\keyword{smooth}
+
+\keyword{background correction}

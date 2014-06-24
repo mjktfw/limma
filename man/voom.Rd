@@ -65,3 +65,5 @@ A \code{voom} case study is given in the User's Guide.
 
 \code{\link{vooma}} is a similar function but for microarrays instead of RNA-seq.
 }
+
+\keyword{rna-seq}

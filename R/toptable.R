@@ -51,7 +51,7 @@ topTable <- function(fit,coef=NULL,number=10,genelist=fit$genes,adjust.method="B
 topTableF <- function(fit,number=10,genelist=fit$genes,adjust.method="BH",sort.by="F",p.value=1,lfc=0)
 #	Summary table of top genes by F-statistic
 #	Gordon Smyth
-#	27 August 2006. Last modified 4 November 2013.
+#	27 August 2006. Last modified 24 June 2014.
 {
 #	Check fit
 	if(is.null(fit$coefficients)) stop("Coefficients not found in fit")
@@ -125,7 +125,7 @@ topTableF <- function(fit,number=10,genelist=fit$genes,adjust.method="BH",sort.b
 		tab <- data.frame(M[o,,drop=FALSE])
 	else
 		tab <- data.frame(genelist[o,,drop=FALSE],M[o,,drop=FALSE])
-	tab$AveExpr=fit$Amean[o]
+	tab$AveExpr <- Amean[o]
 	tab <- data.frame(tab,F=Fstat[o],P.Value=Fp[o],adj.P.Val=adj.P.Value[o])
 	rownames(tab) <- rn[o]
 	tab

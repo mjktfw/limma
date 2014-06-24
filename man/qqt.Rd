@@ -37,4 +37,5 @@ y <- rt(50,df=4)
 qqt(y,df=4)
 abline(0,1)
 }
-\keyword{distribution}
+
+\keyword{distributions}

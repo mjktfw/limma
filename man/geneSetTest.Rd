@@ -104,3 +104,7 @@ stat <- rnorm(100)
 sel <- 1:10; stat[sel] <- stat[sel]+1
 wilcoxGST(sel,stat)
 }
+
+\keyword{gene set test}
+\concept{gene set test}
+\concept{gene set enrichment analysis}

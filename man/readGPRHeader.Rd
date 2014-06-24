@@ -29,7 +29,11 @@ A key component is \code{NHeaderRecords} which gives the number of lines in the 
 All other components are character vectors.
 }
 \references{
-See \url{http://www.moleculardevices.com/Products/Software/GenePix-Pro.html} for GenePix formats.
+See
+\url{http://www.moleculardevices.com/Products/Software/GenePix-Pro.html} 
+or
+\url{http://www.cryer.co.uk/file-types/a/atf/genepix_file_formats.htm}
+for GenePix formats.
 
 See \url{http://http://smd.princeton.edu} for the SMD.
 }
@@ -38,6 +42,7 @@ See \url{http://http://smd.princeton.edu} for the SMD.
 
 An overview of LIMMA functions to read data is given in \link{03.ReadingData}.
 }
+\keyword{IO}
 \keyword{file}
 \concept{microarray data file}
 

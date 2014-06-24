@@ -32,3 +32,5 @@ Ranks genes by the Plots interaction log2-fold-change by exon for the specified 
 An overview of diagnostic functions available in LIMMA is given in \link{09.Diagnostics}.
 }
 \examples{# See diffSplice}
+
+\keyword{rna-seq}

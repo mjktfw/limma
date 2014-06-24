@@ -65,4 +65,4 @@ MA <- normalizeWithinArrays(RGmodel)
 }
 }
 
-\keyword{models}
+\keyword{background correction}

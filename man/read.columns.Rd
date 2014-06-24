@@ -47,5 +47,5 @@ A data frame (data.frame) containing a representation of the data in the file.
 An overview of LIMMA functions for reading data is given in \link{03.ReadingData}.
 }
 
-\keyword{IO}
-\keyword{file}
+\keyword{reading data}
+

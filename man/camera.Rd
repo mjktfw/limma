@@ -16,7 +16,7 @@ interGeneCorrelation(y, design)
   Rows correspond to probes and columns to samples.
   Any type of object that can be processed by \code{\link{getEAWP}} is acceptable.
   }
-  \item{index}{an index vector or a list of index vectors.  Can be any vector such that \code{y[index,]} selects the rows corresponding to the test set.  The list can be made using \code{\link{symbols2indices}}.}
+  \item{index}{an index vector or a list of index vectors.  Can be any vector such that \code{y[index,]} selects the rows corresponding to the test set.  The list can be made using \code{\link{ids2indices}}.}
   \item{design}{design matrix.}
   \item{contrast}{contrast of the linear model coefficients for which the test is required. Can be an integer specifying a column of \code{design}, or else a numeric vector of same length as the number of columns of \code{design}.}
   \item{weights}{can be a numeric matrix of individual weights, of same size as \code{y}, or a numeric vector of array weights with length equal to \code{ncol(y)}, or a numeric vector of gene weights with length equal to \code{nrow(y)}.}
@@ -76,7 +76,7 @@ Analyzing gene expression data in terms of gene sets: methodological issues.
 \code{\link{geneSetTest}},
 \code{\link{roast}},
 \code{\link{romer}},
-\code{\link{symbols2indices}}.
+\code{\link{ids2indices}}.
 
 There is a topic page on \link{10.GeneSetTests}.
 }
@@ -97,5 +97,7 @@ camera(y, index2, design)
 
 camera(y, list(set1=index1,set2=index2), design)
 }
-\keyword{htest}
 
+\keyword{gene set test}
+\concept{gene set test}
+\concept{gene set enrichment analysis}

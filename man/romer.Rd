@@ -9,7 +9,7 @@ romer(index, y, design, contrast=ncol(design), array.weights=NULL, block=NULL,
       correlation, set.statistic="mean", nrot=9999)
 }
 \arguments{
-  \item{index}{list of indices specifying the rows of \code{y} in the gene sets. The list can be made using \link{symbols2indices}.}
+  \item{index}{list of indices specifying the rows of \code{y} in the gene sets. The list can be made using \link{ids2indices}.}
   \item{y}{numeric matrix giving log-expression values.}
   \item{design}{design matrix}
   \item{contrast}{contrast for which the test is required. Can be an integer specifying a column of \code{design}, or else a contrast vector of length equal to the number of columns of \code{design}.}
@@ -60,7 +60,7 @@ This statistic performs well in practice but is slightly slower to compute.
 
 \seealso{
 \code{\link{topRomer}},
-\code{\link{symbols2indices}},
+\code{\link{ids2indices}},
 \code{\link{roast}},
 \code{\link{wilcoxGST}}
 
@@ -101,4 +101,7 @@ r
 topRomer(r,alt="up")
 topRomer(r,alt="down")
 }
+
+\keyword{gene set test}
 \concept{gene set test}
+\concept{gene set enrichment analysis}

@@ -80,3 +80,5 @@ zscoreGamma(c(1,2.5), shape=0.5, scale=2)
 zscoreT(2, df=3)
 tZscore(2, df=3)
 }
+
+\keyword{distributions}

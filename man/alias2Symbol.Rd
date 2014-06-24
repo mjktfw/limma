@@ -39,3 +39,6 @@ This function is often used to assist gene set testing, see
 \examples{
 if(require("org.Hs.eg.db")) alias2Symbol(c("PUMA","NOXA","BIM"))
 }
+
+\keyword{gene annotation}
+

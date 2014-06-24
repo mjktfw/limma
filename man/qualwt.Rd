@@ -47,4 +47,4 @@ RG <- read.maimages(fnames,source="spot",wt.fun=wtarea(165))
 MA <- normalizeWithinArrays(RG,layout)
 }
 }
-\keyword{regression}
+\keyword{reading data}

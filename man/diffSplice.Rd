@@ -39,3 +39,5 @@ topSplice(ex)
 plotSplice(ex)
 }
 }
+
+\keyword{rna-seq}
