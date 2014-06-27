@@ -6,7 +6,7 @@ Plot of regularized linear discriminant functions for microarray data.
 }
 \usage{
 plotRLDF(y,design=NULL,z=NULL,labels.y=NULL,labels.z=NULL,col.y=1,col.z=1,
-df.prior=5,show.dimensions=c(1,2),main=NULL,nprobes=500,...)}
+df.prior=5,show.dimensions=c(1,2),main=NULL,nprobes=500,\dots)}
 \arguments{
  \item{y}{any data object which can be coerced to a matrix, such as \code{ExpressionSet} or \code{EList}. The training dataset.}
  \item{z}{any data object which can be coerced to a matrix, such as \code{ExpressionSet} or \code{EList}. The dataset to be classified.}
@@ -19,7 +19,7 @@ df.prior=5,show.dimensions=c(1,2),main=NULL,nprobes=500,...)}
  \item{show.dimensions}{which two dimensions should be plotted, numeric vector of length two.}
  \item{main}{title of the plot.}
  \item{nprobes}{number of probes to be used for the calculations. Selected by moderated F tests.}
- \item{...}{any other arguments are passed to \code{plot}.}
+ \item{\dots}{any other arguments are passed to \code{plot}.}
 }
 \details{
 This function is a variation on the plot of usual linear discriminant fuction, in that the within-group covariance matrix is regularized to ensure that it is invertible, with eigenvalues bounded away from zero.

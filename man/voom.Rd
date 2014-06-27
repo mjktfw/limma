@@ -8,7 +8,7 @@ The data are then ready for linear modelling.
 
 \usage{
 voom(counts, design = NULL, lib.size = NULL, normalize.method = "none",
-     plot = FALSE, span=0.5, ...)
+     plot = FALSE, span=0.5, \dots)
 }
 \arguments{
  \item{counts}{a numeric \code{matrix} containing raw counts, or an \code{ExpressionSet} containing raw counts, or a \code{DGEList} object.}
@@ -20,7 +20,7 @@ voom(counts, design = NULL, lib.size = NULL, normalize.method = "none",
  Choices are as for the \code{method} argument of \code{normalizeBetweenArrays} when the data is single-channel.}
  \item{plot}{\code{logical}, should a plot of the mean-variance trend be displayed?}
  \item{span}{width of the lowess smoothing window as a proportion.}
- \item{...}{other arguments are passed to \code{lmFit}.}
+ \item{\dots}{other arguments are passed to \code{lmFit}.}
   }
 
 \details{

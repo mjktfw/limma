@@ -8,10 +8,10 @@ Creates a heat diagram showing the co-regulation of genes under one condition wi
 \usage{
 heatDiagram(results, coef, primary=1, names=NULL, treatments=colnames(coef), limit=NULL,
             orientation="landscape", low="green", high="red", cex=1, mar=NULL,
-            ncolors=123, ...)
+            ncolors=123, \dots)
 heatdiagram(stat, coef, primary=1, names=NULL, treatments=colnames(stat),
             critical.primary=4, critical.other=3, limit=NULL, orientation="landscape",
-            low="green", high="red", cex=1, mar=NULL, ncolors=123, ...)
+            low="green", high="red", cex=1, mar=NULL, ncolors=123, \dots)
 }
 \arguments{
   \item{results}{\code{TestResults} matrix, containing elements -1, 0 or 1, from \code{\link{decideTests}}}
@@ -30,7 +30,7 @@ heatdiagram(stat, coef, primary=1, names=NULL, treatments=colnames(stat),
   \item{cex}{factor to increase or decrease size of column and row text}
   \item{mar}{numeric vector of length four giving the size of the margin widths.
   Default is \code{cex*c(5,6,1,1)} for landscape and \code{cex*c(1,1,4,3)} for portrait.}
-  \item{...}{any other arguments will be passed to the \code{image} function}
+  \item{\dots}{any other arguments will be passed to the \code{image} function}
 }
 \details{
 Users are encouraged to use \code{heatDiagram} rather than \code{heatdiagram} as the later function may be removed in future versions of limma.

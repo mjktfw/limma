@@ -4,7 +4,7 @@
 \description{Fit linear model for each gene given a series of arrays}
 \usage{
 lmFit(object, design=NULL, ndups=1, spacing=1, block=NULL, correlation, weights=NULL,
-      method="ls", ...)
+      method="ls", \dots)
 }
 \arguments{
   \item{object}{object of class \code{numeric}, \code{matrix}, \code{MAList}, \code{EList}, \code{marrayNorm}, \code{ExpressionSet} or \code{PLMset} containing log-ratios or log-values of expression for a series of microarrays}
@@ -15,7 +15,7 @@ lmFit(object, design=NULL, ndups=1, spacing=1, block=NULL, correlation, weights=
   \item{correlation}{the inter-duplicate or inter-technical replicate correlation}
   \item{weights}{non-negative observation weights.  Can be a numeric matrix of individual weights, of same size as the object expression matrix, or a numeric vector of array weights with length equal to \code{ncol} of the expression matrix, or a numeric vector of gene weights with length equal to \code{nrow} of the expression matrix.}
   \item{method}{fitting method; \code{"ls"} for least squares or \code{"robust"} for robust regression}
-  \item{...}{other optional arguments to be passed to \code{lm.series}, \code{gls.series} or \code{mrlm}}
+  \item{\dots}{other optional arguments to be passed to \code{lm.series}, \code{gls.series} or \code{mrlm}}
 }
 
 \value{

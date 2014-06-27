@@ -6,7 +6,7 @@ Write MA-plots to files in PNG format, six plots to a file in a 3 by 2 grid arra
 }
 \usage{
 plotMA3by2(MA, prefix="MA", path=NULL, main=colnames(MA),
-           zero.weights=FALSE, common.lim=TRUE, device="png", ...)
+           zero.weights=FALSE, common.lim=TRUE, device="png", \dots)
 }
 \arguments{
   \item{MA}{an \code{MAList}, \code{RGList}, \code{EListRaw} or \code{EList} object, or a matrix containing log-intensities.}
@@ -16,7 +16,7 @@ plotMA3by2(MA, prefix="MA", path=NULL, main=colnames(MA),
   \item{zero.weights}{logical, should points with non-positive weights be plotted}
   \item{common.lim}{logical, should all plots on a page use the same axis limits}
   \item{device}{device driver for the plot. Choices are \code{"png"}, \code{"jpeg"}, \code{"pdf"}, \code{"postscript"}.}
-  \item{...}{any other arguments are passed to \code{plotMA}}
+  \item{\dots}{any other arguments are passed to \code{plotMA}}
 }
 
 \details{

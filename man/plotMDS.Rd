@@ -12,11 +12,11 @@ Distances on the plot can be interpreted in terms of \emph{leading log2-fold-cha
 }
 
 \usage{
-\method{plotMDS}{default}(x, top=500, labels=NULL, pch=NULL, col=NULL, cex=1,
+\method{plotMDS}{default}(x, top=500, labels=NULL, pch=NULL, cex=1,
      dim.plot=c(1,2), ndim=max(dim.plot), gene.selection="pairwise",
-     xlab=paste("Dimension",dim.plot[1]), ylab=paste("Dimension",dim.plot[2]), ...)
-\method{plotMDS}{MDS}(x, labels=NULL, pch=NULL, col=NULL, cex=1, dim.plot=x$dim.plot,
-     xlab=paste("Dimension",dim.plot[1]), ylab=paste("Dimension",dim.plot[2]),...)
+     xlab=paste("Dimension",dim.plot[1]), ylab=paste("Dimension",dim.plot[2]), \dots)
+\method{plotMDS}{MDS}(x, labels=NULL, pch=NULL, cex=1, dim.plot=x$dim.plot,
+     xlab=paste("Dimension",dim.plot[1]), ylab=paste("Dimension",dim.plot[2]), \dots)
 }
 
 \arguments{
@@ -24,14 +24,13 @@ Distances on the plot can be interpreted in terms of \emph{leading log2-fold-cha
   \item{top}{number of top genes used to calculate pairwise distances.}
   \item{labels}{character vector of sample names or labels. If \code{x} has no column names, then defaults the index of the samples.}
   \item{pch}{plotting symbol or symbols. See \code{\link{points}} for possible values. Ignored if \code{labels} is non-\code{NULL}.}
-  \item{col}{numeric or character vector of colors for the plotting characters.}
   \item{cex}{numeric vector of plot symbol expansions.}
   \item{dim.plot}{which two dimensions should be plotted, numeric vector of length two.}
   \item{ndim}{number of dimensions in which data is to be represented}
   \item{gene.selection}{character, \code{"pairwise"} to choose the top genes separately for each pairwise comparison between the samples or \code{"common"} to select the same genes for all comparisons}
   \item{xlab}{title for the x-axis}
   \item{ylab}{title for the y-axis}
-  \item{...}{any other arguments are passed to \code{plot}.}
+  \item{\dots}{any other arguments are passed to \code{plot}, and also to \code{text} (if \code{pch} is \code{NULL}).}
 }
 
 \details{

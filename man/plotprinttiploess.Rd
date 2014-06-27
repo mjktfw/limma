@@ -5,7 +5,7 @@
 Creates a coplot giving MA-plots with loess curves by print-tip groups.
 }
 \usage{
-plotPrintTipLoess(object,layout,array=1,span=0.4,...)
+plotPrintTipLoess(object,layout,array=1,span=0.4,\dots)
 }
 \arguments{
   \item{object}{\code{MAList} or \code{RGList} object or list with components \code{M} containing log-ratios and \code{A} containing average intensities}
@@ -13,7 +13,7 @@ plotPrintTipLoess(object,layout,array=1,span=0.4,...)
   Defaults to \code{MA$printer} if that is non-null.}
   \item{array}{integer giving the array to be plotted. Corresponds to columns of \code{M} and \code{A}.}
   \item{span}{span of window for \code{lowess} curve}
-  \item{...}{other arguments passed to \code{panel.smooth}}
+  \item{\dots}{other arguments passed to \code{panel.smooth}}
 }
 \details{
 Note that spot quality weights in \code{object} are not used for computing the loess curves for this plot even though such weights would be used for loess normalization using \code{normalizeWithinArrays}.

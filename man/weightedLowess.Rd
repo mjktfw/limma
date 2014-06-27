@@ -29,7 +29,7 @@ This function extends the lowess algorithm to handle non-negative prior weights.
 used during span calculations such that the span distance for each point must include the
 specified proportion of all weights. They are also applied during weighted linear regression to 
 compute the fitted value (in addition to the tricube weights determined by \code{span}). For integer 
-weights, the prior weights are equivalent to using \code{rep(..., w)} on \code{x} and \code{y} prior to fitting.
+weights, the prior weights are equivalent to using \code{rep(\dots, w)} on \code{x} and \code{y} prior to fitting.
 
 For large vectors, running time is reduced by only performing locally weighted regression for 
 several points. Fitted values for all points adjacent to the chosen points are computed by 

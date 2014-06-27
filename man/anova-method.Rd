@@ -8,14 +8,14 @@ Produces an ANOVA table useful for quality assessment by decomposing between and
 This method produces a single ANOVA Table rather than one for each gene and is not used to identify differentially expressed genes.
 }
 \section{Usage}{
-\code{anova(object,design=NULL,ndups=2,...)}
+\code{anova(object,design=NULL,ndups=2,\dots)}
 }
 \section{Arguments}{
 \describe{
   \item{\code{object}}{object of class \code{MAList}. Missing values in the M-values are not allowed.}
   \item{\code{design}}{numeric vector or single-column matrix containing the design matrix for linear model. The length of the vector or the number of rows of the matrix should agree with the number of columns of M.}
   \item{\code{ndups}}{number of duplicate spots. Each gene is printed ndups times in adjacent spots on each array.}
-  \item{\code{...}}{other arguments are not used}
+  \item{\code{\dots}}{other arguments are not used}
 }
 }
 \section{Details}{

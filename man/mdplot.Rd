@@ -5,11 +5,11 @@
 Creates a mean-difference plot.
 }
 \usage{
-mdplot(x, ...)
+mdplot(x, \dots)
 }
 \arguments{
   \item{x}{numeric \code{matrix} with at least two columns}
-  \item{...}{any other arguments are passed to \code{plot}}
+  \item{\dots}{any other arguments are passed to \code{plot}}
 }
 
 \details{

@@ -6,14 +6,14 @@
 Apply a specified function to each to each value of a matrix and its immediate neighbors.
 }
 \usage{
-ma3x3.matrix(x,FUN=mean,na.rm=TRUE,...)
-ma3x3.spottedarray(x,printer,FUN=mean,na.rm=TRUE,...)
+ma3x3.matrix(x,FUN=mean,na.rm=TRUE,\dots)
+ma3x3.spottedarray(x,printer,FUN=mean,na.rm=TRUE,\dots)
 }
 \arguments{
   \item{x}{numeric matrix}
   \item{FUN}{function to apply to each window of values}
   \item{na.rm}{logical value, should missing values be removed when applying \code{FUN}}
-  \item{...}{other arguments are passed to \code{FUN}}
+  \item{\dots}{other arguments are passed to \code{FUN}}
   \item{printer}{list giving the printer layout, see \code{\link{PrintLayout-class}}}
 }
 \details{

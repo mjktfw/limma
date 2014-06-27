@@ -6,7 +6,7 @@ Plot log residual standard deviation versus average log expression for a fitted 
 }
 \usage{
 plotSA(fit, xlab="Average log-expression", ylab="log2(sigma)",
-       zero.weights=FALSE, pch=16, cex=0.2, ...)
+       zero.weights=FALSE, pch=16, cex=0.2, \dots)
 }
 \arguments{
   \item{fit}{an \code{MArrayLM} object.}
@@ -16,7 +16,7 @@ plotSA(fit, xlab="Average log-expression", ylab="log2(sigma)",
   \item{cex}{numeric expansion factor for plotting character. 
   Defaults to 0.2.}
   \item{zero.weights}{logical, should spots with zero or negative weights be plotted?}
-  \item{...}{any other arguments are passed to \code{plot}}
+  \item{\dots}{any other arguments are passed to \code{plot}}
 }
 
 \details{

@@ -5,7 +5,7 @@
 Read a table giving regular expressions to identify different types of spots in the gene-dataframe.
 }
 \usage{
-readSpotTypes(file="SpotTypes.txt",path=NULL,sep="\t",check.names=FALSE,...)
+readSpotTypes(file="SpotTypes.txt",path=NULL,sep="\t",check.names=FALSE,\dots)
 }
 \arguments{
   \item{file}{character string giving the name of the file specifying the spot types.}

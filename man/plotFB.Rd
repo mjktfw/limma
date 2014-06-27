@@ -8,8 +8,8 @@
 Creates foreground-background plots.
 }
 \usage{
-\method{plotFB}{RGList}(x, array=1, lim="separate", pch=16, cex=0.2, ...)
-\method{plotFB}{EListRaw}(x, array=1, pch=16, cex=0.2, ...)
+\method{plotFB}{RGList}(x, array=1, lim="separate", pch=16, cex=0.2, \dots)
+\method{plotFB}{EListRaw}(x, array=1, pch=16, cex=0.2, \dots)
 }
 \arguments{
   \item{x}{an \code{RGList} or \code{EListRaw} object.}
@@ -17,7 +17,7 @@ Creates foreground-background plots.
   \item{lim}{character string indicating whether the red and green plots should have \code{"separate"} or \code{"common"} x- and y- co-ordinate limits.}
   \item{pch}{vector or list of plotting characters. Defaults to integer code 16.}
   \item{cex}{numeric vector of plot symbol expansions.} 
-  \item{...}{any other arguments are passed to \code{plot}}
+  \item{\dots}{any other arguments are passed to \code{plot}}
 }
 
 \details{

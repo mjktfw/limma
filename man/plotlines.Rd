@@ -5,7 +5,7 @@
 Time course style plot of expression data.
 }
 \usage{
-plotlines(x,first.column.origin=FALSE,xlab="Column",ylab="x",col="black",lwd=1,...)
+plotlines(x,first.column.origin=FALSE,xlab="Column",ylab="x",col="black",lwd=1,\dots)
 }
 \arguments{
   \item{x}{numeric matrix or object containing expression data.}
@@ -14,7 +14,7 @@ plotlines(x,first.column.origin=FALSE,xlab="Column",ylab="x",col="black",lwd=1,.
   \item{ylab}{y-axis label}
   \item{col}{vector of colors for lines}
   \item{lwd}{line width multiplier}
-  \item{...}{any other arguments are passed to \code{plot}}
+  \item{\dots}{any other arguments are passed to \code{plot}}
 }
 
 \details{

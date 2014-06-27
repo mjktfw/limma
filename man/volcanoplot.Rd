@@ -6,7 +6,7 @@ Creates a volcano plot of log-fold changes versus log-odds of differential expre
 }
 \usage{
 volcanoplot(fit, coef=1, highlight=0, names=fit$genes$ID,
-            xlab="Log Fold Change", ylab="Log Odds", pch=16, cex=0.35, ...)
+            xlab="Log Fold Change", ylab="Log Odds", pch=16, cex=0.35, \dots)
 }
 \arguments{
   \item{fit}{an \code{MArrayLM} fitted linear model object}
@@ -17,7 +17,7 @@ volcanoplot(fit, coef=1, highlight=0, names=fit$genes$ID,
   \item{ylab}{character string giving label for y-axis}
   \item{pch}{vector or list of plotting characters. Default is integer code 16 which gives a solid circle.}
   \item{cex}{numeric vector of plot symbol expansions. Default is 0.35.}
-  \item{...}{any other arguments are passed to \code{plot}}
+  \item{\dots}{any other arguments are passed to \code{plot}}
 }
 
 \details{

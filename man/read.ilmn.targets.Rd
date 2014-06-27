@@ -3,11 +3,11 @@
 \title{Read Illumina Data from a Target Dataframe}
 \description{Read Illumina data from a target dataframe}
 \usage{
-read.ilmn.targets(targets, ...)
+read.ilmn.targets(targets, \dots)
 }
 \arguments{
   \item{targets}{ data frame including names of profile files.}
-  \item{...}{ any other parameters are passed on to \code{\link{read.ilmn}}.}
+  \item{\dots}{ any other parameters are passed on to \code{\link{read.ilmn}}.}
   }
 \details{
 \code{targets} is often created by calling the function \code{\link{readTargets}}.

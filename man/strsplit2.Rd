@@ -6,7 +6,7 @@
 Split a vector of composite names into a matrix of simple names.}
 
 \usage{
-strsplit2(x, split, ...)
+strsplit2(x, split, \dots)
 }
 
 \arguments{

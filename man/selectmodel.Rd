@@ -3,7 +3,7 @@
 \title{Select Appropriate Linear Model}
 \description{Select the best fitting linear model for each gene by minimizing an information criterion.}
 \usage{
-selectModel(y, designlist, criterion="aic", df.prior=0, s2.prior=NULL, s2.true=NULL, ...)
+selectModel(y, designlist, criterion="aic", df.prior=0, s2.prior=NULL, s2.true=NULL, \dots)
 }
 \arguments{
   \item{y}{a matrix-like data object, containing log-ratios or log-values of expression for a series of microarrays.
@@ -13,7 +13,7 @@ selectModel(y, designlist, criterion="aic", df.prior=0, s2.prior=NULL, s2.true=N
   \item{df.prior}{prior degrees of freedom for residual variances. See \code{\link{squeezeVar}}}
   \item{s2.prior}{prior value for residual variances, to be used if \code{df.prior}>0.}
   \item{s2.true}{numeric vector of true variances, to be used if \code{criterion="mallowscp"}.}
-  \item{...}{other optional arguments to be passed to \code{lmFit}}
+  \item{\dots}{other optional arguments to be passed to \code{lmFit}}
 }
 
 \value{

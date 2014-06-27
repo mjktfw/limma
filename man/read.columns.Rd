@@ -6,7 +6,7 @@ Reads specified columns from a file in table format and creates a data frame fro
 }
 \usage{
 read.columns(file, required.col=NULL, text.to.search="", sep="\t", quote="\"", skip=0,
-             fill=TRUE, blank.lines.skip=TRUE, comment.char="", allowEscapes=FALSE, ...)
+             fill=TRUE, blank.lines.skip=TRUE, comment.char="", allowEscapes=FALSE, \dots)
 }
 \arguments{
   \item{file}{the name of the file which the data are to be read from.}

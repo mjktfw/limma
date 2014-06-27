@@ -2,12 +2,13 @@
 \alias{nec}
 \alias{neqc}
 \title{NormExp Background Correction and Normalization Using Control Probes}
-\description{Perform normexp background correction using negative control probes and quantile normalization using negative and positive control probes.}
+\description{Perform normexp background correction using negative control probes and quantile normalization using negative and positive control probes.
+Particularly useful for Illumina BeadChips.}
 \usage{
 nec(x, status=NULL, negctrl="negative", regular="regular", offset=16,
     robust=FALSE, detection.p="Detection")
 neqc(x, status=NULL, negctrl="negative", regular="regular", offset=16,
-    robust=FALSE, detection.p="Detection", ...)
+    robust=FALSE, detection.p="Detection", \dots)
 }
 \arguments{
   \item{x}{object of class \code{EListRaw} or \code{matrix} containing raw intensities for regular and control probes from a series of microarrays.}
@@ -17,7 +18,7 @@ neqc(x, status=NULL, negctrl="negative", regular="regular", offset=16,
   \item{offset}{numeric value added to the intensities after background correction.}
   \item{robust}{logical. Should robust estimators be used for the background mean and standard deviation?}
   \item{detection.p}{dection p-values.  Only used when no negative control probes can be found in the data.  Can be a numeric matrix or a character string giving the name of the component of \code{x$other} containing the matrix.}
-  \item{...}{any other arguments are passed to \code{normalizeBetweenArrays.}}
+  \item{\dots}{any other arguments are passed to \code{normalizeBetweenArrays.}}
   }
 \details{
 \code{neqc} performs background correction followed by quantile normalization, using negative control probes for background correction and both negative and positive controls for normalization (Shi et al, 2010).
@@ -82,4 +83,5 @@ yr <- neqc(xr)
 }
 }
 
-\keyword{models}
+\keyword{background correction}
+\keyword{illumina beadchips}

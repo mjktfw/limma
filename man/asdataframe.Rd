@@ -8,7 +8,7 @@
 Turn a \code{MArrayLM} object into a \code{data.frame}.
 }
 \usage{
-\method{as.data.frame}{MArrayLM}(x, row.names = NULL, optional = FALSE, ...)
+\method{as.data.frame}{MArrayLM}(x, row.names = NULL, optional = FALSE, \dots)
 }
 \arguments{
   \item{x}{an object of class \code{MArrayLM}}

@@ -10,12 +10,12 @@ Apply variance stabilizing normalization (vsn) to limma data objects.
 }
 
 \usage{
-normalizeVSN(x, ...)
+normalizeVSN(x, \dots)
 }
 
 \arguments{
   \item{x}{a numeric \code{matrix}, \code{EListRaw} or \code{\link[limma:rglist]{RGList}} object.}
-  \item{...}{other arguments are passed to \code{vsn}}
+  \item{\dots}{other arguments are passed to \code{vsn}}
 }
 
 \details{

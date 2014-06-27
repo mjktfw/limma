@@ -10,11 +10,11 @@
 Plot the density of expression values for multiple arrays on the same plot.
 }
 \usage{
-\method{plotDensities}{RGList}(object, log=TRUE, group=NULL, col=NULL, main="RG Densities",...)
-\method{plotDensities}{MAList}(object, log=TRUE, group=NULL, col=NULL, main="RG Densities",...)
-\method{plotDensities}{EListRaw}(object, log=TRUE, group=NULL, col=NULL, main=NULL,...)
-\method{plotDensities}{EList}(object, log=TRUE, group=NULL, col=NULL, main=NULL,...)
-\method{plotDensities}{default}(object, group=NULL, col=NULL, main=NULL,...)
+\method{plotDensities}{RGList}(object, log=TRUE, group=NULL, col=NULL, main="RG Densities",\dots)
+\method{plotDensities}{MAList}(object, log=TRUE, group=NULL, col=NULL, main="RG Densities",\dots)
+\method{plotDensities}{EListRaw}(object, log=TRUE, group=NULL, col=NULL, main=NULL,\dots)
+\method{plotDensities}{EList}(object, log=TRUE, group=NULL, col=NULL, main=NULL,\dots)
+\method{plotDensities}{default}(object, group=NULL, col=NULL, main=NULL,\dots)
 }
 \arguments{
   \item{object}{an \code{RGList}, \code{MAList}, \code{EListRaw} or \code{EList} object containing expression data.  Or any data object that can be coerced to a matrix.}

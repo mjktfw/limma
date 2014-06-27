@@ -12,7 +12,7 @@ Compute z-score equivalents of non-normal random deviates.
 }
 
 \usage{
-zscore(q, distribution, ...)
+zscore(q, distribution, \dots)
 zscoreGamma(q, shape, rate = 1, scale = 1/rate) 
 zscoreT(x, df, approx=FALSE)
 tZscore(x, df)

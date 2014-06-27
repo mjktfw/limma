@@ -6,7 +6,7 @@ Write imageplots to files in PNG format, six plots to a file in a 3 by 2 grid ar
 }
 \usage{
 imageplot3by2(RG, z="Gb", prefix=paste("image",z,sep="-"), path=NULL,
-              zlim=NULL, common.lim=TRUE, ...)
+              zlim=NULL, common.lim=TRUE, \dots)
 }
 \arguments{
   \item{RG}{an \code{RGList} or \code{MAList} object, or any list with component named by \code{z}}
@@ -15,7 +15,7 @@ imageplot3by2(RG, z="Gb", prefix=paste("image",z,sep="-"), path=NULL,
   \item{path}{character string specifying directory for output files}
   \item{zlim}{numeric vector of length 2, giving limits of response vector to be associated with saturated colors}
   \item{common.lim}{logical, should all plots on a page use the same axis limits}
-  \item{...}{any other arguments are passed to \code{imageplot}}
+  \item{\dots}{any other arguments are passed to \code{imageplot}}
 }
 
 \details{

@@ -161,9 +161,9 @@ vennDiagram <- function(object,include="both",names=NULL,mar=rep(1,4),cex=c(1.5,
 		rect(-20, -20, 420, 400)
 		elps <- cbind(162*cos(seq(0,2*pi,len=1000)), 108*sin(seq(0,2*pi,len=1000)))
 		polygon(relocate_elp(elps,  45, 130, 170),border=circle.col[1],lwd=lwd)
-		polygon(relocate_elp(elps,  45, 200, 200),border=circle.col[1],lwd=lwd)
-		polygon(relocate_elp(elps, 135, 200, 200),border=circle.col[1],lwd=lwd)
-		polygon(relocate_elp(elps, 135, 270, 170),border=circle.col[1],lwd=lwd)
+		polygon(relocate_elp(elps,  45, 200, 200),border=circle.col[2],lwd=lwd)
+		polygon(relocate_elp(elps, 135, 200, 200),border=circle.col[3],lwd=lwd)
+		polygon(relocate_elp(elps, 135, 270, 170),border=circle.col[4],lwd=lwd)
 
 		text( 35, 315, names[1], cex=cex[1])
 		text(138, 350, names[2], cex=cex[1])
@@ -221,10 +221,10 @@ vennDiagram <- function(object,include="both",names=NULL,mar=rep(1,4),cex=c(1.5,
 
 	elps <- cbind(150*cos(seq(0,2*pi,len=1000)), 60*sin(seq(0,2*pi,len=1000)))
 	polygon(relocate_elp(elps,  90,200, 250),border=circle.col[1],lwd=lwd)
-	polygon(relocate_elp(elps, 162,250, 220),border=circle.col[1],lwd=lwd)
-	polygon(relocate_elp(elps, 234,250, 150),border=circle.col[1],lwd=lwd)
-	polygon(relocate_elp(elps, 306,180, 125),border=circle.col[1],lwd=lwd)
-	polygon(relocate_elp(elps, 378,145, 200),border=circle.col[1],lwd=lwd)
+	polygon(relocate_elp(elps, 162,250, 220),border=circle.col[2],lwd=lwd)
+	polygon(relocate_elp(elps, 234,250, 150),border=circle.col[3],lwd=lwd)
+	polygon(relocate_elp(elps, 306,180, 125),border=circle.col[4],lwd=lwd)
+	polygon(relocate_elp(elps, 378,145, 200),border=circle.col[5],lwd=lwd)
 
 	text( 50, 285, names[1],cex=cex[1])
 	text(200, 415, names[2],cex=cex[1])

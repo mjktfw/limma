@@ -6,7 +6,7 @@ Fit a linear model genewise to expression data from a series of microarrays.
 The fit is by generalized least squares allowing for correlation between duplicate spots or related arrays.
 This is a utility function for \code{lmFit}.
 }
-\usage{gls.series(M,design=NULL,ndups=2,spacing=1,block=NULL,correlation=NULL,weights=NULL,...)}
+\usage{gls.series(M,design=NULL,ndups=2,spacing=1,block=NULL,correlation=NULL,weights=NULL,\dots)}
 \arguments{
   \item{M}{numeric matrix containing log-ratio or log-expression values for a series of microarrays, rows correspond to genes and columns to arrays.}
   \item{design}{numeric design matrix defining the linear model, with rows corresponding to arrays and columns to comparisons to be estimated. The number of rows must match the number of columns of \code{M}. Defaults to the unit vector meaning that the arrays are treated as replicates.} 
@@ -16,7 +16,7 @@ This is a utility function for \code{lmFit}.
   Same length as \code{ncol(M)}.}
   \item{correlation}{numeric value specifying the inter-duplicate or inter-block correlation.}
   \item{weights}{an optional numeric matrix of the same dimension as \code{M} containing weights for each spot. If it is of different dimension to \code{M}, it will be filled out to the same size.}
-  \item{...}{other optional arguments to be passed to \code{dupcor.series}.}
+  \item{\dots}{other optional arguments to be passed to \code{dupcor.series}.}
 }
 \value{
   A list with components

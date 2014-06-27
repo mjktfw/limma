@@ -39,7 +39,7 @@ When unequal \code{weights} are provided, this function calls \code{weightedLowe
 \code{weightedLowess} implements a similar algorithm to \code{lowess} except that it uses the prior weights both in the local regressions and in determining which other observations to include in the local neighbourhood of each observation.
 
 Two alternative algorithms for weighted lowess curve fitting are provided as options.
-If \code{method="loess"}, then a call is made to \code{loess(y~x,weights=weights,span=span,degree=1,family="symmetric",...)}.
+If \code{method="loess"}, then a call is made to \code{loess(y~x,weights=weights,span=span,degree=1,family="symmetric",\dots)}.
 This method differs from \code{weightedLowess} in that the prior weights are ignored when determining the neighbourhood of each observation.
 
 If \code{method="locfit"}, then repeated calls are made to \code{locfit:::locfit.raw} with \code{deg=1}.

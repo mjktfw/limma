@@ -8,7 +8,7 @@ This function can be used to explore any spatial effects across the microarray.
 }
 \usage{
 imageplot(z, layout, low = NULL, high = NULL, ncolors = 123, zerocenter = NULL, 
-zlim = NULL, mar=c(2,1,1,1), legend=TRUE, ...)
+zlim = NULL, mar=c(2,1,1,1), legend=TRUE, \dots)
 }
 \arguments{
   \item{z}{numeric vector or array. This vector can contain any spot 
@@ -32,7 +32,7 @@ the interval \code{zlim} will be truncated to the relevant limit.}
  \item{mar}{numeric vector of length 4 specifying the width of the margin around the plot.
  This argument is passed to \code{\link[graphics]{par}}.}
  \item{legend}{logical, if \code{TRUE} the range of \code{z} and \code{zlim} is shown in the bottom margin}
-\item{...}{any other arguments will be passed to the function image}
+\item{\dots}{any other arguments will be passed to the function image}
 }
 \details{
 This function may be used to plot the values of any spot-specific statistic, such as the log intensity ratio, background intensity or a quality

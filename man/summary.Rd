@@ -9,11 +9,11 @@
 Briefly summarize microarray data objects.
 }
 \usage{
-\method{summary}{RGList}(object, ...)
+\method{summary}{RGList}(object, \dots)
 }
 \arguments{
   \item{object}{an object of class \code{RGList}, \code{MAList} or \code{MArrayLM}}
-  \item{...}{other arguments are not used}
+  \item{\dots}{other arguments are not used}
 }
 \details{
 The data objects are summarized as if they were lists, i.e., brief information about the length and type of the components is given.

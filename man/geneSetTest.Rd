@@ -9,7 +9,7 @@ Genes are assumed to be independent.
 \usage{
 geneSetTest(index, statistics, alternative = "mixed", type= "auto",
             ranks.only = TRUE, nsim=9999)
-wilcoxGST(index, statistics, ...)
+wilcoxGST(index, statistics, \dots)
 }
 
 \arguments{

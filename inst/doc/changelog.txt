@@ -1,3 +1,12 @@
+27 June 2014: limma 3.21.10
+
+- remove col argument from plotMDS(), as it handled by ... as are
+  other graphics arguments.
+
+- vennDiagram() now supports circles of different colors for any
+  number of circles.  Previously this was supported only up to three
+  sets.  
+
 23 June 2014: limma 3.21.9
 
 - new function goana() for gene ontology analysis of DE results from
