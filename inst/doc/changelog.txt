@@ -1,3 +1,28 @@
+ 8 Aug 2014: limma 3.21.12
+
+- The definition of the M and A axes for an MA-plot of single channel
+  data is changed slightly.  Previously the A-axis was the average of
+  all arrays in the dataset -- this has been definition since MA-plots
+  were introduced for single channel data in April 2003.  Now an
+  artificial array is formed by averaging all arrays other than the
+  one to be plotted.  Then a mean-difference plot is formed from the
+  specified array and the artificial array.  This change ensures the 
+  specified and artificial arrays are computed from independent data,
+  and ensures the MA-plot will reduce to a correct mean-difference
+  plot when there are just two arrays in the dataset.
+
+ 7 Aug 2014: limma 3.21.11
+
+- diffSplice() now includes Simes adjusted p-values
+
+- topSplice() has a new level="hybrid" argument for ranking genes by
+  Simes adjusted p-values.
+
+- goana() is now an S3 generic function.
+
+- goana() can now optionally adjust for gene length or abundance
+  bias.
+
 27 June 2014: limma 3.21.10
 
 - remove col argument from plotMDS(), as it handled by ... as are
@@ -3447,6 +3472,10 @@ Apr 25 2003: limma 0.9.7
 
 The smawehi package was renamed to limma, with the title "Linear Models
 for Microarray Data" and became part of the Bioconductor project.
+
+Apr 7, 2003
+
+MA plots added for both two-color and single channel data.
 
 11 November 2002: smawehi 0.1
 

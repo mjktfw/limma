@@ -30,10 +30,10 @@ The method is explained briefly in Majewski et al (2010) and in full detail in P
 The \code{subset} argument specifies whether and how the fit object should be subsetted.
 Ideally, only genes that are truly differentially expressed for one or both of the contrasts should be used estimate the biological correlation.
 The default is \code{"all"}, which uses all genes in the fit object to estimate the biological correlation.
-The option \code{"Fpval"} chooses genes based on how many F-test p-values are estimated to be truly significant using the method \code{propNotDE}.
+The option \code{"Fpval"} chooses genes based on how many F-test p-values are estimated to be truly significant using the function \code{propTrueNull}.
 This should capture genes that display any evidence of differential expression in either of the two contrasts.
 The options \code{"p.union"} and \code{"p.int"} are based on the moderated t p-values from both contrasts.
-From the \code{propNotDE} method an estimate of the number of p-values truly significant in either of the two contrasts can be obtained.
+From the \code{propTrueNull} function an estimate of the number of p-values truly significant in either of the two contrasts can be obtained.
 "p.union" takes the union of these genes and \code{"p.int"} takes the intersection of these genes.
 The other options, \code{"logFC"} and \code{"predFC"} subsets on genes that attain a logFC or predFC at least as large as the 90th percentile of the log fold changes or predictive log fold changes on the absolute scale. 
 

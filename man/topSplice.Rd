@@ -5,18 +5,27 @@
 Top table ranking the most differentially spliced genes or exons.
 }
 \usage{
-topSplice(fit, coef=ncol(fit), level="exon", number=10, FDR=1)
+topSplice(fit, coef=ncol(fit), level="hybrid", number=10, FDR=1)
 }
 \arguments{
   \item{fit}{\code{MArrayLM} fit object produced by \code{diffSplice}.}
   \item{coef}{the coefficient (column) of fit for which differentially splicing is assessed.}
-  \item{level}{character string, should the table be by \code{"exon"} or by \code{"gene"}.}
+  \item{level}{character string, possible values are \code{"gene"}, \code{"exon} or \code{"hybrid}.
+    \code{"gene"} gives F-tests for each gene.
+    \code{"exon"} gives t-tests for each exon.
+    \code{"hybrid"} gives gene level results with p-values derived from the exon-level tests.}
   \item{number}{integer, maximum number of rows to output.}
   \item{FDR}{numeric, only show exons or genes with false discovery rate less than this cutoff.}
 }
 
 \details{
-Ranks genes by the Plots interaction log2-fold-change by exon for the specified gene.
+Ranks genes or exons by evidence for differential splicing.
+The gene-level test is an F-test for any differences in exon usage between experimental conditions.
+The exon-level tests are t-tests for differences between each exon and all other exons for the same gene.
+
+The hybrid testing method processes the exon-level p-values to give an overall call of differential splicing for each gene.
+It returns the minimum Simes-adjusted p-values for each gene.
+It is likely to be more powerful than the genewise F-tests if only a minority of exons for a gene are differentially spliced.
 }
 
 \value{A data.frame with any annotation columns found in \code{fit} plus the following columns

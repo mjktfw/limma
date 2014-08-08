@@ -2,7 +2,7 @@ diffSplice <- function(fit,geneid,exonid=NULL,verbose=TRUE)
 #	Test for splicing variants between conditions
 #	using linear model fit of exon data.
 #	Charity Law and Gordon Smyth
-#	Created 13 Dec 2013.  Last modified 18 Feb 2014.
+#	Created 13 Dec 2013.  Last modified 7 Aug 2014.
 {
 	exon.genes <- fit$genes
 	if(is.null(exon.genes)) exon.genes <- data.frame(ExonID=1:nrow(fit))
@@ -106,78 +106,98 @@ diffSplice <- function(fit,geneid,exonid=NULL,verbose=TRUE)
 	out$gene.F.p.value <- gene.F.p.value
 
 #	Which columns of exon.genes contain gene level annotation?
-	exon.lastexon <- cumsum(gene.nexons)
-	exon.firstexon <- exon.lastexon-gene.nexons+1
+	gene.lastexon <- cumsum(gene.nexons)
+	gene.firstexon <- gene.lastexon-gene.nexons+1
 	no <- logical(nrow(exon.genes))
-	isdup <- vapply(exon.genes,duplicated,no)[-exon.firstexon,,drop=FALSE]
+	isdup <- vapply(exon.genes,duplicated,no)[-gene.firstexon,,drop=FALSE]
 	isgenelevel <- apply(isdup,2,all)
-	out$gene.genes <- exon.genes[exon.lastexon,isgenelevel, drop=FALSE]
+	out$gene.genes <- exon.genes[gene.lastexon,isgenelevel, drop=FALSE]
 	out$gene.genes$NExons <- gene.nexons
+	out$gene.firstexon <- gene.firstexon
+	out$gene.lastexon <- gene.lastexon
+
+#	Simes adjustment of exon level p-values
+	simes <- function(p,n) {
+		p <- p[-which.max(p)]
+		min(sort(p)*(n-1)/(1:(n-1)))
+	}
+	out$gene.simes.p.value <- out$gene.F.p.value
+	for (i in 1:ngenes) for (j in 1:ncol(fit)) {
+		out$gene.simes.p.value[i,j] <- simes(exon.p.value[gene.firstexon[i]:gene.lastexon[i],j],gene.nexons[i])
+	}
 
 	out
 }
 
-topSplice <- function(fit, coef=ncol(fit), level="exon", number=10, FDR=1)
-#	Collate voomex results in data.frame, ordered from most significant at top
+topSplice <- function(fit, coef=ncol(fit), level="hybrid", number=10, FDR=1)
+#	Collate diffSplice results into data.frame, ordered from most significant at top
 #	Gordon Smyth
-#	Created 18 Dec 2013.  Last modified 17 March 2014.
+#	Created 18 Dec 2013.  Last modified 7 Aug 2014.
 {
 	coef <- coef[1]
-	exon <- match.arg(level,c("exon","gene"))
-	if(level=="exon") {
+	level <- match.arg(level,c("hybrid","exon","gene"))
+	switch(level,
+	"exon" = {
 		number <- min(number,nrow(fit$coefficients))
 		P <- fit$p.value[,coef]
 		BH <- p.adjust(P, method="BH")
 		if(FDR<1) number <- min(number,sum(BH<FDR))
 		o <- order(P)[1:number]
 		data.frame(fit$genes[o,,drop=FALSE],logFC=fit$coefficients[o,coef],t=fit$t[o,coef],P.Value=P[o],FDR=BH[o])
-	} else {
+	},
+	gene = {
 		number <- min(number,nrow(fit$gene.F))
 		P <- fit$gene.F.p.value[,coef]
 		BH <- p.adjust(P, method="BH")
 		if(FDR<1) number <- min(number,sum(BH<FDR))
 		o <- order(P)[1:number]
 		data.frame(fit$gene.genes[o,,drop=FALSE],F=fit$gene.F[o,coef],P.Value=P[o],FDR=BH[o])
+	},
+	hybrid = {
+		number <- min(number,nrow(fit$gene.F))
+		P <- fit$gene.simes.p.value[,coef]
+		BH <- p.adjust(P, method="BH")
+		if(FDR<1) number <- min(number,sum(BH<FDR))
+		o <- order(P)[1:number]
+		data.frame(fit$gene.genes[o,,drop=FALSE],P.Value=P[o],FDR=BH[o])
 	}
+	)
 }
 
-plotSplice <- function(fit, coef=ncol(fit), geneid=NULL, rank=1L, FDR = 0.05)
-#	Plot exons of most differentially spliced gene
+plotSplice <- function(fit, coef=ncol(fit), geneid=NULL, genecolname=NULL, rank=1L, FDR = 0.05)
+#	Plot exons of chosen gene
+#	fit is output from diffSplice
 #	Gordon Smyth and Yifang Hu
 #	Created 3 Jan 2014.  Last modified 19 March 2014.
 {
-	# Gene labelling including gene symbol
-	genecolname <- fit$genecolname
-	genelab <- grep(paste0(genecolname,"|Symbol|symbol"), colnames(fit$gene.genes), value = T)
-	
+	if(is.null(genecolname)) 
+		genecolname <- fit$genecolname
+	else
+		genecolname <- as.character(genecolname)
+
 	if(is.null(geneid)) {
+#		Find gene from specified rank 
 		if(rank==1L)
 			i <- which.min(fit$gene.F.p.value[,coef])
 		else
 			i <- order(fit$gene.F.p.value[,coef])[rank]
-
-		geneid <- paste(fit$gene.genes[i,genelab], collapse = ".")
-
+		geneid <- paste(fit$gene.genes[i,genecolname], collapse = ".")
 	} else {
-		i <- which(fit$gene.genes[,fit$genecolname]==geneid)
-		
-		geneid <- paste(fit$gene.genes[i,genelab], collapse = ".")
-
+#		Find gene from specified name
+		geneid <- as.character(geneid)
+		i <- which(fit$gene.genes[,genecolname]==geneid)[1]
 		if(!length(i)) stop(paste("geneid",geneid,"not found"))
 	}
-	exon.lastexon <- cumsum(fit$gene.genes$NExons[1:i])
-	j <- (exon.lastexon[i-1]+1):exon.lastexon[i]
+
+#	Row numbers containing exons
+	j <- fit$gene.firstexon[i]:fit$gene.lastexon[i]
 
 	exoncolname <- fit$exoncolname
-
-	if(is.null(exoncolname)){
+	if(is.null(exoncolname)) {
 
 		plot(fit$coefficients[j,coef], xlab = "Exon", ylab = "logFC (this exon vs rest)", main = geneid, type = "b")
 
-	}
-
-	# Plot exons and mark exon ids on the axis
-	if(!is.null(exoncolname)) {
+	} else {
 
 		exon.id <- fit$genes[j, exoncolname]
 		xlab <- paste("Exon", exoncolname, sep = " ")
@@ -186,25 +206,24 @@ plotSplice <- function(fit, coef=ncol(fit), geneid=NULL, rank=1L, FDR = 0.05)
 		axis(1, at = 1:length(j), labels = exon.id, las = 2, cex.axis = 0.6)
 		mtext(xlab, side = 1, padj = 5.2)
 
-		# Mark the topSpliced exons
+#		Mark the topSpliced exons
 		top <- topSplice(fit, coef = coef, number = Inf, level = "exon", FDR = FDR)
 		m <- which(top[,genecolname] %in% fit$gene.genes[i,genecolname])
-
 		if(length(m) > 0){
-
-			if(length(m) == 1) cex <- 1.5 else{
-
+			if(length(m) == 1)
+				cex <- 1.5
+			else {
 				abs.fdr <- abs(log10(top$FDR[m]))
 				from <- range(abs.fdr)
 				to <- c(1,2)
 				cex <- (abs.fdr - from[1])/diff(from) * diff(to) + to[1]
-
 			}	
 			mark <- match(top[m, exoncolname], exon.id)
 			points((1:length(j))[mark], fit$coefficients[j[mark], coef], col = "red", pch = 16, cex = cex)
 		}
+
 	}
 
 	abline(h=0,lty=2)
-
+	invisible()
 }

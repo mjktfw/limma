@@ -3,7 +3,7 @@
 read.ilmn <- function(files=NULL, ctrlfiles=NULL, path=NULL, ctrlpath=NULL, probeid="Probe", annotation=c("TargetID", "SYMBOL"), expr="AVG_Signal", other.columns="Detection",sep="\t", quote="\"", verbose=TRUE, ...)
 #	Read one or more files of Illumina BeadStudio output
 #	Wei Shi and Gordon Smyth.
-#	Created 15 July 2009. Last modified 27 November 2013.
+#	Created 15 July 2009. Last modified 21 July 2014.
 {
 	if(!is.null(files)){
 		f <- unique(files)
@@ -34,12 +34,22 @@ read.ilmn <- function(files=NULL, ctrlfiles=NULL, path=NULL, ctrlpath=NULL, prob
 			else
 				elist.ctrl <- cbind(elist.ctrl, elist.ctrl1)
 		}
-		elist.ctrl$genes$Status <- elist.ctrl$genes[,ncol(elist.ctrl$genes)]
+		
+		if(is.null(elist.ctrl$genes)) elist.ctrl$genes <- data.frame(Status = rep("negative", nrow(elist.ctrl)))
+		else {
+			ctrl.status.negative <- apply(elist.ctrl$genes, 2, function(x) sum(tolower(x) %in% "negative"))
+			STATUS.col <- which.max(ctrl.status.negative)
+			if(ctrl.status.negative[STATUS.col] > 0) elist.ctrl$genes$Status <- elist.ctrl$genes[[STATUS.col]]
+			else elist.ctrl$genes$Status <- "negative"
+		}
 	}
 	
 	if(!is.null(files))
 		if(!is.null(ctrlfiles)){
-			colnames(elist.ctrl$genes) <- colnames(elist$genes)
+			REG.col <- setdiff(colnames(elist$genes), colnames(elist.ctrl$genes))
+			if(length(REG.col)) for(i in REG.col) elist.ctrl$genes[[i]] <- NA
+			CTRL.col <- setdiff(colnames(elist.ctrl$genes), colnames(elist$genes))
+			if(length(CTRL.col)) for(i in CTRL.col) elist$genes[[i]] <- NA
 			return(rbind(elist, elist.ctrl))
 		}
 		else
@@ -64,7 +74,7 @@ read.ilmn.targets <- function(targets, ...)
 .read.oneilmnfile <- function(fname, probeid, annotation, expr, other.columns, sep, quote, verbose, ...)
 #	Read a single file of Illumina BeadStudio output
 #	Wei Shi and Gordon Smyth
-#	Created 15 July 2009. Last modified 16 June 2014.
+#	Created 15 July 2009. Last modified 21 July 2014.
 {
 	h <- readGenericHeader(fname,columns=expr,sep=sep)
 	skip <- h$NHeaderRecords
@@ -101,7 +111,7 @@ read.ilmn.targets <- function(targets, ...)
 #	Add probe annotation	
 	if(length(anncol)) {
 		elist$genes <- x[,anncol,drop=FALSE]
-		if(!any(duplicated(pids))) row.names(elist$genes) <- pids
+		if(length(pids) & !any(duplicated(pids))) row.names(elist$genes) <- pids
 	}
 
 #	elist$targets <- data.frame(SampleNames=snames, stringsAsFactors=FALSE)
