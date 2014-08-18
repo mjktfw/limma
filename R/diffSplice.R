@@ -2,7 +2,7 @@ diffSplice <- function(fit,geneid,exonid=NULL,verbose=TRUE)
 #	Test for splicing variants between conditions
 #	using linear model fit of exon data.
 #	Charity Law and Gordon Smyth
-#	Created 13 Dec 2013.  Last modified 7 Aug 2014.
+#	Created 13 Dec 2013.  Last modified 18 Aug 2014.
 {
 	exon.genes <- fit$genes
 	if(is.null(exon.genes)) exon.genes <- data.frame(ExonID=1:nrow(fit))
@@ -117,27 +117,33 @@ diffSplice <- function(fit,geneid,exonid=NULL,verbose=TRUE)
 	out$gene.lastexon <- gene.lastexon
 
 #	Simes adjustment of exon level p-values
-	simes <- function(p,n) {
-		p <- p[-which.max(p)]
-		min(sort(p)*(n-1)/(1:(n-1)))
-	}
-	out$gene.simes.p.value <- out$gene.F.p.value
-	for (i in 1:ngenes) for (j in 1:ncol(fit)) {
-		out$gene.simes.p.value[i,j] <- simes(exon.p.value[gene.firstexon[i]:gene.lastexon[i],j],gene.nexons[i])
+	penalty <- rep_len(1L,length(g))
+	penalty[gene.lastexon] <- 1L-gene.nexons
+	penalty <- cumsum(penalty)[-gene.lastexon]
+	penalty <- penalty / rep(gene.nexons-1L,gene.nexons-1L)
+	g2 <- g[-gene.lastexon]
+
+	out$gene.simes.p.value <- gene.F.p.value
+	for (j in 1:ncol(fit)) {
+		o <- order(g,exon.p.value[,j])
+		p.adj <- pmin(exon.p.value[o,j][-gene.lastexon] / penalty, 1)
+		o <- order(g2,p.adj)
+		out$gene.simes.p.value[,j] <- p.adj[o][gene.firstexon-0L:(ngenes-1L)]
 	}
 
 	out
 }
 
-topSplice <- function(fit, coef=ncol(fit), level="hybrid", number=10, FDR=1)
+topSplice <- function(fit, coef=ncol(fit), test="simes", number=10, FDR=1)
 #	Collate diffSplice results into data.frame, ordered from most significant at top
 #	Gordon Smyth
-#	Created 18 Dec 2013.  Last modified 7 Aug 2014.
+#	Created 18 Dec 2013.  Last modified 18 Aug 2014.
 {
 	coef <- coef[1]
-	level <- match.arg(level,c("hybrid","exon","gene"))
-	switch(level,
-	"exon" = {
+	test <- match.arg(test,c("simes","F","f","t"))
+	if(test=="f") test <- "F"
+	switch(test,
+	"t" = {
 		number <- min(number,nrow(fit$coefficients))
 		P <- fit$p.value[,coef]
 		BH <- p.adjust(P, method="BH")
@@ -145,7 +151,7 @@ topSplice <- function(fit, coef=ncol(fit), level="hybrid", number=10, FDR=1)
 		o <- order(P)[1:number]
 		data.frame(fit$genes[o,,drop=FALSE],logFC=fit$coefficients[o,coef],t=fit$t[o,coef],P.Value=P[o],FDR=BH[o])
 	},
-	gene = {
+	F = {
 		number <- min(number,nrow(fit$gene.F))
 		P <- fit$gene.F.p.value[,coef]
 		BH <- p.adjust(P, method="BH")
@@ -153,7 +159,7 @@ topSplice <- function(fit, coef=ncol(fit), level="hybrid", number=10, FDR=1)
 		o <- order(P)[1:number]
 		data.frame(fit$gene.genes[o,,drop=FALSE],F=fit$gene.F[o,coef],P.Value=P[o],FDR=BH[o])
 	},
-	hybrid = {
+	simes = {
 		number <- min(number,nrow(fit$gene.F))
 		P <- fit$gene.simes.p.value[,coef]
 		BH <- p.adjust(P, method="BH")
@@ -207,7 +213,7 @@ plotSplice <- function(fit, coef=ncol(fit), geneid=NULL, genecolname=NULL, rank=
 		mtext(xlab, side = 1, padj = 5.2)
 
 #		Mark the topSpliced exons
-		top <- topSplice(fit, coef = coef, number = Inf, level = "exon", FDR = FDR)
+		top <- topSplice(fit, coef = coef, number = Inf, test = "t", FDR = FDR)
 		m <- which(top[,genecolname] %in% fit$gene.genes[i,genecolname])
 		if(length(m) > 0){
 			if(length(m) == 1)

@@ -15,15 +15,26 @@ diffSplice(fit, geneid, exonid=NULL, verbose=TRUE)
 An object of class \code{MArrayLM} containing both exon level and gene level tests.
 Results are sorted by geneid and by exonid within gene.
   \item{coefficients}{numeric matrix of coefficients of same dimensions as \code{fit}. Each coefficient is the difference between the log-fold-change for that exon versus the average log-fold-change for all other exons for the same gene.}
-  \item{t}{numeric matrix of moderated t-statistics}
+  \item{t}{numeric matrix of moderated t-statistics, of same dimensions as \code{fit}.}
   \item{p.value}{numeric vector of p-values corresponding to the t-statistics}
   \item{genes}{data.frame of exon annotation}
   \item{genecolname}{character string giving the name of the column of \code{genes} containing gene IDs}
-  \item{gene.F}{numeric vector of moderated F-statistics, one for each gene.}
-  \item{gene.F.p.value}{numeric vector of p-values corresponding to \code{gene.F}}
+  \item{gene.F}{numeric matrix of moderated F-statistics, one row for each gene.}
+  \item{gene.F.p.value}{numeric matrix of p-values corresponding to \code{gene.F}}
+  \item{gene.simes.p.value}{numeric matrix of Simes adjusted p-values, one row for each gene.}
+  \item{gene.genes}{data.frame of gene annotation.}
 }
 \details{
-This function is often used in conjunction with voom.
+This function tests for differential exon usage for each gene and for each column of \code{fit}.
+
+Testing for differential exon usage is equivalent to testing whether the log-fold-changes in the \code{fit} differ between exons for the same gene.
+Two different tests are provided.
+The first is an F-test for differences between the log-fold-changes.
+The other is a series of t-tests in which each exon is compared to the average of all other exons for the same gene.
+The exon-level t-tests are converted into a genewise test by adjusting the p-values for the same gene by Simes method.
+The minimum adjusted p-value is then used for each gene.
+
+This function can be used on data from an exon microarray or can be used in conjunction with voom for exon-level RNA-seq counts.
 }
 \seealso{
 \code{\link{voom}}

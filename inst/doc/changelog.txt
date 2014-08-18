@@ -1,3 +1,11 @@
+18 Aug 2014: limma 3.21.13
+
+- Speed improvement for the calculation of Simes adjusted p-values by
+  diffSplice().
+
+- argument 'level' for diffSplice() renamed to 'test', with possible
+  values "simes", "F" or "t".
+
  8 Aug 2014: limma 3.21.12
 
 - The definition of the M and A axes for an MA-plot of single channel
