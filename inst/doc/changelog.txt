@@ -1,3 +1,11 @@
+26 Aug 2014: limma 3.21.14
+
+- Improvements to goana() and topGO() help files.  Argument 'weights'
+  renamed to 'prior.prob'.
+
+- Bug fix for read.maimages: default value for 'quote' was not being
+  set correctly for source="agilent.mean" or source="agilent.median".
+
 18 Aug 2014: limma 3.21.13
 
 - Speed improvement for the calculation of Simes adjusted p-values by

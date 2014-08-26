@@ -1,13 +1,21 @@
 #	READ IMAGE ANALYSIS FILES INTO RGList or EListRaw
 
 read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=NULL,columns=NULL,other.columns=NULL,annotation=NULL,green.only=FALSE,wt.fun=NULL,verbose=TRUE,sep="\t",quote=NULL,...)
-#	Extracts an RG list from a set of two-color image analysis output files
-#  or an EListRaw from a set of one-color files
+#	Extracts either an RGList object from a set of two-color image analysis output files
+#	or an EListRaw object from a set of one-color files
 #	Gordon Smyth. 
-#	1 Nov 2002.  Last revised 9 March 2012.
+#	1 Nov 2002.  Last revised 26 August 2014.
 {
-#	Begin checking input arguments
 
+#	Determine type of input file
+	source <- match.arg(source,c("generic","agilent","agilent.mean","agilent.median","arrayvision","arrayvision.ARM","arrayvision.MTM","bluefuse","genepix","genepix.mean","genepix.median","genepix.custom","imagene","imagene9","quantarray","scanarrayexpress","smd.old","smd","spot","spot.close.open"))
+#	source2 is the source type with qualifications removed
+	source2 <- strsplit(source,split=".",fixed=TRUE)[[1]][1]
+
+#	ImaGene is special case
+	if(source2=="imagene") return(read.imagene(files=files,path=path,ext=ext,names=names,columns=columns,other.columns=other.columns,wt.fun=wt.fun,verbose=verbose,sep=sep,quote=quote,...))
+
+#	Get list of files and associated targets frame
 	if(is.null(files)) {
 		if(is.null(ext))
 			stop("Must specify input files")
@@ -16,28 +24,24 @@ read.maimages <- function(files=NULL,source="generic",path=NULL,ext=NULL,names=N
 			files <- dir(path=ifelse(is.null(path),".",path),pattern=extregex)
 			files <- sub(extregex,"",files)
 		}
-	}
-
-	source <- match.arg(source,c("generic","agilent","agilent.mean","agilent.median","arrayvision","arrayvision.ARM","arrayvision.MTM","bluefuse","genepix","genepix.mean","genepix.median","genepix.custom","imagene","imagene9","quantarray","scanarrayexpress","smd.old","smd","spot","spot.close.open"))
-#	source2 is the source type with qualifications removed
-	source2 <- strsplit(source,split=".",fixed=TRUE)[[1]][1]
-	if(is.null(quote)) if(source=="agilent") quote <- "" else quote <- "\""
-	if(source2=="imagene") return(read.imagene(files=files,path=path,ext=ext,names=names,columns=columns,other.columns=other.columns,wt.fun=wt.fun,verbose=verbose,sep=sep,quote=quote,...))
-
-	if(is.data.frame(files)) {
-		targets <- files
-		files <- files$FileName
-		if(is.null(files)) stop("targets frame doesn't contain FileName column")
-		if(is.null(names)) names <- targets$Label
-	} else {
-		targets <- NULL
-	}
-
+	} else
+		if(is.data.frame(files)) {
+			targets <- files
+			files <- files$FileName
+			if(is.null(files)) stop("targets frame doesn't contain FileName column")
+			if(is.null(names)) names <- targets$Label
+		} else {
+			targets <- NULL
+		}
 	slides <- as.vector(as.character(files))
 	if(!is.null(ext)) slides <- paste(slides,ext,sep=".")
 	nslides <- length(slides)
 
+#	Default sample names
 	if(is.null(names)) names <- removeExt(files)
+
+#	Default for quote
+	if(is.null(quote)) if(source2=="agilent") quote <- "" else quote <- "\""
 
 	if(is.null(columns)) {
 		if(source2=="generic") stop("must specify columns for generic input")

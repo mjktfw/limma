@@ -1,50 +1,47 @@
 \name{goana}
 \alias{goana}
 \alias{goana.default}
-\alias{goana.MArrayLM}
-\title{Gene Ontology Analysis of Differentially Expressed Genes}
+\title{Gene Ontology Analysis}
+
 \description{
-Fisher's exact test or Wallenius' noncentral hypergeometric test on differentially expressed genes for over-representation of gene ontology (GO) terms.
+Test for over-representation of gene ontology (GO) terms in one or more sets of genes.
 }
+
 \usage{
-\method{goana}{default}(de, universe = NULL, species = "Hs", weights = NULL, \dots)
-\method{goana}{MArrayLM}(de, coef = ncol(de), geneid = rownames(de), FDR = 0.05, 
-      species = "Hs", trend = FALSE, \dots)
+\method{goana}{default}(de, universe = NULL, species = "Hs", prior.prob = NULL, \dots)
 }
+
 \arguments{
-  \item{de}{Differentially expressed genes.  Can be a \code{MArrayLM} fit object, or a vector or list of Entrez Gene IDs of differentially expressed genes.}
-  \item{universe}{vector specifying the Entrez Gene identifiers of the universe. If \code{NULL}, all Entrez Gene IDs with any gene ontology annotation will be the universe.}
-  \item{species}{character string specifying the species. Possible values are \code{"Hs"}, \code{"Mm"}, \code{"Rn"} or \code{"Dm"}.}
-  \item{weights}{probability weighting of the universe.}
-  \item{coef}{column number or column name specifying which coefficient or contrast of the linear model is of interest.}
-  \item{geneid}{Entrez Gene identifiers. Either a vector of length \code{nrow(de)} or the name of the column of \code{de$genes} containing the Entrez Gene IDs.}
-  \item{FDR}{numeric. False discovery rate of differentially expressed genes less than this cutoff.}
-  \item{trend}{adjust analysis for gene length or abundance?
-  Can be logical, or a numeric vector of covariate values, or the name of the column of \code{de$genes} containing the covariate values.
-  If \code{TRUE}, then \code{de$Amean} is used as the covariate.}
-  \item{\dots}{further arguments.}
+  \item{de}{a vector of Entrez Gene IDs, or a list of such vectors.}
+  \item{universe}{vector specifying the set of Entrez Gene identifiers to be the background universe.
+  If \code{NULL} then all Entrez Gene IDs associated with any gene ontology term will be used as the universe.}
+  \item{species}{species identifier. Possible values are \code{"Hs"}, \code{"Mm"}, \code{"Rn"} or \code{"Dm"}.}
+  \item{prior.prob}{numeric vector giving the prior probability that each gene in the universe appears in a gene set.}
+  \item{\dots}{other arguments are not currently used.}
 }
+
 \details{
-Performs a Gene Ontology enrichment analysis for one for more gene lists using the appropriate Bioconductor organism package.
+\code{goana} is an S3 generic function.
+The default method performs a Gene Ontology enrichment analysis for one for more gene lists using the appropriate Bioconductor organism package.
 The gene lists must be supplied as Entrez Gene IDs.
 
-If applied to a linear model fit, then the differentially expressed genes are extracted automatically from the fit object, and analyses are done separately for the up and down significant genes.
+If \code{prior.prob=NULL}, the function computes one-sided hypergeometric tests equivalent to Fisher's exact test.
 
-If \code{trend=FALSE}, the function computes one-sided hypergeometric tests.
-If \code{trend=TRUE} or a covariate is supplied, then a trend is fitted to the differential expression results and the method of Young et al (2010) is used to adjust for this trend.
-The adjusted test uses Wallenius' noncentral hypergeometric distribution.
+The \code{prior.prob} vector can be used to specify the prior probability that each gene in the universe appears in a gene set.
+If prior probabilities are specified, then a test based on the Wallenius' noncentral hypergeometric distribution is used to adjust for the relative probability that each gene will appear in a gene set, following the approach of Young et al (2010).
 }
+
 \value{
-  A dataframe with rows for GO IDs and the following possible columns:
-  \item{Term}{GO terms.}
-  \item{Ont}{GO term ontology from BP, CC and MF.}
-  \item{N}{Number of genes in the GO term.}
-  \item{Up}{Number of up regulated differentially expressed genes for testing.}
-  \item{Down}{Number of down regulated differentially expressed genes for testing.}
-  \item{DE1}{Number of differentially expressed genes for testing.}
-  \item{P.Up}{P value from hypergeometric test or Wallenius' noncentral hypergeometric test of up regulated differentially expressed genes for over representation of GO terms.}
-  \item{P.Down}{P value from hypergeometric test or Wallenius' noncentral hypergeometric test of down regulated differentially expressed genes for over representation of GO terms.}
-  \item{P.DE1}{P value from hypergeometric test or Wallenius' noncentral hypergeometric test of differentially expressed genes for over representation of GO terms.}
+A data frame with a row for each GO term and the following columns:
+  \item{Term}{GO term.}
+  \item{Ont}{ontology that the GO term belongs to.  Possible values are \code{"BP"}, \code{"CC"} and \code{"MF"}.}
+  \item{N}{number of genes in the GO term.}
+  \item{DE1}{number of genes in the \code{DE1} set.}
+  \item{P.DE1}{p-value for over-representation of the GO term in the set.}
+The last two column names above assume one gene set with the name \code{DE1}.
+In general, there will be a pair of such columns for each gene set and the name of the set will appear in place of \code{"DE1"}.
+
+The row names of the data frame give the GO term IDs.
 }
 
 \references{
@@ -55,46 +52,25 @@ The adjusted test uses Wallenius' noncentral hypergeometric distribution.
 }
 
 \seealso{
-\code{\link{topGO}}
+\code{\link{goana.MArrayLM}}, \code{\link{topGO}}
 
 The goseq package implements a similar GO analysis.
 The goseq version will work with a variety of gene identifiers, not only Entrez Gene as here, and includes a database of gene length information for various species.
 
 The gostats package also does GO analyses with some different options.
 }
+
 \author{Gordon Smyth and Yifang Hu}
+
 \examples{
-
 \dontrun{
-
-fit <- lmFit(y, design)
-fit <- eBayes(fit)
-
-# goana without adjusting for gene length bias
-go.fisher <- goana(fit)
-topGO(go.fisher, sort = "up")
-topGO(go.fisher, sort = "down")
-
-# goana adjusting for gene length bias 
-go.len <- goana(fit, geneid = "GeneID", trend = "Length")
-topGO(go.len, sort = "up")
-topGO(go.len, sort = "down")
-
-# goana adjusting for gene abundance
-go.abund <- goana(fit, geneid = "GeneID", trend = TRUE)
-topGO(go.abund, sort = "up")
-topGO(go.abund, sort = "down")
-
-# goana.default
 go.de <- goana(list(DE1 = EG.DE1, DE2 = EG.DE2, DE3 = EG.DE3))
 topGO(go.de, sort = "DE1")
 topGO(go.de, sort = "DE2")
 topGO(go.de, ontology = "BP", sort = "DE3")
 topGO(go.de, ontology = "CC", sort = "DE3")
 topGO(go.de, ontology = "MF", sort = "DE3")
-
 }
-
 }
 
 \keyword{gene set test}

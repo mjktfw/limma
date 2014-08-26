@@ -64,47 +64,59 @@ goana.MArrayLM <- function(de, coef = ncol(de), geneid = rownames(de), FDR = 0.0
 	}
 	if(!trend) PW <- NULL
 
-	NextMethod(de = de.gene, universe = universe, species = species, weights = PW, ...)
+	NextMethod(de = de.gene, universe = universe, species = species, prior.prob = PW, ...)
 }
 
-goana.default <- function(de, universe = NULL, species = "Hs", weights = NULL, ...)
+goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL, ...)
 #  Gene ontology analysis of DE genes
 #  Gordon Smyth and Yifang Hu
-#  Created 20 June 2014.  Last modified 23 July 2014.
+#  Created 20 June 2014.  Last modified 26 August 2014.
 {
-	# check de
+	# Ensure de is a list
 	if(!is.list(de)) de <- list(DE1 = de)
-	if(is.null(names(de))) names(de) <- paste0("DE", 1:length(de))
+
+	# Stop if components of de are not vectors
+	if(!all(vapply(de,is.vector,TRUE))) stop("components of de should be vectors")
+
+	# Ensure gene IDs are of character mode
 	de <- lapply(de, as.character)
+
+	# Ensure all gene sets have names
+	if(is.null(names(de))) names(de) <- paste0("DE", 1:length(de))
 
 	# Select species
 	species <- match.arg(species, c("Hs", "Mm", "Rn", "Dm"))
 
-	# Load packages
-	DB <- paste("org", species, "eg", "db", sep = ".")
-	suppressPackageStartupMessages(require(DB, character.only = TRUE))
-	suppressPackageStartupMessages(require("GO.db", character.only = TRUE))
+	# Load package of GO terms
+	if(!suppressPackageStartupMessages(require("GO.db", character.only = TRUE))) stop("Go.db package not available")
 
-	# Get GO data
+	# Load species annotation package
+	DB <- paste("org", species, "eg", "db", sep = ".")
+	if(!suppressPackageStartupMessages(require(DB, character.only = TRUE))) stop("Go.db package not available")
+
+	# Get gene-GOterm mappings, and remove duplicate entries
 	GO2ALLEGS <- paste("org", species, "egGO2ALLEGS", sep = ".")
 	EG.GO <- toTable(get(GO2ALLEGS))
-
-	# Remove duplicates
 	d <- duplicated(EG.GO[,c("gene_id", "go_id", "Ontology")])
 	EG.GO <- EG.GO[!d, ]
 
 	# Check universe
-	if(is.null(universe)) universe <- EG.GO$gene_id
-	universe <- as.character(universe)
+	if(is.null(universe)) {
+		# Get universe of all gene IDs
+		universe <- unique(EG.GO$gene_id)
+		universe <- as.character(universe)
+	} else {
+		universe <- unique(universe)
+		# Keep only genes in universe
+		EG.GO <- EG.GO[EG.GO$gene_id %in% universe, ]
+	}
+	if(!length(EG.GO$gene_id)) stop("No genes found in universe")
 
-	# Check weights
-	if(!is.null(weights)){
-		if(length(weights)!=length(universe)) stop("length(weights) must equal length(universe).")
+	# Check prior probabilities
+	if(!is.null(prior.prob)) {
+		if(length(prior.prob)!=length(universe)) stop("length(prior.prob) must equal length(universe)")
 	}
 
-	# Reduce to universe
-	EG.GO <- EG.GO[EG.GO$gene_id %in% universe, ]
-	if(!length(EG.GO$gene_id)) stop("Universe is empty.")
 
 	Total <- length(unique(EG.GO$gene_id))
 
@@ -113,10 +125,10 @@ goana.default <- function(de, universe = NULL, species = "Hs", weights = NULL, .
 	TotalDE <- lapply(isDE, function(x) length(unique(EG.GO$gene_id[x])))
 	nDE <- length(isDE)
 
-	if(length(weights)) {
+	if(length(prior.prob)) {
 		# Probability weight for each gene
 		m <- match(EG.GO$gene_id, universe)
-		PW2 <- list(weights[m])
+		PW2 <- list(prior.prob[m])
 		X <- do.call(cbind, c(N=1, isDE, PW=PW2))
 	} else
 		X <- do.call(cbind, c(N=1, isDE))
@@ -126,11 +138,11 @@ goana.default <- function(de, universe = NULL, species = "Hs", weights = NULL, .
 
 	P <- matrix(0, nrow = nrow(S), ncol = nDE)
 
-	if(length(weights)) {
+	if(length(prior.prob)) {
 
 		# Calculate weight
 		require("BiasedUrn", character.only = TRUE)
-		PW.ALL <- sum(weights[universe %in% EG.GO$gene_id])
+		PW.ALL <- sum(prior.prob[universe %in% EG.GO$gene_id])
 		AVE.PW <- S[,"PW"]/S[,"N"]
 		W <- AVE.PW*(Total-S[,"N"])/(PW.ALL-S[,"N"]*AVE.PW)
 
@@ -172,33 +184,47 @@ goana.default <- function(de, universe = NULL, species = "Hs", weights = NULL, .
 	Results
 }
 
-topGO <- function(results, ontology = c("BP", "CC", "MF"), sort = "up", number = 20L){
-#  Extract sorted goana gene ontology test results 
+topGO <- function(results, ontology = c("BP", "CC", "MF"), sort = NULL, number = 20L)
+#  Extract sorted results from goana output 
 #  Gordon Smyth and Yifang Hu
-#  Created 20 June 2014. Last modified 21 July 2014.
-
+#  Created 20 June 2014. Last modified 26 August 2014.
+{
 	# Check results
-	if(!is.data.frame(results)) stop("Expect a dataframe with goana results.")
+	if(!is.data.frame(results)) stop("results should be a data.frame.")
+
+	# Number of gene sets
+	nsets <- (ncol(results)-3L) %/% 2L
+	setnames <- colnames(results)[4L:(3L+nsets)]
 
 	# Check ontology
 	ontology <- match.arg(ontology, c("BP", "CC", "MF"), several.ok = TRUE)
 
-	# Check sort and sort by P value
-	if(length(sort) != 1) stop("sort length needs to be 1.")
-	sort <- tolower(colnames(results)) %in% tolower(paste0("P.", sort))
-	if(sum(sort)!=1) stop("sort not found.")
+	# Check sort and find p-value column
+	if(is.null(sort)) {
+		P.col <- 4L+nsets
+	} else {
+		sort <- as.character(sort[1])
+		if(sort=="up") sort="Up"
+		if(sort=="down") sort="Down"
+		sort <- paste0("^",sort,"$")
+		P.col <- grep(sort, setnames)
+		if(!length(P.col)) stop("sort column not found")
+		P.col <- 3L+nsets+P.col
+	}
 
 	# Check number
 	if(!is.numeric(number)) stop("Need to input number.")
 	if(number < 1L) return(data.frame())
 
-	# Select ontologies
-	sel <- results$Ont %in% ontology
-	results <- results[sel,]
+	# Limit results to specified ontologies
+	if(length(ontology) < 3L) {
+		sel <- results$Ont %in% ontology
+		results <- results[sel,]
+	}
 
-	# Sort by p value
-	o <- order(results[, sort], rownames(results))
-	results <- results[o,]
+	# Sort by p-value
+	o <- order(results[,P.col], rownames(results))
+	if(number < length(o)) o <- o[1:number]
 
-	if(number >= nrow(results)) results else results[1:number,]
+	results[o,,drop=FALSE]
 }
