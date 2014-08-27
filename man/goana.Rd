@@ -64,6 +64,7 @@ The gostats package also does GO analyses with some different options.
 
 \examples{
 \dontrun{
+
 go.de <- goana(list(DE1 = EG.DE1, DE2 = EG.DE2, DE3 = EG.DE3))
 topGO(go.de, sort = "DE1")
 topGO(go.de, sort = "DE2")

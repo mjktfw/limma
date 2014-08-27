@@ -64,6 +64,7 @@ The gostats package also does GO analyses with some different options.
 \examples{
 
 \dontrun{
+
 fit <- lmFit(y, design)
 fit <- eBayes(fit)
 

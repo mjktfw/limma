@@ -57,10 +57,10 @@ goana.MArrayLM <- function(de, coef = ncol(de), geneid = rownames(de), FDR = 0.0
 
 	# Fit monotonic cubic spline for DE genes vs. gene.weights
 	if(trend) {
-			PW <- isDE <- rep(0,nrow(de))
-			isDE[fdr.coef < FDR] <- 1
-			o <- order(covariate)
-			PW[o] <- tricubeMovingAverage(isDE[o],span=0.5,full.length=TRUE)
+		isDE <- as.numeric(fdr.coef < FDR)
+		o <- order(covariate)
+		PW <- rep(0,nrow(de))
+		PW[o] <- tricubeMovingAverage(isDE[o],span=0.5,full.length=TRUE)
 	}
 	if(!trend) PW <- NULL
 
@@ -83,6 +83,7 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 
 	# Ensure all gene sets have names
 	if(is.null(names(de))) names(de) <- paste0("DE", 1:length(de))
+	nsets <- length(de)
 
 	# Select species
 	species <- match.arg(species, c("Hs", "Mm", "Rn", "Dm"))
@@ -117,7 +118,6 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 		if(length(prior.prob)!=length(universe)) stop("length(prior.prob) must equal length(universe)")
 	}
 
-
 	Total <- length(unique(EG.GO$gene_id))
 
 	# Overlap with DE genes
@@ -136,7 +136,7 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 	group <- paste(EG.GO$go_id, EG.GO$Ontology, sep=".")
 	S <- rowsum(X, group=group, reorder=FALSE)
 
-	P <- matrix(0, nrow = nrow(S), ncol = nDE)
+	P <- matrix(0, nrow = nrow(S), ncol = nsets)
 
 	if(length(prior.prob)) {
 
@@ -147,7 +147,7 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 		W <- AVE.PW*(Total-S[,"N"])/(PW.ALL-S[,"N"]*AVE.PW)
 
 		# Wallenius' noncentral hypergeometric test
-		for(j in 1:nDE){
+		for(j in 1:nsets){
 
 			for(i in 1:nrow(S)){
 
@@ -162,7 +162,7 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 	} else {
 
 		# Fisher's exact test
-		for(j in 1:nDE){
+		for(j in 1:nsets){
 
 			P[,j] <- phyper(q=S[,1+j]-0.5,m=TotalDE[[j]],n=Total-TotalDE[[j]], k=S[,"N"],lower.tail=FALSE)
 		}
@@ -175,11 +175,8 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 	Results <- data.frame(Term = TERM[[2]], Ont = g[,2], S, P, stringsAsFactors=FALSE)
 	rownames(Results) <- g[,1]
 
-	# Name P value for the DE genes
-	iTON <- c(1:3)
-	iDE <- 3+c(1:nDE)
-	PDE<- paste0("P.", colnames(Results)[iDE])
-	colnames(Results)[-c(iTON,iDE)] <- PDE
+	# Name p-value columns
+	colnames(Results)[3+nsets+(1L:nsets)] <- paste0("P.", names(de))
 
 	Results
 }
