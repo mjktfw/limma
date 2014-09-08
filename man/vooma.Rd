@@ -11,7 +11,8 @@ Estimate the mean-variance relationship and use this to compute appropriate obse
 \usage{
 vooma(y, design=NULL, correlation, block=NULL, plot=FALSE, span=NULL)
 voomaByGroup(y, group, design=NULL, correlation, block=NULL,
-             plot=FALSE, span=NULL, col=NULL)
+             plot=FALSE, span=NULL, col=NULL, lwd=1, alpha=0.5,
+             pch=16, cex=0.3, legend="topright")
 }
 
 \arguments{
@@ -23,6 +24,11 @@ voomaByGroup(y, group, design=NULL, correlation, block=NULL,
   \item{plot}{\code{logical} value indicating whether a plot of mean-variance trend should be displayed.}
   \item{group}{categorical vector or factor giving group membership of columns of \code{y}.}
   \item{col}{vector of colors for plotting group trends}
+  \item{lwd}{line width for plotting group trends}
+  \item{pch}{plotting character. Default is integer code 16 which gives a solid circle. If a vector, then should be of length \code{nrow(y)}.}
+  \item{cex}{numeric vector of plot symbol expansions.  If a vector, then should be of length equal to number of groups.}
+  \item{alpha}{transparancy of points, on scale from \code{0} for fully transparant to \code{1} for fully opaque.}
+  \item{legend}{character string giving position to place legend.}
 }
 
 \details{

@@ -70,10 +70,10 @@ goana.MArrayLM <- function(de, coef = ncol(de), geneid = rownames(de), FDR = 0.0
 goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL, ...)
 #  Gene ontology analysis of DE genes
 #  Gordon Smyth and Yifang Hu
-#  Created 20 June 2014.  Last modified 26 August 2014.
+#  Created 20 June 2014.  Last modified 28 August 2014.
 {
 	# Ensure de is a list
-	if(!is.list(de)) de <- list(DE1 = de)
+	if(!is.list(de)) de <- list(DE = de)
 
 	# Stop if components of de are not vectors
 	if(!all(vapply(de,is.vector,TRUE))) stop("components of de should be vectors")
@@ -82,8 +82,13 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 	de <- lapply(de, as.character)
 
 	# Ensure all gene sets have names
-	if(is.null(names(de))) names(de) <- paste0("DE", 1:length(de))
 	nsets <- length(de)
+
+	names(de) <- trimWhiteSpace(names(de))
+	NAME <- names(de)
+	i <- NAME == "" | is.na(NAME)
+	NAME[i] <- paste0("DE", 1:nsets)[i]
+	names(de) <- makeUnique(NAME)
 
 	# Select species
 	species <- match.arg(species, c("Hs", "Mm", "Rn", "Dm"))
@@ -93,32 +98,45 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 
 	# Load species annotation package
 	DB <- paste("org", species, "eg", "db", sep = ".")
-	if(!suppressPackageStartupMessages(require(DB, character.only = TRUE))) stop("Go.db package not available")
+	if(!suppressPackageStartupMessages(require(DB, character.only = TRUE))) stop(DB,"package not available")
 
 	# Get gene-GOterm mappings, and remove duplicate entries
 	GO2ALLEGS <- paste("org", species, "egGO2ALLEGS", sep = ".")
-	EG.GO <- toTable(get(GO2ALLEGS))
-	d <- duplicated(EG.GO[,c("gene_id", "go_id", "Ontology")])
-	EG.GO <- EG.GO[!d, ]
-
-	# Check universe
 	if(is.null(universe)) {
-		# Get universe of all gene IDs
+		EG.GO <- toTable(get(GO2ALLEGS))
+		d <- duplicated(EG.GO[,c("gene_id", "go_id", "Ontology")])
+		EG.GO <- EG.GO[!d, ]
 		universe <- unique(EG.GO$gene_id)
 		universe <- as.character(universe)
 	} else {
-		universe <- unique(universe)
-		# Keep only genes in universe
-		EG.GO <- EG.GO[EG.GO$gene_id %in% universe, ]
+
+		universe <- as.character(universe)
+
+		dup <- duplicated(universe)
+		if(!is.null(prior.prob)) {
+			if(length(prior.prob)!=length(universe)) stop("length(prior.prob) must equal length(universe)")
+			prior.prob <- prior.prob[!dup]
+		}
+		universe <- universe[!dup]
+
+		GO2ALLEGS <- get(GO2ALLEGS)
+		m <- match(Lkeys(GO2ALLEGS),universe,0L)
+		universe <- universe[m]
+		if(!is.null(prior.prob)) prior.prob <- prior.prob[m]
+
+		Lkeys(GO2ALLEGS) <- universe
+		EG.GO <- toTable(GO2ALLEGS)
+		d <- duplicated(EG.GO[,c("gene_id", "go_id", "Ontology")])
+		EG.GO <- EG.GO[!d, ]
 	}
-	if(!length(EG.GO$gene_id)) stop("No genes found in universe")
+
+	Total <- length(unique(EG.GO$gene_id))
+	if(Total<1L) stop("No genes found in universe")
 
 	# Check prior probabilities
 	if(!is.null(prior.prob)) {
 		if(length(prior.prob)!=length(universe)) stop("length(prior.prob) must equal length(universe)")
 	}
-
-	Total <- length(unique(EG.GO$gene_id))
 
 	# Overlap with DE genes
 	isDE <- lapply(de, function(x) EG.GO$gene_id %in% x)
@@ -147,25 +165,16 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 		W <- AVE.PW*(Total-S[,"N"])/(PW.ALL-S[,"N"]*AVE.PW)
 
 		# Wallenius' noncentral hypergeometric test
-		for(j in 1:nsets){
-
-			for(i in 1:nrow(S)){
-
-				P[i,j] <- pWNCHypergeo(S[i,1+j], S[i,"N"], Total-S[i,"N"], TotalDE[[j]], W[i],lower.tail=FALSE)+
-					dWNCHypergeo(S[i,1+j], S[i,"N"], Total-S[i,"N"], TotalDE[[j]], W[i])
-			}
-
-		}
+		for(j in 1:nsets) for(i in 1:nrow(S))
+			P[i,j] <- pWNCHypergeo(S[i,1+j], S[i,"N"], Total-S[i,"N"], TotalDE[[j]], W[i],lower.tail=FALSE) + dWNCHypergeo(S[i,1+j], S[i,"N"], Total-S[i,"N"], TotalDE[[j]], W[i])
 
 		S <- S[,-ncol(S)]
 
 	} else {
 
 		# Fisher's exact test
-		for(j in 1:nsets){
-
+		for(j in 1:nsets)
 			P[,j] <- phyper(q=S[,1+j]-0.5,m=TotalDE[[j]],n=Total-TotalDE[[j]], k=S[,"N"],lower.tail=FALSE)
-		}
 
 	}
 
@@ -184,7 +193,7 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 topGO <- function(results, ontology = c("BP", "CC", "MF"), sort = NULL, number = 20L)
 #  Extract sorted results from goana output 
 #  Gordon Smyth and Yifang Hu
-#  Created 20 June 2014. Last modified 26 August 2014.
+#  Created 20 June 2014. Last modified 29 August 2014.
 {
 	# Check results
 	if(!is.data.frame(results)) stop("results should be a data.frame.")
@@ -194,7 +203,7 @@ topGO <- function(results, ontology = c("BP", "CC", "MF"), sort = NULL, number =
 	setnames <- colnames(results)[4L:(3L+nsets)]
 
 	# Check ontology
-	ontology <- match.arg(ontology, c("BP", "CC", "MF"), several.ok = TRUE)
+	ontology <- match.arg(unique(ontology), c("BP", "CC", "MF"), several.ok = TRUE)
 
 	# Check sort and find p-value column
 	if(is.null(sort)) {

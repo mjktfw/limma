@@ -1,5 +1,5 @@
 voom <- function(counts,design=NULL,lib.size=NULL,normalize.method="none",plot=FALSE,span=0.5,...) 
-# Linear modelling of count data mean-variance modelling at the observational level.
+# Linear modelling of count data with mean-variance modelling at the observational level.
 # Creates an EList object for entry to lmFit() etc in the limma pipeline.
 # Gordon Smyth and Charity Law
 # Created 22 June 2011.  Last modified 5 June 2013.

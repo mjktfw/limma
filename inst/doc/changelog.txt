@@ -1,3 +1,9 @@
+ 8 Sep 2014: limma 3.21.15
+
+- speed improvement for goana().
+
+- improved plotting for voomaByGroup().
+
 26 Aug 2014: limma 3.21.14
 
 - Improvements to goana() and topGO() help files.  Argument 'weights'

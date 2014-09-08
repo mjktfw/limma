@@ -9,7 +9,7 @@ removeBatchEffect(x, batch=NULL, batch2=NULL, covariates=NULL,
                   design=matrix(1,ncol(x),1), \dots)
 }
 \arguments{
-  \item{x}{numeric matrix, or any object that can be coerced to a matrix by \code{as.matrix(x)}, containing log-expression values for a series of samples.
+  \item{x}{numeric matrix, or any data object that can be processed by \code{\link{getEAWP}} containing log-expression values for a series of samples.
   Rows correspond to probes and columns to samples.}
   \item{batch}{factor or vector indicating batches.}
   \item{batch2}{factor or vector indicating batches.}
@@ -29,7 +29,7 @@ The design matrix is used to describe comparisons between the samples, for examp
 
 The function (in effect) fits a linear model to the data, including both batches and regular treatments, then removes the component due to the batch effects.
 
-The data object \code{x} can be of any class for which \code{lmFit} and \code{as.matrix} work.
+The data object \code{x} can be of any class for which \code{lmFit} works.
 If \code{x} contains weights, then these will be used in estimating the batch effects.
 }
 

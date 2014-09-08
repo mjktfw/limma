@@ -270,3 +270,8 @@ v <- voom(y,design)
 names(v)
 summary(v$E)
 summary(v$weights)
+
+### goana
+
+go <- goana(fit,FDR=0.6,geneid=1:100)
+topGO(go,n=10)
