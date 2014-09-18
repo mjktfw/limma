@@ -3,75 +3,72 @@
 
 plotMA <- function(MA,...) UseMethod("plotMA")
 
-plotMA.RGList <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
+plotMA.RGList <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], status=MA$genes$Status, zero.weights=FALSE, ...)
 #	MA-plot with color coding for controls
 #	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.
-#	Last modified 23 April 2013.
+#	Last modified 18 Sep 2014.
 {
 	MA <- MA.RG(MA[,array])
-	plotMA(MA,array=1,xlab=xlab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,status=status,values=values,pch=pch,col=col,cex=cex,legend=legend,zero.weights=zero.weights,...)
+	plotMA.MAList(MA=MA,array=1,xlab=xlab,ylab=ylab,main=main,status=status,zero.weights=zero.weights,...)
 }
 
-plotMA.MAList <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
+plotMA.MAList <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], status=MA$genes$Status, zero.weights=FALSE, ...)
 #	MA-plot with color coding for controls
 #	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.
-#	Last modified 23 April 2013.
+#	Last modified 18 Sep 2014.
 {
-	x <- as.matrix(MA$A)[,array]
-	y <- as.matrix(MA$M)[,array]
-	if(is.null(MA$weights)) w <- NULL else w <- as.matrix(MA$weights)[,array]
-	if(missing(status)) status <- MA$genes$Status
-	if(!is.null(w) && !zero.weights) {
-		i <- is.na(w) | (w <= 0)
-		y[i] <- NA
+	A <- as.matrix(MA$A)[,array]
+	M <- as.matrix(MA$M)[,array]
+	if(!zero.weights && !is.null(MA$weights)) {
+		w <- as.matrix(MA$weights)[,array]
+		M[ is.na(w) | (w <= 0) ] <- NA
 	}
-	.plotMAxy(x,y,xlab=xlab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,status=status,values=values,pch=pch,col=col,cex=cex,legend=legend, ...)
+	plotWithHighlights(x=A,y=M,xlab=xlab,ylab=ylab,main=main,status=status,...)
 }
 
-plotMA.MArrayLM <- function(MA, coef=ncol(MA), xlab="AveExpr", ylab="logFC", main=colnames(MA)[coef], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
+plotMA.MArrayLM <- function(MA, coef=ncol(MA), xlab="Average log-expression", ylab="log-fold-change", main=colnames(MA)[coef], status=MA$genes$Status, zero.weights=FALSE, ...)
 #	MA-plot with color coding for controls
 #	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.
-#	Last modified 21 March 2014.
+#	Last modified 18 Sep 2014.
 {
-	if(is.null(MA$Amean)) stop("MA-plot not possible because Amean component is absent.")
-	x <- MA$Amean
-	y <- as.matrix(MA$coef)[,coef]
-	if(is.null(MA$weights)) w <- NULL else w <- as.matrix(MA$weights)[,coef]
-	if(missing(status)) status <- MA$genes$Status
-	if(!is.null(w) && !zero.weights) {
-		i <- is.na(w) | (w <= 0)
-		y[i] <- NA
+	if(is.null(MA$Amean)) stop("Amean component is absent.")
+	logFC <- as.matrix(MA$coef)[,coef]
+	if(!zero.weights && !is.null(MA$weights)) {
+		w <- as.matrix(MA$weights)[,array]
+		logFC[ is.na(w) | (w <= 0) ] <- NA
 	}
-	.plotMAxy(x,y,xlab=xlab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,status=status,values=values,pch=pch,col=col,cex=cex,legend=legend, ...)
+	plotWithHighlights(x=MA$Amean,y=logFC,xlab=xlab,ylab=ylab,main=main,status=status,...)
 }
 
-plotMA.EList <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
+plotMA.EList <- function(MA, array=1, xlab="Average log-expression", ylab="Expression log-ratio (this sample vs others)", main=colnames(MA)[array], status=MA$genes$Status, zero.weights=FALSE, ...)
 #	MA-plot with color coding for controls
 #	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.
-#	Last modified 23 April 2013.
+#	Last modified 18 Sep 2014.
 {
-	MA$E <- as.matrix(MA$E)
-	narrays <- ncol(MA$E)
-	if(narrays < 2) stop("Need at least two arrays")
-	if(narrays > 5)
-		x <- apply(MA$E,1,median,na.rm=TRUE)
-	else
-		x <- rowMeans(MA$E,na.rm=TRUE)
-	y <- MA$E[,array]-x
-	if(is.null(MA$weights)) w <- NULL else w <- as.matrix(MA$weights)[,array]
-	if(missing(status)) status <- MA$genes$Status
+	E <- as.matrix(MA$E)
+	if(ncol(E) < 2) stop("Need at least two arrays")
 
-	if(!is.null(w) && !zero.weights) {
-		i <- is.na(w) | (w <= 0)
-		y[i] <- NA
+#	Convert array to integer if not already
+	j <- 1L:ncol(E)
+	names(j) <- colnames(E)
+	array <- j[array[1]]
+
+	AveOfOthers <- rowMeans(E[,-array,drop=FALSE],na.rm=TRUE)
+	Diff <- E[,array]-AveOfOthers
+	Mean <- (E[,array]+AveOfOthers)/2
+
+	if(!zero.weights && !is.null(MA$weights)) {
+		w <- as.matrix(MA$weights)[,array]
+		Diff[ is.na(w) | (w <= 0) ] <- NA
 	}
-	.plotMAxy(x,y,xlab=xlab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,status=status,values=values,pch=pch,col=col,cex=cex,legend=legend, ...)
+
+	plotWithHighlights(x=Mean,y=Diff,xlab=xlab,ylab=ylab,main=main,status=status,...)
 }
 
-plotMA.default <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[array], xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, zero.weights=FALSE, ...)
+plotMA.default <- function(MA, array=1, xlab="Average log-expression", ylab="Expression log-ratio (this sample vs others)", main=colnames(MA)[array], status=NULL, ...)
 #	MA-plot with color coding for controls
 #	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.
-#	Last modified 8 August 2014.
+#	Last modified 18 Sep 2014.
 {
 #	Data is assumed to be single-channel
 	MA <- as.matrix(MA)
@@ -82,92 +79,7 @@ plotMA.default <- function(MA, array=1, xlab="A", ylab="M", main=colnames(MA)[ar
 	y <- MA[,array]-Ave
 	x <- (MA[,array]+Ave)/2
 
-	.plotMAxy(x,y,xlab=xlab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,status=status,values=values,pch=pch,col=col,cex=cex,legend=legend, ...)
-}
-
-.plotMAxy <- function(x, y, xlab="A", ylab="M", main=NULL, xlim=NULL, ylim=NULL, status, values, pch, col, cex, legend=TRUE, ...)
-#	MA-plot with color coding for controls
-#	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.
-#	Last modified 23 April 2013.
-{
-#	Check legend
-	legend.position <- "topleft"
-	if(!is.logical(legend)) {
-		legend.position <- legend
-		legend <- TRUE
-	}
-	legend.position <- match.arg(legend.position,c("bottomright","bottom","bottomleft","left","topleft","top","topright","right","center"))
-
-#	Check xlim and ylim
-	if(is.null(xlim)) xlim <- range(x,na.rm=TRUE)
-	if(is.null(ylim)) ylim <- range(y,na.rm=TRUE)
-
-#	Setup plot axes
-	plot(x,y,xlab=xlab,ylab=ylab,main=main,xlim=xlim,ylim=ylim,type="n",...)
-
-#	If no status information, just plot points normally
-	if(is.null(status) || all(is.na(status))) {
-		if(missing(pch)) pch <- 16
-		if(missing(cex)) cex <- 0.3
-		points(x,y,pch=pch[[1]],cex=cex[1])
-		return(invisible())
-	}
-
-#	From here, status is not NULL and not all missing
-
-#	Check values
-	if(missing(values)) {
-		if(is.null(attr(status,"values")))
-			values <- names(sort(table(status),decreasing=TRUE))
-		else
-			values <- attr(status,"values")
-	}
-	nvalues <- length(values)
-
-#	Plot non-highlighted points
-	sel <- !(status %in% values)
-	nonhi <- any(sel)
-	if(nonhi) points(x[sel],y[sel],pch=16,cex=0.3)
-
-	if(missing(pch)) {
-		if(is.null(attr(status,"pch")))
-			pch <- rep(16,nvalues)
-		else
-			pch <- attr(status,"pch")
-	}
-
-	if(missing(cex)) {
-		if(is.null(attr(status,"cex"))) {
-			cex <- rep(1,nvalues)
-			if(!nonhi) cex[1] <- 0.3
-		} else
-			cex <- attr(status,"cex")
-	}
-
-	if(missing(col)) {
-		if(is.null(attr(status,"col"))) {
-			col <- nonhi + 1:nvalues
-		} else
-			col <- attr(status,"col")
-	}
-
-	pch <- rep(pch,length=nvalues)
-	col <- rep(col,length=nvalues)
-	cex <- rep(cex,length=nvalues)
-
-#	Plot highlighted classes of points
-	for (i in 1:nvalues) {
-		sel <- status==values[i]
-		points(x[sel],y[sel],pch=pch[[i]],cex=cex[i],col=col[i])
-	}
-
-	if(legend) {
-		if(is.list(pch))
-			legend(legend.position,legend=values,fill=col,col=col,cex=0.9)
-		else
-			legend(legend.position,legend=values,pch=pch,,col=col,cex=0.9)
-	}
-	invisible()
+	plotWithHighlights(x,y,xlab=xlab,ylab=ylab,main=main,status=status, ...)
 }
 
 plotMA3by2 <- function(MA, prefix="MA", path=NULL, main=colnames(MA), zero.weights=FALSE, common.lim=TRUE, device="png", ...)

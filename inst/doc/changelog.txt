@@ -1,3 +1,9 @@
+18 Sep 2014: limma 3.21.16
+
+- new function plotWithHighlights(), which is now used as the
+  low-level function for plotMA() and for the plot methods for
+  limma data objects.
+
  8 Sep 2014: limma 3.21.15
 
 - speed improvement for goana().

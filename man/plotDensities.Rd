@@ -10,24 +10,20 @@
 Plot the density of expression values for multiple arrays on the same plot.
 }
 \usage{
-\method{plotDensities}{RGList}(object, log=TRUE, group=NULL, col=NULL, main="RG Densities",\dots)
-\method{plotDensities}{MAList}(object, log=TRUE, group=NULL, col=NULL, main="RG Densities",\dots)
-\method{plotDensities}{EListRaw}(object, log=TRUE, group=NULL, col=NULL, main=NULL,\dots)
-\method{plotDensities}{EList}(object, log=TRUE, group=NULL, col=NULL, main=NULL,\dots)
-\method{plotDensities}{default}(object, group=NULL, col=NULL, main=NULL,\dots)
+\method{plotDensities}{RGList}(object, log=TRUE, group=NULL, col=NULL, main="RG Densities", bc.method="subtract", \dots)
+\method{plotDensities}{MAList}(object, log=TRUE, group=NULL, col=NULL, main="RG Densities", \dots)
+\method{plotDensities}{EListRaw}(object, log=TRUE, group=NULL, col=NULL, main=NULL, bc.method="subtract", \dots)
+\method{plotDensities}{EList}(object, log=TRUE, group=NULL, col=NULL, main=NULL, \dots)
+\method{plotDensities}{default}(object, group=NULL, col=NULL, main=NULL, \dots)
 }
 \arguments{
   \item{object}{an \code{RGList}, \code{MAList}, \code{EListRaw} or \code{EList} object containing expression data.  Or any data object that can be coerced to a matrix.}
-
   \item{log}{logical, should densities be plotted on the log2 scale?}
-
   \item{group}{optional vector or factor classifying the arrays into groups.  Should be same length as \code{ncol(object)}.}
-
   \item{col}{optional vector of colors of the same length as the number of groups.}
-
   \item{main}{the main title for the plot.}
-  
-  \item{\ldots}{Not currently used.}
+  \item{bc.method}{background subtraction method passed to \code{\link{backgroundCorrect}}.}
+  \item{\ldots}{other arguments are passed to \code{\link{density}}.}
 }
 
 \details{

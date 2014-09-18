@@ -3,12 +3,12 @@
 plotDensities <- function(object,...)
 UseMethod("plotDensities")
 
-plotDensities.RGList <- function(object,log=TRUE,group=NULL,col=NULL,main="RG Densities",...)
+plotDensities.RGList <- function(object,log=TRUE,group=NULL,col=NULL,main="RG Densities",bc.method="subtract",...)
 #	Plot empirical single-channel densities
 #	Original version by Natalie Thorne, 9 September 2003
-#	Modified by Gordon Smyth.  Last modified 18 Nov 2013.
+#	Modified by Gordon Smyth.  Last modified 10 Sep 2014.
 {
-	object <- backgroundCorrect(object,method="subtract")
+	object <- backgroundCorrect(object,method=bc.method)
 	narray <- ncol(object)
 	E <- cbind(object$R,object$G)
 
@@ -23,13 +23,13 @@ plotDensities.RGList <- function(object,log=TRUE,group=NULL,col=NULL,main="RG De
 		group2 <- c(group,group)
 	}
 
-	plotDensities(E,group=group2,col=col2,main=main)
+	NextMethod(object=E,group=group2,col=col2,main=main,...)
 }
 
 plotDensities.MAList <- function(object,log=TRUE,group=NULL,col=NULL,main="RG Densities",...)
 #	Plot empirical single-channel densities
 #	Original version by Natalie Thorne, 9 September 2003
-#	Modified by Gordon Smyth.  Last modified 18 Nov 2013.
+#	Modified by Gordon Smyth.  Last modified 10 Sep 2014.
 {
 	narray <- ncol(object)
 	E <- cbind(object$A+object$M/2, object$A-object$M/2)
@@ -44,28 +44,32 @@ plotDensities.MAList <- function(object,log=TRUE,group=NULL,col=NULL,main="RG De
 		group2 <- c(group,group)
 	}
 
-	plotDensities(E,group=group2,col=col2,main=main)
+	NextMethod(object=E,group=group2,col=col2,main=main,...)
 }
 
-plotDensities.EListRaw <- function(object,log=TRUE,group=NULL,col=NULL,main=NULL,...)
+plotDensities.EListRaw <- function(object,log=TRUE,group=NULL,col=NULL,main=NULL,bc.method="subtract",...)
+#	Gordon Smyth.
+#	Created 23 March 2009.  Last modified 10 Sep 2014.
 {
-	object <- backgroundCorrect(object,method="subtract")
+	object <- backgroundCorrect(object,method=bc.method)
 	E <- object$E
 	if(log) E <- log2(E+1)
-	plotDensities(E,group=group,col=col,main=main)
+	NextMethod(object=E,group=group,col=col,main=main,...)
 }
 
 plotDensities.EList <- function(object,log=TRUE,group=NULL,col=NULL,main=NULL,...)
+#	Gordon Smyth.
+#	Created 23 March 2009.  Last modified 10 Sep 2014.
 {
 	E <- object$E
 	if(!log) E <- 2^E
-	plotDensities(E,group=group,col=col,main=main)
+	NextMethod(object=E,group=group,col=col,main=main,...)
 }
 
 plotDensities.default <- function(object,group=NULL,col=NULL,main=NULL,...)
 #	Plot empirical single-channel densities
 #	Gordon Smyth
-#	18 Nov 2013.  Last modified 18 Nov 2013.
+#	18 Nov 2013.  Last modified 10 Sep 2014.
 {
 #	Coerce object to matrix
 	E <- as.matrix(object)
@@ -89,7 +93,7 @@ plotDensities.default <- function(object,group=NULL,col=NULL,main=NULL,...)
 	npoint <- 512
 	X <- Y <- matrix(0,npoint,narray)
 	for (a in 1:ncol(E)) {
-		d <- density(E[,a],n=npoint)
+		d <- density(E[,a],n=npoint,na.rm=TRUE,...)
 		X[,a] <- d$x
 		Y[,a] <- d$y
 	}

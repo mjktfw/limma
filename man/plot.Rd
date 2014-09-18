@@ -4,17 +4,23 @@
 \alias{plot.MAList}
 \alias{plot.EList}
 \alias{plot.MArrayLM}
+\alias{plotWithHighlights}
 \description{
-Plot methods for data or model fit objects.
+Plot data or model fit objects.
 These represent the object by creating an MA-plot, with optional color coding for control spots.
 }
 \usage{
-\method{plot}{MAList}(x, y, array = 1, xlab= "A", ylab= "M", main = colnames(x)[array],
-     xlim = NULL, ylim = NULL, status, values, pch, col, cex, legend = TRUE,
-     zero.weights = FALSE, \dots)
-\method{plot}{MArrayLM}(x, y, coef = ncol(x), xlab="AveExpr", ylab="logFC",
-     main = colnames(x)[coef], xlim=NULL, ylim=NULL, status, values, pch, col, cex,
-     legend = TRUE, zero.weights = FALSE, \dots)
+plotWithHighlights(x, y, status = NULL, values = NULL, pch = 16, col = NULL, cex = 1,
+     legend = "topleft", pch.bg = 16, col.bg = "black", cex.bg = 0.3, \dots)
+\method{plot}{EList}(x, y, array = 1, xlab = "Average log-expression",
+     ylab = "Expression log-ratio (this sample vs others)", main = colnames(x)[array],
+     status=x$genes$Status, zero.weights = FALSE, \dots)
+\method{plot}{RGList}(x, y, array = 1, xlab = "A", ylab = "M", main = colnames(x)[array],
+     status=x$genes$Status, zero.weights = FALSE, \dots)
+\method{plot}{MAList}(x, y, array = 1, xlab = "A", ylab = "M", main = colnames(x)[array],
+     status=x$genes$Status, zero.weights = FALSE, \dots)
+\method{plot}{MArrayLM}(x, y, coef = ncol(x), xlab = "Average log-expression", ylab = "log-fold-change",
+     main = colnames(x)[coef], status = x$genes$Status, zero.weights = FALSE, \dots)
 }
 \arguments{
   \item{x}{an \code{RGList}, \code{MAList}, \code{EList} or \code{MArrayLM} object.}
@@ -24,22 +30,28 @@ These represent the object by creating an MA-plot, with optional color coding fo
   \item{xlab}{character string giving label for x-axis}
   \item{ylab}{character string giving label for y-axis}
   \item{main}{character string giving title for plot}
-  \item{xlim}{numeric vector of length 2 giving limits for x-axis, defaults to min and max of the data}
-  \item{ylim}{numeric vector of length 2 giving limits for y-axis, defaults to min and max of the data}
   \item{status}{character vector giving the control status of each spot on the array, of same length as the number of rows of \code{MA$M}.
-  If omitted, all points are plotted in the default color, symbol and size.}
-  \item{values}{character vector giving values of \code{status} to be highlighted on the plot. Defaults to unique values of \code{status}.
+  If \code{NULL}, then all points are plotted in the default color, symbol and size.}
+  \item{values}{character vector giving values of \code{status} to be highlighted on the plot.
+  Defaults to unique values of \code{status} in decreasing order of frequency, with the most frequent value set as the background value.
   Ignored if there is no \code{status} vector.}
-  \item{pch}{vector or list of plotting characters. Default is integer code 16 which gives a solid circle.
+  \item{pch}{vector or list of plotting characters.
   Ignored is there is no \code{status} vector.}
-  \item{col}{numeric or character vector of colors, of the same length as \code{values}. Defaults to \code{1:length(values)}.
+  \item{col}{numeric or character vector of colors, of the same length as \code{values}.
+  Defaults to \code{1+1:length(values)}.
   Ignored if there is no \code{status} vector.}
-  \item{cex}{numeric vector of plot symbol expansions, of the the same length as \code{values}. 
-  Defaults to 0.3 for the most common status value and 1 for the others.
+  \item{cex}{numeric vector of plot symbol expansions.
+  If a vector, then of the same length as \code{values}. 
   Ignored if there is no \code{status} vector.}
-  \item{legend}{logical, should a legend of plotting symbols and colors be included. Can also be a character string giving position to place legend. Ignored if there is no \code{status} vector.}
+  \item{legend}{character string giving position to place legend.
+  See \code{\link{legend}} for possible values.
+  Can also be logical, with \code{FALSE} meaning no legend.
+  Ignored if there is no \code{status} vector.}
   \item{zero.weights}{logical, should spots with zero or negative weights be plotted?}
-  \item{\dots}{any other arguments are passed to \code{plot.default}}
+  \item{pch.bg}{plotting character for background (non-highlighted) points.}
+  \item{col.bg}{color for background (non-highlighted) points.}
+  \item{cex.bg}{plot symbol expansion for background (non-highlighted) points.}
+  \item{\dots}{The \code{plot} methods pass other arguments to \code{plotWithHighlights}, and \code{plotWithHighlights} passes other arguments to \code{plot.default}.}
 }
 
 \details{
@@ -48,12 +60,12 @@ If \code{x} is an \code{RGList} or \code{MAList} then this function produces an 
 If \code{x} is an \code{MArrayLM} object, then the plot is an fitted model MA-plot in which the estimated coefficient is on the y-axis and the average A-value is on the x-axis.
 
 If \code{x} is a \code{EList} object, then this function produces a between-array MA-plot.
-In this case the A-values in the plot are the average log-intensities across the arrays and the M-values are the deviations of the log-intensities for the specified array from the average.
-If there are more than five arays, then the average is computed robustly using medians.
-With five or fewer arrays, it is computed by means.
+An articifial array is produced by averaging all the arrays other than the array specified.
+A mean-difference plot is then producing from the specified array and the artificial array.
+Note that this procedure reduces to an ordinary mean-difference plot when there are just two arrays total.
 
-The \code{status} vector is intended to specify the control status of each spot, for example "gene", "ratio control", "house keeping gene", "buffer" and so on.
-The vector is usually computed using the function \code{\link{controlStatus}} and a spot-types file.
+The \code{status} vector is intended to specify the control status of each spot, for example \code{"gene"}, \code{"ratio control"}, \code{"house keeping gene"}, \code{"buffer"} and so on.
+The vector is often computed using the function \code{\link{controlStatus}} and a spot-types file.
 However the function may be used to highlight any subset of spots.
 
 The \code{status} can be included as the component \code{x$genes$Status} instead of being passed as an argument to \code{plot}.
@@ -65,31 +77,16 @@ See \code{\link[graphics]{points}} for possible values for \code{pch}, \code{col
 \value{A plot is created on the current graphics device.}
 \references{See \url{http://www.statsci.org/micrarra/refs/maplots.html}}
 \author{Gordon Smyth}
+
 \examples{
-# See also lmFit example
-
-MA <- new("MAList")
-MA$A <- runif(300,4,16)
-MA$M <- rt(300,df=3)
-status <- rep("Gene",300)
-status[1:3] <- "M=0"
-MA$M[1:3] <- 0
-status[4:6] <- "M=3"
-MA$M[4:6] <- 3
-status[7:9] <- "M=-3"
-MA$M[7:9] <- -3
-plot(MA,main="MA-Plot with Simulated Data",status=status,
-     values=c("M=0","M=3","M=-3"),col=c("blue","red","green"))
-
-#  Same as above
-attr(status,"values") <- c("M=0","M=3","M=-3")
-attr(status,"col") <- c("blue","red","green")
-plot(MA,main="MA-Plot with Simulated Data",status=status)
-
-#  Same as above
-MA$genes$Status <- status
-plot(MA,main="MA-Plot with Simulated Data")
+A <- runif(1000,4,16)
+y <- A + matrix(rnorm(1000*3,sd=0.2),1000,3)
+status <- rep(c(0,-1,1),c(950,40,10))
+y[,1] <- y[,1] + status
+E <- new("EList",list(E=y))
+plot(E,array=1,status=status,values=c(-1,1),col=c("blue","red"))
 }
+
 \seealso{
 \code{\link[limma:plotma]{plotMA}}, \code{\link{plotFB}}, \code{\link{plotMDS}}, \code{\link{plotSA}}
 

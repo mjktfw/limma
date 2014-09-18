@@ -94,7 +94,7 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 	species <- match.arg(species, c("Hs", "Mm", "Rn", "Dm"))
 
 	# Load package of GO terms
-	if(!suppressPackageStartupMessages(require("GO.db", character.only = TRUE))) stop("Go.db package not available")
+	if(!suppressPackageStartupMessages(require("GO.db", character.only = TRUE))) stop("GO.db package not available")
 
 	# Load species annotation package
 	DB <- paste("org", species, "eg", "db", sep = ".")
