@@ -4,6 +4,8 @@
   low-level function for plotMA() and for the plot methods for
   limma data objects.
 
+- Updates to the two RNA-seq case studies in the User's Guide.
+
  8 Sep 2014: limma 3.21.15
 
 - speed improvement for goana().
