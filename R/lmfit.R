@@ -390,7 +390,7 @@ getEAWP <- function(object)
 #	Given any microarray data object, extract basic information needed
 #	for linear modelling.
 #	Gordon Smyth
-#	9 March 2008. Last modified 26 June 2013.
+#	9 March 2008. Last modified 19 Sep 2014.
 {
 	y <- list()
 	
@@ -412,6 +412,7 @@ getEAWP <- function(object)
 		y$exprs <- exprs(object)
 		if(length(object@featureData@data)) y$probes <- object@featureData@data
 		y$Amean <- rowMeans(y$exprs,na.rm=TRUE)
+		if("weights" %in% assayDataElementNames(object)) y$weights <- assayDataElement(object,"weights")
 	} else {
 	if(is(object,"PLMset")) {
 		y$exprs <- object@chip.coefs

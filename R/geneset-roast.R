@@ -16,7 +16,7 @@ roast <- function(y,...) UseMethod("roast")
 roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,approx.zscore=TRUE,...)
 # Rotation gene set testing for linear models
 # Gordon Smyth and Di Wu
-# Created 24 Apr 2008.  Last modified 18 June 2014.
+# Created 24 Apr 2008.  Last modified 19 Sep 2014.
 {
 #	Check index
 	if(is.list(index)) return(mroast(y=y,index=index,design=design,contrast=contrast,set.statistic=set.statistic,gene.weights=gene.weights,array.weights=array.weights,weights=weights,block=block,correlation=correlation,var.prior=var.prior,df.prior=df.prior,trend.var=trend.var,nrot=nrot))
@@ -97,6 +97,14 @@ roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.sta
  	}
 
 #	Check contrast
+	if(is.character(contrast)) {
+		if(length(contrast)>1L) {
+			warning("using only first entry for contrast")
+			contrast <- contrast[1]
+		}
+		contrast <- which(contrast==colnames(design))
+		if(length(contrast)==0L) stop("coef ",contrast," not found")
+	}
 	if(all(contrast == 0)) stop("contrast all zero")
 
 #	Reform design matrix so that contrast is last coefficient
