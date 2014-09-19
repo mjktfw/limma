@@ -2,6 +2,12 @@
 \title{limma News}
 \encoding{UTF-8}
 
+\section{Version 3.22.0}{\itemize{
+\item
+New function goana() provides functionality for gene ontology overlap analyses.
+}}
+
+
 \section{Version 3.20.0}{\itemize{
 
 \item

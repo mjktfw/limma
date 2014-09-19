@@ -1,3 +1,8 @@
+19 Sep 2014: limma 3.21.18
+
+- new argument 'robust' for diffSplice(), giving access to robust
+  empirical Bayes variance moderation.
+
 19 Sep 2014: limma 3.21.17
 
 - getEAWP() will now find a weights matrix in an ExpressionSet object

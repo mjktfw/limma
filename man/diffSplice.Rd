@@ -3,12 +3,13 @@
 \title{Test for Differential Splicing}
 \description{Given a linear model fit at the exon level, test for differences in exon retention between experimental conditions.}
 \usage{
-diffSplice(fit, geneid, exonid=NULL, verbose=TRUE)
+diffSplice(fit, geneid, exonid=NULL, robust=FALSE, verbose=TRUE)
 }
 \arguments{
   \item{fit}{an \code{MArrayLM} fitted model object produced by \code{lmFit} or \code{contrasts.fit}. Rows should correspond to exons.}
   \item{geneid}{gene identifiers. Either a vector of length \code{nrow(fit)} or the name of the column of \code{fit$genes} containing the gene identifiers. Rows with the same ID are assumed to belong to the same gene.}
   \item{exonid}{exon identifiers. Either a vector of length \code{nrow(fit)} or the name of the column of \code{fit$genes} containing the exon identifiers.}
+  \item{robust}{logical, should the estimation of the empirical Bayes prior parameters be robustified against outlier sample variances?}
   \item{verbose}{logical, if \code{TRUE} some diagnostic information about the number of genes and exons is output.}
 }
 \value{

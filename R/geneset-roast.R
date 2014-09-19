@@ -108,7 +108,7 @@ roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.sta
 	if(all(contrast == 0)) stop("contrast all zero")
 
 #	Reform design matrix so that contrast is last coefficient
-	if(length(contrast) == 1) {
+	if(length(contrast) == 1L) {
 		contrast <- as.integer(contrast)
 		if(contrast < p)
 			X <- cbind(design[,-contrast,drop=FALSE],design[,contrast,drop=FALSE])

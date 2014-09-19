@@ -1,8 +1,8 @@
-diffSplice <- function(fit,geneid,exonid=NULL,verbose=TRUE)
+diffSplice <- function(fit,geneid,exonid=NULL,robust=FALSE,verbose=TRUE)
 #	Test for splicing variants between conditions
 #	using linear model fit of exon data.
-#	Charity Law and Gordon Smyth
-#	Created 13 Dec 2013.  Last modified 18 Aug 2014.
+#	Gordon Smyth and Charity Law
+#	Created 13 Dec 2013.  Last modified 16 Sep 2014.
 {
 	exon.genes <- fit$genes
 	if(is.null(exon.genes)) exon.genes <- data.frame(ExonID=1:nrow(fit))
@@ -51,7 +51,7 @@ diffSplice <- function(fit,geneid,exonid=NULL,verbose=TRUE)
 	}
 
 #	Posterior genewise variances
-	squeeze <- squeezeVar(var=gene.s2, df=gene.df.residual)
+	squeeze <- squeezeVar(var=gene.s2, df=gene.df.residual, robust=robust)
 
 #	Remove genes with only 1 exon
 	gene.keep <- gene.nexons>1
