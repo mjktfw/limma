@@ -1,3 +1,8 @@
+22 Sep 2014: limma 3.21.19
+
+- Section on "How to get help" in User's Guide now refers to
+  Bioconductor support site.
+
 19 Sep 2014: limma 3.21.18
 
 - new argument 'robust' for diffSplice(), giving access to robust
