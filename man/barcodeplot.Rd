@@ -1,22 +1,33 @@
 \name{barcodeplot}
 \alias{barcodeplot}
-\title{Barcode Plot}
+\title{Barcode Enrichment Plot}
 \description{
-Plot positions of one or two gene sets in a ranked list of statistics.
+Display the enrichment of one or two gene sets in a ranked gene list.
 }
 \usage{
-barcodeplot(statistics, index, index2=NULL, labels=c("Up","Down"), quantiles=c(-1,1),
-            col.bars=NULL, worm=TRUE, span.worm=0.45, ...)
+barcodeplot(statistics, index = NULL, index2 = NULL, gene.weights = NULL,
+            weights.label = "Weight", labels = c("Up","Down"), quantiles = c(-1,1),
+            col.bars = NULL, worm = TRUE, span.worm=0.45, \dots)
 }
 \arguments{
-  \item{index}{index vector for the gene set.  This can be a vector of indices, or a logical vector of the same length as \code{statistics} or, in general, any vector such that \code{statistic[index]} gives the statistic values for the gene set to be tested.}
-  \item{index2}{index vector for a second gene set.  Usually used to specify down-regulated genes when \code{index} is used for up-regulated genes.vector specifying the elements of \code{statistic} in the test group.}
   \item{statistics}{numeric vector giving the values of statistics to rank genes by.}
-  \item{labels}{character vector of labels for the two groups of RNA samples that are being compared by the statistics.  First label is associated with high statistics and is displayed at the left end of the plot.  Second label is associated with low or negative statistics and is displayed at the right end of the plot.}
+  \item{index}{index vector for the gene set.
+  This can be a vector of indices, or a logical vector of the same length as \code{statistics} or, in general, any vector such that \code{statistic[index]} gives a subset of the statistic values.
+  Can be omitted if \code{gene.weights} has same length as \code{statistics}, in which case positive values of \code{gene.weights} indicate to members of the positive set and negative weights correspond to members of the negative set.}
+  \item{index2}{optional index vector for a second (negative) gene set.
+  If specified, then \code{index} and \code{index2} specify positive and negative genes respectively.
+  Usually used to distinguish down-regulated genes from up-regulated genes.}
+  \item{gene.weights}{numeric vector giving directional weights for the genes in the (first) set.
+  Postive and negative weights correspond to positive and negative genes.
+  Ignored if \code{index2} is non-null.}
+  \item{weights.label}{label describing the entries in \code{gene.weights}.}
+  \item{labels}{character vector of labels for high and low statistics.  First label is associated with high statistics and is displayed at the left end of the plot.  Second label is associated with low or negative statistics and is displayed at the right end of the plot.}
   \item{quantiles}{numeric vector of length 2, giving cutoff values for \code{statistics} considered small or large respectively.  Used to color the rectangle of the barcodeplot.}
-  \item{col.bars}{character vector giving colors for the bars on the barcodeplot. Defaults to \code{"black"} for one set or \code{c("red","blue")} for two sets.}
+  \item{col.bars}{character vector giving colors for the bars on the barcodeplot.
+  Defaults to \code{"black"} for one set or \code{c("red","blue")} for two sets.
+  Defaults to semitransparent color for the bars inside the rectangle when variable gene weights are given which is intended to distinguish the positional bars from the weighted bars and also to show the density of the genes.}
   \item{worm}{logical, should enrichment worms be plotted?}
-  \item{span.worm}{loess span for enrichment worms.}
+  \item{span.worm}{loess span for enrichment worms.  Larger spans give smoother worms.}
   \item{\ldots}{other arguments are passed to \code{plot}.}
 }
 
@@ -25,16 +36,31 @@ No value is returned but a plot is produced as a side effect.
 }
 
 \details{
-Rank statistics left to right from largest to smallest, and show positions of one or two specified subsets.
-This plot is intended to be used in conjunction with gene set tests, and shows the enrichment of gene sets amongst high or low ranked genes.
-It first appeared in the literature in Lim et al (2009).
-It was inspired by the set location plot of Subramanian et al (2005).
+This function plots the positions of one or two gene sets in a ranked list of statistics.
+If there are two sets, then one is considered to be the positive set and the other the down set.
+For example, the first set and second sets often correspond to genes that are expected to be up- or down-regulated respectively.
+The function can optionally display varying weights for different genes, for example log-fold-changes from a previous experiment.
 
-The enrichment worm is calculated by tricube-weighted moving average.
+The statistics are ranked left to right from largest to smallest.
+The ranked statistics are represented by a shaded bar or bed, and the positions of the specified subsets are marked by vertical bars, forming a pattern like a barcode.
+An enrichment worm optionally shows the relative enrichment of the vertical bars in each part of the plot.
+
+Barcode plots are often used in conjunction with gene set tests, and show the enrichment of gene sets amongst high or low ranked genes.
+They were inspired by the set location plot of Subramanian et al (2005), with a number of enhancements, especially the ability to plot positive and negative sets simultaneously.
+Barcode plots first appeared in the literature in Lim et al (2009).
+More recent examples can be seen in Liu et al (2014).
+
+The function can be used with any of four different calling sequences:
+  \itemize{
+    \item \code{index} is specified, but not \code{index2} or \code{gene.weights}.  Single direction plot.
+    \item \code{index} and \code{index2} are specified.  Two directional plot.
+    \item \code{index} and \code{gene.weights} are specified.  \code{gene.weights} must have same length as \code{statistics[index]}.  Plot will be two-directional if \code{gene.weights} contains positive and negative values.
+    \item \code{gene.weights} is specified by not \code{index} or \code{index2}.  \code{gene.weights} must have same length as \code{statistics}.  Plot will be two-directional if \code{gene.weights} contains positive and negative values.      
+  }
 }
 
 \seealso{
-\code{\link{tricubeMovingAverage}}, \code{\link{camera}}, \code{\link{wilcox.test}}
+\code{\link{tricubeMovingAverage}}, \code{\link{roast}}, \code{\link{camera}}, \code{\link{wilcox.test}}
 }
 
 \author{Gordon Smyth, Di Wu and Yifang Hu}
@@ -42,7 +68,12 @@ The enrichment worm is calculated by tricube-weighted moving average.
 \references{
 Lim E, Vaillant F, Wu D, Forrest NC, Pal B, Hart AH, Asselin-Labat ML, Gyorki DE, Ward T, Partanen A, Feleppa F, Huschtscha LI, Thorne HJ; kConFab; Fox SB, Yan M, French JD, Brown MA, Smyth GK, Visvader JE, Lindeman GJ (2009).
 Aberrant luminal progenitors as the candidate target population for basal tumor development in BRCA1 mutation carriers.
-\emph{Nat Med}, 15, 907-913..
+\emph{Nat Med}, 15, 907-913.
+
+Liu, GJ, Cimmino, L, Jude, JG, Hu, Y, Witkowski, MT, McKenzie, MD, Kartal-Kaess, M, Best, SA, Tuohey, L, Liao, Y, Shi, W, Mullighan, CG, Farrar, MA, Nutt, SL, Smyth, GK, Zuber, J, and Dickins, RA (2014).
+Pax5 loss imposes a reversible differentiation block in B progenitor acute lymphoblastic leukemia.
+\emph{Genes & Development} 28, 1337-1350. 
+\url{http://www.ncbi.nlm.nih.gov/pubmed/24939936}
 
 Subramanian A, Tamayo P, Mootha VK, Mukherjee S, Ebert BL, Gillette MA, Paulovich A, Pomeroy SL, Golub TR, Lander ES, Mesirov JP (2005).
 Gene set enrichment analysis: a knowledge-based approach for interpreting genome-wide expression profiles.
@@ -52,9 +83,27 @@ Gene set enrichment analysis: a knowledge-based approach for interpreting genome
 \examples{
 stat <- rnorm(100)
 sel <- 1:10
-stat[sel] <- stat[sel]+1
-barcodeplot(stat,sel)
 sel2 <- 11:20
+stat[sel] <- stat[sel]+1
 stat[sel2] <- stat[sel2]-1
-barcodeplot(stat,sel,sel2)
+
+# One directional
+barcodeplot(stat, index = sel)
+
+# Two directional
+barcodeplot(stat, index = sel, index2 = sel2)
+
+# Second set can be indicated by negative weights
+barcodeplot(stat, index = c(sel,sel2), gene.weights = c(rep(1,10), rep(-1,10)))
+
+# Two directional with unequal weights
+w <- rep(0,100)
+w[sel] <- runif(10)
+w[sel2] <- -runif(10)
+barcodeplot(stat, gene.weights = w, weights.label = "logFC")
+
+# One directional with unequal weights
+w <- rep(0,100)
+w[sel2] <- -runif(10)
+barcodeplot(stat, gene.weights = w, weights.label = "logFC", col.bars = "dodgerblue")
 }

@@ -175,7 +175,7 @@ plotSplice <- function(fit, coef=ncol(fit), geneid=NULL, genecolname=NULL, rank=
 #	Plot exons of chosen gene
 #	fit is output from diffSplice
 #	Gordon Smyth and Yifang Hu
-#	Created 3 Jan 2014.  Last modified 19 March 2014.
+#	Created 3 Jan 2014.  Last modified 7 October 2014.
 {
 	if(is.null(genecolname)) 
 		genecolname <- fit$genecolname
@@ -200,6 +200,11 @@ plotSplice <- function(fit, coef=ncol(fit), geneid=NULL, genecolname=NULL, rank=
 	j <- fit$gene.firstexon[i]:fit$gene.lastexon[i]
 
 	exoncolname <- fit$exoncolname
+
+#	Get strand if possible		
+	strcol <- grepl("strand", colnames(fit$gene.genes), ignore.case = TRUE)
+	if(any(strcol)) geneid <- paste0(geneid, " (", as.character(fit$gene.genes[i, strcol])[1], ")")
+
 	if(is.null(exoncolname)) {
 
 		plot(fit$coefficients[j,coef], xlab = "Exon", ylab = "logFC (this exon vs rest)", main = geneid, type = "b")
@@ -210,7 +215,7 @@ plotSplice <- function(fit, coef=ncol(fit), geneid=NULL, genecolname=NULL, rank=
 		xlab <- paste("Exon", exoncolname, sep = " ")
 
 		plot(fit$coefficients[j, coef], xlab = "", ylab = "logFC (this exon vs rest)", main = geneid,type = "b", xaxt = "n")
-		axis(1, at = 1:length(j), labels = exon.id, las = 2, cex.axis = 0.6)
+		axis(1, at = 1:length(j), labels = exon.id, las = 2, cex.axis = 0.5)
 		mtext(xlab, side = 1, padj = 5.2)
 
 #		Mark the topSpliced exons

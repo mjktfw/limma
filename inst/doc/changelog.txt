@@ -1,3 +1,21 @@
+10 Oct 2014: limma 3.21.20
+
+- barcodeplot() is now able to plot different weights for different
+  genes, as specified by the new argument 'gene.weights'.
+
+- new function plotExons() to plot log-fold-changes by exon for a
+  given gene.
+
+- plotSplice() now plots strand information if this can be found.
+
+- first argument of plotMA() and plotMA3by2() is now 'object' instead
+  of 'MA'.
+
+- mdplot() now accepts arguments 'xlab' and 'ylab'.
+
+- all default methods for S3 generic functions are now registered in
+  NAMESPACE.
+
 22 Sep 2014: limma 3.21.19
 
 - Section on "How to get help" in User's Guide now refers to

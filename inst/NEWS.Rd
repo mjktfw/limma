@@ -4,7 +4,110 @@
 
 \section{Version 3.22.0}{\itemize{
 \item
-New function goana() provides functionality for gene ontology overlap analyses.
+New functions goana() and topGO() provide gene ontology analyses of differentially genes from a linear model fit.
+The tests include the ability to adjust for gene length or abundance biases in differential expression detection, similar to the goseq package.
+
+\item
+Improvements to diffSplice.
+diffSplice() now calculates Simes adjusted p-values for gene level inferences, in addition to the exon level t-tests and gene level F-tests.
+topSplice() now has three ranking methods ("simes", "F" or "t"), with "simes" now becoming the default.
+diffSplice() also has a new argument 'robust' giving access to robust empirical Bayes variance moderation.
+
+\item
+New function plotExons() to plot log-fold-changes by exon for a given gene.
+
+\item
+New function voomWithQualityWeights() allows users to estimate sample quality weights or allow for heteroscedasticity between treatment groups when doing an RNA-seq analysis.
+
+\item
+Improvement to arrayQualightyWeights().
+It now has a new argument 'var.design' which allows users to model variability by treatment group or other covariates.
+
+\item
+Improved plotting for voomaByGroup().
+
+\item
+barcodeplot() can now plot different weights for different genes in the set.
+
+\item
+Improvements to roast() and mroast().
+The directional (up and down) tests done by roast() now use both the original rotations and their opposite signs, effectively doubling the number of effective rotations for no additional computational cost.
+The two-sided tests are now done explicitly by rotation instead of doubling the smallest one-sided p-value.
+The two-sided p-value is now called "UpOrDown" in the roast() output.
+Both functions now use a fast approximation to convert t-statistics into z-scores,
+making the functions much faster when the number of rotations or the number of genes is large.
+The contrast argument can now optionally be a character string giving a column name of the design matrix.
+
+\item
+zscoreT() can optionally use a fast approximation instead of the slower exact calculation.
+
+\item
+symbols2indices() renamed to ids2indices().
+
+\item
+Improvements to removeBatchEffect().
+It can now take into account weights and other arguments that will affect the linear model fit.
+It can now accept any arguments that would be acceptable for lmFit().
+The behavior of removeBatchEffect() with design supplied has also changed so that it is now consistent with that of lmFit() when modelling batches as additive effects.
+Previously batch adjustments were made only within the treatment levels defined by the design matrix.
+
+\item
+New function plotWithHighlights(), which is now used as the low-level function for plotMA() and plot() methods for limma data objects.
+
+\item
+The definition of the M and A axes for an MA-plot of single channel
+  data is changed slightly.  Previously the A-axis was the average of
+  all arrays in the dataset -- this has been definition since MA-plots
+  were introduced for single channel data in April 2003.  Now an
+  artificial array is formed by averaging all arrays other than the
+  one to be plotted.  Then a mean-difference plot is formed from the
+  specified array and the artificial array.  This change ensures the 
+  specified and artificial arrays are computed from independent data,
+  and ensures the MA-plot will reduce to a correct mean-difference
+  plot when there are just two arrays in the dataset.
+
+\item
+plotMDS() can now optionally plot samples using symbols instead of
+  text labels.
+It no longer has a 'col' argument, which instead is handled by ....
+
+\item
+vennDiagram() now supports circles of different colors for any
+  number of circles.  Previously this was supported only up to three
+  sets.  
+
+\item
+getEAWP() will now find a weights matrix in an ExpressionSet object
+  if it exists.
+
+\item
+update to helpMethods().
+
+\item
+Substantial updates to the two RNA-seq case studies in the User's Guide.
+In both cases, the short read data has been realigned and resummarized.
+
+\item
+Improvements to many Rd files.
+Many keyword entries have been revised.
+Many usage and example lines been reformated to avoid over long lines.
+
+\item
+biocViews keywords updated.
+
+\item
+Subsetting columns of a MArrayLM object no longer subsets the design matrix.
+
+\item
+Bug fix for read.maimages: default value for 'quote' was not being
+  set correctly for source="agilent.mean" or source="agilent.median".
+
+\item
+Bug fix to topTableF() and topTable().
+The ordering of Amean values was sometimes incorrect when sorting by F-statistic and a lfc or p.value filter had been set.
+
+\item
+Bug fix to read.ilmn() when sep=",".
 }}
 
 

@@ -78,7 +78,8 @@ go.abund <- goana(fit, geneid = "GeneID", trend = TRUE)
 topGO(go.abund, sort = "up")
 topGO(go.abund, sort = "down")
 
-# GO analysis adjusting for gene length bias (assuming that y$genes contains a column of gene lengths)
+# GO analysis adjusting for gene length bias
+# (assuming that y$genes$Length contains gene lengths)
 go.len <- goana(fit, geneid = "GeneID", trend = "Length")
 topGO(go.len, sort = "up")
 topGO(go.len, sort = "down")

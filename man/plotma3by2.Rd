@@ -5,11 +5,11 @@
 Write MA-plots to files in PNG format, six plots to a file in a 3 by 2 grid arrangement.
 }
 \usage{
-plotMA3by2(MA, prefix="MA", path=NULL, main=colnames(MA),
+plotMA3by2(object, prefix="MA", path=NULL, main=colnames(object),
            zero.weights=FALSE, common.lim=TRUE, device="png", \dots)
 }
 \arguments{
-  \item{MA}{an \code{MAList}, \code{RGList}, \code{EListRaw} or \code{EList} object, or a matrix containing log-intensities.}
+  \item{object}{an \code{MAList}, \code{RGList}, \code{EListRaw} or \code{EList} object, or a matrix containing log-intensities.}
   \item{prefix}{character string giving prefix to attach to file names}
   \item{path}{character string specifying directory for output files}
   \item{main}{character vector giving titles for plots}
@@ -31,7 +31,7 @@ Note that \code{"pdf"} or \code{"postscript"} may produce very large files.
 
 \value{
 No value is returned, but one or more files are written to the working directory.
-The number of files is determined by the number of columns of \code{MA}.
+The number of files is determined by the number of columns of \code{object}.
 }
 
 \author{Gordon Smyth}

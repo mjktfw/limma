@@ -10,9 +10,11 @@
 Plot the density of expression values for multiple arrays on the same plot.
 }
 \usage{
-\method{plotDensities}{RGList}(object, log=TRUE, group=NULL, col=NULL, main="RG Densities", bc.method="subtract", \dots)
+\method{plotDensities}{RGList}(object, log=TRUE, group=NULL, col=NULL, main="RG Densities",
+              bc.method="subtract", \dots)
 \method{plotDensities}{MAList}(object, log=TRUE, group=NULL, col=NULL, main="RG Densities", \dots)
-\method{plotDensities}{EListRaw}(object, log=TRUE, group=NULL, col=NULL, main=NULL, bc.method="subtract", \dots)
+\method{plotDensities}{EListRaw}(object, log=TRUE, group=NULL, col=NULL, main=NULL,
+              bc.method="subtract", \dots)
 \method{plotDensities}{EList}(object, log=TRUE, group=NULL, col=NULL, main=NULL, \dots)
 \method{plotDensities}{default}(object, group=NULL, col=NULL, main=NULL, \dots)
 }

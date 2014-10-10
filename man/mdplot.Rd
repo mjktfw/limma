@@ -5,23 +5,26 @@
 Creates a mean-difference plot.
 }
 \usage{
-mdplot(x, \dots)
+mdplot(x, xlab="Mean", ylab="Difference", \dots)
 }
 \arguments{
-  \item{x}{numeric \code{matrix} with at least two columns}
-  \item{\dots}{any other arguments are passed to \code{plot}}
+  \item{x}{numeric \code{matrix} with at least two columns.}
+  \item{xlab}{label for the x-axis.}
+  \item{ylab}{label for the y-axis.}
+  \item{\dots}{any other arguments are passed to \code{\link{plotWithHighlights}}.}
 }
 
 \details{
 Plots differences vs means for a set of bivariate values.
 This is useful to contrast expression values for two microarrays.
 
-Note that an MA-plot \code{\link{plotMA}} is a type of mean-difference plot.
+An MA-plot \code{\link{plotMA}} is a type of mean-difference plot.
 }
 
 \value{A plot is created on the current graphics device.}
 
-\references{Chambers, J. M., Cleveland, W. S., Kleiner, B., and Tukey, P. A. (1983). Graphical Methods of Data Analysis. Wadsworth (pp. 48-57).
+\references{
+Chambers, J. M., Cleveland, W. S., Kleiner, B., and Tukey, P. A. (1983). Graphical Methods of Data Analysis. Wadsworth (pp. 48-57).
 
 Cleveland, W. S., (1993). Visualizing Data. Hobart Press.
 
@@ -31,6 +34,8 @@ See also \url{http://www.statsci.org/micrarra/refs/maplots.html}
 }
 \author{Gordon Smyth}
 \seealso{
+\code{\link{plotMA}}, \code{\link{plotWithHighlights}}
+
 An overview of diagnostic functions available in LIMMA is given in \link{09.Diagnostics}.
 }
 \keyword{hplot}

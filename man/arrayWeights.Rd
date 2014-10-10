@@ -7,8 +7,8 @@ Estimates relative quality weights for each array in a multi-array
 experiment.
 }
 \usage{
-arrayWeights(object, design = NULL, weights = NULL, method = "genebygene", maxiter = 50,
-     tol = 1e-10, trace=FALSE)
+arrayWeights(object, design = NULL, weights = NULL, var.design = NULL,
+     method = "genebygene", maxiter = 50, tol = 1e-10, trace=FALSE)
 arrayWeightsSimple(object, design = NULL,
      maxiter = 100, tol = 1e-6, maxratio = 100, trace=FALSE)
 }
@@ -21,6 +21,8 @@ arrayWeightsSimple(object, design = NULL,
            estimated.  Defaults to the unit vector meaning that the
            arrays are treated as replicates.}
  \item{weights}{optional numeric matrix containing prior weights for each spot.}
+ \item{var.design}{design matrix for the variance model. Defaults to the sample-specific model 
+           (i.e. each sample has a distinct variance) when \code{NULL}.}
  \item{method}{character string specifying the estimating algorithm to be used. Choices
           are \code{"genebygene"} and \code{"reml"}.}
  \item{maxiter}{maximum number of iterations allowed.}
@@ -60,6 +62,8 @@ BMC Bioinformatics 7, 261.
 \url{http://www.biomedcentral.com/1471-2105/7/261/abstract}
 }
 \seealso{
+\code{\link{voomWithQualityWeights}}
+
 An overview of linear model functions in limma is given by \link{06.LinearModels}.
 }
 \examples{

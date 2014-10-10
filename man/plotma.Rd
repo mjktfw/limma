@@ -12,29 +12,33 @@ Creates an MA-plot with color coding for control spots.
 }
 
 \usage{
-\method{plotMA}{default}(MA, array = 1, xlab = "Average log-expression",
-       ylab = "Expression log-ratio (this sample vs others)", main = colnames(MA)[array],
-       status=NULL, \dots)
-\method{plotMA}{EList}(MA, array = 1, xlab = "Average log-expression",
-       ylab = "Expression log-ratio (this sample vs others)", main = colnames(MA)[array],
-       status=MA$genes$Status, zero.weights = FALSE, \dots)
-\method{plotMA}{RGList}(MA, array = 1, xlab = "A", ylab = "M", main = colnames(MA)[array],
-       status=MA$genes$Status, zero.weights = FALSE, \dots)
-\method{plotMA}{MAList}(MA, array = 1, xlab = "A", ylab = "M", main = colnames(MA)[array],
-       status=MA$genes$Status, zero.weights = FALSE, \dots)
-\method{plotMA}{MArrayLM}(MA, coef = ncol(MA), xlab = "Average log-expression", ylab = "log-fold-change",
-       main = colnames(MA)[coef], status=MA$genes$Status, zero.weights = FALSE, \dots)
+\method{plotMA}{default}(object, array = 1, xlab = "Average log-expression",
+       ylab = "Expression log-ratio (this sample vs others)",
+       main = colnames(object)[array], status=NULL, \dots)
+\method{plotMA}{EList}(object, array = 1, xlab = "Average log-expression",
+       ylab = "Expression log-ratio (this sample vs others)",
+       main = colnames(object)[array], status=object$genes$Status,
+       zero.weights = FALSE, \dots)
+\method{plotMA}{RGList}(object, array = 1, xlab = "A", ylab = "M",
+       main = colnames(object)[array], status=object$genes$Status,
+       zero.weights = FALSE, \dots)
+\method{plotMA}{MAList}(object, array = 1, xlab = "A", ylab = "M",
+       main = colnames(object)[array], status=object$genes$Status,
+       zero.weights = FALSE, \dots)
+\method{plotMA}{MArrayLM}(object, coef = ncol(object), xlab = "Average log-expression",
+       ylab = "log-fold-change", main = colnames(object)[coef],
+       status=object$genes$Status, zero.weights = FALSE, \dots)
 }
 
 \arguments{
-  \item{MA}{an \code{RGList}, \code{MAList}, \code{EList}, \code{ExpressionSet} or \code{MArrayLM} object.
+  \item{object}{an \code{RGList}, \code{MAList}, \code{EList}, \code{ExpressionSet} or \code{MArrayLM} object.
   Alternatively a numeric \code{matrix}.}
   \item{array}{integer giving the array to be plotted.}
   \item{coef}{integer giving the linear model coefficient to be plotted.}
   \item{xlab}{character string giving label for x-axis}
   \item{ylab}{character string giving label for y-axis}
   \item{main}{character string giving title for plot}
-  \item{status}{vector giving the control status of each spot on the array, of same length as the number of rows of \code{MA}.
+  \item{status}{vector giving the control status of each spot on the array, of same length as the number of rows of \code{object}.
   If \code{NULL}, then all points are plotted in the default color, symbol and size.}
   \item{zero.weights}{logical, should spots with zero or negative weights be plotted?}
   \item{\dots}{other arguments are passed to \code{\link{plotWithHighlights}}.}
@@ -50,13 +54,13 @@ An articifial array is produced by averaging all the arrays other than the array
 A mean-difference plot is then producing from the specified array and the artificial array.
 Note that this procedure reduces to an ordinary mean-difference plot when there are just two arrays total.
 
-If \code{MA} is an \code{MArrayLM} object, then the plot is an fitted model MA-plot in which the estimated coefficient is on the y-axis and the average A-value is on the x-axis.
+If \code{object} is an \code{MArrayLM} object, then the plot is an fitted model MA-plot in which the estimated coefficient is on the y-axis and the average A-value is on the x-axis.
 
 The \code{status} vector is intended to specify the control status of each spot, for example \code{"gene"}, \code{"ratio control"}, \code{"house keeping gene"}, \code{"buffer"} and so on.
 The vector is often computed using the function \code{\link{controlStatus}} and a spot-types file.
 However the function may be used to highlight any subset of spots.
 
-The \code{status} can be included as the component \code{MA$genes$Status} instead of being passed as an argument to \code{plotMA}.
+The \code{status} can be included as the component \code{object$genes$Status} instead of being passed as an argument to \code{plotMA}.
 The arguments \code{values}, \code{pch}, \code{col} and \code{cex} can be included as attributes to \code{status} instead of being passed as arguments to \code{plotMA}.
 }
 
