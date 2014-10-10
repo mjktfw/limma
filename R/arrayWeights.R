@@ -216,8 +216,10 @@ voomWithQualityWeights <- function(counts, design=NULL, lib.size=NULL, normalize
 #	Matt Ritchie and Cynthia Liu, 22 Sept 2014.
 #       Last modified 7 Oct 2014.
 {
-    if(plot)
-        par(mfrow=c(1,2))
+    if(plot) {
+        oldpar <- par(mfrow=c(1,2))
+        on.exit(par(oldpar))
+    }
     v <- voom(counts, design=design, lib.size=lib.size, normalize.method=normalize.method, plot=FALSE, span=span, ...)
     aw <- arrayWeights(v, design=design, method=method, maxiter=maxiter, tol=tol, var.design=var.design)
     v <- voom(counts, design=design, weights=aw, lib.size=lib.size, normalize.method=normalize.method, plot=plot, span=span, ...)

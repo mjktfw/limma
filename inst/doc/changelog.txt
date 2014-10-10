@@ -1,3 +1,8 @@
+10 Oct 2014: limma 3.21.21
+
+- arrayWeights() with plot=TRUE now resets graphics parameters to
+  original settings on exit.
+
 10 Oct 2014: limma 3.21.20
 
 - barcodeplot() is now able to plot different weights for different
