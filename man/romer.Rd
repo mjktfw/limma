@@ -1,23 +1,26 @@
 \name{romer}
 \alias{romer}
+\alias{romer.default}
+
 \title{Rotation Gene Set Enrichment Analysis}
 \description{
 Gene set enrichment analysis for linear models using rotation tests (ROtation testing using MEan Ranks).
 }
 \usage{
-romer(index, y, design, contrast=ncol(design), array.weights=NULL, block=NULL,
-      correlation, set.statistic="mean", nrot=9999)
+\S3method{romer}{default}(y, index, design, contrast=ncol(design), array.weights=NULL,
+      block=NULL, correlation, set.statistic="mean", nrot=9999, \dots)
 }
 \arguments{
-  \item{index}{list of indices specifying the rows of \code{y} in the gene sets. The list can be made using \link{ids2indices}.}
   \item{y}{numeric matrix giving log-expression values.}
-  \item{design}{design matrix}
+  \item{index}{list of indices specifying the rows of \code{y} in the gene sets. The list can be made using \link{ids2indices}.}
+  \item{design}{design matrix.}
   \item{contrast}{contrast for which the test is required. Can be an integer specifying a column of \code{design}, or else a contrast vector of length equal to the number of columns of \code{design}.}
   \item{array.weights}{optional numeric vector of array weights.} 
   \item{block}{optional vector of blocks.}
   \item{correlation}{correlation between blocks.}
   \item{set.statistic}{statistic used to summarize the gene ranks for each set. Possible values are \code{"mean"}, \code{"floormean"} or \code{"mean50"}.}
   \item{nrot}{number of rotations used to estimate the p-values.}
+  \item{\dots}{other arguments not currently used.}
 }
 \value{
 Numeric matrix giving p-values and the number of matched genes in each gene set.
@@ -62,6 +65,7 @@ This statistic performs well in practice but is slightly slower to compute.
 \code{\link{topRomer}},
 \code{\link{ids2indices}},
 \code{\link{roast}},
+\code{\link{camera}},
 \code{\link{wilcoxGST}}
 
 There is a topic page on \link{10.GeneSetTests}.
@@ -96,7 +100,7 @@ y[index,3:4] <- y[index,3:4]+3
 
 index1 <- 1:5
 index2 <- 6:10
-r <- romer(index=list(set1=index1,set2=index2),y=y,design=design,contrast=2,nrot=99)
+r <- romer(y=y,index=list(set1=index1,set2=index2),design=design,contrast=2,nrot=99)
 r
 topRomer(r,alt="up")
 topRomer(r,alt="down")

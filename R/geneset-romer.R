@@ -1,4 +1,5 @@
 ##  ROMER.R
+romer <- function(y,...) UseMethod("romer")
 
 ids2indices <- function(gene.sets, identifiers, remove.empty=TRUE)
 # Make a list of gene identifiers into a list of indices for gene sets
@@ -12,23 +13,23 @@ ids2indices <- function(gene.sets, identifiers, remove.empty=TRUE)
 	index
 }
 
-romer <- function(index,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation=NULL,set.statistic="mean",nrot=9999)
+romer.default <- function(y,index,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation=NULL,set.statistic="mean",nrot=9999,...)
 # rotation mean-rank version of GSEA (gene set enrichment analysis) for linear models
 # Gordon Smyth and Yifang Hu
-# 27 March 2009.  Last modified 3 June 2010.
+# 27 March 2009.  Last modified 20 October 2014.
 {
 	set.statistic <- match.arg(set.statistic,c("mean","floormean","mean50"))
 	if(set.statistic=="mean50") {
-		return(.romer.mean50(index=index,y=y,design=design,contrast=contrast,array.weights=array.weights,block=block,correlation=correlation,nrot=nrot))
+		return(.romer.mean50(y=y,index=index,design=design,contrast=contrast,array.weights=array.weights,block=block,correlation=correlation,nrot=nrot))
 	} else {
-		return(.romer.mean.floormean(index=index,y=y,design=design,contrast=contrast,array.weights=array.weights,block=block,correlation=correlation,floor=(set.statistic=="floormean"),nrot=nrot))
+		return(.romer.mean.floormean(y=y,index=index,design=design,contrast=contrast,array.weights=array.weights,block=block,correlation=correlation,floor=(set.statistic=="floormean"),nrot=nrot))
 	}
 }
 
-.romer.mean50 <- function(index,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,nrot=9999)
+.romer.mean50 <- function(y,index,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,nrot=9999)
 # rotation-mean50-rank version of GSEA (gene set enrichment analysis) for linear models
 # Gordon Smyth and Yifang Hu
-# 27 March 2009.  Last modified 15 Sep 2009.
+# 27 March 2009.  Last modified 20 October 2014.
 {
 #	Check input arguments
 	if(!is.list(index)) index <- list(set=index)
@@ -211,10 +212,10 @@ romer <- function(index,y,design,contrast=ncol(design),array.weights=NULL,block=
 	c(top,bottom)
 }
 
-.romer.mean.floormean <- function(index,y,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,floor=FALSE,nrot=9999)
+.romer.mean.floormean <- function(y,index,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation,floor=FALSE,nrot=9999)
 # rotation mean-rank version of GSEA (gene set enrichment analysis) for linear models
 # Gordon Smyth and Yifang Hu
-# 27 March 2009.  Last modified 5 Oct 2009.
+# 27 March 2009.  Last modified 20 Oct 2014.
 {
 #	Check input arguments
 	if(!is.list(index)) index <- list(set=index)
