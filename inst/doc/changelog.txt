@@ -1,3 +1,9 @@
+20 Oct 2014: limma 3.22.1
+
+- romer() is now an S3 generic function.
+
+14 Oct 2014: limma 3.22.0 (Bioconductor 3.0 Release Branch)
+
 10 Oct 2014: limma 3.21.21
 
 - arrayWeights() with plot=TRUE now resets graphics parameters to
