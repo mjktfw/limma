@@ -1,3 +1,18 @@
+25 Nov 2014: limma 3.23.2
+
+- plotMDS() now stores 'axislabel', depending on the method used to
+  compute distances, and using this for axis labels.
+
+- vennDiagram now fills circles with specified colors.
+
+- voomWithQualityWeights() now stores observation weights and array
+  weights separately.
+
+- plotMA method for EListRaw objects.
+
+- nec() and neqc() now remove the Eb component if it exists in an
+  EListRaw object.
+
 20 Oct 2014: limma 3.23.1
 
 - romer() is now an S3 generic function.
@@ -7,8 +22,12 @@
 
 10 Oct 2014: limma 3.21.21
 
-- arrayWeights() with plot=TRUE now resets graphics parameters to
-  original settings on exit.
+- arrayWeights() has a new argument var.design, allowing the array
+  weights to be a function of covariates.  When plot=TRUE, the
+  graphics parameters are now reset to original values on exit.
+
+- new function voomWithQualityWeights(), combining capabilities of
+  voom() and arrayWeights().
 
 10 Oct 2014: limma 3.21.20
 

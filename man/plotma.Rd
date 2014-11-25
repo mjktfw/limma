@@ -3,6 +3,7 @@
 \alias{plotMA}
 \alias{plotMA.RGList}
 \alias{plotMA.MAList}
+\alias{plotMA.EListRaw}
 \alias{plotMA.EList}
 \alias{plotMA.MArrayLM}
 \alias{plotMA.default}

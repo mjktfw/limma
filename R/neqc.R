@@ -95,11 +95,13 @@ normexp.fit.control <- function(x,status=NULL,negctrl="negative",regular="regula
 nec <- function(x,status=NULL,negctrl="negative",regular="regular",offset=16,robust=FALSE,detection.p="Detection")
 #	Normexp background correction aided by negative controls.
 #	Wei Shi and Gordon Smyth
-#	Created 27 September 2010. Last modified 31 March 2011.
+#	Created 27 September 2010. Last modified 21 Oct 2014.
 {
-	if(is(x,"EListRaw") && !is.null(x$Eb)) x$E <- x$E-x$Eb
-		
 	if(is(x, "EListRaw")) {
+		if(!is.null(x$Eb)) {
+			x$E <- x$E-x$Eb
+			x$Eb <- NULL
+		}
 		if(is.null(status)) status <- x$genes$Status
 		if(any(tolower(status) %in% tolower(negctrl))) {
 			normexp.par <- normexp.fit.control(x,status,negctrl,regular,robust)
@@ -107,9 +109,7 @@ nec <- function(x,status=NULL,negctrl="negative",regular="regular",offset=16,rob
 			normexp.par <- normexp.fit.detection.p(x,detection.p)
 			message("Inferred negative control probe intensities were used in background correction.")
 		}
-
-		for(i in 1:ncol(x))
-			x$E[, i] <- normexp.signal(normexp.par[i, ], x$E[, i])
+		for(i in 1:ncol(x)) x$E[,i] <- normexp.signal(normexp.par[i,], x$E[,i])
 		x$E <- x$E + offset
 	} else {
 		x <- as.matrix(x)
@@ -118,9 +118,7 @@ nec <- function(x,status=NULL,negctrl="negative",regular="regular",offset=16,rob
 		} else {
 			normexp.par <- normexp.fit.detection.p(x,detection.p)
 		}
-
-		for(i in 1:ncol(x))
-			x[, i] <- normexp.signal(normexp.par[i, ], x[, i])
+		for(i in 1:ncol(x)) x[,i] <- normexp.signal(normexp.par[i,], x[,i])
 		x <- x + offset
 	}
 	x

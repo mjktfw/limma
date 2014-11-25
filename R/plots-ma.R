@@ -40,6 +40,14 @@ plotMA.MArrayLM <- function(object, coef=ncol(object), xlab="Average log-express
 	plotWithHighlights(x=object$Amean,y=logFC,xlab=xlab,ylab=ylab,main=main,status=status,...)
 }
 
+plotMA.EListRaw <- function(object, array=1, xlab="Average log-expression", ylab="Expression log-ratio (this sample vs others)", main=colnames(object)[array], status=object$genes$Status, zero.weights=FALSE, ...)
+{
+	if(!is.null(object$Eb)) object$E <- object$E-object$Eb
+	object$E <- log2(object$E)
+	object <- new("EList",unclass(object))
+	plotMA(object, array=array, xlab=xlab, ylab=ylab, main=main, status=status, zero.weights=zero.weights, ...)
+}
+
 plotMA.EList <- function(object, array=1, xlab="Average log-expression", ylab="Expression log-ratio (this sample vs others)", main=colnames(object)[array], status=object$genes$Status, zero.weights=FALSE, ...)
 #	MA-plot with color coding for controls
 #	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.

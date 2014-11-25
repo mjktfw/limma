@@ -32,7 +32,7 @@ vennDiagram <- function(object,include="both",names=NULL,mar=rep(1,4),cex=c(1.5,
 #	Plot Venn diagram
 #	Gordon Smyth, James Wettenhall, Yifang Hu.
 #	Capabilities for multiple counts and colors uses code by Francois Pepin.
-#	4 July 2003.  Last modified 31 January 2014.
+#	4 July 2003.  Last modified 31 October 2014.
 {
 #	Check include
 	include <- as.character(include)
@@ -60,7 +60,11 @@ vennDiagram <- function(object,include="both",names=NULL,mar=rep(1,4),cex=c(1.5,
 	if(is.null(names)) names <- colnames(object)[1:nsets]
 
 #	Set colors
-	if(is.null(circle.col)) circle.col <- par('col')
+	FILL.COL <- TRUE
+	if(is.null(circle.col)) { 
+		circle.col <- par('col')
+		FILL.COL <- FALSE
+	}
 	if(length(circle.col)<nsets) circle.col <- rep(circle.col,length.out=nsets)
 	if(is.null(counts.col)) counts.col <- par('col')
 	if(length(counts.col)<LenInc) counts.col <- rep(counts.col,length.out=LenInc)
@@ -91,8 +95,17 @@ vennDiagram <- function(object,include="both",names=NULL,mar=rep(1,4),cex=c(1.5,
 	ytext <- switch(nsets, 1.8, c(1.8,1.8), c(2.4,2.4,-3) )
 #	Note that lines() better than symbols() to make circles follow aspect ratio of plot
 	for(circle in 1:nsets) {
-		lines(xcentres[circle]+r*cos(theta),ycentres[circle]+r*sin(theta),lwd=lwd,col=circle.col[circle])
+
+		if(!FILL.COL) lines(xcentres[circle]+r*cos(theta),ycentres[circle]+r*sin(theta),lwd=lwd,col=circle.col[circle])
+		if(FILL.COL) {
+			RGB <- col2rgb(circle.col[circle])/255
+			ALPHA <- 0.06
+			RGB.ALP <- rgb(RGB[1, 1], RGB[2, 1], RGB[3, 1], alpha = ALPHA)
+			polygon(xcentres[circle]+r*cos(theta),ycentres[circle]+r*sin(theta),border=circle.col[circle],lwd=lwd,col=RGB.ALP)
+		}
+
 		text(xtext[circle],ytext[circle],names[circle],cex=cex)
+
 	}
 
 #	Plot rectangles
@@ -160,10 +173,25 @@ vennDiagram <- function(object,include="both",names=NULL,mar=rep(1,4),cex=c(1.5,
    if (4 == nsets) {
 		rect(-20, -20, 420, 400)
 		elps <- cbind(162*cos(seq(0,2*pi,len=1000)), 108*sin(seq(0,2*pi,len=1000)))
-		polygon(relocate_elp(elps,  45, 130, 170),border=circle.col[1],lwd=lwd)
-		polygon(relocate_elp(elps,  45, 200, 200),border=circle.col[2],lwd=lwd)
-		polygon(relocate_elp(elps, 135, 200, 200),border=circle.col[3],lwd=lwd)
-		polygon(relocate_elp(elps, 135, 270, 170),border=circle.col[4],lwd=lwd)
+
+		if(!FILL.COL){
+			polygon(relocate_elp(elps,  45, 130, 170),border=circle.col[1],lwd=lwd)
+			polygon(relocate_elp(elps,  45, 200, 200),border=circle.col[2],lwd=lwd)
+			polygon(relocate_elp(elps, 135, 200, 200),border=circle.col[3],lwd=lwd)
+			polygon(relocate_elp(elps, 135, 270, 170),border=circle.col[4],lwd=lwd)
+		}
+		if(FILL.COL){
+			RGB <- col2rgb(circle.col)/255
+			ALPHA <- 0.06
+			RGB.ALP1 <- rgb(RGB[1, 1], RGB[2, 1], RGB[3, 1], alpha = ALPHA)
+			RGB.ALP2 <- rgb(RGB[1, 2], RGB[2, 2], RGB[3, 2], alpha = ALPHA)
+			RGB.ALP3 <- rgb(RGB[1, 3], RGB[2, 3], RGB[3, 3], alpha = ALPHA)
+			RGB.ALP4 <- rgb(RGB[1, 4], RGB[2, 4], RGB[3, 4], alpha = ALPHA)
+			polygon(relocate_elp(elps,  45, 130, 170),border=circle.col[1],lwd=lwd,col=RGB.ALP1)
+			polygon(relocate_elp(elps,  45, 200, 200),border=circle.col[2],lwd=lwd,col=RGB.ALP2)
+			polygon(relocate_elp(elps, 135, 200, 200),border=circle.col[3],lwd=lwd,col=RGB.ALP3)
+			polygon(relocate_elp(elps, 135, 270, 170),border=circle.col[4],lwd=lwd,col=RGB.ALP4)
+		}
 
 		text( 35, 315, names[1], cex=cex[1])
 		text(138, 350, names[2], cex=cex[1])
@@ -220,11 +248,28 @@ vennDiagram <- function(object,include="both",names=NULL,mar=rep(1,4),cex=c(1.5,
 	rect(-20, -30, 430, 430)
 
 	elps <- cbind(150*cos(seq(0,2*pi,len=1000)), 60*sin(seq(0,2*pi,len=1000)))
-	polygon(relocate_elp(elps,  90,200, 250),border=circle.col[1],lwd=lwd)
-	polygon(relocate_elp(elps, 162,250, 220),border=circle.col[2],lwd=lwd)
-	polygon(relocate_elp(elps, 234,250, 150),border=circle.col[3],lwd=lwd)
-	polygon(relocate_elp(elps, 306,180, 125),border=circle.col[4],lwd=lwd)
-	polygon(relocate_elp(elps, 378,145, 200),border=circle.col[5],lwd=lwd)
+
+	if(!FILL.COL){
+		polygon(relocate_elp(elps,  90,200, 250),border=circle.col[1],lwd=lwd)
+		polygon(relocate_elp(elps, 162,250, 220),border=circle.col[2],lwd=lwd)
+		polygon(relocate_elp(elps, 234,250, 150),border=circle.col[3],lwd=lwd)
+		polygon(relocate_elp(elps, 306,180, 125),border=circle.col[4],lwd=lwd)
+		polygon(relocate_elp(elps, 378,145, 200),border=circle.col[5],lwd=lwd)
+	}
+	if(FILL.COL){
+		RGB <- col2rgb(circle.col)/255
+		ALPHA <- 0.06
+		RGB.ALP1 <- rgb(RGB[1, 1], RGB[2, 1], RGB[3, 1], alpha = ALPHA)
+		RGB.ALP2 <- rgb(RGB[1, 2], RGB[2, 2], RGB[3, 2], alpha = ALPHA)
+		RGB.ALP3 <- rgb(RGB[1, 3], RGB[2, 3], RGB[3, 3], alpha = ALPHA)
+		RGB.ALP4 <- rgb(RGB[1, 4], RGB[2, 4], RGB[3, 4], alpha = ALPHA)
+		RGB.ALP5 <- rgb(RGB[1, 5], RGB[2, 5], RGB[3, 5], alpha = ALPHA)
+		polygon(relocate_elp(elps,  90,200, 250),border=circle.col[1],lwd=lwd,col=RGB.ALP1)
+		polygon(relocate_elp(elps, 162,250, 220),border=circle.col[2],lwd=lwd,col=RGB.ALP2)
+		polygon(relocate_elp(elps, 234,250, 150),border=circle.col[3],lwd=lwd,col=RGB.ALP3)
+		polygon(relocate_elp(elps, 306,180, 125),border=circle.col[4],lwd=lwd,col=RGB.ALP4)
+		polygon(relocate_elp(elps, 378,145, 200),border=circle.col[5],lwd=lwd,col=RGB.ALP5)
+	}
 
 	text( 50, 285, names[1],cex=cex[1])
 	text(200, 415, names[2],cex=cex[1])
@@ -233,7 +278,7 @@ vennDiagram <- function(object,include="both",names=NULL,mar=rep(1,4),cex=c(1.5,
 	text(100, -10, names[5],cex=cex[1])
 
 	text( 61, 231, z["10000"], cex=cex[2], col=counts.col[1])
-	text(194, 332, z["01000"], cex=cex[2], col=counts.col[1])
+	text(200, 332, z["01000"], cex=cex[2], col=counts.col[1])
 	text(321, 248, z["00100"], cex=cex[2], col=counts.col[1])
 	text(290,  84, z["00010"], cex=cex[2], col=counts.col[1])
 	text(132,  72, z["00001"], cex=cex[2], col=counts.col[1])
@@ -267,7 +312,7 @@ vennDiagram <- function(object,include="both",names=NULL,mar=rep(1,4),cex=c(1.5,
 
 	if(length(include)==2) {
 		text( 61, 220, z2["10000"], cex=cex[2], col=counts.col[2])
-		text(194, 321, z2["01000"], cex=cex[2], col=counts.col[2])
+		text(200, 321, z2["01000"], cex=cex[2], col=counts.col[2])
 		text(321, 237, z2["00100"], cex=cex[2], col=counts.col[2])
 		text(290,  73, z2["00010"], cex=cex[2], col=counts.col[2])
 		text(132,  61, z2["00001"], cex=cex[2], col=counts.col[2])
