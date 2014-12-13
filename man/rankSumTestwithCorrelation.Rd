@@ -19,7 +19,7 @@ rankSumTestWithCorrelation(index, statistics, correlation=0, df=Inf)
 }
 
 \value{
-Numeric vector containing \code{left.tail} and \code{right.tail} p-values respectively.
+Numeric vector of length 2 containing the \code{left.tail} and \code{right.tail} p-values.
 }
 
 \details{

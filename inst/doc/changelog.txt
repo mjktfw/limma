@@ -1,3 +1,12 @@
+13 Dec 2014: limma 3.23.3
+
+- update to lowess C code.
+
+- the argument names predFCm() changed slightly.  Old argument
+  'VarRel' replaced by logical argument 'var.indep.of.fc'.  Old
+  argument 'prop' replaced by 'all.de'.  New argument
+  'prop.true.null.method' passes through method to propTrueNull.
+
 25 Nov 2014: limma 3.23.2
 
 - plotMDS() now stores 'axislabel', depending on the method used to
@@ -5,8 +14,10 @@
 
 - vennDiagram now fills circles with specified colors.
 
-- voomWithQualityWeights() now stores observation weights and array
-  weights separately.
+- voomWithQualityWeights() now stores the sample weights in the 
+  resulting EList object (see $sample.weights component).
+  The values stored in $weights are still the combined 
+  observation and sample weights.
 
 - plotMA method for EListRaw objects.
 

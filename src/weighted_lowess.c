@@ -34,6 +34,7 @@ void find_seeds (int ** indices, int * number, const double* xptr, const int npt
 		}
 	}
 	idptr[total]=npts-1;
+	++total;
 	(*indices)=idptr;
 	return;
 }
@@ -187,6 +188,7 @@ SEXP weighted_lowess(SEXP covariate, SEXP response, SEXP weight, SEXP span, SEXP
 	int pt;
 	for (pt=0; pt<npts; ++pt) { totalweight+=weiptr[pt]; }
 	double spanweight=totalweight*spv;
+	const double subrange=(covptr[npts-1]-covptr[0])/npts;
 
 	/* Setting up the indices of points for sampling; the frame start and end for those indices, and the max dist. */
 	int *seed_index;
@@ -226,7 +228,7 @@ SEXP weighted_lowess(SEXP covariate, SEXP response, SEXP weight, SEXP span, SEXP
  				 * positive, pt-last_pt could never be 1 so we'd never reach this point.
  				 */
 				current = covptr[pt]-covptr[last_pt]; 
-				if (current > THRESHOLD) {
+				if (current > THRESHOLD*subrange) {
 					const double slope=(fitptr[pt]-fitptr[last_pt])/current;
 					const double intercept=fitptr[pt] - slope*covptr[pt];
 					for (subpt=last_pt+1; subpt<pt; ++subpt) { fitptr[subpt]=slope*covptr[subpt]+intercept; }
@@ -239,13 +241,17 @@ SEXP weighted_lowess(SEXP covariate, SEXP response, SEXP weight, SEXP span, SEXP
 		}
 	
 		/* Computing the weighted MAD of the absolute values of the residuals. */
+		double resid_scale=0;
 		for (pt=0; pt<npts; ++pt) { 
 			rsdptr[pt]=fabs(resptr[pt]-fitptr[pt]); 
+			resid_scale+=rsdptr[pt];
 			rorptr[pt]=pt;
 		}
+		resid_scale/=npts;
 		rsort_with_index(rsdptr, rorptr, npts);
+
 		current=0;
-		double cmad=THRESHOLD;
+		double cmad=0;
 		const double halfweight=totalweight/2;
 		for (pt=0; pt<npts; ++pt) {
 			current+=weiptr[rorptr[pt]];
@@ -257,6 +263,12 @@ SEXP weighted_lowess(SEXP covariate, SEXP response, SEXP weight, SEXP span, SEXP
 				break;
 			}
 		}
+		
+		/* If it's too small, then robustness weighting will have no further effect.
+		 * Any points with large residuals would already be pretty lowly weighted.
+		 * This is based on a similar step in lowess.c in the core R code.
+		 */
+		if (cmad <= THRESHOLD * resid_scale) { break; } 
 
 		/* Computing the robustness weights. */
 		for (pt=0; pt<npts; ++pt) {
