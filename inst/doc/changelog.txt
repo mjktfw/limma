@@ -1,6 +1,11 @@
+27 Dec 2014: limma 3.23.4
+
+- new 'col' argument for voomWithQualityWeights() so that barplot of 
+  sample weights can be colour-coded by the user.
+
 13 Dec 2014: limma 3.23.3
 
-- update to lowess C code.
+- improvements to lowess C code.
 
 - the argument names predFCm() changed slightly.  Old argument
   'VarRel' replaced by logical argument 'var.indep.of.fc'.  Old

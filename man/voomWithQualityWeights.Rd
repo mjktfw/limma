@@ -7,7 +7,7 @@ Combine voom observational-level weights with sample-specific quality weights in
 \usage{
 voomWithQualityWeights(counts, design=NULL, lib.size=NULL, normalize.method="none",
              plot=FALSE, span=0.5, var.design=NULL, method="genebygene", maxiter=50,
-             tol=1e-10, trace=FALSE, replace.weights=TRUE, ...) 
+             tol=1e-10, trace=FALSE, replace.weights=TRUE, col=NULL, ...) 
 }
 \arguments{
  \item{counts}{a numeric \code{matrix} containing raw counts, or an \code{ExpressionSet} containing raw counts, or a \code{DGEList} object.}
@@ -31,6 +31,7 @@ voomWithQualityWeights(counts, design=NULL, lib.size=NULL, normalize.method="non
  \item{replace.weights}{logical variable. If TRUE then the weights in the voom object will be replaced with 
        the combined voom and sample-specific weights and the \code{\link[limma:EList]{EList}} object from voom is returned.
        If FALSE, then a matrix of combined weights is returned.}
+ \item{col}{colours to use in the barplot of sample-specific weights (only used if \code{plot=TRUE}). If \code{NULL}, bars are plotted in grey.}
  \item{\dots}{other arguments are passed to \code{lmFit}.}
 }
 \details{
@@ -51,12 +52,16 @@ It combines observational-level weights from \code{voom} with sample-specific we
 \author{Matthew Ritchie and Cynthia Liu}
 
 \references{
+Liu, R., Holik, A. Z., Su, S., Jansz, N., Chen, K., Leong, H. S., Blewitt, M. E., Asselin-Labat, M.-L., Smyth, G. K., Ritchie, M. E. (2014).
+Why weight? Combining voom with estimates of sample quality improves power in RNA-seq analyses.
+(in preparation)
+
 Ritchie, M. E., Diyagama, D., Neilson, van Laar, R., J., Dobrovic, A., Holloway, A., and Smyth, G. K. (2006).
 Empirical array quality weights in the analysis of microarray data.
 BMC Bioinformatics 7, 261.
 \url{http://www.biomedcentral.com/1471-2105/7/261/abstract}
 
-Law, CW, Chen, Y, Shi, W, Smyth, GK (2014).
+Law, C. W., Chen, Y., Shi, W., Smyth, G. K. (2014).
 Voom: precision weights unlock linear model analysis tools for RNA-seq read counts.
 \emph{Genome Biology} 15, R29.
 \url{http://genomebiology.com/2014/15/2/R29}
