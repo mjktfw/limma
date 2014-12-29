@@ -14,7 +14,7 @@ plotMDS.MDS <- function(x,labels=NULL,pch=NULL,cex=1,dim.plot=NULL,xlab=NULL,yla
 #	Method for MDS objects
 #	Create a new plot using MDS coordinates or distances previously created
 #	Gordon Smyth and Yifang Hu
-#	21 May 2011.  Last modified 25 November 2014
+#	21 May 2011.  Last modified 29 December 2014
 {
 #	Check labels
 	if(is.null(labels) & is.null(pch)) {
@@ -66,7 +66,7 @@ plotMDS.default <- function(x,top=500,labels=NULL,pch=NULL,cex=1,dim.plot=c(1,2)
 #	Check x
 	x <- as.matrix(x)
 	nsamples <- ncol(x)
-	if(nsamples < 3) stop("Need at least 3 columns")
+	if(nsamples < 3) stop(paste("Only",nsamples,"columns of data: need at least 3"))
 	cn <- colnames(x)
 #	Remove rows with missing or Inf values
 	bad <- rowSums(is.finite(x)) < nsamples
@@ -83,40 +83,54 @@ plotMDS.default <- function(x,top=500,labels=NULL,pch=NULL,cex=1,dim.plot=c(1,2)
 	}
 	if(!is.null(labels)) labels <- as.character(labels)
 
+#	Check dim.plot
+	dim.plot <- unique(as.integer(dim.plot))
+	if(length(dim.plot) != 2L) stop("dim.plot must specify two dimensions to plot")
+
 #	Check dim
-	if(ndim < 2) stop("Need at least two dim.plot")
-	if(nsamples < ndim) stop("Too few samples")
-	if(nprobes < ndim) stop("Too few rows")
+	if(ndim < 2L) stop("Need at least two dim.plot")
+	if(nsamples < ndim) stop("ndim is greater than number of samples")
+	if(nprobes < ndim) stop("ndim is greater than number of rows of data")
 
 #	Check gene.selection
 	gene.selection <- match.arg(gene.selection,c("pairwise","common"))
 
 #	Distance matrix from pairwise leading fold changes
 	dd <- matrix(0,nrow=nsamples,ncol=nsamples,dimnames=list(cn,cn))
-	topindex <- nprobes-top+1
 	if(gene.selection=="pairwise") {
 #		Distance measure is mean of top squared deviations for each pair of arrays
-		for (i in 2:(nsamples))
-		for (j in 1:(i-1))
+		topindex <- nprobes-top+1L
+		for (i in 2L:(nsamples))
+		for (j in 1L:(i-1L))
 			dd[i,j]=sqrt(mean(sort.int((x[,i]-x[,j])^2,partial=topindex)[topindex:nprobes]))
 		axislabel <- "Leading logFC dim"
 	} else {
 #		Same genes used for all comparisons
-		s <- rowMeans((x-rowMeans(x))^2)
-		q <- quantile(s,p=(topindex-1.5)/(nprobes-1))
-		x <- x[s>=q,]
-		for (i in 2:(nsamples))
-			dd[i,1:(i-1)]=sqrt(colMeans((x[,i]-x[,1:(i-1),drop=FALSE])^2))
+		if(nprobes > top) {
+			s <- rowMeans((x-rowMeans(x))^2)
+			o <- order(s,decreasing=TRUE)
+			x <- x[o[1L:top],,drop=FALSE]
+		}
+		for (i in 2L:(nsamples))
+			dd[i,1L:(i-1L)]=sqrt(colMeans((x[,i]-x[,1:(i-1),drop=FALSE])^2))
 		axislabel <- "Principal Component"
 	}
 
 #	Multi-dimensional scaling
-	a1 <- cmdscale(as.dist(dd),k=ndim)
+	a1 <- suppressWarnings(cmdscale(as.dist(dd),k=ndim))
 
 #	Make MDS object and call plotMDS method
 	mds <- new("MDS",list(dim.plot=dim.plot,distance.matrix=dd,cmdscale.out=a1,top=top,gene.selection=gene.selection))
-	mds$x <- a1[,dim.plot[1]]
-	mds$y <- a1[,dim.plot[2]]
+	if(dim.plot[1] > ncol(a1)) {
+		mds$x <- rep.int(0,nsamples)
+		warning(paste("dimension",dim.plot[1],"is degenerate or all zero"))
+	} else
+		mds$x <- a1[,dim.plot[1]]
+	if(dim.plot[2] > ncol(a1)) {
+		mds$y <- rep.int(0,nsamples)
+		warning(paste("dimension",dim.plot[2],"is degenerate or all zero"))
+	} else
+		mds$y <- a1[,dim.plot[1]]
 	mds$top <- top
 	mds$axislabel <- axislabel
 	plotMDS(mds,labels=labels,pch=pch,cex=cex,xlab=xlab,ylab=ylab,...)
