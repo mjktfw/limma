@@ -1,3 +1,39 @@
+8 Jan 2015: limma 3.22.2
+
+- Limma review article (Ritchie et al, NAR, 2015) now accepted for
+  publication.  Updating references in User's Guide, help
+  files and CITATION to refer to this article.
+
+- bug fix to plotMDS when gene.selection="common" and top=nrow(x).
+
+- plotMDS() now traps problems when the distances are all zero or if
+  one or more of the dimensions are degenerate.
+
+- new 'col' argument for voomWithQualityWeights() so that barplot of 
+  sample weights can be colour-coded by the user.
+
+- improvements to lowess C code.
+
+- the argument names predFCm() changed slightly.  Old argument
+  'VarRel' replaced by logical argument 'var.indep.of.fc'.  Old
+  argument 'prop' replaced by 'all.de'.  New argument
+  'prop.true.null.method' passes through method to propTrueNull.
+
+- plotMDS() now stores 'axislabel', depending on the method used to
+  compute distances, and using this for axis labels.
+
+- vennDiagram now fills circles with specified colors.
+
+- voomWithQualityWeights() now stores the sample weights in the 
+  resulting EList object (see $sample.weights component).
+  The values stored in $weights are still the combined 
+  observation and sample weights.
+
+- plotMA method for EListRaw objects.
+
+- nec() and neqc() now remove the Eb component if it exists in an
+  EListRaw object.
+
 20 Oct 2014: limma 3.22.1
 
 - romer() is now an S3 generic function.

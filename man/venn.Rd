@@ -19,8 +19,8 @@ vennDiagram(object, include="both", names=NULL, mar=rep(1,4), cex=c(1.5,1,0.7), 
   \item{mar}{numeric vector of length 4 specifying the width of the margins around the plot. This argument is passed to \code{par}.}
   \item{cex}{numerical vector of length 3 giving scaling factors for large, medium and small text on the plot.}
   \item{lwd}{numerical value giving the amount by which the circles should be scaled on the plot. See \code{par}.}
-  \item{circle.col}{vector of color specifications defining the colors by which the circles should be drawn. See \code{par}.}
-  \item{counts.col}{vector of color specifications, of same length as \code{include}, defining the colors by which the counts should be drawn. See \code{par}.}
+  \item{circle.col}{vector of colors for the circles. See \code{par} for possible values.}
+  \item{counts.col}{vector of colors for the counts. Of same length as \code{include}. See \code{par} for possible values.}
   \item{show.include}{logical value whether the value of \code{include} should be printed on the plot. Defaults to \code{FALSE} if \code{include} is a single value and \code{TRUE} otherwise}
   \item{\dots}{any other arguments are passed to \code{plot}}
 }
@@ -53,7 +53,10 @@ print(a)
 mfrow.old <- par()$mfrow
 par(mfrow=c(1,2))
 vennDiagram(a)
-vennDiagram(results,include=c("up","down"),counts.col=c("red","green"))
+vennDiagram(results, 
+    include=c("up", "down"),
+    counts.col=c("red", "blue"),
+    circle.col = c("red", "blue", "green3"))
 par(mfrow=mfrow.old)
 }
 

@@ -1,4 +1,4 @@
-\title{Multidimensional scaling plot of microarray data}
+\title{Multidimensional scaling plot of distances between gene expression profiles}
 \name{plotMDS}
 \alias{plotMDS}
 \alias{plotMDS.MDS}
@@ -7,29 +7,28 @@
 \alias{show,MDS-method}
 
 \description{
-Plot the sample relations based on multi-dimensional scaling (MDS).
-Distances on the plot can be interpreted in terms of \emph{leading log2-fold-change}.
+Plot samples on a two-dimensional scatterplot so that distances on the plot approximate the typical log2 fold changes between the samples.
 }
 
 \usage{
-\method{plotMDS}{default}(x, top=500, labels=NULL, pch=NULL, cex=1,
-     dim.plot=c(1,2), ndim=max(dim.plot), gene.selection="pairwise",
-     xlab=paste("Dimension",dim.plot[1]), ylab=paste("Dimension",dim.plot[2]), \dots)
-\method{plotMDS}{MDS}(x, labels=NULL, pch=NULL, cex=1, dim.plot=x$dim.plot,
-     xlab=paste("Dimension",dim.plot[1]), ylab=paste("Dimension",dim.plot[2]), \dots)
+\method{plotMDS}{default}(x, top = 500, labels = NULL, pch = NULL, cex = 1,
+     dim.plot = c(1,2), ndim = max(dim.plot), gene.selection = "pairwise",
+     xlab = NULL, ylab = NULL, \dots)
+\method{plotMDS}{MDS}(x, labels = NULL, pch = NULL, cex = 1, dim.plot = NULL,
+     xlab = NULL, ylab = NULL, \dots)
 }
 
 \arguments{
   \item{x}{any data object which can be coerced to a matrix, such as \code{ExpressionSet} or \code{EList}.}
   \item{top}{number of top genes used to calculate pairwise distances.}
-  \item{labels}{character vector of sample names or labels. If \code{x} has no column names, then defaults the index of the samples.}
+  \item{labels}{character vector of sample names or labels. Defaults to \code{colnames(x)}.}
   \item{pch}{plotting symbol or symbols. See \code{\link{points}} for possible values. Ignored if \code{labels} is non-\code{NULL}.}
   \item{cex}{numeric vector of plot symbol expansions.}
-  \item{dim.plot}{which two dimensions should be plotted, numeric vector of length two.}
-  \item{ndim}{number of dimensions in which data is to be represented}
-  \item{gene.selection}{character, \code{"pairwise"} to choose the top genes separately for each pairwise comparison between the samples or \code{"common"} to select the same genes for all comparisons}
-  \item{xlab}{title for the x-axis}
-  \item{ylab}{title for the y-axis}
+  \item{dim.plot}{integer vector of length two specifying which principal components should be plotted.}
+  \item{ndim}{number of dimensions in which data is to be represented.}
+  \item{gene.selection}{character, \code{"pairwise"} to choose the top genes separately for each pairwise comparison between the samples or \code{"common"} to select the same genes for all comparisons.}
+  \item{xlab}{title for the x-axis.}
+  \item{ylab}{title for the y-axis.}
   \item{\dots}{any other arguments are passed to \code{plot}, and also to \code{text} (if \code{pch} is \code{NULL}).}
 }
 
@@ -60,6 +59,13 @@ This is a list containing the following components:
 }
 
 \author{Di Wu and Gordon Smyth}
+
+\references{
+Ritchie, ME, Phipson, B, Wu, D, Hu, Y, Law, CW, Shi, W, and Smyth, GK (2015).
+limma powers differential expression analyses for RNA-sequencing and microarray studies.
+\emph{Nucleic Acids Research} Volume 43.
+\url{file:///C:/Gordon/www/smyth/pubs/limmaPreprint.pdf}
+}
 
 \seealso{
 \code{\link{cmdscale}}

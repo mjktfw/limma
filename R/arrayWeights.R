@@ -3,7 +3,7 @@ arrayWeights <- function(object, design=NULL, weights=NULL, var.design=NULL, met
 #	Matt Ritchie 7 Feb 2005.
 #	Gordon Smyth simplified argument checking to use getEAWP, 9 Mar 2008.
 #	Cynthia Liu added var.design argument so that variance model can be modified by user, 22 Sep 2014
-#	Last modified 7 Oct 2014.
+#	Last modified 27 Oct 2014.
 {
 #	Check arguments
 	y <- getEAWP(object)
@@ -211,7 +211,7 @@ arrayWeights <- function(object, design=NULL, weights=NULL, var.design=NULL, met
 
 voomWithQualityWeights <- function(counts, design=NULL, lib.size=NULL, normalize.method="none",
                          plot=FALSE, span=0.5, var.design=NULL, method="genebygene", maxiter=50,
-                         tol=1e-10, trace=FALSE, replace.weights=TRUE, ...)
+                         tol=1e-10, trace=FALSE, replace.weights=TRUE, col=NULL, ...)
 #	Combine voom weights with sample-specific weights estimated by arrayWeights() function for RNA-seq data
 #	Matt Ritchie and Cynthia Liu, 22 Sept 2014.
 #       Last modified 7 Oct 2014.
@@ -227,11 +227,12 @@ voomWithQualityWeights <- function(counts, design=NULL, lib.size=NULL, normalize
     wts <- asMatrixWeights(aw, dim(v))*v$weights
     attr(wts, "arrayweights") <- NULL
     if(plot) {
-        barplot(aw, names=seq(1:length(aw)), main="Sample-specific weights", ylab="Weight", xlab="Sample")
+        barplot(aw, names=1:length(aw), main="Sample-specific weights", ylab="Weight", xlab="Sample", col=col)
         abline(h=1, col=2, lty=2)
     }
     if(replace.weights) {
       v$weights <- wts
+      v$sample.weights <- aw
       return(v)
     } else {
         return(wts)

@@ -5,7 +5,7 @@
 #define THRESHOLD 0.0000001
 
 /* This function determines the number of points to be used in the analysis,
- * based on the chosen delta. It returns that number as well as the index 
+ * based on the chosen delta. It returns that number as well as the index
  * values of those points in a pointer reference. Note that the first
  * and last point (i.e. smallest and largest) are always considered.
  */
@@ -13,7 +13,7 @@
 void find_seeds (int ** indices, int * number, const double* xptr, const int npts, const double delta) {
 	int pt, last_pt=0;
 	int total=2;
-	for (pt=1; pt<npts-1; ++pt) {	
+	for (pt=1; pt<npts-1; ++pt) {
 		if (xptr[pt] - xptr[last_pt] > delta) {
 			++total;
 			last_pt=pt;
@@ -34,18 +34,19 @@ void find_seeds (int ** indices, int * number, const double* xptr, const int npt
 		}
 	}
 	idptr[total]=npts-1;
+	++total;
 	(*indices)=idptr;
 	return;
 }
 
-/* This function identifies the start and end index in the span for each chosen sampling 
+/* This function identifies the start and end index in the span for each chosen sampling
  * point. It returns two arrays via reference containing said indices. It also returns
- * an array containing the maximum distance between points at each span. 
+ * an array containing the maximum distance between points at each span.
  *
- * We don't use the update-based algorithm in Cleveland's paper, as it ceases to be 
- * numerically stable once you throw in double-precision weights. It's not particularly 
+ * We don't use the update-based algorithm in Cleveland's paper, as it ceases to be
+ * numerically stable once you throw in double-precision weights. It's not particularly
  * amenable to updating through cycles of addition and subtraction. At any rate, the
- * algorithm as a whole remains quadratic (as weights must be recomputed) so there's no 
+ * algorithm as a whole remains quadratic (as weights must be recomputed) so there's no
  * damage to scalability.
  */
 
@@ -54,7 +55,7 @@ void find_limits (const int* indices, const int num, const double* xptr, const d
 	int* spbegin=(int*)R_alloc(num, sizeof(int));
 	int* spend=(int*)R_alloc(num, sizeof(int));
 	double* spdist=(double*)R_alloc(num, sizeof(double));
-	
+
 	int curx;
 	for (curx=0; curx<num; ++curx) {
 		const int curpt=indices[curx];
@@ -70,14 +71,14 @@ void find_limits (const int* indices, const int num, const double* xptr, const d
 				curw+=wptr[left];
 				if (left==0) { ends=1; }
 				ldist=xptr[curpt]-xptr[left];
-				if (mdist < ldist) { mdist=ldist; }	
+				if (mdist < ldist) { mdist=ldist; }
 			} else if (ends) {
 				/* Can only extend forwards. */
 				++right;
 				curw+=wptr[right];
 				if (right==npts-1) { ende=1; }
 				rdist=xptr[right]-xptr[curpt];
-				if (mdist < rdist) { mdist=rdist; }	
+				if (mdist < rdist) { mdist=rdist; }
 			} else {
 				/* Can do either; extending by the one that minimizes the curpt mdist. */
 				ldist=xptr[curpt]-xptr[left-1];
@@ -93,7 +94,7 @@ void find_limits (const int* indices, const int num, const double* xptr, const d
 					if (right==npts-1) { ende=1; }
 					if (mdist < rdist) { mdist=rdist; }
 				}
-			}		
+			}
 		}
 
 		/* Extending to ties. */
@@ -110,9 +111,9 @@ void find_limits (const int* indices, const int num, const double* xptr, const d
 	(*end)=spend;
 	(*dist)=spdist;
 	return;
-}	
+}
 
-/* Computes the lowess fit at a given point using linear regression with a combination of tricube, 
+/* Computes the lowess fit at a given point using linear regression with a combination of tricube,
  * prior and robustness weighting. Some additional effort is put in to avoid numerical instability
  * and undefined values when divisors are near zero.
  */
@@ -121,8 +122,8 @@ double lowess_fit (const double* xptr, const double* yptr, const double* wptr, c
 		const int npts, const int curpt, const int left, const int right, const double dist, double* work) {
 	double ymean=0, allweight=0;
 	int pt;
-	if (dist < THRESHOLD) { 
-		for (pt=left; pt<=right; ++pt) { 
+	if (dist < THRESHOLD) {
+		for (pt=left; pt<=right; ++pt) {
 			work[pt]=wptr[pt]*rwptr[pt];
 			ymean+=yptr[pt]*work[pt];
 			allweight+=work[pt];
@@ -131,8 +132,8 @@ double lowess_fit (const double* xptr, const double* yptr, const double* wptr, c
 		return ymean;
 	}
 	double xmean=0;
-	for (pt=left; pt<=right; ++pt) { 
-		work[pt]=pow(1-pow(fabs(xptr[curpt]-xptr[pt])/dist, 3.0), 3.0)*wptr[pt]*rwptr[pt]; 
+	for (pt=left; pt<=right; ++pt) {
+		work[pt]=pow(1-pow(fabs(xptr[curpt]-xptr[pt])/dist, 3.0), 3.0)*wptr[pt]*rwptr[pt];
 		xmean+=work[pt]*xptr[pt];
 		ymean+=work[pt]*yptr[pt];
 		allweight+=work[pt];
@@ -154,9 +155,9 @@ double lowess_fit (const double* xptr, const double* yptr, const double* wptr, c
 }
 
 /* This is a C version of the local weighted regression (lowess) trend fitting algorithm,
- * based on the Fortran code in lowess.f from http://www.netlib.org/go written by Cleveland. 
- * Consideration of non-equal prior weights is added to the span calculations and linear 
- * regression. These weights are intended to have the equivalent effect of frequency weights 
+ * based on the Fortran code in lowess.f from http://www.netlib.org/go written by Cleveland.
+ * Consideration of non-equal prior weights is added to the span calculations and linear
+ * regression. These weights are intended to have the equivalent effect of frequency weights
  * (at least, in the integer case; extended by analogy to all non-negative values).
  */
 
@@ -178,7 +179,7 @@ SEXP weighted_lowess(SEXP covariate, SEXP response, SEXP weight, SEXP span, SEXP
 	const int niter=INTEGER_VALUE(iter);
 	if (niter<=0) { error("number of robustness iterations should be positive"); }
 	if (!IS_NUMERIC(delta) || LENGTH(delta)!=1) { error("delta should be a double-precision scalar"); }
-	const double dv=NUMERIC_VALUE(delta); 
+	const double dv=NUMERIC_VALUE(delta);
 
 	/*** NO MORE ERRORS AT THIS POINT, MEMORY ASSIGNMENTS ARE ACTIVE. ***/
 
@@ -187,6 +188,7 @@ SEXP weighted_lowess(SEXP covariate, SEXP response, SEXP weight, SEXP span, SEXP
 	int pt;
 	for (pt=0; pt<npts; ++pt) { totalweight+=weiptr[pt]; }
 	double spanweight=totalweight*spv;
+	const double subrange=(covptr[npts-1]-covptr[0])/npts;
 
 	/* Setting up the indices of points for sampling; the frame start and end for those indices, and the max dist. */
 	int *seed_index;
@@ -198,35 +200,35 @@ SEXP weighted_lowess(SEXP covariate, SEXP response, SEXP weight, SEXP span, SEXP
 
 	/* Setting up arrays to hold the fitted values, residuals and robustness weights. */
 	SEXP output=PROTECT(NEW_LIST(2));
-	SET_VECTOR_ELT(output, 0, NEW_NUMERIC(npts));	
+	SET_VECTOR_ELT(output, 0, NEW_NUMERIC(npts));
 	double* fitptr=NUMERIC_POINTER(VECTOR_ELT(output, 0));
 	double* rsdptr=(double*)R_alloc(npts, sizeof(double));
 	SET_VECTOR_ELT(output, 1, NEW_NUMERIC(npts));
 	double* robptr=NUMERIC_POINTER(VECTOR_ELT(output, 1));
 	int* rorptr=(int*)R_alloc(npts, sizeof(int));
-	for (pt=0; pt<npts; ++pt) { robptr[pt]=1; } 
+	for (pt=0; pt<npts; ++pt) { robptr[pt]=1; }
 
 	/* Robustness iterations. */
 	int it=0;
-	for (it=0; it<niter; ++it) {	
+	for (it=0; it<niter; ++it) {
 		int cur_seed, last_pt=0, subpt;
 		double current;
 
 		/* Computing fitted values for seed points, and interpolating to the intervening points. */
 		fitptr[0]=lowess_fit(covptr, resptr, weiptr, robptr, npts, 0, frame_start[0], frame_end[0], max_dist[0], rsdptr);
-		for (cur_seed=1; cur_seed<nseeds; ++cur_seed) {	
+		for (cur_seed=1; cur_seed<nseeds; ++cur_seed) {
 			pt=seed_index[cur_seed];
-			fitptr[pt]=lowess_fit(covptr, resptr, weiptr, robptr, npts, pt, frame_start[cur_seed], 
+			fitptr[pt]=lowess_fit(covptr, resptr, weiptr, robptr, npts, pt, frame_start[cur_seed],
 				frame_end[cur_seed], max_dist[cur_seed], rsdptr); /* using rsdptr as a holding cell. */
 
 			if (pt-last_pt > 1) {
-	 			/* Some protection is provided against infinite slopes. This shouldn't be 
+	 			/* Some protection is provided against infinite slopes. This shouldn't be
  				 * a problem for non-zero delta; the only concern is at the final point
  				 * where the covariate distance may be zero. Besides, if delta is not
  				 * positive, pt-last_pt could never be 1 so we'd never reach this point.
  				 */
-				current = covptr[pt]-covptr[last_pt]; 
-				if (current > THRESHOLD) {
+				current = covptr[pt]-covptr[last_pt];
+				if (current > THRESHOLD*subrange) {
 					const double slope=(fitptr[pt]-fitptr[last_pt])/current;
 					const double intercept=fitptr[pt] - slope*covptr[pt];
 					for (subpt=last_pt+1; subpt<pt; ++subpt) { fitptr[subpt]=slope*covptr[subpt]+intercept; }
@@ -237,15 +239,19 @@ SEXP weighted_lowess(SEXP covariate, SEXP response, SEXP weight, SEXP span, SEXP
 			}
 			last_pt=pt;
 		}
-	
+
 		/* Computing the weighted MAD of the absolute values of the residuals. */
-		for (pt=0; pt<npts; ++pt) { 
-			rsdptr[pt]=fabs(resptr[pt]-fitptr[pt]); 
+		double resid_scale=0;
+		for (pt=0; pt<npts; ++pt) {
+			rsdptr[pt]=fabs(resptr[pt]-fitptr[pt]);
+			resid_scale+=rsdptr[pt];
 			rorptr[pt]=pt;
 		}
+		resid_scale/=npts;
 		rsort_with_index(rsdptr, rorptr, npts);
+
 		current=0;
-		double cmad=THRESHOLD;
+		double cmad=0;
 		const double halfweight=totalweight/2;
 		for (pt=0; pt<npts; ++pt) {
 			current+=weiptr[rorptr[pt]];
@@ -258,12 +264,18 @@ SEXP weighted_lowess(SEXP covariate, SEXP response, SEXP weight, SEXP span, SEXP
 			}
 		}
 
+		/* If it's too small, then robustness weighting will have no further effect.
+		 * Any points with large residuals would already be pretty lowly weighted.
+		 * This is based on a similar step in lowess.c in the core R code.
+		 */
+		if (cmad <= THRESHOLD * resid_scale) { break; }
+
 		/* Computing the robustness weights. */
 		for (pt=0; pt<npts; ++pt) {
 			if (rsdptr[pt]<cmad) {
 				robptr[rorptr[pt]]=pow(1-pow(rsdptr[pt]/cmad, 2.0), 2.0);
 			} else { robptr[rorptr[pt]]=0; }
-		}		
+		}
 	}
 
 	UNPROTECT(1);

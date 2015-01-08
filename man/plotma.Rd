@@ -3,6 +3,7 @@
 \alias{plotMA}
 \alias{plotMA.RGList}
 \alias{plotMA.MAList}
+\alias{plotMA.EListRaw}
 \alias{plotMA.EList}
 \alias{plotMA.MArrayLM}
 \alias{plotMA.default}
@@ -66,7 +67,12 @@ The arguments \code{values}, \code{pch}, \code{col} and \code{cex} can be includ
 
 \value{A plot is created on the current graphics device.}
 
-\references{See \url{http://www.statsci.org/micrarra/refs/maplots.html}}
+\references{
+Ritchie, ME, Phipson, B, Wu, D, Hu, Y, Law, CW, Shi, W, and Smyth, GK (2015).
+limma powers differential expression analyses for RNA-sequencing and microarray studies.
+\emph{Nucleic Acids Research} Volume 43.
+\url{file:///C:/Gordon/www/smyth/pubs/limmaPreprint.pdf}
+}
 
 \author{Gordon Smyth}
 
