@@ -1,7 +1,8 @@
 8 Jan 2015: limma 3.23.6
 
-- updating Ritchie et al (NAR, 2005) reference in User's Guide and
-  help files.
+- Limma review article (Ritchie et al, NAR, 2015) now accepted for
+  publication.  Updating references in User's Guide, help
+  files and CITATION to refer to this article.
 
 29 Dec 2014: limma 3.23.5
 
