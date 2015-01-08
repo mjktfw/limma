@@ -8,8 +8,7 @@
 LIMMA is a library for the analysis of gene expression microarray data, especially the use of linear models for analysing designed experiments and the assessment of differential expression.
 LIMMA provides the ability to analyse comparisons between many RNA targets simultaneously in arbitrary complicated designed experiments.
 Empirical Bayesian methods are used to provide stable results even when the number of arrays is small.
-The normalization and data analysis functions are for two-colour spotted microarrays.
-The linear model and differential expression functions apply to all microarrays including Affymetrix and other multi-array oligonucleotide experiments.
+The linear model and differential expression functions apply to all gene expression technologies, including microarrays, RNA-seq and quantitative PCR.
 }
 
 \details{
@@ -35,16 +34,19 @@ The function \code{\link{changeLog}} displays the record of changes to the packa
 \author{Gordon Smyth, with contributions from many colleagues}
 
 \references{
-Smyth, G. K., Yang, Y.-H., Speed, T. P. (2003). Statistical issues in microarray data analysis.
-\emph{Methods in Molecular Biology} 224, 111-136.
+Ritchie, ME, Phipson, B, Wu, D, Hu, Y, Law, CW, Shi, W, and Smyth, GK (2015).
+limma powers differential expression analyses for RNA-sequencing and microarray studies.
+\emph{Nucleic Acids Research} Volume 43.
+\url{file:///C:/Gordon/www/smyth/pubs/limmaPreprint.pdf}
+
+Law, CW, Chen, Y, Shi, W, and Smyth, GK (2014).
+Voom: precision weights unlock linear model analysis tools for RNA-seq read counts.
+<em>Genome Biology</em> Volume 15, R29.
+\url{http://genomebiology.com/2014/15/2/R29}
 
 Smyth, G. K. (2004). Linear models and empirical Bayes methods for assessing differential expression in microarray experiments.
 \emph{Statistical Applications in Genetics and Molecular Biology}, Volume \bold{3}, Article 3.
 \url{http://www.statsci.org/smyth/pubs/ebayes.pdf}
-
-Smyth, G. K. (2005). Limma: linear models for microarray data.
-In: \emph{Bioinformatics and Computational Biology Solutions using R and Bioconductor}.
-R. Gentleman, V. Carey, S. Dudoit, R. Irizarry, W. Huber (eds), Springer, New York, 2005.
 }
 
 \seealso{

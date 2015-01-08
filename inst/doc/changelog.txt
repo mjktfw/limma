@@ -1,3 +1,8 @@
+8 Jan 2015: limma 3.23.6
+
+- updating Ritchie et al (NAR, 2005) reference in User's Guide and
+  help files.
+
 29 Dec 2014: limma 3.23.5
 
 - bug fix to plotMDS when gene.selection="common" and top=nrow(x).
@@ -5,7 +10,7 @@
 - plotMDS() now traps problems when the distances are all zero or if
   one or more of the dimensions are degenerate.
 
-- CITATION file now refers to Ritchie et al (2015).
+- CITATION file now refers to Ritchie et al (NAR, 2015).
 
 27 Dec 2014: limma 3.23.4
 

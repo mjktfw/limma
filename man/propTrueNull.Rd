@@ -23,7 +23,7 @@ convest(p, niter=100, plot=FALSE, report=FALSE, file="", tol=1e-6)
   \item{report}{logical, should the estimated proportion be printed at each iteration?}
   \item{file}{name of file to which to write the report. Defaults to standard output.}
   \item{tol}{accuracy of the bisectional search for finding a new convex combination of the current iterate and the mixing density}
-  \item{\dots}{other arguments are passed to \code{convest} (if \code{method="convest"}.}
+  \item{\dots}{other arguments are passed to \code{convest} if \code{method="convest"}.}
 }
 
 \details{
@@ -61,6 +61,11 @@ Phipson, B (2013).
 Empirical Bayes Modelling of Expression Profiles and Their Associations.
 PhD Thesis, University of Melbourne, Australia.
 \url{http://repository.unimelb.edu.au/10187/17614}
+
+Ritchie, ME, Phipson, B, Wu, D, Hu, Y, Law, CW, Shi, W, and Smyth, GK (2015).
+limma powers differential expression analyses for RNA-sequencing and microarray studies.
+\emph{Nucleic Acids Research} Volume 43.
+\url{file:///C:/Gordon/www/smyth/pubs/limmaPreprint.pdf}
 }
 
 \author{Belinda Phipson and Gordon Smyth for \code{propTrueNull}; Egil Ferkingstad, Mette Langaas and Marcus Davy for \code{convest}}

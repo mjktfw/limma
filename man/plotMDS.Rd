@@ -60,6 +60,13 @@ This is a list containing the following components:
 
 \author{Di Wu and Gordon Smyth}
 
+\references{
+Ritchie, ME, Phipson, B, Wu, D, Hu, Y, Law, CW, Shi, W, and Smyth, GK (2015).
+limma powers differential expression analyses for RNA-sequencing and microarray studies.
+\emph{Nucleic Acids Research} Volume 43.
+\url{file:///C:/Gordon/www/smyth/pubs/limmaPreprint.pdf}
+}
+
 \seealso{
 \code{\link{cmdscale}}
 
