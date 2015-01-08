@@ -53,7 +53,10 @@ print(a)
 mfrow.old <- par()$mfrow
 par(mfrow=c(1,2))
 vennDiagram(a)
-vennDiagram(results,include=c("up","down"),counts.col=c("red","blue"), circle.col = c("red", "blue", "green3"))
+vennDiagram(results, 
+    include=c("up", "down"),
+    counts.col=c("red", "blue"),
+    circle.col = c("red", "blue", "green3"))
 par(mfrow=mfrow.old)
 }
 
