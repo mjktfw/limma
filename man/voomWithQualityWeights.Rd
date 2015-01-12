@@ -59,7 +59,7 @@ Why weight? Combining voom with estimates of sample quality improves power in RN
 Ritchie, M. E., Diyagama, D., Neilson, van Laar, R., J., Dobrovic, A., Holloway, A., and Smyth, G. K. (2006).
 Empirical array quality weights in the analysis of microarray data.
 BMC Bioinformatics 7, 261.
-\url{http://www.biomedcentral.com/1471-2105/7/261/abstract}
+\url{http://www.biomedcentral.com/1471-2105/7/261}
 
 Law, C. W., Chen, Y., Shi, W., Smyth, G. K. (2014).
 Voom: precision weights unlock linear model analysis tools for RNA-seq read counts.

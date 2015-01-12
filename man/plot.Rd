@@ -1,4 +1,4 @@
-\title{plot.MArrayLM}
+\title{plotWithHighlights}
 \name{plot.MArrayLM}
 \alias{plot.RGList}
 \alias{plot.MAList}
@@ -75,7 +75,14 @@ See \code{\link[graphics]{points}} for possible values for \code{pch}, \code{col
 }
 
 \value{A plot is created on the current graphics device.}
-\references{See \url{http://www.statsci.org/micrarra/refs/maplots.html}}
+
+\references{
+Ritchie, ME, Phipson, B, Wu, D, Hu, Y, Law, CW, Shi, W, and Smyth, GK (2015).
+limma powers differential expression analyses for RNA-sequencing and microarray studies.
+\emph{Nucleic Acids Research} Volume 43.
+\url{http://www.statsci.org/smyth/pubs/limmaPreprint.pdf}
+}
+
 \author{Gordon Smyth}
 
 \examples{

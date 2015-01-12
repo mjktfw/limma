@@ -22,7 +22,7 @@ See the ImaGene documentation for further information.
 The output object will also contain a component \code{NHeaderRecords}giving the number of lines in the file before the intensity data begins.
 }
 \references{
-\url{http://www.biodiscovery.com/imagene.asp}
+\url{http://www.biodiscovery.com/software/imagene}
 }
 \author{Gordon Smyth}
 \seealso{\code{\link{read.imagene}}

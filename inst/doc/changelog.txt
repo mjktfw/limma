@@ -1,3 +1,7 @@
+12 Jan 2015: limma 3.22.3
+
+- fix URLs for a number of references in help pages.
+
 8 Jan 2015: limma 3.22.2
 
 - Limma review article (Ritchie et al, NAR, 2015) now accepted for

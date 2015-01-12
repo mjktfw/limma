@@ -29,13 +29,9 @@ A key component is \code{NHeaderRecords} which gives the number of lines in the 
 All other components are character vectors.
 }
 \references{
-See
-\url{http://www.moleculardevices.com/Products/Software/GenePix-Pro.html} 
-or
-\url{http://www.cryer.co.uk/file-types/a/atf/genepix_file_formats.htm}
-for GenePix formats.
+See \url{http://www.cryer.co.uk/file-types/a/atf/genepix_file_formats.htm} for GenePix formats.
 
-See \url{http://http://smd.princeton.edu} for the SMD.
+See \url{http://smd.princeton.edu} for the SMD.
 }
 \author{Gordon Smyth}
 \seealso{\code{\link{read.maimages}}
