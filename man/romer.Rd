@@ -74,25 +74,26 @@ There is a topic page on \link{10.GeneSetTests}.
 
 
 \references{
-Langsrud, O, 2005.
+Langsrud, O (2005).
 Rotation tests.
 \emph{Statistics and Computing} 15, 53-60
 
 Majewski, IJ, Ritchie, ME, Phipson, B, Corbin, J, Pakusch, M, Ebert, A, Busslinger, M, Koseki, H, Hu, Y, Smyth, GK, Alexander, WS, Hilton, DJ, and Blewitt, ME (2010).
 Opposing roles of polycomb repressive complexes in hematopoietic stem and progenitor cells.
-\emph{Blood}, published online 5 May 2010.
+\emph{Blood} 116, 731-739.
 \url{http://www.ncbi.nlm.nih.gov/pubmed/20445021}
 
 Ritchie, ME, Phipson, B, Wu, D, Hu, Y, Law, CW, Shi, W, and Smyth, GK (2015).
 limma powers differential expression analyses for RNA-sequencing and microarray studies.
 \emph{Nucleic Acids Research} Volume 43.
-\url{file:///C:/Gordon/www/smyth/pubs/limmaPreprint.pdf}
+\url{http://www.statsci.org/smyth/pubs/limmaPreprint.pdf}
 
-Subramanian, A, Tamayo, P, Mootha, VK, Mukherjee, S, Ebert, BL, Gillette, MA, Paulovich, A, Pomeroy, SL, Golub, TR, Lander, ES and Mesirov JP, 2005.
+Subramanian, A, Tamayo, P, Mootha, VK, Mukherjee, S, Ebert, BL, Gillette, MA, Paulovich, A, Pomeroy, SL, Golub, TR, Lander, ES and Mesirov JP (2005).
 Gene set enrichment analysis: a knowledge-based approach for interpreting genome-wide expression profiles.
 \emph{Proc Natl Acad Sci U S A} 102, 15545-15550
 
-Wu, D, Lim, E, Francois Vaillant, F, Asselin-Labat, M-L, Visvader, JE, and Smyth, GK (2010). ROAST: rotation gene set tests for complex microarray experiments.
+Wu, D, Lim, E, Francois Vaillant, F, Asselin-Labat, M-L, Visvader, JE, and Smyth, GK (2010).
+ROAST: rotation gene set tests for complex microarray experiments.
 \emph{Bioinformatics} 26, 2176-2182.
 \url{http://bioinformatics.oxfordjournals.org/content/26/17/2176}
 }
