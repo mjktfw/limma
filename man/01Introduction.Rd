@@ -41,11 +41,11 @@ limma powers differential expression analyses for RNA-sequencing and microarray 
 
 Law, CW, Chen, Y, Shi, W, and Smyth, GK (2014).
 Voom: precision weights unlock linear model analysis tools for RNA-seq read counts.
-<em>Genome Biology</em> Volume 15, R29.
+\emph{Genome Biology} 15, R29.
 \url{http://genomebiology.com/2014/15/2/R29}
 
 Smyth, G. K. (2004). Linear models and empirical Bayes methods for assessing differential expression in microarray experiments.
-\emph{Statistical Applications in Genetics and Molecular Biology}, Volume \bold{3}, Article 3.
+\emph{Statistical Applications in Genetics and Molecular Biology}, Volume 3, Article 3.
 \url{http://www.statsci.org/smyth/pubs/ebayes.pdf}
 }
 
