@@ -61,7 +61,7 @@ plotMDS.MDS <- function(x,labels=NULL,pch=NULL,cex=1,dim.plot=NULL,xlab=NULL,yla
 plotMDS.default <- function(x,top=500,labels=NULL,pch=NULL,cex=1,dim.plot=c(1,2),ndim=max(dim.plot),gene.selection="pairwise",xlab=NULL,ylab=NULL,...)
 #	Multi-dimensional scaling with top-distance
 #	Di Wu and Gordon Smyth
-#	19 March 2009.  Last modified 25 Nov 2014
+#	19 March 2009.  Last modified 14 Jan 2015
 {
 #	Check x
 	x <- as.matrix(x)
@@ -130,7 +130,7 @@ plotMDS.default <- function(x,top=500,labels=NULL,pch=NULL,cex=1,dim.plot=c(1,2)
 		mds$y <- rep.int(0,nsamples)
 		warning(paste("dimension",dim.plot[2],"is degenerate or all zero"))
 	} else
-		mds$y <- a1[,dim.plot[1]]
+		mds$y <- a1[,dim.plot[2]]
 	mds$top <- top
 	mds$axislabel <- axislabel
 	plotMDS(mds,labels=labels,pch=pch,cex=cex,xlab=xlab,ylab=ylab,...)

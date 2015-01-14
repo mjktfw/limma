@@ -1,3 +1,9 @@
+12 Jan 2015: limma 3.23.7
+
+- fix URLs for a number of references in help pages.
+
+- fix bug in plotMDS.default introduced with limma 3.23.5
+
 8 Jan 2015: limma 3.23.6
 
 - Limma review article (Ritchie et al, NAR, 2015) now accepted for

@@ -37,6 +37,8 @@ The number of files is determined by the number of columns of \code{object}.
 \author{Gordon Smyth}
 
 \seealso{
+\code{\link[limma:plotma]{plotMA}}
+
 An overview of diagnostic functions available in LIMMA is given in \link{09.Diagnostics}.
 }
 \keyword{hplot}

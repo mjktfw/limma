@@ -80,9 +80,12 @@ See \code{\link{squeezeVar}} for more details.
 An overview of linear model functions in limma is given by \link{06.LinearModels}.
 }
 \author{Gordon Smyth and Davis McCarthy}
+
 \references{
-McCarthy, D. J., and Smyth, G. K. (2009). Testing significance relative to a fold-change threshold is a TREAT. \emph{Bioinformatics}.
-\url{http://bioinformatics.oxfordjournals.org/cgi/content/abstract/btp053}
+McCarthy, D. J., and Smyth, G. K. (2009).
+Testing significance relative to a fold-change threshold is a TREAT.
+\emph{Bioinformatics} 25, 765-771.
+\url{http://bioinformatics.oxfordjournals.org/content/25/6/765}
 
 Loennstedt, I., and Speed, T. P. (2002). Replicated microarray data. \emph{Statistica Sinica} \bold{12}, 31-46.
 
@@ -95,6 +98,7 @@ Smyth, G. K. (2004). Linear models and empirical Bayes methods for assessing dif
 \emph{Statistical Applications in Genetics and Molecular Biology}, Volume \bold{3}, Article 3.
 \url{http://www.statsci.org/smyth/pubs/ebayes.pdf}
 }
+
 \examples{
 #  See also lmFit examples
 
