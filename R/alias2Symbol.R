@@ -14,16 +14,16 @@ alias2Symbol <- function(alias,species="Hs",expand.symbols=FALSE)
 	suppressPackageStartupMessages(require(DB,character.only=TRUE))
 	if(expand.symbols)
 	{
-		alias <- intersect(alias,Rkeys(get(ALIAS2EG)))
-		eg <- mappedLkeys(get(ALIAS2EG)[alias])
-		mappedRkeys(get(SYMBOL)[eg])
+		alias <- intersect(alias,AnnotationDbi::Rkeys(get(ALIAS2EG)))
+		eg <- AnnotationDbi::mappedLkeys(get(ALIAS2EG)[alias])
+		AnnotationDbi::mappedRkeys(get(SYMBOL)[eg])
 	}
 	else
 	{
-		isSymbol <- alias %in% Rkeys(get(SYMBOL)) 
-		alias2 <- intersect(alias[!isSymbol],Rkeys(get(ALIAS2EG)))
-		eg <- mappedLkeys(get(ALIAS2EG)[alias2])
-		c(alias[isSymbol],mappedRkeys(get(SYMBOL)[eg]))
+		isSymbol <- alias %in% AnnotationDbi::Rkeys(get(SYMBOL)) 
+		alias2 <- intersect(alias[!isSymbol],AnnotationDbi::Rkeys(get(ALIAS2EG)))
+		eg <- AnnotationDbi::mappedLkeys(get(ALIAS2EG)[alias2])
+		c(alias[isSymbol],AnnotationDbi::mappedRkeys(get(SYMBOL)[eg]))
 
 	}
 }
@@ -41,18 +41,18 @@ alias2SymbolTable <- function(alias,species="Hs")
 	SYMBOL <- paste("org",species,"egSYMBOL",sep=".")
 	suppressPackageStartupMessages(require(DB,character.only=TRUE))
 
-	isSymbol <- alias %in% Rkeys(get(SYMBOL))
+	isSymbol <- alias %in% AnnotationDbi::Rkeys(get(SYMBOL))
 	Symbol <- alias
 	Symbol[!isSymbol] <- NA
 
 	OtherAliases <- alias[!isSymbol]
-	isAlias <- OtherAliases %in% Rkeys(get(ALIAS2EG))
+	isAlias <- OtherAliases %in% AnnotationDbi::Rkeys(get(ALIAS2EG))
 	if(!any(isAlias)) return(Symbol)
 	OtherAliases <- OtherAliases[isAlias]
 
-	AliasTbl <- toTable(get(ALIAS2EG)[OtherAliases])
+	AliasTbl <- AnnotationDbi::toTable(get(ALIAS2EG)[OtherAliases])
 	if(anyDuplicated(AliasTbl$alias_symbol)) warning("Multiple symbols ignored for one or more aliases")
-	SymbolTbl <- toTable(get(SYMBOL)[AliasTbl$gene_id])
+	SymbolTbl <- AnnotationDbi::toTable(get(SYMBOL)[AliasTbl$gene_id])
 	m <- match(OtherAliases,AliasTbl$alias_symbol)
 	GeneID <- AliasTbl$gene_id[m]
 	m <- match(GeneID,SymbolTbl$gene_id)

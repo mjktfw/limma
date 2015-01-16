@@ -103,7 +103,7 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 	# Get gene-GOterm mappings, and remove duplicate entries
 	GO2ALLEGS <- paste("org", species, "egGO2ALLEGS", sep = ".")
 	if(is.null(universe)) {
-		EG.GO <- toTable(get(GO2ALLEGS))
+		EG.GO <- AnnotationDbi::toTable(get(GO2ALLEGS))
 		d <- duplicated(EG.GO[,c("gene_id", "go_id", "Ontology")])
 		EG.GO <- EG.GO[!d, ]
 		universe <- unique(EG.GO$gene_id)
@@ -120,12 +120,12 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 		universe <- universe[!dup]
 
 		GO2ALLEGS <- get(GO2ALLEGS)
-		m <- match(Lkeys(GO2ALLEGS),universe,0L)
+		m <- match(AnnotationDbi::Lkeys(GO2ALLEGS),universe,0L)
 		universe <- universe[m]
 		if(!is.null(prior.prob)) prior.prob <- prior.prob[m]
 
-		Lkeys(GO2ALLEGS) <- universe
-		EG.GO <- toTable(GO2ALLEGS)
+		AnnotationDbi::Lkeys(GO2ALLEGS) <- universe
+		EG.GO <- AnnotationDbi::toTable(GO2ALLEGS)
 		d <- duplicated(EG.GO[,c("gene_id", "go_id", "Ontology")])
 		EG.GO <- EG.GO[!d, ]
 	}
@@ -180,7 +180,7 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 
 	# Assemble output
 	g <- strsplit2(rownames(S),split="\\.")
-	TERM <- select(GO.db,keys=g[,1],columns="TERM")
+	TERM <- AnnotationDbi::select(GO.db::GO.db,keys=g[,1],columns="TERM")
 	Results <- data.frame(Term = TERM[[2]], Ont = g[,2], S, P, stringsAsFactors=FALSE)
 	rownames(Results) <- g[,1]
 

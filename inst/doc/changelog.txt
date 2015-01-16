@@ -2,7 +2,7 @@
 
 - When loading suggested packages within function calls, usages of
   require() have been converted to requireNamespace() wherever
-  possible.
+  possible.  Functions from suggested packages are called using ::.
 
 - Acknowledgements edited in User's Guide.
 
