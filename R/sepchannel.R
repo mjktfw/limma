@@ -56,7 +56,7 @@ lmscFit <- function(object,design,correlation)
 intraspotCorrelation <- function(object,design,trim=0.15)
 #	Estimate intra-spot correlation between channels for two channel data
 #	Gordon Smyth
-#	19 April 2004.  Last modified 13 Nov 2005.
+#	19 April 2004.  Last modified 14 Dec 2015.
 {
 #	Check input
 	M <- as.matrix(object$M)
@@ -79,12 +79,12 @@ intraspotCorrelation <- function(object,design,trim=0.15)
 	designA <- (Ident %x% matrix(c(0.5,0.5),1,2)) %*% design
 	X <- rbind(designM, designA)
 	Z <- diag(2) %x% rep(1,narrays)
-	if(!require(statmod)) stop("statmod package required but is not available")
+	if(!requireNamespace("statmod",quietly=TRUE)) stop("statmod package required but is not available")
 	arho <- rep(NA,ngenes)
 	degfre <- matrix(0,ngenes,2,dimnames=list(rownames(M),c("df.M","df.A")))
 	for (i in 1:ngenes) {
 		y <- c(M[i,],A[i,])
-		fit <- try(remlscore(y,X,Z),silent=TRUE)
+		fit <- try(statmod::remlscore(y,X,Z),silent=TRUE)
 		if(is.list(fit)) {
 			arho[i] <- 0.5*(fit$gamma[2]-fit$gamma[1])
 			degfre[i,] <- crossprod(Z,1-fit$h)

@@ -166,9 +166,9 @@ lm.series <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL)
 mrlm <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL,...)
 #	Robustly fit linear model for each gene to a series of arrays
 #	Gordon Smyth
-#	20 Mar 2002.  Last revised 22 Feb 2007.
+#	20 Mar 2002.  Last revised 14 January 2015.
 {
-	require(MASS) # need rlm.default
+	if(!requireNamespace("MASS",quietly=TRUE)) stop("MASS package required but is not available")
 	M <- as.matrix(M)
 	narrays <- ncol(M)
 	if(is.null(design)) design <- matrix(1,narrays,1)
@@ -199,7 +199,7 @@ mrlm <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL,...)
 		else
 			w <- as.vector(weights[i,obs])
 		if(length(y) > nbeta) {
-			out <- rlm(x=X,y=y,weights=w,...)
+			out <- MASS::rlm(x=X,y=y,weights=w,...)
 			beta[i,] <- coef(out)
 			stdev.unscaled[i,] <- sqrt(diag(chol2inv(out$qr$qr)))
 			df.residual[i] <- length(y) - out$rank
@@ -409,10 +409,11 @@ getEAWP <- function(object)
 		y$design <- object$design
 	} else {
 	if(is(object,"ExpressionSet")) {
-		y$exprs <- exprs(object)
+		if(!requireNamespace("Biobase",quietly=TRUE)) stop("Biobase package required but is not available")
+		y$exprs <- Biobase::exprs(object)
 		if(length(object@featureData@data)) y$probes <- object@featureData@data
 		y$Amean <- rowMeans(y$exprs,na.rm=TRUE)
-		if("weights" %in% assayDataElementNames(object)) y$weights <- assayDataElement(object,"weights")
+		if("weights" %in% Biobase::assayDataElementNames(object)) y$weights <- Biobase::assayDataElement(object,"weights")
 	} else {
 	if(is(object,"PLMset")) {
 		y$exprs <- object@chip.coefs

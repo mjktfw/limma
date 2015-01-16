@@ -70,7 +70,7 @@ goana.MArrayLM <- function(de, coef = ncol(de), geneid = rownames(de), FDR = 0.0
 goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL, ...)
 #  Gene ontology analysis of DE genes
 #  Gordon Smyth and Yifang Hu
-#  Created 20 June 2014.  Last modified 28 August 2014.
+#  Created 20 June 2014.  Last modified 14 January 2015.
 {
 	# Ensure de is a list
 	if(!is.list(de)) de <- list(DE = de)
@@ -159,14 +159,14 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 	if(length(prior.prob)) {
 
 		# Calculate weight
-		require("BiasedUrn", character.only = TRUE)
+		if(!requireNamespace("BiasedUrn",quietly=TRUE)) stop("BiasedUrn package required but is not available")
 		PW.ALL <- sum(prior.prob[universe %in% EG.GO$gene_id])
 		AVE.PW <- S[,"PW"]/S[,"N"]
 		W <- AVE.PW*(Total-S[,"N"])/(PW.ALL-S[,"N"]*AVE.PW)
 
 		# Wallenius' noncentral hypergeometric test
 		for(j in 1:nsets) for(i in 1:nrow(S))
-			P[i,j] <- pWNCHypergeo(S[i,1+j], S[i,"N"], Total-S[i,"N"], TotalDE[[j]], W[i],lower.tail=FALSE) + dWNCHypergeo(S[i,1+j], S[i,"N"], Total-S[i,"N"], TotalDE[[j]], W[i])
+			P[i,j] <- BiasedUrn::pWNCHypergeo(S[i,1+j], S[i,"N"], Total-S[i,"N"], TotalDE[[j]], W[i],lower.tail=FALSE) + BiasedUrn::dWNCHypergeo(S[i,1+j], S[i,"N"], Total-S[i,"N"], TotalDE[[j]], W[i])
 
 		S <- S[,-ncol(S)]
 

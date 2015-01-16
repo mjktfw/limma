@@ -56,7 +56,7 @@ normexp.fit.detection.p <- function(x,detection.p="Detection")
 normexp.fit.control <- function(x,status=NULL,negctrl="negative",regular="regular",robust=FALSE)
 #  Estimate normexp parameters using negative control probes
 #  Wei Shi and Gordon Smyth
-#  Created 17 April 2009. Last modified 19 Dec 2011.
+#  Created 17 April 2009. Last modified 14 January 2015.
 {
 	if(is(x, "EListRaw")) {
 		if(is.null(status)) status <- x$genes$Status
@@ -71,12 +71,12 @@ normexp.fit.control <- function(x,status=NULL,negctrl="negative",regular="regula
 	if(nrow(xn)<2) stop("Fewer than two negative control probes found")
 
 	if(robust) {
-		require(MASS)
+		if(!requireNamespace("MASS",quietly=TRUE)) stop("MASS package required but is not available")
 		narrays <- ncol(xn)
 		m <- s <- rep(0,narrays)
 	#	Robustness is judged on the log-scale, assumed normal
 		for (j in 1:ncol(xn)) {
-			h <- huber(log(xn[,j]))
+			h <- MASS::huber(log(xn[,j]))
 			m[j] <- h$mu
 			s[j] <- h$s
 		}
