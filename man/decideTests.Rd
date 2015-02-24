@@ -9,7 +9,7 @@ A number of different multiple testing schemes are offered which adjust for mult
 decideTests(object,method="separate",adjust.method="BH",p.value=0.05,lfc=0)
 }
 \arguments{
-  \item{object}{\code{MArrayLM} object output from \code{eBayes} from which the t-statistics may be extracted.}
+  \item{object}{\code{MArrayLM} object output from \code{eBayes} or \code{treat} from which the t-statistics may be extracted.}
   \item{method}{character string specify how probes and contrasts are to be combined in the multiple testing strategy.  Choices are \code{"separate"}, \code{"global"}, \code{"hierarchical"}, \code{"nestedF"} or any partial string.}
   \item{adjust.method}{character string specifying p-value adjustment method.  Possible values are \code{"none"}, \code{"BH"}, \code{"fdr"} (equivalent to \code{"BH"}), \code{"BY"} and \code{"holm"}. See \code{\link[stats]{p.adjust}} for details.}
   \item{p.value}{numeric value between 0 and 1 giving the desired size of the test}
@@ -32,6 +32,11 @@ The setting \code{method="separate"} is equivalent to using \code{topTable} sepa
 \code{method="hierarchical"} adjusts down genes and then across contrasts.
 \code{method="nestedF"} adjusts down genes and then uses \code{classifyTestsF} to classify contrasts as significant or not for the selected genes.
 Please see the limma User's Guide for a discussion of the statistical properties of these methods.
+}
+\note{
+Although this function enables users to set p-value and lfc cutoffs simultaneously, this is not generally recommended.
+If the fold changes and p-values are not highly correlated, then the use of a fold change cutoff can increase the false discovery rate above the nominal level.
+Users wanting to use fold change thresholding are recommended to use \code{treat} instead of \code{eBayes}, and to leave \code{lfc} at the default value when using \code{decideTests}.
 }
 \seealso{
 An overview of multiple testing functions is given in \link{08.Tests}.

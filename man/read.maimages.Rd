@@ -123,8 +123,8 @@ For two-color data, an \code{\link[limma:rglist]{RGList}} object containing the 
 \references{
 Ritchie, ME, Phipson, B, Wu, D, Hu, Y, Law, CW, Shi, W, and Smyth, GK (2015).
 limma powers differential expression analyses for RNA-sequencing and microarray studies.
-\emph{Nucleic Acids Research} Volume 43.
-\url{file:///C:/Gordon/www/smyth/pubs/limmaPreprint.pdf}
+\emph{Nucleic Acids Research} 43,
+doi: 10.1093/nar/gkv007.
 
 Web pages for the image analysis software packages mentioned here are listed at \url{http://www.statsci.org/micrarra/image.html}
 }

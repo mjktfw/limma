@@ -1,3 +1,8 @@
+24 Feb 2015: limma 3.23.9
+
+- Update citation to the recent limma review article, which is now in
+  advance access publication.
+
 16 Jan 2015: limma 3.23.8
 
 - When loading suggested packages within function calls, usages of

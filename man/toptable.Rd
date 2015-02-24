@@ -95,6 +95,14 @@ Alternatively, by specifying \code{p.value} and \code{number=Inf}, all genes wit
 The argument \code{lfc} gives the ability to filter genes by log-fold change.
 This argument is not available for \code{topTreat} because \code{treat} already handles fold-change thresholding in a more sophisticated way.
 }
+\note{
+Although \code{topTable} enables users to set p-value and lfc cutoffs simultaneously, this is not generally recommended.
+If the fold changes and p-values are not highly correlated, then the use of a fold change cutoff can increase the false discovery rate above the nominal level.
+Users wanting to use fold change thresholding are usually recommended to use \code{treat} and \code{topTreat} instead.
+
+In general, the adjusted p-values returned by \code{adjust.method="BH"} remain valid as FDR bounds only when the genes remain sorted by p-value.
+Resorting the table by log-fold-change can increase the false discovery rate above the nominal level for genes at the top of resorted table.
+}
 \seealso{
 An overview of linear model and testing functions is given in \link{06.LinearModels}.
 See also \code{\link[stats]{p.adjust}} in the \code{stats} package.
