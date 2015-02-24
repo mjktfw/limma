@@ -107,8 +107,8 @@ fitFDist <- function(x,df1,covariate=NULL)
 		emean <- mean(e)
 		evar <- sum((e-emean)^2)/(n-1)
 	} else {
-		require(splines)
-		design <- try(ns(covariate,df=splinedf,intercept=TRUE),silent=TRUE)
+		if(!requireNamespace("splines",quietly=TRUE)) stop("splines package required but is not available")
+		design <- try(splines::ns(covariate,df=splinedf,intercept=TRUE),silent=TRUE)
 		if(is(design,"try-error")) stop("Problem with covariate")
 		fit <- lm.fit(design,e)
 		if(notallok) {

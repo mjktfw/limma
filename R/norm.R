@@ -146,10 +146,10 @@ normalizeWithinArrays <- function(object,layout=object$printer,method="printtipl
 normalizeRobustSpline <- function(M,A,layout=NULL,df=5,method="M") {
 #	Robust spline normalization
 #	Gordon Smyth
-#	27 April 2003.  Last revised 29 Nov 2012.
+#	27 April 2003.  Last revised 14 January 2015.
 
-	require(MASS)
-	require(splines)
+	if(!requireNamespace("MASS",quietly=TRUE)) stop("MASS package required but is not available")
+	if(!requireNamespace("splines",quietly=TRUE)) stop("splines package required but is not available")
 	if(is.null(layout)) {
 		ngrids <- 1
 		nspots <- length(M)
@@ -163,11 +163,11 @@ normalizeRobustSpline <- function(M,A,layout=NULL,df=5,method="M") {
 #	Global splines
 	O <- is.finite(M) & is.finite(A)
 	X <- matrix(NA,ngrids*nspots,df)
-	X[O,] <- ns(A[O],df=df,intercept=TRUE)
+	X[O,] <- splines::ns(A[O],df=df,intercept=TRUE)
 	x <- X[O,,drop=FALSE]
 	y <- M[O]
 	w <- rep(1,length(y))
-	s0 <- summary(rlm(x,y,weights=w,method=method),method="XtWX",correlation=FALSE)
+	s0 <- summary(MASS::rlm(x,y,weights=w,method=method),method="XtWX",correlation=FALSE)
 	beta0 <- s0$coefficients[,1]
 	covbeta0 <- s0$cov * s0$stddev^2
 
@@ -190,7 +190,7 @@ normalizeRobustSpline <- function(M,A,layout=NULL,df=5,method="M") {
 			r <- qr(x)$rank
 			if(r<df) x <- x[,1:r,drop=FALSE]
 			w <- rep(1,length(y))
-			s <- summary(rlm(x,y,weights=w,method=method),method="XtWX",correlation=FALSE)
+			s <- summary(MASS::rlm(x,y,weights=w,method=method),method="XtWX",correlation=FALSE)
 			beta[i,1:r] <- s$coefficients[,1]
 			covbeta[i,1:r,1:r] <- s$cov * s$stddev^2
 		}
@@ -257,7 +257,8 @@ normalizeForPrintorder.rg <- function(R,G,printorder,method="loess",separate.cha
 	if(method=="plate") {
 		# Correct for plate pack (usually four 384-well plates)
 		plate <- 1 + (printorder-0.5) %/% plate.size
-		hubermu <- function(...) huber(...)$mu
+		if(!requireNamespace("MASS",quietly=TRUE)) stop("MASS package required but is not available")
+		hubermu <- function(...) MASS::huber(...)$mu
 		if(separate.channels) {
 			plate.mR <- tapply(Rf,plate,hubermu)
 			plate.mG <- tapply(Gf,plate,hubermu)
@@ -418,7 +419,8 @@ normalizeBetweenArrays <- function(object, method=NULL, targets=NULL, cyclic.met
 
 normalizeVSN <- function(x,...)
 {
-	require("vsn")
+	if(!requireNamespace("Biobase",quietly=TRUE)) stop("Biobase package required but is not available")
+	if(!requireNamespace("vsn",quietly=TRUE)) stop("vsn package required but is not available")
 	UseMethod("normalizeVSN")
 }
 
@@ -430,7 +432,7 @@ normalizeVSN.RGList <- function(x,...)
 	x <- backgroundCorrect(x,method="subtract")
 	y <- cbind(x$G,x$R)
 	x$G <- x$R <- NULL
-	y <- exprs(vsnMatrix(x=y,...))
+	y <- Biobase::exprs(vsn::vsnMatrix(x=y,...))
 	n2 <- ncol(y)/2
 	G <- y[,1:n2]
 	R <- y[,n2+(1:n2)]
@@ -445,7 +447,7 @@ normalizeVSN.EListRaw <- function(x,...)
 #	9 Sep 2010.
 {
 	x <- backgroundCorrect(x,method="subtract")
-	x$E <- exprs(vsnMatrix(x=x$E,...))
+	x$E <- Biobase::exprs(vsn::vsnMatrix(x=x$E,...))
 	new("EList",unclass(x))
 }
 
@@ -454,7 +456,7 @@ normalizeVSN.default <- function(x,...)
 #	Gordon Smyth
 #	9 Sep 2010.
 {
-	exprs(vsnMatrix(x=as.matrix(x),...))
+	Biobase::exprs(vsn::vsnMatrix(x=as.matrix(x),...))
 }
 
 

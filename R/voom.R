@@ -16,9 +16,9 @@ voom <- function(counts,design=NULL,lib.size=NULL,normalize.method="none",plot=F
 	} else {
 		isExpressionSet <- suppressPackageStartupMessages(is(counts,"ExpressionSet"))
 		if(isExpressionSet) {
-			if(length(fData(counts))) out$genes <- fData(counts)
-			if(length(pData(counts))) out$targets <- pData(counts)
-			counts <- exprs(counts)
+			if(length(Biobase::fData(counts))) out$genes <- Biobase::fData(counts)
+			if(length(Biobase::pData(counts))) out$targets <- Biobase::pData(counts)
+			counts <- Biobase::exprs(counts)
 		} else {
 			counts <- as.matrix(counts)
 		}

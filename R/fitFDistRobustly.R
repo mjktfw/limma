@@ -3,7 +3,7 @@ fitFDistRobustly <- function(x,df1,covariate=NULL,winsor.tail.p=c(0.05,0.1),trac
 #	given the first degrees of freedom, using first and second
 #	moments of Winsorized z-values
 #	Gordon Smyth and Belinda Phipson
-#	8 Sept 2002.  Last revised 20 February 2014.
+#	8 Sept 2002.  Last revised 14 January 2015.
 {
 #	Check x
 	n <- length(x)
@@ -110,8 +110,8 @@ fitFDistRobustly <- function(x,df1,covariate=NULL,winsor.tail.p=c(0.05,0.1),trac
 	if(trace) cat("Variance of Winsorized Fisher-z",zwvar,"\n")
 
 #	Theoretical Winsorized moments
-	require("statmod")
-	g <- gauss.quad.prob(128,dist="uniform")
+	if(!requireNamespace("statmod",quietly=TRUE)) stop("statmod package required but is not available")
+	g <- statmod::gauss.quad.prob(128,dist="uniform")
 	linkfun <- function(x) x/(1+x)
 	linkinv <- function(x) x/(1-x)
 	winsorizedMoments <- function(df1=df1,df2=df2,winsor.tail.p=winsor.tail.p) {

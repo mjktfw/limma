@@ -33,7 +33,7 @@ uniquegenelist <- function(genelist,ndups=2,spacing=1) {
 duplicateCorrelation <- function(object,design=NULL,ndups=2,spacing=1,block=NULL,trim=0.15,weights=NULL)
 #	Estimate the correlation between duplicates given a series of arrays
 #	Gordon Smyth
-#	25 Apr 2002. Last revised 28 July 2013.
+#	25 Apr 2002. Last revised 14 January 2015.
 {
 #	Extract components from y
 	y <- getEAWP(object)
@@ -97,7 +97,7 @@ duplicateCorrelation <- function(object,design=NULL,ndups=2,spacing=1,block=NULL
 		design <- design %x% rep(1,ndups)
 	}
 
-	require( "statmod" ) # need mixedModel2Fit function
+	if(!requireNamespace("statmod",quietly=TRUE)) stop("statmod package required but is not available")
 	rho <- rep(NA,ngenes)
 	nafun <- function(e) NA
 	for (i in 1:ngenes) {
@@ -112,9 +112,9 @@ duplicateCorrelation <- function(object,design=NULL,ndups=2,spacing=1,block=NULL
 			Z <- model.matrix(~0+A)
 			if(!is.null(weights)) {
 				w <- drop(weights[i,])[o]
-				s <- tryCatch(mixedModel2Fit(y,X,Z,w,only.varcomp=TRUE,maxit=20)$varcomp,error=nafun)
+				s <- tryCatch(statmod::mixedModel2Fit(y,X,Z,w,only.varcomp=TRUE,maxit=20)$varcomp,error=nafun)
 			} else
-				s <- tryCatch(mixedModel2Fit(y,X,Z,only.varcomp=TRUE,maxit=20)$varcomp,error=nafun)
+				s <- tryCatch(statmod::mixedModel2Fit(y,X,Z,only.varcomp=TRUE,maxit=20)$varcomp,error=nafun)
 			if(!is.na(s[1])) rho[i] <- s[2]/sum(s)
 		}
 	}

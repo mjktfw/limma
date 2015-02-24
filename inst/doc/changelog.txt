@@ -1,3 +1,14 @@
+24 Feb 2015: limma 3.22.5
+
+- Update citation to the recent limma review article, which is now in
+  advance access publication.
+
+- When loading suggested packages within function calls, usages of
+  require() have been converted to requireNamespace() wherever
+  possible.  Functions from suggested packages are called using ::.
+
+- Acknowledgements edited in User's Guide.
+
 12 Jan 2015: limma 3.22.4
 
 - fix bug in plotMDS.default introduced with limma 3.22.2

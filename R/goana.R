@@ -70,7 +70,7 @@ goana.MArrayLM <- function(de, coef = ncol(de), geneid = rownames(de), FDR = 0.0
 goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL, ...)
 #  Gene ontology analysis of DE genes
 #  Gordon Smyth and Yifang Hu
-#  Created 20 June 2014.  Last modified 28 August 2014.
+#  Created 20 June 2014.  Last modified 14 January 2015.
 {
 	# Ensure de is a list
 	if(!is.list(de)) de <- list(DE = de)
@@ -103,7 +103,7 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 	# Get gene-GOterm mappings, and remove duplicate entries
 	GO2ALLEGS <- paste("org", species, "egGO2ALLEGS", sep = ".")
 	if(is.null(universe)) {
-		EG.GO <- toTable(get(GO2ALLEGS))
+		EG.GO <- AnnotationDbi::toTable(get(GO2ALLEGS))
 		d <- duplicated(EG.GO[,c("gene_id", "go_id", "Ontology")])
 		EG.GO <- EG.GO[!d, ]
 		universe <- unique(EG.GO$gene_id)
@@ -120,12 +120,12 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 		universe <- universe[!dup]
 
 		GO2ALLEGS <- get(GO2ALLEGS)
-		m <- match(Lkeys(GO2ALLEGS),universe,0L)
+		m <- match(AnnotationDbi::Lkeys(GO2ALLEGS),universe,0L)
 		universe <- universe[m]
 		if(!is.null(prior.prob)) prior.prob <- prior.prob[m]
 
-		Lkeys(GO2ALLEGS) <- universe
-		EG.GO <- toTable(GO2ALLEGS)
+		AnnotationDbi::Lkeys(GO2ALLEGS) <- universe
+		EG.GO <- AnnotationDbi::toTable(GO2ALLEGS)
 		d <- duplicated(EG.GO[,c("gene_id", "go_id", "Ontology")])
 		EG.GO <- EG.GO[!d, ]
 	}
@@ -159,14 +159,14 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 	if(length(prior.prob)) {
 
 		# Calculate weight
-		require("BiasedUrn", character.only = TRUE)
+		if(!requireNamespace("BiasedUrn",quietly=TRUE)) stop("BiasedUrn package required but is not available")
 		PW.ALL <- sum(prior.prob[universe %in% EG.GO$gene_id])
 		AVE.PW <- S[,"PW"]/S[,"N"]
 		W <- AVE.PW*(Total-S[,"N"])/(PW.ALL-S[,"N"]*AVE.PW)
 
 		# Wallenius' noncentral hypergeometric test
 		for(j in 1:nsets) for(i in 1:nrow(S))
-			P[i,j] <- pWNCHypergeo(S[i,1+j], S[i,"N"], Total-S[i,"N"], TotalDE[[j]], W[i],lower.tail=FALSE) + dWNCHypergeo(S[i,1+j], S[i,"N"], Total-S[i,"N"], TotalDE[[j]], W[i])
+			P[i,j] <- BiasedUrn::pWNCHypergeo(S[i,1+j], S[i,"N"], Total-S[i,"N"], TotalDE[[j]], W[i],lower.tail=FALSE) + BiasedUrn::dWNCHypergeo(S[i,1+j], S[i,"N"], Total-S[i,"N"], TotalDE[[j]], W[i])
 
 		S <- S[,-ncol(S)]
 
@@ -180,7 +180,7 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 
 	# Assemble output
 	g <- strsplit2(rownames(S),split="\\.")
-	TERM <- select(GO.db,keys=g[,1],columns="TERM")
+	TERM <- AnnotationDbi::select(GO.db::GO.db,keys=g[,1],columns="TERM")
 	Results <- data.frame(Term = TERM[[2]], Ont = g[,2], S, P, stringsAsFactors=FALSE)
 	rownames(Results) <- g[,1]
 

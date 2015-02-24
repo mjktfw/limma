@@ -26,7 +26,7 @@ normexp.fit <- function(x, method="saddle", n.pts=NULL, trace=FALSE)
 #	Estimate parameters of normal+exponential convolution model
 #	Pure R Version Gordon Smyth 24 Aug 2002.
 #	Version with C by Jeremy Silver 29 Oct 2007.
-#	Last modified 25 Sept 2008.
+#	Last modified 14 January 2015.
 {
 	isna <- is.na(x)
 	if(any(isna)) x <- x[!isna]
@@ -40,8 +40,8 @@ normexp.fit <- function(x, method="saddle", n.pts=NULL, trace=FALSE)
 	if(method=="nlminblog") method <- "mle"
 
 	if(method=="rma") {
-		require(affy)
-		out <- bg.parameters(x)
+		if(!requireNamespace("affy",quietly=TRUE)) stop("affy package required but is not available")
+		out <- affy::bg.parameters(x)
 		return(list(par=c(out$mu,log(out$sigma),-log(out$alpha))))
 	}
 

@@ -70,8 +70,8 @@ The arguments \code{values}, \code{pch}, \code{col} and \code{cex} can be includ
 \references{
 Ritchie, ME, Phipson, B, Wu, D, Hu, Y, Law, CW, Shi, W, and Smyth, GK (2015).
 limma powers differential expression analyses for RNA-sequencing and microarray studies.
-\emph{Nucleic Acids Research} Volume 43.
-\url{http://www.statsci.org/smyth/pubs/limmaPreprint.pdf}
+\emph{Nucleic Acids Research} 43,
+doi: 10.1093/nar/gkv007.
 }
 
 \author{Gordon Smyth}

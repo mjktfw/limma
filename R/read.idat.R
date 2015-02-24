@@ -1,10 +1,11 @@
 read.idat <- function(idatfiles, bgxfile, dateinfo=FALSE)
-# Function to read idat data from gene expression BeadArrays
-# Matt Ritchie, 30 September 2013
+# Read idat data from gene expression BeadChips
+# Matt Ritchie
+# Created 30 September 2013. Last modified 14 January 2015.
 {
-  require(illuminaio)
+  if(!requireNamespace("illuminaio",quietly=TRUE)) stop("illuminaio package required but is not available")
   cat("Reading manifest file", bgxfile, "... ")
-  bgx <- readBGX(bgxfile)
+  bgx <- illuminaio::readBGX(bgxfile)
   cat("Done\n")
   nregprobes <-nrow(bgx$probes)
   nctrlprobes <-nrow(bgx$control)
@@ -23,7 +24,7 @@ read.idat <- function(idatfiles, bgxfile, dateinfo=FALSE)
   rm(tmp)
   for(i in 1:nsamples) {
     cat("\t", idatfiles[i], "... ")
-    tmp <- readIDAT(idatfiles[i])
+    tmp <- illuminaio::readIDAT(idatfiles[i])
     cat("Done\n")
     ind <- match(elist$genes[,"Array_Address_Id"], tmp$Quants[,'IllumicodeBinData'])
     if(sum(is.na(ind))>0)

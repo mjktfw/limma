@@ -3,7 +3,7 @@
 genas <- function(fit,coef=c(1,2),subset="all",plot=FALSE,alpha=0.4)
 #	Genuine association of gene expression profiles
 #	Belinda Phipson and Gordon Smyth
-#	21 September 2009. Last modified 26 July 2013.
+#	21 September 2009. Last modified 14 January 2015.
 {
 	out <- list(
 		technical.correlation=NA,
@@ -66,7 +66,7 @@ genas <- function(fit,coef=c(1,2),subset="all",plot=FALSE,alpha=0.4)
 	rhotech <- V[2,1]/sqrt(V[1,1]*V[2,2])
 
 	if(plot) {
-		require(ellipse)
+		if(!requireNamespace("ellipse",quietly=TRUE)) stop("ellipse package required but is not available")
 		lim <- mean(c(sd(fit.plot$coeff[,1]),sd(fit.plot$coeff[,2])))
 		if(nrow(fit)<500) lim <- 1.5*lim else lim <- 2*lim
 		max <- max(c(fit.plot$coeff[,1],fit.plot$coeff[,2]))
@@ -75,16 +75,16 @@ genas <- function(fit,coef=c(1,2),subset="all",plot=FALSE,alpha=0.4)
 		min <- sign(min)*max(abs(min),abs(max))
 		if(abs(rhobiol)>abs(rhotech)){
 			plot(fit.plot$coeff[,1],fit.plot$coeff[,2],pch=16,cex=0.4,ylim=c(min,max),xlim=c(min,max),xlab=colnames(fit.plot$coeff)[1],ylab=colnames(fit.plot$coeff)[2])
-			polygon(ellipse(rhotech,scale=c(lim,lim)),col=rgb(0,0,1,alpha=alpha),border=rgb(0,0,1,alpha=alpha))
-			polygon(ellipse(rhobiol,scale=c(lim,lim)),col=rgb(0,1,0,alpha=alpha),border=rgb(0,1,0,alpha=alpha))
+			polygon(ellipse::ellipse(rhotech,scale=c(lim,lim)),col=rgb(0,0,1,alpha=alpha),border=rgb(0,0,1,alpha=alpha))
+			polygon(ellipse::ellipse(rhobiol,scale=c(lim,lim)),col=rgb(0,1,0,alpha=alpha),border=rgb(0,1,0,alpha=alpha))
 			points(fit.plot$coeff[,1],fit.plot$coeff[,2],pch=16,cex=0.4)
 			abline(h=0,v=0)
 			legend(min,max,legend=bquote(rho[biol]==.(round(rhobiol,3))),col=rgb(0,1,0,alpha=alpha),pch=16,bty="n",cex=0.8)
 			legend(min,max-lim/2,legend=bquote(rho[tech]==.(round(rhotech,3))),col=rgb(0,0,1,alpha=alpha),pch=16,bty="n",cex=0.8)
 		} else {
 			plot(fit.plot$coeff[,1],fit.plot$coeff[,2],pch=16,cex=0.4,ylim=c(min,max),xlim=c(min,max),xlab=colnames(fit.plot$coeff)[1],ylab=colnames(fit.plot$coeff)[2])
-			polygon(ellipse(rhobiol,scale=c(lim,lim)),col=rgb(0,1,0,alpha=alpha),border=rgb(0,1,0,alpha=alpha))
-			polygon(ellipse(rhotech,scale=c(lim,lim)),col=rgb(0,0,1,alpha=alpha),border=rgb(0,0,1,alpha=alpha))
+			polygon(ellipse::ellipse(rhobiol,scale=c(lim,lim)),col=rgb(0,1,0,alpha=alpha),border=rgb(0,1,0,alpha=alpha))
+			polygon(ellipse::ellipse(rhotech,scale=c(lim,lim)),col=rgb(0,0,1,alpha=alpha),border=rgb(0,0,1,alpha=alpha))
 			points(fit.plot$coeff[,1],fit.plot$coeff[,2],pch=16,cex=0.4)
 			abline(h=0,v=0)
 			legend(min,max,legend=bquote(rho[biol]==.(round(rhobiol,3))),col=rgb(0,1,0,alpha=alpha),pch=16,bty="n",cex=0.8)

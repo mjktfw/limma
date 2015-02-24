@@ -4,7 +4,7 @@ loessFit <- function(y, x, weights=NULL, span=0.3, iterations=4L, min.weight=1e-
 #	Fast lowess fit for univariate x and y allowing for weights
 #	Uses lowess() if weights=NULL and weightedLowess(), locfit.raw() or loess() otherwise
 #	Gordon Smyth
-#	28 June 2003.  Last revised 17 Apr 2014.
+#	28 June 2003.  Last revised 14 January 2015.
 {
 #	Check x and y
 	n <- length(y)
@@ -81,15 +81,11 @@ loessFit <- function(y, x, weights=NULL, span=0.3, iterations=4L, min.weight=1e-
 		},
 		"locfit" = {
 #			Check for locfit package
-			loaded <- ( "package:locfit" %in% search() )
-			if(!loaded) {
-				loadresult <- tryCatch(suppressPackageStartupMessages(library("locfit",character.only=TRUE,quietly=TRUE)),error=function(e) e)
-				if(inherits(loadresult,"error")) stop("locfit package not available",call.=FALSE)
-			}
+			if(!requireNamespace("locfit",quietly=TRUE)) stop("locfit required but is not available")
 #			Weighted lowess with robustifying iterations
 		    biweights <- rep(1,nobs)
  			for (i in 1:iterations) {
-       			fit <- locfit.raw(x=xobs,y=yobs,weights=wobs*biweights,alpha=span,deg=1)
+       			fit <- locfit::locfit(yobs~xobs,weights=wobs*biweights,alpha=span,deg=1)
 		        res <- residuals(fit,type="raw")
 		        s <- median(abs(res))
 		        biweights <- pmax(1-(res/(6*s))^2,0)^2
