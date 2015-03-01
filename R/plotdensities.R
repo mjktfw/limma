@@ -6,7 +6,7 @@ UseMethod("plotDensities")
 plotDensities.RGList <- function(object,log=TRUE,group=NULL,col=NULL,main="RG Densities",bc.method="subtract",...)
 #	Plot empirical single-channel densities
 #	Original version by Natalie Thorne, 9 September 2003
-#	Modified by Gordon Smyth.  Last modified 10 Sep 2014.
+#	Modified by Gordon Smyth.  Last modified 1 March 2015.
 {
 	object <- backgroundCorrect(object,method=bc.method)
 	narray <- ncol(object)
@@ -23,13 +23,13 @@ plotDensities.RGList <- function(object,log=TRUE,group=NULL,col=NULL,main="RG De
 		group2 <- c(group,group)
 	}
 
-	NextMethod(object=E,group=group2,col=col2,main=main,...)
+	plotDensities(object=E,group=group2,col=col2,main=main,...)
 }
 
 plotDensities.MAList <- function(object,log=TRUE,group=NULL,col=NULL,main="RG Densities",...)
 #	Plot empirical single-channel densities
 #	Original version by Natalie Thorne, 9 September 2003
-#	Modified by Gordon Smyth.  Last modified 10 Sep 2014.
+#	Modified by Gordon Smyth.  Last modified 1 March 2015.
 {
 	narray <- ncol(object)
 	E <- cbind(object$A+object$M/2, object$A-object$M/2)
@@ -43,27 +43,27 @@ plotDensities.MAList <- function(object,log=TRUE,group=NULL,col=NULL,main="RG De
 		group <- rep(group,narray)
 		group2 <- c(group,group)
 	}
-
-	NextMethod(object=E,group=group2,col=col2,main=main,...)
+	
+	plotDensities(object=E,group=group2,col=col2,main=main,...)
 }
 
 plotDensities.EListRaw <- function(object,log=TRUE,group=NULL,col=NULL,main=NULL,bc.method="subtract",...)
 #	Gordon Smyth.
-#	Created 23 March 2009.  Last modified 10 Sep 2014.
+#	Created 23 March 2009.  Last modified 1 March 2015.
 {
 	object <- backgroundCorrect(object,method=bc.method)
 	E <- object$E
 	if(log) E <- log2(E+1)
-	NextMethod(object=E,group=group,col=col,main=main,...)
+	plotDensities(object=E,group=group,col=col,main=main,...)
 }
 
 plotDensities.EList <- function(object,log=TRUE,group=NULL,col=NULL,main=NULL,...)
 #	Gordon Smyth.
-#	Created 23 March 2009.  Last modified 10 Sep 2014.
+#	Created 23 March 2009.  Last modified 1 March 2015.
 {
 	E <- object$E
 	if(!log) E <- 2^E
-	NextMethod(object=E,group=group,col=col,main=main,...)
+	plotDensities(object=E,group=group,col=col,main=main,...)
 }
 
 plotDensities.default <- function(object,group=NULL,col=NULL,main=NULL,...)

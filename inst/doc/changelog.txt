@@ -1,3 +1,8 @@
+1 March 2015: limma 3.23.10
+
+- fix bug in the MAList method for plotDensities introduced with
+  the use of NextMethod() in version 3.21.16.
+
 24 Feb 2015: limma 3.23.9
 
 - Update citation to the recent limma review article, which is now in
@@ -122,6 +127,8 @@
   limma data objects.
 
 - Updates to the two RNA-seq case studies in the User's Guide.
+
+- plotDensities S3 methods now use NextMethod().
 
  8 Sep 2014: limma 3.21.15
 
