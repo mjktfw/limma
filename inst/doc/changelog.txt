@@ -1,3 +1,8 @@
+13 March 2015: limma 3.22.7
+
+- new argument 'legend' for plotDensities, allowing user to
+  reposition the legend.
+
 1 March 2015: limma 3.22.6
 
 - fix bug in the MAList method for plotDensities introduced in
@@ -66,8 +71,12 @@
 
 10 Oct 2014: limma 3.21.21
 
-- arrayWeights() with plot=TRUE now resets graphics parameters to
-  original settings on exit.
+- arrayWeights() has a new argument var.design, allowing the array
+  weights to be a function of covariates.  When plot=TRUE, the
+  graphics parameters are now reset to original values on exit.
+
+- new function voomWithQualityWeights(), combining capabilities of
+  voom() and arrayWeights().
 
 10 Oct 2014: limma 3.21.20
 

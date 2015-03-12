@@ -66,10 +66,10 @@ plotDensities.EList <- function(object,log=TRUE,group=NULL,col=NULL,main=NULL,..
 	plotDensities(object=E,group=group,col=col,main=main,...)
 }
 
-plotDensities.default <- function(object,group=NULL,col=NULL,main=NULL,...)
+plotDensities.default <- function(object,group=NULL,col=NULL,main=NULL,legend="topleft",...)
 #	Plot empirical single-channel densities
 #	Gordon Smyth
-#	18 Nov 2013.  Last modified 10 Sep 2014.
+#	18 Nov 2013.  Last modified 13 March 2015.
 {
 #	Coerce object to matrix
 	E <- as.matrix(object)
@@ -85,6 +85,15 @@ plotDensities.default <- function(object,group=NULL,col=NULL,main=NULL,...)
 	if(is.null(col)) col <- 1:ngroup
 	col <- rep(col,length=ngroup)
 
+#	Check legend
+	if(is.logical(legend)) {
+		legend.position <- "topleft"
+	} else {
+		legend.position <- as.character(legend)
+		legend <- TRUE
+	}
+	legend.position <- match.arg(legend.position,c("bottomright","bottom","bottomleft","left","topleft","top","topright","right","center"))
+
 #	Expand cols to number of arrays
 	arraycol <- group
 	levels(arraycol) <- col
@@ -98,6 +107,6 @@ plotDensities.default <- function(object,group=NULL,col=NULL,main=NULL,...)
 		Y[,a] <- d$y
 	}
 	matplot(X,Y,xlab="Intensity",ylab="Density",main=main,type="l",col=arraycol,lwd=2,lty=1)
-	if(ngroup>1) legend("topleft",lwd=2,legend=levels(group),col=col)
+	if(legend && ngroup>1) legend(legend.position,lwd=2,legend=levels(group),col=col)
 	invisible(list(X=X,Y=Y))
 }
