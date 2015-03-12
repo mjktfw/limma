@@ -6,12 +6,15 @@ UseMethod("plotDensities")
 plotDensities.RGList <- function(object,log=TRUE,group=NULL,col=NULL,main="RG Densities",bc.method="subtract",...)
 #	Plot empirical single-channel densities
 #	Original version by Natalie Thorne, 9 September 2003
-#	Modified by Gordon Smyth.  Last modified 1 March 2015.
+#	Modified by Gordon Smyth.  Last modified 13 March 2015.
 {
 	object <- backgroundCorrect(object,method=bc.method)
 	narray <- ncol(object)
 	E <- cbind(object$R,object$G)
 
+#	Add one to prevent taking logs of zero
+#	However this means that plotDensities.RGList and plotDensities.MAList will give slightly
+#	different plots on the same data even when the RG and MA objects represent the same data
 	if(log) E <- log2(E+1)
 
 	col2 <- col
@@ -47,23 +50,23 @@ plotDensities.MAList <- function(object,log=TRUE,group=NULL,col=NULL,main="RG De
 	plotDensities(object=E,group=group2,col=col2,main=main,...)
 }
 
-plotDensities.EListRaw <- function(object,log=TRUE,group=NULL,col=NULL,main=NULL,bc.method="subtract",...)
+plotDensities.EListRaw <- function(object,log=TRUE,bc.method="subtract",...)
 #	Gordon Smyth.
-#	Created 23 March 2009.  Last modified 1 March 2015.
+#	Created 23 March 2009.  Last modified 13 March 2015.
 {
 	object <- backgroundCorrect(object,method=bc.method)
 	E <- object$E
 	if(log) E <- log2(E+1)
-	plotDensities(object=E,group=group,col=col,main=main,...)
+	plotDensities(object=E,...)
 }
 
-plotDensities.EList <- function(object,log=TRUE,group=NULL,col=NULL,main=NULL,...)
+plotDensities.EList <- function(object,log=TRUE,...)
 #	Gordon Smyth.
-#	Created 23 March 2009.  Last modified 1 March 2015.
+#	Created 23 March 2009.  Last modified 13 March 2015.
 {
 	E <- object$E
 	if(!log) E <- 2^E
-	plotDensities(object=E,group=group,col=col,main=main,...)
+	plotDensities(object=E,...)
 }
 
 plotDensities.default <- function(object,group=NULL,col=NULL,main=NULL,legend="topleft",...)
