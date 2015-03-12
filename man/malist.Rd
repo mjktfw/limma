@@ -45,7 +45,7 @@ and \code{\link{plotPrintTipLoess}}.
 \seealso{
   \link{02.Classes} gives an overview of all the classes defined by this package.
   
-  \code{\link[marray:marrayNorm-class]{marrayNorm}} is the corresponding class in the marray package.
+  \code{marrayNorm} is the corresponding class in the marray package.
 }
 
 \keyword{classes}

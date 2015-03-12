@@ -81,7 +81,7 @@ In particular, see \code{\link{normalizeBetweenArrays}} for between-array normal
 The original loess normalization function was the \code{statma} funtion in the sma package.
 \code{normalizeWithinArrays} is a direct generalization of that function, with more options and with support for quantitative spot quality weights.
 
-A different implementation of loess normalization methods, with potentially different behavior, is provided by the \code{\link[marray:maNorm]{maNorm}} in the marray package.
+A different implementation of loess normalization methods, with potentially different behavior, is provided by the \code{maNorm} in the marray package.
 }
 
 \keyword{normalization}

@@ -11,7 +11,7 @@ as.MAList(object)
 }
 
 \arguments{
-\item{object}{an \code{\link[marray:marrayNorm-class]{marrayNorm}} object}
+\item{object}{an \code{marrayNorm} object}
 }
 
 \value{
@@ -29,6 +29,8 @@ Note that such conversion is not necessary to access the limma linear modelling 
 
 \seealso{
   \link{02.Classes} gives an overview of all the classes defined by this package.
+
+  The marrayNorm class is defined in the marray package.
 }
 
 \keyword{classes}

@@ -6,12 +6,15 @@ UseMethod("plotDensities")
 plotDensities.RGList <- function(object,log=TRUE,group=NULL,col=NULL,main="RG Densities",bc.method="subtract",...)
 #	Plot empirical single-channel densities
 #	Original version by Natalie Thorne, 9 September 2003
-#	Modified by Gordon Smyth.  Last modified 1 March 2015.
+#	Modified by Gordon Smyth.  Last modified 13 March 2015.
 {
 	object <- backgroundCorrect(object,method=bc.method)
 	narray <- ncol(object)
 	E <- cbind(object$R,object$G)
 
+#	Add one to prevent taking logs of zero
+#	However this means that plotDensities.RGList and plotDensities.MAList will give slightly
+#	different plots on the same data even when the RG and MA objects represent the same data
 	if(log) E <- log2(E+1)
 
 	col2 <- col
@@ -47,29 +50,29 @@ plotDensities.MAList <- function(object,log=TRUE,group=NULL,col=NULL,main="RG De
 	plotDensities(object=E,group=group2,col=col2,main=main,...)
 }
 
-plotDensities.EListRaw <- function(object,log=TRUE,group=NULL,col=NULL,main=NULL,bc.method="subtract",...)
+plotDensities.EListRaw <- function(object,log=TRUE,bc.method="subtract",...)
 #	Gordon Smyth.
-#	Created 23 March 2009.  Last modified 1 March 2015.
+#	Created 23 March 2009.  Last modified 13 March 2015.
 {
 	object <- backgroundCorrect(object,method=bc.method)
 	E <- object$E
 	if(log) E <- log2(E+1)
-	plotDensities(object=E,group=group,col=col,main=main,...)
+	plotDensities(object=E,...)
 }
 
-plotDensities.EList <- function(object,log=TRUE,group=NULL,col=NULL,main=NULL,...)
+plotDensities.EList <- function(object,log=TRUE,...)
 #	Gordon Smyth.
-#	Created 23 March 2009.  Last modified 1 March 2015.
+#	Created 23 March 2009.  Last modified 13 March 2015.
 {
 	E <- object$E
 	if(!log) E <- 2^E
-	plotDensities(object=E,group=group,col=col,main=main,...)
+	plotDensities(object=E,...)
 }
 
-plotDensities.default <- function(object,group=NULL,col=NULL,main=NULL,...)
+plotDensities.default <- function(object,group=NULL,col=NULL,main=NULL,legend="topleft",...)
 #	Plot empirical single-channel densities
 #	Gordon Smyth
-#	18 Nov 2013.  Last modified 10 Sep 2014.
+#	18 Nov 2013.  Last modified 13 March 2015.
 {
 #	Coerce object to matrix
 	E <- as.matrix(object)
@@ -85,6 +88,15 @@ plotDensities.default <- function(object,group=NULL,col=NULL,main=NULL,...)
 	if(is.null(col)) col <- 1:ngroup
 	col <- rep(col,length=ngroup)
 
+#	Check legend
+	if(is.logical(legend)) {
+		legend.position <- "topleft"
+	} else {
+		legend.position <- as.character(legend)
+		legend <- TRUE
+	}
+	legend.position <- match.arg(legend.position,c("bottomright","bottom","bottomleft","left","topleft","top","topright","right","center"))
+
 #	Expand cols to number of arrays
 	arraycol <- group
 	levels(arraycol) <- col
@@ -98,6 +110,6 @@ plotDensities.default <- function(object,group=NULL,col=NULL,main=NULL,...)
 		Y[,a] <- d$y
 	}
 	matplot(X,Y,xlab="Intensity",ylab="Density",main=main,type="l",col=arraycol,lwd=2,lty=1)
-	if(ngroup>1) legend("topleft",lwd=2,legend=levels(group),col=col)
+	if(legend && ngroup>1) legend(legend.position,lwd=2,legend=levels(group),col=col)
 	invisible(list(X=X,Y=Y))
 }

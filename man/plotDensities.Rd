@@ -13,10 +13,9 @@ Plot the density of expression values for multiple arrays on the same plot.
 \method{plotDensities}{RGList}(object, log=TRUE, group=NULL, col=NULL, main="RG Densities",
               bc.method="subtract", \dots)
 \method{plotDensities}{MAList}(object, log=TRUE, group=NULL, col=NULL, main="RG Densities", \dots)
-\method{plotDensities}{EListRaw}(object, log=TRUE, group=NULL, col=NULL, main=NULL,
-              bc.method="subtract", \dots)
-\method{plotDensities}{EList}(object, log=TRUE, group=NULL, col=NULL, main=NULL, \dots)
-\method{plotDensities}{default}(object, group=NULL, col=NULL, main=NULL, \dots)
+\method{plotDensities}{EListRaw}(object, log=TRUE, bc.method="subtract", \dots)
+\method{plotDensities}{EList}(object, log=TRUE, \dots)
+\method{plotDensities}{default}(object, group=NULL, col=NULL, main=NULL, legend="topleft", \dots)
 }
 \arguments{
   \item{object}{an \code{RGList}, \code{MAList}, \code{EListRaw} or \code{EList} object containing expression data.  Or any data object that can be coerced to a matrix.}
@@ -25,7 +24,10 @@ Plot the density of expression values for multiple arrays on the same plot.
   \item{col}{optional vector of colors of the same length as the number of groups.}
   \item{main}{the main title for the plot.}
   \item{bc.method}{background subtraction method passed to \code{\link{backgroundCorrect}}.}
-  \item{\ldots}{other arguments are passed to \code{\link{density}}.}
+  \item{legend}{character string giving position to place legend.
+  See \code{\link{legend}} for possible values.
+  Can also be logical, with \code{FALSE} meaning no legend.}
+  \item{\ldots}{other arguments are passed to \code{plotDensities.default} or \code{\link{density}}.}
 }
 
 \details{

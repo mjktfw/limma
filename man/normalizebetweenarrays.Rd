@@ -89,7 +89,7 @@ In: D. R. Goldstein (ed.), \emph{Science and Statistics: A Festschrift for Terry
 
   Note that vsn normalization, previously offered as a method of this function, is now performed by the \code{\link{normalizeVSN}} function.
 
-  See also \code{\link[marray:maNormScale]{maNormScale}} in the marray package and
+  See also \code{maNormScale} in the marray package and
   \code{\link[affy:normalize-methods]{normalize-methods}} in the affy package.
 }
 

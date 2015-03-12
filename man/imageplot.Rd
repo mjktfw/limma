@@ -49,7 +49,7 @@ It differs from \code{maImage} in that any statistic may be plotted and in its u
 \value{An plot is created on the current graphics device.}
 \author{Gordon Smyth}
 \seealso{
-\code{\link[marray]{maImage}}, \code{\link[graphics]{image}}.
+\code{maImage} in the marray package, \code{\link{image}} in the graphics package.
 
 An overview of diagnostic functions available in LIMMA is given in \link{09.Diagnostics}.
 }
