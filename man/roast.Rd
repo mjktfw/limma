@@ -110,9 +110,7 @@ The default setting for the set statistic was changed in limma 3.5.9 (3 June 201
 }
 
 \seealso{
-\code{\link{camera}}, \code{\link{romer}}, \code{\link{geneSetTest}}, \code{\link{ids2indices}}.
-
-There is a topic page on \link{10.GeneSetTests}.
+See \link{10.GeneSetTests} for a description of other functions used for gene set testing.
 }
 \author{Gordon Smyth and Di Wu}
 

@@ -13,26 +13,29 @@ topGO(results, ontology = c("BP", "CC", "MF"), sort = NULL, number = 20L)
 \arguments{
   \item{results}{data frame produced by \code{\link{goana}}.} 
   \item{ontology}{character vector of ontologies to be included in output.  Elements should be one or more of \code{"BP"}, \code{"CC"} or \code{"MF"}.}
-  \item{sort}{name of gene set for which results are required.  Should be one of the column names of \code{results}.  Defaults to first set.}
+  \item{sort}{character vector of names of gene lists for which results are required.  Should be one or more of the column names of \code{results}.  Defaults to all gene lists.}
   \item{number}{maximum number of top GO terms to list. For all terms, set \code{number=Inf}.}
 }
 
 \details{
-This function is organize the output from \code{\link{goana}} into top-tables of the most significant GO terms.
+This function organizes the output from \code{\link{goana}} into top-tables of the most significant GO terms.
+Rows are sorted by the minimum p-value of any of the result columns specified by \code{sort}.
 }
 
 \value{
-Same as \code{results} but with rows subsetted by Ontology and sorted by the specified p-value.
+Same as \code{results} but with rows subsetted by Ontology and sorted by p-value.
 }
 
 \seealso{
-\code{\link{goana}}, \code{\link{goana.MArrayLM}}
+\code{\link{goana}}
+
+See \link{10.GeneSetTests} for a description of other functions used for gene set testing.
 }
 
 \author{Gordon Smyth and Yifang Hu}
 
 \examples{
-# See goana and goana.MArrayLM examples
+# See goana examples
 }
 
 \keyword{gene set test}

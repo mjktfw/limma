@@ -1,6 +1,6 @@
 
-R Under development (unstable) (2014-07-19 r66202) -- "Unsuffered Consequences"
-Copyright (C) 2014 The R Foundation for Statistical Computing
+R version 3.2.0 alpha (2015-03-28 r68110)
+Copyright (C) 2015 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -912,7 +912,6 @@ A -1.715769 0.9181357 -6.307429 1.747263e-07 1.747263e-06 12.83865
 > ### duplicateCorrelation
 > 
 > cor.out <- duplicateCorrelation(M)
-Loading required package: statmod
 > cor.out$consensus.correlation
 [1] -0.09290714
 > cor.out$atanh.correlations
@@ -943,7 +942,6 @@ Loading required package: statmod
 > ### mrlm
 > 
 > fit <- mrlm(M,design)
-Loading required package: MASS
 Warning message:
 In rlm.default(x = X, y = y, weights = w, ...) :
   'rlm' failed to converge in 20 steps
@@ -1218,7 +1216,6 @@ set1      5  -0.2481655        Up 0.0009047749
 > 
 > fit <- lmFit(y,design)
 > fit <- eBayes(fit,trend=TRUE)
-Loading required package: splines
 > topTable(fit,coef=2)
        logFC     AveExpr         t      P.Value  adj.P.Val          B
 3   3.488703  1.03931081  4.860410 0.0002436118 0.01647958  0.6722078
@@ -1319,31 +1316,64 @@ Loading required package: splines
 > 
 > ### goana
 > 
-> go <- goana(fit,FDR=0.6,geneid=1:100)
+> EB <- c("133746","1339","134","1340","134083","134111","134147","134187","134218","134266",
++ "134353","134359","134391","134429","134430","1345","134510","134526","134549","1346",
++ "134637","1347","134701","134728","1348","134829","134860","134864","1349","134957",
++ "135","1350","1351","135112","135114","135138","135152","135154","1352","135228",
++ "135250","135293","135295","1353","135458","1355","1356","135644","135656","1357",
++ "1358","135892","1359","135924","135935","135941","135946","135948","136","1360",
++ "136051","1361","1362","136227","136242","136259","1363","136306","136319","136332",
++ "136371","1364","1365","136541","1366","136647","1368","136853","1369","136991",
++ "1370","137075","1371","137209","1373","137362","1374","137492","1375","1376",
++ "137682","137695","137735","1378","137814","137868","137872","137886","137902","137964")
+> go <- goana(fit,FDR=0.8,geneid=EB)
 > topGO(go,n=10)
-                                                                   Term Ont N
-GO:0001867                        complement activation, lectin pathway  BP 1
-GO:0001868          regulation of complement activation, lectin pathway  BP 1
-GO:0001869 negative regulation of complement activation, lectin pathway  BP 1
-GO:0002020                                             protease binding  MF 1
-GO:0002673                    regulation of acute inflammatory response  BP 1
-GO:0002920                        regulation of humoral immune response  BP 1
-GO:0002921               negative regulation of humoral immune response  BP 1
-GO:0006102                                 isocitrate metabolic process  BP 1
-GO:0006956                                        complement activation  BP 1
-GO:0006959                                      humoral immune response  BP 1
-           Up Down   P.Up P.Down
-GO:0001867  1    0 0.0625      1
-GO:0001868  1    0 0.0625      1
-GO:0001869  1    0 0.0625      1
-GO:0002020  1    0 0.0625      1
-GO:0002673  1    0 0.0625      1
-GO:0002920  1    0 0.0625      1
-GO:0002921  1    0 0.0625      1
-GO:0006102  1    0 0.0625      1
-GO:0006956  1    0 0.0625      1
-GO:0006959  1    0 0.0625      1
+                                                                       Term Ont
+GO:0055082                                    cellular chemical homeostasis  BP
+GO:0006897                                                      endocytosis  BP
+GO:0019725                                             cellular homeostasis  BP
+GO:0006915                                                apoptotic process  BP
+GO:0012501                                            programmed cell death  BP
+GO:0008283                                               cell proliferation  BP
+GO:0042127                                 regulation of cell proliferation  BP
+GO:0097190                                      apoptotic signaling pathway  BP
+GO:0006909                                                     phagocytosis  BP
+GO:0007169 transmembrane receptor protein tyrosine kinase signaling pathway  BP
+           N Up Down        P.Up      P.Down
+GO:0055082 2  0    2 1.000000000 0.004242424
+GO:0006897 3  3    0 0.005046382 1.000000000
+GO:0019725 3  0    2 1.000000000 0.012294372
+GO:0006915 4  3    1 0.017844424 0.255402330
+GO:0012501 4  3    1 0.017844424 0.255402330
+GO:0008283 4  1    2 0.553950615 0.023749721
+GO:0042127 4  1    2 0.553950615 0.023749721
+GO:0097190 2  2    0 0.030909091 1.000000000
+GO:0006909 2  2    0 0.030909091 1.000000000
+GO:0007169 2  2    0 0.030909091 1.000000000
+> topGO(go,n=10,sort="down")
+                                                Term Ont  N Up Down      P.Up
+GO:0055082             cellular chemical homeostasis  BP  2  0    2 1.0000000
+GO:0019725                      cellular homeostasis  BP  3  0    2 1.0000000
+GO:0008283                        cell proliferation  BP  4  1    2 0.5539506
+GO:0042127          regulation of cell proliferation  BP  4  1    2 0.5539506
+GO:0048878                      chemical homeostasis  BP  5  1    2 0.6375849
+GO:0032502                     developmental process  BP 22  3    4 0.8185069
+GO:0048519 negative regulation of biological process  BP 14  2    3 0.7685153
+GO:0043230                   extracellular organelle  CC 14  1    3 0.9502416
+GO:0065010  extracellular membrane-bounded organelle  CC 14  1    3 0.9502416
+GO:0070062           extracellular vesicular exosome  CC 14  1    3 0.9502416
+                P.Down
+GO:0055082 0.004242424
+GO:0019725 0.012294372
+GO:0008283 0.023749721
+GO:0042127 0.023749721
+GO:0048878 0.038228009
+GO:0032502 0.040079017
+GO:0048519 0.055161144
+GO:0043230 0.055161144
+GO:0065010 0.055161144
+GO:0070062 0.055161144
 > 
 > proc.time()
    user  system elapsed 
-   5.89    0.21    6.10 
+   2.94    0.23    3.16 

@@ -24,8 +24,12 @@ camera <- function(y,...) UseMethod("camera")
 camera.default <- function(y,index,design=NULL,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,trend.var=FALSE,sort=TRUE,...)
 #	Competitive gene set test allowing for correlation between genes
 #	Gordon Smyth and Di Wu
-#	Created 2007.  Last modified 25 Feb 2014
+#	Created 2007.  Last modified 31 March 2015
 {
+#	Issue warning if extra arguments found
+	dots <- names(list(...))
+	if(length(dots)) warning("Extra arguments disregarded: ",sQuote(dots))
+
 #	Extract components from y
 	y <- getEAWP(y)
 	G <- nrow(y$exprs)

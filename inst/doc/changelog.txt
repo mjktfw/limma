@@ -1,3 +1,19 @@
+ 4 April 2015: limma 3.23.12
+
+- camera(), roast(), mroast() and romer() now give a warning if
+  any arguments found in ... are not used.
+
+- speed improvement for romer() when the "mean" or "floormean" set
+  statistics are used.
+
+- topGO() can now sort gene ontology results by several p-value
+  columns at once, using the minimum of the columns.  The default is
+  now to sort results using all the p-value columns found in the
+  results instead of just by the first column.
+
+- new arguments 'plot' and 'covariate' for goana().  The help files
+  goana.Rd and goana.MArrayLM.Rd are consolidated into one file.
+
 13 March 2015: limma 3.23.11
 
 - new argument 'legend' for plotDensities, allowing user to

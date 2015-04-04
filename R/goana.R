@@ -1,6 +1,6 @@
 goana <- function(de,...) UseMethod("goana")
 
-goana.MArrayLM <- function(de, coef = ncol(de), geneid = rownames(de), FDR = 0.05, species = "Hs", trend = FALSE, ...)
+goana.MArrayLM <- function(de, coef = ncol(de), geneid = rownames(de), FDR = 0.05, species = "Hs", trend = FALSE, plot=FALSE, ...)
 #  Gene ontology analysis of DE genes from linear model fit
 #  Gordon Smyth and Yifang Hu
 #  Created 20 June 2014.  Last modified 23 July 2014.
@@ -55,22 +55,23 @@ goana.MArrayLM <- function(de, coef = ncol(de), geneid = rownames(de), FDR = 0.0
 	EG.DE.DN <- universe[fdr.coef < FDR & de$coef[,coef] < 0]
 	de.gene <- list(Up=EG.DE.UP, Down=EG.DE.DN)
 
-	# Fit monotonic cubic spline for DE genes vs. gene.weights
+	# Fit trend in DE with respect to the covariate
 	if(trend) {
 		isDE <- as.numeric(fdr.coef < FDR)
 		o <- order(covariate)
 		PW <- rep(0,nrow(de))
 		PW[o] <- tricubeMovingAverage(isDE[o],span=0.5,full.length=TRUE)
+		if(plot) plot(covariate[o],PW[o],type="l",xlab="Abundance",ylab="prior.prob")
 	}
 	if(!trend) PW <- NULL
 
-	NextMethod(de = de.gene, universe = universe, species = species, prior.prob = PW, ...)
+	goana(de = de.gene, universe = universe, species = species, prior.prob = PW, ...)
 }
 
-goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL, ...)
+goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL, covariate=NULL, plot=FALSE, ...)
 #  Gene ontology analysis of DE genes
 #  Gordon Smyth and Yifang Hu
-#  Created 20 June 2014.  Last modified 14 January 2015.
+#  Created 20 June 2014.  Last modified 27 March 2015.
 {
 	# Ensure de is a list
 	if(!is.list(de)) de <- list(DE = de)
@@ -80,18 +81,27 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 
 	# Ensure gene IDs are of character mode
 	de <- lapply(de, as.character)
+	if(!is.null(universe)) universe <- as.character(universe)
 
-	# Ensure all gene sets have names
+	# Ensure all gene sets have unique names
 	nsets <- length(de)
-
 	names(de) <- trimWhiteSpace(names(de))
 	NAME <- names(de)
-	i <- NAME == "" | is.na(NAME)
-	NAME[i] <- paste0("DE", 1:nsets)[i]
+	i <- which(NAME == "" | is.na(NAME))
+	NAME[i] <- paste0("DE",i)
 	names(de) <- makeUnique(NAME)
 
 	# Select species
 	species <- match.arg(species, c("Hs", "Mm", "Rn", "Dm"))
+
+	# Fit trend in DE with respect to the covariate, combining all de lists
+	if(!is.null(covariate)) {
+		isDE <- as.numeric(universe %in% unlist(de))
+		o <- order(covariate)
+		prior.prob <- covariate
+		prior.prob[o] <- tricubeMovingAverage(isDE[o],span=0.5,full.length=TRUE)
+		if(plot) plot(covariate[o],prior.prob[o],type="l")
+	}
 
 	# Load package of GO terms
 	if(!suppressPackageStartupMessages(require("GO.db", character.only = TRUE))) stop("GO.db package not available")
@@ -115,7 +125,9 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 		dup <- duplicated(universe)
 		if(!is.null(prior.prob)) {
 			if(length(prior.prob)!=length(universe)) stop("length(prior.prob) must equal length(universe)")
-			prior.prob <- prior.prob[!dup]
+			prior.prob <- rowsum(prior.prob,group=universe,reorder=FALSE)
+			n <- rowsum(rep_len(1L,length(universe)),group=universe,reorder=FALSE)
+			prior.prob <- prior.prob/n
 		}
 		universe <- universe[!dup]
 
@@ -191,46 +203,49 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 }
 
 topGO <- function(results, ontology = c("BP", "CC", "MF"), sort = NULL, number = 20L)
-#  Extract sorted results from goana output 
+#  Extract top GO terms from goana output 
 #  Gordon Smyth and Yifang Hu
-#  Created 20 June 2014. Last modified 29 August 2014.
+#  Created 20 June 2014. Last modified 4 April 2015.
 {
 	# Check results
 	if(!is.data.frame(results)) stop("results should be a data.frame.")
 
-	# Number of gene sets
-	nsets <- (ncol(results)-3L) %/% 2L
-	setnames <- colnames(results)[4L:(3L+nsets)]
-
 	# Check ontology
 	ontology <- match.arg(unique(ontology), c("BP", "CC", "MF"), several.ok = TRUE)
-
-	# Check sort and find p-value column
-	if(is.null(sort)) {
-		P.col <- 4L+nsets
-	} else {
-		sort <- as.character(sort[1])
-		if(sort=="up") sort="Up"
-		if(sort=="down") sort="Down"
-		sort <- paste0("^",sort,"$")
-		P.col <- grep(sort, setnames)
-		if(!length(P.col)) stop("sort column not found")
-		P.col <- 3L+nsets+P.col
-	}
-
-	# Check number
-	if(!is.numeric(number)) stop("Need to input number.")
-	if(number < 1L) return(data.frame())
 
 	# Limit results to specified ontologies
 	if(length(ontology) < 3L) {
 		sel <- results$Ont %in% ontology
 		results <- results[sel,]
 	}
+	dimres <- dim(results)
 
-	# Sort by p-value
-	o <- order(results[,P.col], rownames(results))
-	if(number < length(o)) o <- o[1:number]
+	# Check number
+	if(!is.numeric(number)) stop("number should be a positive integer")
+	if(number > dimres[1L]) number <- dimres[1]
+	if(number < 1L) return(results[integer(0),])
 
-	results[o,,drop=FALSE]
+	# Number of gene lists for which results are reported
+	# Lists are either called "Up" and "Down" or have user-supplied names
+	nsets <- (dimres[2L]-3L) %/% 2L
+	if(nsets < 1L) stop("results has wrong number of columns")
+	setnames <- colnames(results)[4L:(3L+nsets)]
+
+	# Check sort. Defaults to all gene lists.
+	if(is.null(sort)) {
+		isort <- 1L:nsets
+	} else {
+		sort <- as.character(sort)
+		isort <- which(tolower(setnames) %in% tolower(sort))
+		if(!length(isort)) stop("sort column not found in results")
+	}
+
+	# Sort by minimum p-value for specified gene lists
+	P.col <- 3L+nsets+isort
+	if(length(P.col)==1L) {
+		o <- order(results[,P.col])
+	} else {
+		o <- order(do.call("pmin",as.data.frame(results[,P.col,drop=FALSE])))
+	}
+	results[o[1L:number],,drop=FALSE]
 }
