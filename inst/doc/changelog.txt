@@ -5,8 +5,8 @@
 
 1 March 2015: limma 3.22.6
 
-- fix bug in the MAList method for plotDensities introduced in
-  version 3.22.0.
+- fix bug in the MAList method for plotDensities introduced with
+  the use of NextMethod() in version 3.22.0.
 
 24 Feb 2015: limma 3.22.5
 
