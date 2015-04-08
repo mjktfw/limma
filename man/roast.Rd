@@ -5,19 +5,25 @@
 \alias{mroast.default}
 \alias{Roast-class}
 \alias{show,Roast-method}
+\alias{fry}
+\alias{fry.default}
 \title{Rotation Gene Set Tests}
 \description{
 Rotation gene set testing for linear models.
 }
 
 \usage{
-\S3method{roast}{default}(y, index=NULL, design=NULL, contrast=ncol(design), set.statistic="mean",
-     gene.weights=NULL, array.weights=NULL, weights=NULL, block=NULL, correlation,
-     var.prior=NULL, df.prior=NULL, trend.var=FALSE, nrot=999, approx.zscore=TRUE, \dots)
-\S3method{mroast}{default}(y, index=NULL, design=NULL, contrast=ncol(design), set.statistic="mean",
-     gene.weights=NULL, array.weights=NULL, weights=NULL, block=NULL, correlation,
-     var.prior=NULL, df.prior=NULL, trend.var=FALSE, nrot=999, approx.zscore=TRUE,
-     adjust.method="BH", midp=TRUE, sort="directional", \dots)
+\S3method{fry}{default}(y, index = NULL, design = NULL, contrast = ncol(design),
+      weights = NULL, sort = TRUE, \dots)
+\S3method{roast}{default}(y, index = NULL, design = NULL, contrast = ncol(design),
+      set.statistic = "mean", gene.weights = NULL, array.weights = NULL, weights = NULL,
+      block = NULL, correlation, var.prior = NULL, df.prior = NULL, trend.var = FALSE,
+      nrot = 999, approx.zscore = TRUE, \dots)
+\S3method{mroast}{default}(y, index = NULL, design = NULL, contrast = ncol(design),
+       set.statistic = "mean", gene.weights = NULL, array.weights = NULL, weights = NULL,
+       block = NULL, correlation, var.prior = NULL, df.prior = NULL, trend.var = FALSE,
+       nrot = 999, approx.zscore = TRUE, adjust.method = "BH", midp = TRUE,
+       sort = "directional", \dots)
 }
 
 \arguments{
@@ -40,7 +46,7 @@ Rotation gene set testing for linear models.
   \item{nrot}{number of rotations used to estimate the p-values.}
   \item{adjust.method}{method used to adjust the p-values for multiple testing. See \code{\link{p.adjust}} for possible values.}
   \item{midp}{logical, should mid-p-values be used in instead of ordinary p-values when adjusting for multiple testing?}
-  \item{sort}{character, whether to sort output table by directional p-value (\code{"directional"}), non-directional p-value (\code{"mixed"}), or not at all (\code{"none"}).}
+  \item{sort}{character, whether to sort output table by directional p-value (\code{"directional"}), non-directional p-value (\code{"mixed"}), or not at all (\code{"none"}).  For \code{fry} it is logical, whether to sort or not.}
   \item{approx.zscore}{logical, if \code{TRUE} then a fast approximation is used to convert t-statistics into z-scores prior to computing set statistics. If \code{FALSE}, z-scores will be exact.}
   \item{\dots}{other arguments not currently used.}
 }
@@ -103,6 +109,9 @@ This means that the smallest possible p-value is \code{1/(nrot+1)}.
 \code{mroast} does roast tests for multiple sets, including adjustment for multiple testing.
 By default, \code{mroast} reports ordinary p-values but uses mid-p-values (Routledge, 1994) at the multiple testing stage.
 Mid-p-values are probably a good choice when using false discovery rates (\code{adjust.method="BH"}) but not when controlling the family-wise type I error rate (\code{adjust.method="holm"}).
+
+\code{fry} is a fast version of \code{mroast} in the special case that \code{df.prior} is large and \code{set.statistic="mean"}.
+In this situation, it gives the same result as \code{mroast} with an infinite number of rotations.
 }
 
 \note{

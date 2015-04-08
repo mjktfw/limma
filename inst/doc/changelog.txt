@@ -1,3 +1,11 @@
+ 8 April 2015: limma 3.23.13
+
+- new function fry(), which provides a fast version of mroast()
+  when there is little heteroscedasticity between genes.
+ 
+- minor change to mroast() output so that FDR values are never
+  smaller than p-values when midp=TRUE.
+ 
  4 April 2015: limma 3.23.12
 
 - camera(), roast(), mroast() and romer() now give a warning if

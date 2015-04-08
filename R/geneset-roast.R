@@ -16,7 +16,7 @@ roast <- function(y,...) UseMethod("roast")
 roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,approx.zscore=TRUE,...)
 # Rotation gene set testing for linear models
 # Gordon Smyth and Di Wu
-# Created 24 Apr 2008.  Last modified 31 March 2015.
+# Created 24 Apr 2008.  Last modified 8 April 2015.
 {
 #	Issue warning if extra arguments found
 	dots <- names(list(...))
@@ -482,6 +482,11 @@ mroast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.st
 		row.names=names(index),
 		stringsAsFactors=FALSE
 	)
+
+	if(midp) {
+		tab$FDR <- pmax(tab$FDR, pv[,"UpOrDown"])
+		tab$FDR.Mixed <- pmax(tab$FDR.Mixed, pv[,"Mixed"])
+	}
 
 #	Sort by p-value
 	sort <- match.arg(sort,c("directional","mixed","none"))

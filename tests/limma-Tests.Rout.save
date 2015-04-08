@@ -1,5 +1,5 @@
 
-R version 3.2.0 alpha (2015-03-28 r68110)
+R version 3.2.0 beta (2015-04-02 r68137) -- "Full of Ingredients"
 Copyright (C) 2015 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -1173,21 +1173,21 @@ Up                 1 0.0010005
 UpOrDown           1 0.0020000
 Mixed              1 0.0020000
 > mroast(y=y,list(set1=iset1,set2=iset2),design,contrast=2,gene.weights=runif(100))
-     NGenes PropDown PropUp Direction PValue    FDR PValue.Mixed FDR.Mixed
-set1      5        0      1        Up  0.008 0.0150        0.008    0.0150
-set2      5        0      0        Up  0.959 0.9585        0.687    0.6865
+     NGenes PropDown PropUp Direction PValue   FDR PValue.Mixed FDR.Mixed
+set1      5        0      1        Up  0.008 0.015        0.008     0.015
+set2      5        0      0        Up  0.959 0.959        0.687     0.687
 > mroast(y=y,list(set1=iset1,set2=iset2),design,contrast=2,array.weights=c(0.5,1,0.5,1))
-     NGenes PropDown PropUp Direction PValue    FDR PValue.Mixed FDR.Mixed
-set1      5        0      1        Up  0.004 0.0070        0.004    0.0070
-set2      5        0      0        Up  0.679 0.6785        0.658    0.6575
+     NGenes PropDown PropUp Direction PValue   FDR PValue.Mixed FDR.Mixed
+set1      5        0      1        Up  0.004 0.007        0.004     0.007
+set2      5        0      0        Up  0.679 0.679        0.658     0.658
 > mroast(y=y,list(set1=iset1,set2=iset2),design,contrast=2,weights=w)
-     NGenes PropDown PropUp Direction PValue    FDR PValue.Mixed FDR.Mixed
-set1      5      0.0      1        Up  0.003 0.0050        0.003    0.0050
-set2      5      0.2      0      Down  0.950 0.9495        0.250    0.2495
+     NGenes PropDown PropUp Direction PValue   FDR PValue.Mixed FDR.Mixed
+set1      5      0.0      1        Up  0.003 0.005        0.003     0.005
+set2      5      0.2      0      Down  0.950 0.950        0.250     0.250
 > mroast(y=y,list(set1=iset1,set2=iset2),design,contrast=2,weights=w,array.weights=c(0.5,1,0.5,1))
-     NGenes PropDown PropUp Direction PValue    FDR PValue.Mixed FDR.Mixed
-set1      5        0      1        Up  0.001 0.0010        0.001    0.0010
-set2      5        0      0      Down  0.791 0.7905        0.146    0.1455
+     NGenes PropDown PropUp Direction PValue   FDR PValue.Mixed FDR.Mixed
+set1      5        0      1        Up  0.001 0.001        0.001     0.001
+set2      5        0      0      Down  0.791 0.791        0.146     0.146
 > 
 > ### camera
 > 
@@ -1376,4 +1376,4 @@ GO:0070062 0.055161144
 > 
 > proc.time()
    user  system elapsed 
-   2.94    0.23    3.16 
+   3.13    0.24    4.36 
