@@ -1,3 +1,9 @@
+13 April 2015: limma 3.23.15
+
+- update User's Guide.
+
+- fix bug in plotWithHighlights() introduced in previous version.
+
 13 April 2015: limma 3.23.14
 
 - new function plotMD() for mean-difference plots.  This will take

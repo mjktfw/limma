@@ -51,8 +51,8 @@ plotWithHighlights <- function(x, y, status=NULL, values=NULL, hi.pch=16, hi.col
 	if(nonhi) points(x[bg],y[bg],pch=bg.pch[1],col=bg.col[1],cex=bg.cex[1])
 
 #	Check graphical parameters for highlighted points
-	pch <- rep_len(unlist(hi.pch),length.out=nvalues)
-	cex <- rep_len(unlist(hi.cex),length.out=nvalues)
+	hi.pch <- rep_len(unlist(hi.pch),length.out=nvalues)
+	hi.cex <- rep_len(unlist(hi.cex),length.out=nvalues)
 	if(is.null(hi.col)) hi.col <- nonhi + 1L:nvalues
 	hi.col <- rep_len(unlist(hi.col),length.out=nvalues)
 
