@@ -1,3 +1,8 @@
+13 April 2015: limma 3.23.16
+
+- add note to help page for genas() explaining it is not yet
+  implemented for use with observation weights.
+
 13 April 2015: limma 3.23.15
 
 - update User's Guide.

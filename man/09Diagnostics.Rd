@@ -26,7 +26,7 @@ Plots foreground versus background log-intensies.}
 Mean-difference plots.
 Very versatile plot.
 For two color arrays, this plots the M-values vs A-values.
-For single channel technologies, this plots one columns of log-expression values vs the average of the other columns.
+For single channel technologies, this plots one column of log-expression values vs the average of the other columns.
 For fitted model objects, this plots a log-fold-change versus average log-expression.
 \code{\link{mdplot}} can also be useful for comparing two one-channel microarrays.
 }

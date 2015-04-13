@@ -42,6 +42,11 @@ The biological and technical correlations are overlaid on the scatterplot using 
 \code{library(ellipse)} is required to enable the plotting of ellipses.
 }
 
+\note{
+As present, \code{genas} assumes that technical correlations between coefficients are the same for all genes, and hence it only works with fit objects that were created without observation weights or missing values.
+It does not work with \code{voom} pipelines, because these involve observation weights.
+}
+
 \value{
 	\code{genas} produces a list with the following components:
 	  \item{technical.correlation}{estimate of the technical correlation}
