@@ -3,8 +3,15 @@
 genas <- function(fit,coef=c(1,2),subset="all",plot=FALSE,alpha=0.4)
 #	Genuine association of gene expression profiles
 #	Belinda Phipson and Gordon Smyth
-#	21 September 2009. Last modified 14 January 2015.
+#	21 September 2009. Last modified 11 April 2015.
 {
+	if(is.null(fit$cov.coefficients))
+		if(is.null(fit$qr)) {
+			stop("The fit object appears to have been fitted with observation weights or missing values. genas is not yet implemented for these situations.")
+		} else {
+			fit$cov.coefficients <- chol2inv(fit$qr$qr[,1:fit$qr$rank,drop=FALSE])
+		}
+
 	out <- list(
 		technical.correlation=NA,
 		covariance.matrix=matrix(NA,2,2),

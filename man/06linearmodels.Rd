@@ -82,6 +82,9 @@ After the above steps the results may be displayed or further processed using:
 \item{ \code{\link{plotlines}}}{
 	Plots fitted coefficients or log-intensity values for time-course data.}
 
+\item{ \code{\link{genas}}}{
+	Estimates and plots biological correlation between two coefficients.}
+
 \item{ \code{\link{write.fit}} }{
 	Writes an \code{MarrayLM} object to a file.
 	Note that if \code{fit} is an \code{MArrayLM} object, either \code{write.fit} or \code{write.table} can be used to write the results to a delimited text file.}

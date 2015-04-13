@@ -22,11 +22,24 @@ Produces a spatial picture of any spot-specific measure from an array image. If 
 \item{ \code{\link{plotFB}} }{
 Plots foreground versus background log-intensies.}
 
-\item{ \code{\link{plotMA}} or \code{\link{plot.MAList}} }{
-MA-plots.
-One of the most useful plots of a two-color array.
+\item{ \code{\link{plotMD}} }{
+Mean-difference plots.
+Very versatile plot.
+For two color arrays, this plots the M-values vs A-values.
+For single channel technologies, this plots one columns of log-expression values vs the average of the other columns.
+For fitted model objects, this plots a log-fold-change versus average log-expression.
+\code{\link{mdplot}} can also be useful for comparing two one-channel microarrays.
+}
+
+\item{ \code{\link{plotMA}} }{
+MA-plots, essentially the same as mean-difference plots.
 \code{\link{plotMA3by2}} will write MA-plots to files, six plots to a page.
-\code{\link{mdplot}} can also be useful for comparing two one-channel microarrays.}
+}
+
+\item{ \code{\link{plotWithHighlights}} }{
+Scatterplots with highlights.
+This is the underlying engine for \code{plotMD} and \code{plotMA}.
+}
 
 \item{ \code{\link{plotPrintTipLoess}} }{
 Produces a grid of MA-plots, one for each print-tip group on an array, together with the corresponding lowess curve.

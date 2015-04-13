@@ -1,4 +1,26 @@
- 8 April 2015: limma 3.23.13
+13 April 2015: limma 3.23.14
+
+- new function plotMD() for mean-difference plots.  This will take
+  over functionality of plotMA() function.
+
+- mdplot() has new arguments 'columns' and 'main'.
+
+- arguments 'pch', 'cex' and 'col' of plotWithHighlights() renamed to
+  'hi.pch', 'hi.cex' and 'hi.col'.  Improved help page for
+  plotWithHighlights().
+
+- plot() methods removed for EList, MAList and MArrayLM objects.
+  Use plotMD() instead.
+
+- genas() now gives an error message when applied to fitted model for
+  which the coefficient correlations are gene-specific.
+
+- topTable() now gives an information error message if eBayes() or
+  treat() have not already been run on the fitted model object.
+
+- NEWS.Rd updated for imminent Bioconductor 3.1 release.
+
+8 April 2015: limma 3.23.13
 
 - new function fry(), which provides a fast version of mroast()
   when there is little heteroscedasticity between genes.
@@ -29,8 +51,8 @@
 
 1 March 2015: limma 3.23.10
 
-- fix bug in the MAList method for plotDensities introduced with
-  the use of NextMethod() in version 3.21.16.
+- fix a bug in the MAList method for plotDensities that was
+  introduced with the use of NextMethod() in version 3.21.16.
 
 24 Feb 2015: limma 3.23.9
 
@@ -87,9 +109,9 @@
 
 - vennDiagram now fills circles with specified colors.
 
-- voomWithQualityWeights() now stores the sample weights in the 
-  resulting EList object (see $sample.weights component).
-  The values stored in $weights are still the combined 
+- voomWithQualityWeights() now stores the sample weights in the
+  sample.weights component output EList objects.  The values stored
+  in $weights are unchanged, they are still the combined 
   observation and sample weights.
 
 - plotMA method for EListRaw objects.

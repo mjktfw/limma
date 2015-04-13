@@ -1,6 +1,6 @@
-\title{modifyWeights}
 \name{modifyWeights}
 \alias{modifyWeights}
+\title{Modify Matrix of Weights By Control Status of Rows}
 \description{
 Modify weights matrix for given gene status values.
 }

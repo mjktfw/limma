@@ -12,6 +12,9 @@ This page gives an overview of the LIMMA functions for gene set testing and path
 \item{ \code{\link{mroast}} }{
 	Self-contained gene set testing for many sets.}
 
+\item{ \code{\link{fry}} }{
+	Fast version of \code{mroast} when heteroscedasticity of genes can be ignored.}
+
 \item{ \code{\link{camera}} }{
 	Competitive gene set testing.}
 

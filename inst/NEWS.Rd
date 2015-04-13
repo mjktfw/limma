@@ -2,6 +2,119 @@
 \title{limma News}
 \encoding{UTF-8}
 
+\section{Version 3.24.0}{\itemize{
+\item
+Limma review article (Ritchie et al, Nucleic Acids Research, 2015) is now published, and becomes the primary citation for limma.
+References in User's Guide, help files and CITATION have been updated to refer to this article.
+
+\item
+New function plotMD() for mean-difference plots.  This will take
+  over the functionality of the plotMA() function.
+
+\item
+mdplot() has new arguments 'columns' and 'main'.
+
+\item
+Arguments 'pch', 'cex' and 'col' of plotWithHighlights() renamed to
+  'hi.pch', 'hi.cex' and 'hi.col'.  Improved help page for
+  plotWithHighlights().
+
+\item
+plot() methods removed for EList, MAList and MArrayLM objects.  Use plotMD() instead.
+
+\item
+New function fry() provides a fast version of mroast()
+  when there is little heteroscedasticity between genes.
+
+\item 
+Minor change to mroast() output so that FDR values are never
+  smaller than p-values, even when mid-p-values are used.
+ 
+\item
+camera(), roast(), mroast() and romer() now give a warning if
+  any arguments found in ... are not used.
+
+\item
+romer() is now an S3 generic function.
+Speed improvements for romer() when the "mean" or "floormean" set
+  statistics are used.
+
+\item
+topGO() can now sort gene ontology results by several p-value
+  columns at once, using the minimum of the columns.  The default is
+  now to sort results using all the p-value columns found in the
+  results instead of just by the first column.
+
+\item
+goana() has new arguments 'plot' and 'covariate'.
+The plot argument allows users to view any estimated trend in the genewise significance values.
+The help files goana.Rd and goana.MArrayLM.Rd are consolidated into one file.
+
+\item
+plotDensities() has a new argument 'legend', allowing user to
+  reposition the legend.
+
+\item
+voomWithQualityWeights() has a new argument 'col', allowing the barplot of 
+  sample weights to be colour-coded.
+
+\item
+Improvements and bug fixes to plotMDS().
+plotMDS now stores 'axislabel', depending on the method used to
+  compute distances, and uses this to make more informative axis labels.
+plotMDS now traps problems when the distances are all zero or if
+  one or more of the dimensions are degenerate.
+Also, a bug when gene.selection="common" and top=nrow(x) has been fixed.
+
+\item
+The arguments for predFCm() have been renamed.  Old argument
+  'VarRel' replaced by logical argument 'var.indep.of.fc'.  Old
+  argument 'prop' replaced by 'all.de'.  New argument
+  'prop.true.null.method' passes through method to propTrueNull().
+
+\item
+vennDiagram() now fills circles with specified colors.
+
+\item
+plotMA() now has a method for EListRaw objects.
+
+\item
+voomWithQualityWeights() now stores the sample weights in the output EList object.
+  The values stored in $weights are unchanged, they are still the combined 
+  observation and sample weights.
+
+\item
+nec() and neqc() now remove the background Eb values if they exist in the
+  EListRaw object.
+
+\item
+Acknowledgements edited in User's Guide.
+
+\item
+fix URLs for a number of references in help pages.
+
+\item
+Improvements to lowess C code.
+
+\item
+When loading suggested packages within function calls, usages of
+  require() have been converted to requireNamespace() wherever
+  possible.  Functions from suggested packages are called using `::'.
+
+\item
+topTable() now gives an information error message if eBayes() or
+  treat() have not already been run on the fitted model object.
+
+\item
+genas() now gives an error message when applied to fitted model for
+  which the coefficient correlations are gene-specific.
+
+\item
+Fix a bug in the MAList method for plotDensities that was introduced with
+  the use of NextMethod() in version 3.21.16.
+}}
+
+
 \section{Version 3.22.0}{\itemize{
 \item
 New functions goana() and topGO() provide gene ontology analyses of differentially genes from a linear model fit.
