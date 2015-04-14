@@ -1,3 +1,11 @@
+14 April 2015: limma 3.23.17
+
+- adding back legacy arguments 'pch', 'col' and 'cex' as alternative
+  arguments for plotWithHighlights() to ensure background
+  compatibility.
+
+- edit help pages for plotMD, plotMA and plotWithHighlights.
+
 13 April 2015: limma 3.23.16
 
 - add note to help page for genas() explaining it is not yet
@@ -16,8 +24,8 @@
 
 - mdplot() has new arguments 'columns' and 'main'.
 
-- arguments 'pch', 'cex' and 'col' of plotWithHighlights() renamed to
-  'hi.pch', 'hi.cex' and 'hi.col'.  Improved help page for
+- arguments 'pch', 'col' and 'cex' of plotWithHighlights() renamed to
+  'hi.pch', 'hi.col' and 'hi.cex'.  Improved help page for
   plotWithHighlights().
 
 - plot() methods removed for EList, MAList and MArrayLM objects.

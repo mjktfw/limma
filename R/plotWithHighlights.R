@@ -1,11 +1,11 @@
-plotWithHighlights <- function(x, y, status=NULL, values=NULL, hi.pch=16, hi.col=NULL, hi.cex=1, legend="topleft", bg.pch=16, bg.col="black", bg.cex=0.3, ...)
+plotWithHighlights <- function(x, y, status=NULL, values=NULL, hi.pch=16, hi.col=NULL, hi.cex=1, legend="topleft", bg.pch=16, bg.col="black", bg.cex=0.3, pch=NULL, col=NULL, cex=NULL, ...)
 #	Scatterplot with color coding for special points
 
-#	Replaces the earlier function .plotMAxy, which in turn was based the original plotMA
+#	Replaces the earlier function .plotMAxy, which in turn was based on the original plotMA
 #	created by Gordon Smyth 7 April 2003 and modified by James Wettenhall 27 June 2003.
 
 #	Gordon Smyth
-#	Last modified 17 April 2014.
+#	Last modified 14 April 2015.
 {
 #	If no status information, just plot all points normally
 	if(is.null(status) || all(is.na(status))) {
@@ -16,20 +16,17 @@ plotWithHighlights <- function(x, y, status=NULL, values=NULL, hi.pch=16, hi.col
 
 #	Check values
 	if(is.null(values)) {
-
-#		Check for values and graphics parameters set as attributes by controlStatus()
-		if(!is.null(attr(status,"values"))) {
+		if(is.null(attr(status,"values"))) {
+#			Default is to set the most frequent status value as background, and to highlight other status values in decreasing order of frequency
+			status.values <- names(sort(table(status),decreasing=TRUE))
+			status <- as.character(status)
+			values <- status.values[-1]
+		} else {
+#			Use values and graphics parameters set as attributes by controlStatus()
 			values <- attr(status,"values")
 			if(!is.null(attr(status,"pch"))) hi.pch <- attr(status,"pch")
 			if(!is.null(attr(status,"col"))) hi.col <- attr(status,"col")
 			if(!is.null(attr(status,"cex"))) hi.cex <- attr(status,"cex")
-		}
-
-#		Default is to set the most frequent status value as background, and to highlight other status values in decreasing order of frequency
-		if(is.null(values)) {
-			status.values <- names(sort(table(status),decreasing=TRUE))
-			status <- as.character(status)
-			values <- status.values[-1]
 		}
 	}
 
@@ -40,6 +37,11 @@ plotWithHighlights <- function(x, y, status=NULL, values=NULL, hi.pch=16, hi.col
 		return(invisible())
 	}
 #	From here, values has positive length
+
+#	Allow legacy names 'pch', 'col' and 'cex' as alternatives to 'hi.pch', 'hi.col' and 'hi.cex'
+	if(missing(hi.pch) && !is.null(pch)) hi.pch <- pch
+	if(is.null(hi.col) && !is.null(col)) hi.col <- col
+	if(missing(hi.cex) && !is.null(cex)) hi.cex <- cex
 
 #	Setup plot axes
 	plot(x,y,type="n",...)

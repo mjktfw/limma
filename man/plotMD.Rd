@@ -56,16 +56,17 @@ Note that this procedure reduces to an ordinary mean-difference plot when there 
 
 If \code{object} is an \code{MArrayLM} object, then the plot is an fitted model MD-plot in which the estimated coefficient is on the y-axis and the average A-value is on the x-axis.
 
-The \code{status} vector is intended to specify the control status of each spot, for example \code{"gene"}, \code{"ratio control"}, \code{"house keeping gene"}, \code{"buffer"} and so on.
-The vector is often computed using the function \code{\link{controlStatus}} and a spot-types file.
-However the function may be used to highlight any subset of spots.
+The \code{status} vector can correspond to any grouping of the probes that is of interest.
+If \code{object} is a fitted model object, then \code{status} vector is often used to indicate statistically significance, so that differentially expressed points are highlighted.
+If \code{object} is a microarray data object, then \code{status} might distinguish control probes from regular probes so that different types of controls are highlighted.
 
 The \code{status} can be included as the component \code{object$genes$Status} instead of being passed as an argument to \code{plotMD}.
-The arguments \code{values}, \code{pch}, \code{col} and \code{cex} can be included as attributes to \code{status} instead of being passed as arguments to \code{plotMD}.
+
+See \code{\link{plotWithHighlights}} for how to set colors and graphics parameters for the highlighted and non-highlighted points.
 }
 
 \note{
-This function is an alternative name for \code{plotMA}, which was one of the original functions of the limma package in 2002.
+This function is an alternative to \code{plotMA}, which was one of the original functions of the limma package in 2002.
 The history of mean-difference plots and MA-plots is reviewed in Ritchie et al (2015).
 }
 
@@ -85,8 +86,7 @@ A <- runif(1000,4,16)
 y <- A + matrix(rnorm(1000*3,sd=0.2),1000,3)
 status <- rep(c(0,-1,1),c(950,40,10))
 y[,1] <- y[,1] + status
-E <- new("EList",list(E=y))
-plotMD(E,column=1,status=status,values=c(-1,1),hi.col=c("blue","red"))
+plotMD(y, column=1, status=status, values=c(-1,1), hi.col=c("blue","red"))
 
 MA <- new("MAList")
 MA$A <- runif(300,4,16)
@@ -102,14 +102,14 @@ status[1:3] <- "M=0"
 status[4:6] <- "M=3"
 status[7:9] <- "M=-3"
 values <- c("M=0","M=3","M=-3")
-col <- c("blue","red","green")
+hi.col <- c("blue","red","green")
 
 plotMD(MA,main="MA-Plot with 12 spiked-in points",
-       status=status, values=values, hi.col=col)
+       status=status, values=values, hi.col=hi.col)
 
 #  Same as above but setting graphical parameters as attributes
 attr(status,"values") <- values
-attr(status,"col") <- col
+attr(status,"col") <- hi.col
 plotMD(MA, main="Mean-Difference Plot with 12 spiked-in points", status=status)
 
 #  Same as above but passing status as part of object
@@ -123,9 +123,7 @@ plotMD(MA, bg.pch=1, bg.cex=0.5)
 
 \seealso{
 The driver function for \code{plotMD} is \code{\link{plotWithHighlights}}.
-See also \code{\link{mdplot}} for a simpler mean-difference plot function.
-
-\code{plotMD} and \code{\link{plotMA}} are alternative names for the same function.
+See also \code{\link{mdplot}} for a very basic mean-difference plot function.
 
 An overview of plot functions available in LIMMA is given in \link{09.Diagnostics}.
 }

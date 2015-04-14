@@ -8,7 +8,8 @@ This is the engine for \code{plotMD} and \code{plotMA}.
 \usage{
 plotWithHighlights(x, y, status = NULL, values = NULL,
                    hi.pch = 16, hi.col = NULL, hi.cex = 1, legend = "topleft",
-                   bg.pch = 16, bg.col = "black", bg.cex = 0.3, \dots)
+                   bg.pch = 16, bg.col = "black", bg.cex = 0.3,
+                   pch = NULL, col = NULL, cex = NULL, \dots)
 }
 \arguments{
   \item{x}{numeric vector.}
@@ -43,20 +44,31 @@ plotWithHighlights(x, y, status = NULL, values = NULL,
 
   \item{bg.cex}{plot symbol expansion for background (non-highlighted) points.}
 
+  \item{pch}{synonym for \code{hi.pch} allowed for backward compatibility.}
+
+  \item{col}{synonym for \code{hi.col} allowed for backward compatibility.}
+
+  \item{cex}{synonym for \code{hi.cex} allowed for backward compatibility.}
+
   \item{\dots}{other arguments are passed to \code{plot}.}
 }
 
 \details{
 This function produces a scatterplot in which the highlighted points are, by default, larger and colored compared to background points.
 
-The \code{status} vector might be used specify the control status of each point, for example \code{"gene"}, \code{"ratio control"}, \code{"house keeping gene"}, \code{"buffer"} and so on.
-The vector can be computed using the function \code{\link{controlStatus}} and a spot-types file.
-Alternatively, the \code{status} vector could indicate statistically significant points.
-However the function may be used to highlight any subset of spots.
+The \code{status} vector establishes the status of each point and \code{values} indicates which values of \code{status} should be highlighted.
+If \code{values=NULL}, then the most common value of \code{status} is assumed to correspond to background points and all other values are highlighted.
 
-By default, the most common value of \code{status} is assumed to correspond to a background point.
+The arguments \code{hi.pch}, \code{hi.col} and \code{hi.cex} give graphics settings for highlighted points.
+By default, highlighted points are larger than background points and a different color is used for each distinct highlighted value.
 
-See \code{\link[graphics]{points}} for possible values for \code{pch}, \code{col} and \code{cex}.
+The arguments \code{bg.pch}, \code{bg.col} and \code{bg.cex} give the graphics settings for non-highlighted (background) points.
+The same settings are used for all background points.
+
+The arguments \code{values}, \code{pch}, \code{col} and \code{cex} can be included as attributes to \code{status} instead of being passed as arguments to \code{plotWithHighlights}.
+This is for compatibility with \code{\link{controlStatus}}.
+
+See \code{\link[graphics]{points}} for possible values for the graphics parameters.
 }
 
 \value{A plot is created on the current graphics device.}
@@ -64,17 +76,17 @@ See \code{\link[graphics]{points}} for possible values for \code{pch}, \code{col
 \references{
 Ritchie, ME, Phipson, B, Wu, D, Hu, Y, Law, CW, Shi, W, and Smyth, GK (2015).
 limma powers differential expression analyses for RNA-sequencing and microarray studies.
-\emph{Nucleic Acids Research} 43,
+\emph{Nucleic Acids Research} 43 (7),
 doi: 10.1093/nar/gkv007.
 }
 
 \author{Gordon Smyth}
 
 \examples{
-x <- runif(1000,4,16)
-status <- rep(c(0,-1,1),c(950,40,10))
-y <- status + rnorm(1000,sd=0.2)
-plotWithHighlights(x,y,status=status)
+x <- runif(1000, min=4, max=16)
+status <- rep(c(0,-1,1), c(950,40,10))
+y <- status + rnorm(1000, sd=0.2)
+plotWithHighlights(x, y, status=status)
 }
 
 \seealso{
