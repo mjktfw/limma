@@ -22,13 +22,13 @@ Numeric vector containing adjusted intensities.
 \references{
 Ritchie, M. E., Silver, J., Oshlack, A., Silver, J., Holmes, M., Diyagama, D., Holloway, A., and Smyth, G. K. (2007).
 A comparison of background correction methods for two-colour microarrays.
-\emph{Bioinformatics}
-\url{http://bioinformatics.oxfordjournals.org/cgi/content/abstract/btm412}
+\emph{Bioinformatics} 23, 2700-2707.
+\url{http://bioinformatics.oxfordjournals.org/content/23/20/2700}
 
 Silver, JD, Ritchie, ME, and Smyth, GK (2009).
 Microarray background correction: maximum likelihood estimation for the normal-exponential convolution.
 \emph{Biostatistics} 10, 352-363.
-\url{http://biostatistics.oxfordjournals.org/cgi/content/abstract/kxn042}
+\url{http://biostatistics.oxfordjournals.org/content/10/2/352}
 }
 
 \author{Gordon Smyth}

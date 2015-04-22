@@ -64,8 +64,8 @@ PhD Thesis, University of Melbourne, Australia.
 
 Ritchie, ME, Phipson, B, Wu, D, Hu, Y, Law, CW, Shi, W, and Smyth, GK (2015).
 limma powers differential expression analyses for RNA-sequencing and microarray studies.
-\emph{Nucleic Acids Research} 43,
-doi: 10.1093/nar/gkv007.
+\emph{Nucleic Acids Research} 43, e47.
+\url{http://nar.oxfordjournals.org/content/43/7/e47}
 }
 
 \author{Belinda Phipson and Gordon Smyth for \code{propTrueNull}; Egil Ferkingstad, Mette Langaas and Marcus Davy for \code{convest}}

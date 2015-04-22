@@ -36,8 +36,8 @@ The function \code{\link{changeLog}} displays the record of changes to the packa
 \references{
 Ritchie, ME, Phipson, B, Wu, D, Hu, Y, Law, CW, Shi, W, and Smyth, GK (2015).
 limma powers differential expression analyses for RNA-sequencing and microarray studies.
-\emph{Nucleic Acids Research} 43,
-doi: 10.1093/nar/gkv007.
+\emph{Nucleic Acids Research} 43, e47.
+\url{http://nar.oxfordjournals.org/content/43/7/e47}
 
 Law, CW, Chen, Y, Shi, W, and Smyth, GK (2014).
 Voom: precision weights unlock linear model analysis tools for RNA-seq read counts.

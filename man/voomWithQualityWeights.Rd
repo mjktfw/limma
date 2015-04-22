@@ -27,7 +27,7 @@ voomWithQualityWeights(counts, design=NULL, lib.size=NULL, normalize.method="non
  \item{tol}{convergence tolerance.}
  \item{trace}{logical variable. If true then output diagnostic information
           at each iteration of the '"reml"' algorithm, or at every 1000th iteration of the 
-          '"genebygene"' algorithm.}
+          \code{"genebygene"} algorithm.}
  \item{replace.weights}{logical variable. If TRUE then the weights in the voom object will be replaced with 
        the combined voom and sample-specific weights and the \code{\link[limma:EList]{EList}} object from voom is returned.
        If FALSE, then a matrix of combined weights is returned.}
@@ -40,21 +40,17 @@ This function is intended to process RNA-Seq data prior to linear modelling in l
 It combines observational-level weights from \code{voom} with sample-specific weights estimated using the \code{arrayWeights} function.
 }
 \value{
-	Either an \code{\link[limma:EList]{EList}} object with the following components:
-\item{E}{numeric matrix of normalized expression values on the log2 scale}
-\item{weights}{numeric matrix of inverse variance weights}
-\item{design}{design matrix}
-\item{lib.size}{numeric vector of total normalized library sizes}
-\item{genes}{dataframe of gene annotation extracted from \code{counts}}
-       or a matrix of combined voom and sample-specific weights with same dimension as \code{counts}.
+A numeric matrix of same dimension as \code{counts} containing consolidated voom and sample-specific weights.
+If \code{replace.weights=TRUE}, then an \code{\link[limma:EList]{EList}} object is returned with the \code{weights} component containing the consolidated weights.
 }
 
 \author{Matthew Ritchie and Cynthia Liu}
 
 \references{
-Liu, R., Holik, A. Z., Su, S., Jansz, N., Chen, K., Leong, H. S., Blewitt, M. E., Asselin-Labat, M.-L., Smyth, G. K., Ritchie, M. E. (2014).
+Liu, R., Holik, A. Z., Su, S., Jansz, N., Chen, K., Leong, H. S., Blewitt, M. E., Asselin-Labat, M.-L., Smyth, G. K., Ritchie, M. E. (2015).
 Why weight? Combining voom with estimates of sample quality improves power in RNA-seq analyses.
-(in preparation)
+\emph{Nucleic Acids Research} 43.
+(Accepted 17 April 2015)
 
 Ritchie, M. E., Diyagama, D., Neilson, van Laar, R., J., Dobrovic, A., Holloway, A., and Smyth, G. K. (2006).
 Empirical array quality weights in the analysis of microarray data.

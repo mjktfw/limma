@@ -1,3 +1,15 @@
+22 April 2015: limma 3.24.1
+
+- Update citation for the limma review article (Ritchie et al,
+  NAR 2015).
+
+- Update Liu et al reference for voomWithQualityWeights().
+
+- topGO() has a new argument 'truncate.term' to limit number of
+  characters appearing in a column.
+
+17 April 2015: limma 3.24.0 (Bioconductor 3.1 Release Branch)
+
 14 April 2015: limma 3.23.17
 
 - adding back legacy arguments 'pch', 'col' and 'cex' as alternative
