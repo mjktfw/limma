@@ -39,9 +39,9 @@ read.idat(idatfiles, bgxfile, dateinfo=FALSE)
 }
 
 \references{
-  Smith ML, Baggerly KA, Bengtsson H, Ritchie ME, Hansen KD (2013). 
-  illuminaio: An open source IDAT parsing tool. \emph{F1000 Research}, 2:264.
-  \url{http://f1000research.com/articles/2-264/v1}
+Smith ML, Baggerly KA, Bengtsson H, Ritchie ME, Hansen KD (2013). 
+illuminaio: An open source IDAT parsing tool. \emph{F1000 Research} 2, 264.
+\url{http://f1000research.com/articles/2-264/v1}
 }
 
 \author{Matt Ritchie}

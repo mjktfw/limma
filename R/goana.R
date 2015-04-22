@@ -202,10 +202,10 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 	Results
 }
 
-topGO <- function(results, ontology = c("BP", "CC", "MF"), sort = NULL, number = 20L)
+topGO <- function(results, ontology = c("BP", "CC", "MF"), sort = NULL, number = 20L, truncate.term=NULL)
 #  Extract top GO terms from goana output 
 #  Gordon Smyth and Yifang Hu
-#  Created 20 June 2014. Last modified 4 April 2015.
+#  Created 20 June 2014. Last modified 22 April 2015.
 {
 	# Check results
 	if(!is.data.frame(results)) stop("results should be a data.frame.")
@@ -247,5 +247,17 @@ topGO <- function(results, ontology = c("BP", "CC", "MF"), sort = NULL, number =
 	} else {
 		o <- order(do.call("pmin",as.data.frame(results[,P.col,drop=FALSE])))
 	}
-	results[o[1L:number],,drop=FALSE]
+	tab <- results[o[1L:number],,drop=FALSE]
+
+#	Truncate Term column for readability
+	if(!is.null(truncate.term)) {
+		truncate.term <- as.integer(truncate.term[1])
+		truncate.term <- max(truncate.term,5L)
+		truncate.term <- min(truncate.term,1000L)
+		tm2 <- truncate.term-3L
+		i <- (nchar(tab$Term) > tm2)
+		tab$Term[i] <- paste0(substring(tab$Term[i],1L,tm2),"...")
+	}
+
+	tab
 }

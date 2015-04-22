@@ -7,7 +7,7 @@ Extract top GO terms from goana results.
 }
 
 \usage{
-topGO(results, ontology = c("BP", "CC", "MF"), sort = NULL, number = 20L)
+topGO(results, ontology = c("BP", "CC", "MF"), sort = NULL, number = 20L, truncate.term = NULL)
 }
 
 \arguments{
@@ -15,6 +15,7 @@ topGO(results, ontology = c("BP", "CC", "MF"), sort = NULL, number = 20L)
   \item{ontology}{character vector of ontologies to be included in output.  Elements should be one or more of \code{"BP"}, \code{"CC"} or \code{"MF"}.}
   \item{sort}{character vector of names of gene lists for which results are required.  Should be one or more of the column names of \code{results}.  Defaults to all gene lists.}
   \item{number}{maximum number of top GO terms to list. For all terms, set \code{number=Inf}.}
+  \item{truncate.term}{truncate the name of the GO term at this number of characters.}
 }
 
 \details{

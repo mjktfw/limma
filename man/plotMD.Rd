@@ -75,8 +75,8 @@ The history of mean-difference plots and MA-plots is reviewed in Ritchie et al (
 \references{
 Ritchie, ME, Phipson, B, Wu, D, Hu, Y, Law, CW, Shi, W, and Smyth, GK (2015).
 limma powers differential expression analyses for RNA-sequencing and microarray studies.
-\emph{Nucleic Acids Research} Volume 43, Issue 7,
-doi: 10.1093/nar/gkv007.
+\emph{Nucleic Acids Research} Volume 43, e47.
+\url{http://nar.oxfordjournals.org/content/43/7/e47}
 }
 
 \author{Gordon Smyth}
