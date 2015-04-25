@@ -1,3 +1,7 @@
+25 April 2015: limma 3.25.2
+
+- auROC() now allows for tied stat values.
+
 22 April 2015: limma 3.25.1
 
 - Update citation for the limma review article (Ritchie et al,
