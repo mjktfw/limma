@@ -29,9 +29,6 @@ The area under the curve is undefined if \code{truth} is all \code{TRUE} or all 
 \value{
 Numeric value between 0 and 1 giving area under the curve, 1 being perfect and 0 being the minimum.
 }
-\seealso{
-See \link{08.Tests} for other functions for testing and processing p-values.
-}
 \examples{
 auROC(c(1,1,0,0,0))
 truth <- rbinom(30,size=1,prob=0.2)
