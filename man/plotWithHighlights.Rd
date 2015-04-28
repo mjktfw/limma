@@ -7,7 +7,7 @@ This is the engine for \code{plotMD} and \code{plotMA}.
 }
 \usage{
 plotWithHighlights(x, y, status = NULL, values = NULL,
-                   hi.pch = 16, hi.col = NULL, hi.cex = 1, legend = "topleft",
+                   hl.pch = 16, hl.col = NULL, hl.cex = 1, legend = "topleft",
                    bg.pch = 16, bg.col = "black", bg.cex = 0.3,
                    pch = NULL, col = NULL, cex = NULL, \dots)
 }
@@ -23,14 +23,14 @@ plotWithHighlights(x, y, status = NULL, values = NULL,
   Defaults to unique values of \code{status} in decreasing order of frequency, with the most frequent value set as the background value.
   Ignored if there is no \code{status} vector.}
 
-  \item{hi.pch}{vector of plotting characters for highlighted points, either of unit length or of same length as \code{values}.
+  \item{hl.pch}{vector of plotting characters for highlighted points, either of unit length or of same length as \code{values}.
   Ignored is there is no \code{status} vector.}
 
-  \item{hi.col}{vector of colors for highlighted points, either of unit length or of same length as \code{values}.
+  \item{hl.col}{vector of colors for highlighted points, either of unit length or of same length as \code{values}.
   Defaults to \code{1+1:length(values)}.
   Ignored if there is no \code{status} vector.}
 
-  \item{hi.cex}{numeric vector of plot symbol expansions for highlighted points, either of unit length or of same length as \code{values}.
+  \item{hl.cex}{numeric vector of plot symbol expansions for highlighted points, either of unit length or of same length as \code{values}.
   Ignored if there is no \code{status} vector.}
 
   \item{legend}{character string giving position to place legend.
@@ -44,11 +44,11 @@ plotWithHighlights(x, y, status = NULL, values = NULL,
 
   \item{bg.cex}{plot symbol expansion for background (non-highlighted) points.}
 
-  \item{pch}{synonym for \code{hi.pch} allowed for backward compatibility.}
+  \item{pch}{synonym for \code{hl.pch} allowed for backward compatibility.}
 
-  \item{col}{synonym for \code{hi.col} allowed for backward compatibility.}
+  \item{col}{synonym for \code{hl.col} allowed for backward compatibility.}
 
-  \item{cex}{synonym for \code{hi.cex} allowed for backward compatibility.}
+  \item{cex}{synonym for \code{hl.cex} allowed for backward compatibility.}
 
   \item{\dots}{other arguments are passed to \code{plot}.}
 }
@@ -59,7 +59,7 @@ This function produces a scatterplot in which the highlighted points are, by def
 The \code{status} vector establishes the status of each point and \code{values} indicates which values of \code{status} should be highlighted.
 If \code{values=NULL}, then the most common value of \code{status} is assumed to correspond to background points and all other values are highlighted.
 
-The arguments \code{hi.pch}, \code{hi.col} and \code{hi.cex} give graphics settings for highlighted points.
+The arguments \code{hl.pch}, \code{hl.col} and \code{hl.cex} give graphics settings for highlighted points.
 By default, highlighted points are larger than background points and a different color is used for each distinct highlighted value.
 
 The arguments \code{bg.pch}, \code{bg.col} and \code{bg.cex} give the graphics settings for non-highlighted (background) points.
