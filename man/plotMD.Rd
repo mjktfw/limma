@@ -86,7 +86,7 @@ A <- runif(1000,4,16)
 y <- A + matrix(rnorm(1000*3,sd=0.2),1000,3)
 status <- rep(c(0,-1,1),c(950,40,10))
 y[,1] <- y[,1] + status
-plotMD(y, column=1, status=status, values=c(-1,1), hi.col=c("blue","red"))
+plotMD(y, column=1, status=status, values=c(-1,1), hl.col=c("blue","red"))
 
 MA <- new("MAList")
 MA$A <- runif(300,4,16)
@@ -102,14 +102,14 @@ status[1:3] <- "M=0"
 status[4:6] <- "M=3"
 status[7:9] <- "M=-3"
 values <- c("M=0","M=3","M=-3")
-hi.col <- c("blue","red","green")
+hl.col <- c("blue","red","green")
 
 plotMD(MA,main="MA-Plot with 12 spiked-in points",
-       status=status, values=values, hi.col=hi.col)
+       status=status, values=values, hl.col=hl.col)
 
 #  Same as above but setting graphical parameters as attributes
 attr(status,"values") <- values
-attr(status,"col") <- hi.col
+attr(status,"col") <- hl.col
 plotMD(MA, main="Mean-Difference Plot with 12 spiked-in points", status=status)
 
 #  Same as above but passing status as part of object

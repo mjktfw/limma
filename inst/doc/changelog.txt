@@ -1,3 +1,8 @@
+28 April 2015: limma 3.25.3
+
+- arguments hi.pch, hi.col and hi.cex of plotWithHighlights() renamed
+  to hl.pch, hl.col and hl.cex.  ('hl' is short for 'highlight'.)
+
 25 April 2015: limma 3.25.2
 
 - auROC() now allows for tied stat values.
