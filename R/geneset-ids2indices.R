@@ -1,11 +1,14 @@
 ids2indices <- function(gene.sets, identifiers, remove.empty=TRUE)
 # Make a list of gene identifiers into a list of indices for gene sets
 # Gordon Smyth and Yifang Hu
-# 25 March 2009.  Last modified 19 June 2014.
+# 25 March 2009.  Last modified 6 May 2015.
 {
-	gene.sets <- as.list(gene.sets)
-	index <- lapply(gene.sets, function(x) which(identifiers %in% x))
-	if(remove.empty)
-		for (i in length(index):1) if(!length(index[[i]])) index[[i]] <- NULL
+	if(!is.list(gene.sets)) gene.sets <- list(Set1=gene.sets)
+	identifiers <- as.character(identifiers)
+	index <- lapply(gene.sets, function(x) which(identifiers %in% as.character(x)))
+	if(remove.empty) {
+		Empty <- which(lengths(index)==0L)
+		if(length(Empty)) for (i in length(Empty):1) index[[Empty[i]]] <- NULL
+	}
 	index
 }

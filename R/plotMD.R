@@ -5,10 +5,10 @@ plotMD <- function(object,...) UseMethod("plotMD")
 plotMD.RGList <- function(object, column=1, xlab="A", ylab="M", main=colnames(object)[column], status=object$genes$Status, zero.weights=FALSE, ...)
 #	Mean-difference plot with color coding for controls
 #	Created by Gordon Smyth 7 April 2003 and James Wettenhall 27 June 2003.
-#	Last modified 14 April 2015.
+#	Last modified 13 May 2015.
 {
 	object <- MA.RG(object[,column])
-	plotMA.MAList(object=object,column=1,xlab=xlab,ylab=ylab,main=main,status=status,zero.weights=zero.weights,...)
+	plotMD.MAList(object=object,column=1,xlab=xlab,ylab=ylab,main=main,status=status,zero.weights=zero.weights,...)
 }
 
 plotMD.MAList <- function(object, column=1, xlab="A", ylab="M", main=colnames(object)[column], status=object$genes$Status, zero.weights=FALSE, ...)
