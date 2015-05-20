@@ -1,3 +1,8 @@
+20 May 2015: limma 3.24.5
+
+- bug fix for plotWithHighlights(). Legend was not displaying
+  correctly when there were no background points.
+
 13 May 2015: limma 3.24.4
 
 - goana() with trend now chooses the span of the tricube smoother
