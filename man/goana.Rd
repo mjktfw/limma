@@ -10,7 +10,7 @@ Test for over-representation of gene ontology (GO) terms in one or more sets of 
 
 \usage{
 \method{goana}{MArrayLM}(de, coef = ncol(de), geneid = rownames(de), FDR = 0.05, 
-      species = "Hs", trend = FALSE, plot=FALSE, \dots)
+      trend = FALSE, \dots)
 \method{goana}{default}(de, universe = NULL, species = "Hs", prior.prob = NULL,
       covariate=NULL, plot=FALSE, \dots)
 }

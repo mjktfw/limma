@@ -1,3 +1,15 @@
+20 May 2015: limma 3.25.4
+
+- goana() with trend now chooses the span of the tricube smoother
+  based on the number of differentially expressed genes.  Larger
+  spans give smoother trends and are used for smaller numbers of
+  genes.  Arguments 'species' and 'plot' are no longer part of
+  goana.MArrayLM() and are instead passed to goana.default().
+
+- speedup for ids2indices().
+
+- bug fix to plotMD.RGList.
+
 28 April 2015: limma 3.25.3
 
 - arguments hi.pch, hi.col and hi.cex of plotWithHighlights() renamed
