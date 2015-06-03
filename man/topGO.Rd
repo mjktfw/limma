@@ -1,13 +1,16 @@
 \name{topGO}
 \alias{topGO}
-\title{Table of Top GO Terms}
+\alias{topKEGG}
+\title{Table of Top GO Terms or Top KEGG Pathways}
 
 \description{
-Extract top GO terms from goana results.
+Extract top GO terms from goana output or top KEGG terms from kegga output.
 }
 
 \usage{
-topGO(results, ontology = c("BP", "CC", "MF"), sort = NULL, number = 20L, truncate.term = NULL)
+topGO(results, ontology = c("BP", "CC", "MF"), sort = NULL, number = 20L, 
+      truncate.term = NULL)
+topKEGG(results, sort = NULL, number = 20L, truncate.term = NULL)
 }
 
 \arguments{
@@ -19,8 +22,9 @@ topGO(results, ontology = c("BP", "CC", "MF"), sort = NULL, number = 20L, trunca
 }
 
 \details{
-This function organizes the output from \code{\link{goana}} into top-tables of the most significant GO terms.
-Rows are sorted by the minimum p-value of any of the result columns specified by \code{sort}.
+\code{topGO} organizes the output from \code{\link{goana}} into top-tables of the most significant GO terms.
+\code{topKEGG} similarly extracts the most significant KEGG pathways from \code{\link{kegga}} output. 
+In either case, rows are sorted by the minimum p-value of any of the result columns specified by \code{sort}.
 }
 
 \value{
@@ -28,7 +32,7 @@ Same as \code{results} but with rows subsetted by Ontology and sorted by p-value
 }
 
 \seealso{
-\code{\link{goana}}
+\code{\link{goana}}, \code{\link{kegga}}
 
 See \link{10.GeneSetTests} for a description of other functions used for gene set testing.
 }

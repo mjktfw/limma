@@ -1,14 +1,14 @@
-goana <- function(de,...) UseMethod("goana")
+kegga <- function(de,...) UseMethod("kegga")
 
-goana.MArrayLM <- function(de, coef = ncol(de), geneid = rownames(de), FDR = 0.05, trend = FALSE, ...)
-#	Gene ontology analysis of DE genes from linear model fit
+kegga.MArrayLM <- function(de, coef = ncol(de), geneid = rownames(de), FDR = 0.05, trend = FALSE, ...)
+#	KEGG (Kyoto Encyclopedia of Genes and Genomes) pathway analysis of DE genes from linear model fit
 #	Gordon Smyth and Yifang Hu
-#	Created 20 June 2014.  Last modified 1 May 2015.
+#	Created 15 May 2015. Last modified 3 June 2015.
 {
 #	Avoid argument collision with default method
 	dots <- names(list(...))
-	if("universe" %in% dots) stop("goana.MArrayLM defines its own universe",call.=FALSE)
-	if((!is.logical(trend) || trend) && "covariate" %in% dots) stop("goana.MArrayLM defines it own covariate",call.=FALSE)
+	if("universe" %in% dots) stop("kegga.MArrayLM defines its own universe",call.=FALSE)
+	if((!is.logical(trend) || trend) && "covariate" %in% dots) stop("kegga.MArrayLM defines it own covariate",call.=FALSE)
 
 #	Check fit
 	if(is.null(de$coefficients)) stop("de does not appear to be a valid MArrayLM fit object.")
@@ -69,15 +69,15 @@ goana.MArrayLM <- function(de, coef = ncol(de), geneid = rownames(de), FDR = 0.0
 	}
 
 	if(trend)
-		goana(de=DEGenes, universe = universe, covariate=covariate, ...)
+		kegga(de=DEGenes, universe = universe, covariate=covariate, ...)
 	else
-		goana(de=DEGenes, universe = universe, ...)
+		kegga(de=DEGenes, universe = universe, ...)
 }
 
-goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL, covariate=NULL, plot=FALSE, ...)
-#	Gene ontology analysis of DE genes
+kegga.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL, covariate=NULL, plot=FALSE, ...)
+#	KEGG (Kyoto Encyclopedia of Genes and Genomes) pathway analysis of DE genes
 #	Gordon Smyth and Yifang Hu
-#	Created 20 June 2014.  Last modified 27 March 2015.
+#	Created 18 May 2015.  Modified 3 June 2015.
 {
 #	Ensure de is a list
 	if(!is.list(de)) de <- list(DE = de)
@@ -112,20 +112,27 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 		if(plot) barcodeplot(covariate, index=(isDE==1), worm=TRUE, span.worm=span)
 	}
 
-#	Load package of GO terms
-	if(!suppressPackageStartupMessages(require("GO.db", character.only = TRUE))) stop("GO.db package not available")
+#	Enable REST-style online access to KEGG pathways
+	if(!requireNamespace("KEGGREST",quietly=TRUE)) stop("KEGGREST required but is not available")
 
-#	Load species annotation package
-	DB <- paste("org", species, "eg", "db", sep = ".")
-	if(!suppressPackageStartupMessages(require(DB, character.only = TRUE))) stop(DB,"package not available")
+#	Convert to KEGG organism/species codes
+	organism <- switch(species, "Hs"="hsa", "Dm"="dme", "Mm"="mmu", "Rn"="rno")
 
-#	Get gene-GOterm mappings, and remove duplicate entries
-	GO2ALLEGS <- paste("org", species, "egGO2ALLEGS", sep = ".")
+#	Get gene-KEGG mappings, and remove duplicate entries
 	if(is.null(universe)) {
-		EG.GO <- AnnotationDbi::toTable(get(GO2ALLEGS))
-		d <- duplicated(EG.GO[,c("gene_id", "go_id", "Ontology")])
-		EG.GO <- EG.GO[!d, ]
-		universe <- unique(EG.GO$gene_id)
+
+		path <- KEGGREST::keggLink("pathway", organism)
+		path <- data.frame(kegg_id = names(path), path_id = path, stringsAsFactors = FALSE)
+		if(organism == "dme") {
+			EG <- KEGGREST::keggConv("dme", "ncbi-geneid")
+			geneid <- names(EG)[match(path$kegg_id, EG)]
+			geneid <- gsub("ncbi-geneid:", "", geneid)
+		} else {
+			geneid <- gsub(paste0(organism, ":"), "", path$kegg_id)
+		}
+		EG.KEGG <- data.frame(gene_id = geneid, path, stringsAsFactors = FALSE)
+
+		universe <- unique(EG.KEGG$gene_id)
 		universe <- as.character(universe)
 	} else {
 
@@ -140,18 +147,24 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 		}
 		universe <- universe[!dup]
 
-		GO2ALLEGS <- get(GO2ALLEGS)
-		m <- match(AnnotationDbi::Lkeys(GO2ALLEGS),universe,0L)
+		path <- KEGGREST::keggLink("pathway", organism)
+		path <- data.frame(kegg_id = names(path), path_id = path, stringsAsFactors = FALSE)
+		if(organism == "dme") {
+			EG <- KEGGREST::keggConv("dme", "ncbi-geneid")
+			geneid <- names(EG)[match(path$kegg_id, EG)]
+			geneid <- gsub("ncbi-geneid:", "", geneid)
+		} else {
+			geneid <- gsub(paste0(organism, ":"), "", path$kegg_id)
+		}
+		EG.KEGG <- data.frame(gene_id = geneid, path, stringsAsFactors = FALSE)
+
+		m <- match(EG.KEGG$gene_id, universe)
 		universe <- universe[m]
 		if(!is.null(prior.prob)) prior.prob <- prior.prob[m]
-
-		AnnotationDbi::Lkeys(GO2ALLEGS) <- universe
-		EG.GO <- AnnotationDbi::toTable(GO2ALLEGS)
-		d <- duplicated(EG.GO[,c("gene_id", "go_id", "Ontology")])
-		EG.GO <- EG.GO[!d, ]
+		EG.KEGG <- EG.KEGG[EG.KEGG$gene_id %in% universe,]
 	}
 
-	Total <- length(unique(EG.GO$gene_id))
+	Total <- length(unique(EG.KEGG$gene_id))
 	if(Total<1L) stop("No genes found in universe")
 
 #	Check prior probabilities
@@ -160,19 +173,19 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 	}
 
 #	Overlap with DE genes
-	isDE <- lapply(de, function(x) EG.GO$gene_id %in% x)
-	TotalDE <- lapply(isDE, function(x) length(unique(EG.GO$gene_id[x])))
+	isDE <- lapply(de, function(x) EG.KEGG$gene_id %in% x)
+	TotalDE <- lapply(isDE, function(x) length(unique(EG.KEGG$gene_id[x])))
 	nDE <- length(isDE)
 
 	if(length(prior.prob)) {
 	#	Probability weight for each gene
-		m <- match(EG.GO$gene_id, universe)
+		m <- match(EG.KEGG$gene_id, universe)
 		PW2 <- list(prior.prob[m])
 		X <- do.call(cbind, c(N=1, isDE, PW=PW2))
 	} else
 		X <- do.call(cbind, c(N=1, isDE))
 
-	group <- paste(EG.GO$go_id, EG.GO$Ontology, sep=".")
+	group <- EG.KEGG$path_id
 	S <- rowsum(X, group=group, reorder=FALSE)
 
 	P <- matrix(0, nrow = nrow(S), ncol = nsets)
@@ -180,7 +193,7 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 	if(length(prior.prob)) {
 
 #		Calculate average prior prob for each set
-		PW.ALL <- sum(prior.prob[universe %in% EG.GO$gene_id])
+		PW.ALL <- sum(prior.prob[universe %in% EG.KEGG$gene_id])
 		AVE.PW <- S[,"PW"]/S[,"N"]
 		W <- AVE.PW*(Total-S[,"N"])/(PW.ALL-S[,"N"]*AVE.PW)
 
@@ -192,40 +205,33 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 
 	} else {
 
-	#	Fisher's exact test
+#		Fisher's exact test
 		for(j in 1:nsets)
 			P[,j] <- phyper(q=S[,1+j]-0.5,m=TotalDE[[j]],n=Total-TotalDE[[j]], k=S[,"N"],lower.tail=FALSE)
 
 	}
 
 #	Assemble output
-	g <- strsplit2(rownames(S),split="\\.")
-	TERM <- AnnotationDbi::select(GO.db::GO.db,keys=g[,1],columns="TERM")
-	Results <- data.frame(Term = TERM[[2]], Ont = g[,2], S, P, stringsAsFactors=FALSE)
-	rownames(Results) <- g[,1]
+	g <- rownames(S)
+	pathname <- KEGGREST::keggList("pathway")
+	names(pathname) <- gsub("map", organism, names(pathname))
+	m <- match(g, names(pathname))
+	Results <- data.frame(Path = pathname[m], S, P, stringsAsFactors=FALSE)
+	rownames(Results) <- g
 
 #	Name p-value columns
-	colnames(Results)[3+nsets+(1L:nsets)] <- paste0("P.", names(de))
+	colnames(Results)[2+nsets+(1L:nsets)] <- paste0("P.", names(de))
 
 	Results
 }
 
-topGO <- function(results, ontology = c("BP", "CC", "MF"), sort = NULL, number = 20L, truncate.term=NULL)
-#	Extract top GO terms from goana output 
+topKEGG <- function(results, sort = NULL, number = 20L, truncate.term=NULL)
+#	Extract top KEGG pathways from kegga output 
 #	Gordon Smyth and Yifang Hu
-#	Created 20 June 2014. Last modified 22 April 2015.
+#	Created 15 May 2015.
 {
 #	Check results
 	if(!is.data.frame(results)) stop("results should be a data.frame.")
-
-#	Check ontology
-	ontology <- match.arg(unique(ontology), c("BP", "CC", "MF"), several.ok = TRUE)
-
-#	Limit results to specified ontologies
-	if(length(ontology) < 3L) {
-		sel <- results$Ont %in% ontology
-		results <- results[sel,]
-	}
 	dimres <- dim(results)
 
 #	Check number
@@ -235,9 +241,9 @@ topGO <- function(results, ontology = c("BP", "CC", "MF"), sort = NULL, number =
 
 #	Number of gene lists for which results are reported
 #	Lists are either called "Up" and "Down" or have user-supplied names
-	nsets <- (dimres[2L]-3L) %/% 2L
+	nsets <- (dimres[2L]-2L) %/% 2L
 	if(nsets < 1L) stop("results has wrong number of columns")
-	setnames <- colnames(results)[4L:(3L+nsets)]
+	setnames <- colnames(results)[3L:(2L+nsets)]
 
 #	Check sort. Defaults to all gene lists.
 	if(is.null(sort)) {
@@ -249,7 +255,7 @@ topGO <- function(results, ontology = c("BP", "CC", "MF"), sort = NULL, number =
 	}
 
 #	Sort by minimum p-value for specified gene lists
-	P.col <- 3L+nsets+isort
+	P.col <- 2L+nsets+isort
 	if(length(P.col)==1L) {
 		o <- order(results[,P.col])
 	} else {
