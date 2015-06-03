@@ -2,16 +2,23 @@
 \alias{goana}
 \alias{goana.default}
 \alias{goana.MArrayLM}
-\title{Gene Ontology Analysis}
+\alias{kegga}
+\alias{kegga.default}
+\alias{kegga.MArrayLM}
+\title{Gene Ontology or KEGG Pathway Analysis}
 
 \description{
-Test for over-representation of gene ontology (GO) terms in one or more sets of genes, optionally adjusting for abundance or gene length bias.
+Test for over-representation of gene ontology (GO) terms or KEGG pathways in one or more sets of genes, optionally adjusting for abundance or gene length bias.
 }
 
 \usage{
 \method{goana}{MArrayLM}(de, coef = ncol(de), geneid = rownames(de), FDR = 0.05, 
       trend = FALSE, \dots)
 \method{goana}{default}(de, universe = NULL, species = "Hs", prior.prob = NULL,
+      covariate=NULL, plot=FALSE, \dots)
+\method{kegga}{MArrayLM}(de, coef = ncol(de), geneid = rownames(de), FDR = 0.05, 
+      trend = FALSE, \dots)
+\method{kegga}{default}(de, universe = NULL, species = "Hs", prior.prob = NULL,
       covariate=NULL, plot=FALSE, \dots)
 }
 
@@ -33,9 +40,12 @@ Test for over-representation of gene ontology (GO) terms in one or more sets of 
 }
 
 \details{
-This function performs Gene Ontology analysis for a list of Entrez Gene IDs using the appropriate Bioconductor organism package.
+These functions performs a over-representation analysis for Gene Ontology terms or KEGG pathways in a list of Entrez Gene IDs.
 The default method accepts the gene list as a vector of gene IDs,
 while the \code{MArrayLM} method extracts the gene lists automatically from a linear model fit object.
+
+\code{goana} uses annotation from the appropriate Bioconductor organism package.
+\code{kegga} uses the KEGGREST package to access KEGG pathway annotation.
 
 The default method accepts a vector \code{prior.prob} giving the prior probability that each gene in the universe appears in a gene set.
 This vector can be used to correct for unwanted trends in the differential expression analysis associated with gene length, gene abundance or any other covariate.
@@ -44,16 +54,17 @@ The \code{MArrayLM} object computes the \code{prior.prob} vector automatically w
 If \code{prior.prob=NULL}, the function computes one-sided hypergeometric tests equivalent to Fisher's exact test.
 If prior probabilities are specified, then a test based on the Wallenius' noncentral hypergeometric distribution is used to adjust for the relative probability that each gene will appear in a gene set, following the approach of Young et al (2010).
 
-The \code{MArrayLM} method performs Gene Ontology enrichment analyses for the up and down differentially expressed genes from a linear model analysis.
+The \code{MArrayLM} methods performs over-representation analyses for the up and down differentially expressed genes from a linear model analysis.
 In this case, the universe is all the genes found in the fit object.
 
 \code{trend=FALSE} is equivalent to \code{prior.prob=NULL}.
 If \code{trend=TRUE} or a covariate is supplied, then a trend is fitted to the differential expression results and this is used to set \code{prior.prob}.
 
-The functionality provided here is similar to that provided by the goseq package, with a couple of restrictions.
+The statistical approach provided here is the same as that provided by the goseq package, with one methodological difference and a few restrictions.
 Unlike the goseq package, the gene identifiers here must be Entrez Gene IDs and the user is assumed to be able to supply gene lengths if necessary.
-Another difference is that \code{goana} computes any abundance or gene length trend using \code{tricubeMovingAverage}, which gives more robust results when \code{de} contains only a small number of genes.
-Apart from this last difference, this function provides an implementation of the methods of Young et al (2010) that is more convenient but less flexible than that provided by the goseq package.
+The goseq package has additional functionality to convert gene identifiers and to provide gene lengths.
+The only methodological difference is that \code{goana} and \code{kegga} computes gene length or abundance bias using \code{tricubeMovingAverage} instead of monotonic regression.
+While \code{tricubeMovingAverage} does not enforce monotonicity, it has the advantage of numerical stability when \code{de} contains only a small number of genes.
 }
 
 \value{
@@ -88,7 +99,7 @@ The row names of the data frame give the GO term IDs.
 \seealso{
 \code{\link{topGO}}
 
-The goseq package implements a similar GO analysis.
+The goseq package provides an alternative implementation of methods from Young et al (2010).
 The goseq version will work with a variety of gene identifiers, not only Entrez Gene as here, and includes a database of gene length information for various species.
 
 The gostats package also does GO analyses with some different options.

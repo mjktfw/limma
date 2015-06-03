@@ -48,7 +48,7 @@ An enrichment worm optionally shows the relative enrichment of the vertical bars
 Barcode plots are often used in conjunction with gene set tests, and show the enrichment of gene sets amongst high or low ranked genes.
 They were inspired by the set location plot of Subramanian et al (2005), with a number of enhancements, especially the ability to plot positive and negative sets simultaneously.
 Barcode plots first appeared in the literature in Lim et al (2009).
-More recent examples can be seen in Liu et al (2014), Sheikh et al (2015), and Witkowski et al (2015).
+More recent examples can be seen in Liu et al (2014), Sheikh et al (2015), Witkowski et al (2015) and Ng et al (2015).
 
 The function can be used with any of four different calling sequences:
   \itemize{
@@ -60,7 +60,7 @@ The function can be used with any of four different calling sequences:
 }
 
 \seealso{
-\code{\link{tricubeMovingAverage}}, \code{\link{roast}}, \code{\link{camera}}, \code{\link{romer}}, \code{\link{wilcox.test}}
+\code{\link{tricubeMovingAverage}}, \code{\link{roast}}, \code{\link{camera}}, \code{\link{romer}}, \code{\link{geneSetTest}}
 
 There is a topic page on \link{10.GeneSetTests}.
 }
@@ -68,6 +68,11 @@ There is a topic page on \link{10.GeneSetTests}.
 \author{Gordon Smyth, Di Wu and Yifang Hu}
 
 \references{
+Ng, AP, Hu, Y, Metcalf, D, Hyland, CD, Ierino, H, Phipson, B, Wu, D, Baldwin, TM, Kauppi, M, Kiu, H, Di, Rago, L, Hilton, DJ, Smyth, GK, Alexander, WS (2015).
+Early lineage priming by trisomy of Erg leads to myeloproliferation in a down syndrome model.
+\emph{PLOS Genetics} 11, e1005211. 
+\url{http://www.ncbi.nlm.nih.gov/pubmed/25973911}
+
 Lim E, Vaillant F, Wu D, Forrest NC, Pal B, Hart AH, Asselin-Labat ML, Gyorki DE, Ward T, Partanen A, Feleppa F, Huschtscha LI, Thorne HJ; kConFab; Fox SB, Yan M, French JD, Brown MA, Smyth GK, Visvader JE, and Lindeman GJ (2009).
 Aberrant luminal progenitors as the candidate target population for basal tumor development in BRCA1 mutation carriers.
 \emph{Nat Med}, 15, 907-913.

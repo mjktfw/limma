@@ -1,9 +1,9 @@
 goana <- function(de,...) UseMethod("goana")
 
 goana.MArrayLM <- function(de, coef = ncol(de), geneid = rownames(de), FDR = 0.05, trend = FALSE, ...)
-#  Gene ontology analysis of DE genes from linear model fit
-#  Gordon Smyth and Yifang Hu
-#  Created 20 June 2014.  Last modified 1 May 2015.
+#	Gene ontology analysis of DE genes from linear model fit
+#	Gordon Smyth and Yifang Hu
+#	Created 20 June 2014.  Last modified 1 May 2015.
 {
 #	Avoid argument collision with default method
 	dots <- names(list(...))
@@ -63,7 +63,7 @@ goana.MArrayLM <- function(de, coef = ncol(de), geneid = rownames(de), FDR = 0.0
 	DEGenes <- list(Up=EG.DE.UP, Down=EG.DE.DN)
 
 #	If no DE genes, return data.frame with 0 rows
-	if(all(lengths(DEGenes)==0)) {
+	if(length(EG.DE.UP)==0 && length(EG.DE.DN)==0) {
 		message("No DE genes")
 		return(data.frame())
 	}
@@ -75,9 +75,9 @@ goana.MArrayLM <- function(de, coef = ncol(de), geneid = rownames(de), FDR = 0.0
 }
 
 goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL, covariate=NULL, plot=FALSE, ...)
-#  Gene ontology analysis of DE genes
-#  Gordon Smyth and Yifang Hu
-#  Created 20 June 2014.  Last modified 27 March 2015.
+#	Gene ontology analysis of DE genes
+#	Gordon Smyth and Yifang Hu
+#	Created 20 June 2014.  Last modified 27 March 2015.
 {
 #	Ensure de is a list
 	if(!is.list(de)) de <- list(DE = de)
@@ -179,16 +179,15 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 
 	if(length(prior.prob)) {
 
-	#	Calculate weight
-		if(!requireNamespace("BiasedUrn",quietly=TRUE)) stop("BiasedUrn package required but is not available")
+#		Calculate average prior prob for each set
 		PW.ALL <- sum(prior.prob[universe %in% EG.GO$gene_id])
 		AVE.PW <- S[,"PW"]/S[,"N"]
 		W <- AVE.PW*(Total-S[,"N"])/(PW.ALL-S[,"N"]*AVE.PW)
 
-	#	Wallenius' noncentral hypergeometric test
-		for(j in 1:nsets) for(i in 1:nrow(S))
+#		Wallenius' noncentral hypergeometric test
+		if(!requireNamespace("BiasedUrn",quietly=TRUE)) stop("BiasedUrn package required but is not available")
+		for(j in 1:nsets) for(i in 1:nrow(S)) 
 			P[i,j] <- BiasedUrn::pWNCHypergeo(S[i,1+j], S[i,"N"], Total-S[i,"N"], TotalDE[[j]], W[i],lower.tail=FALSE) + BiasedUrn::dWNCHypergeo(S[i,1+j], S[i,"N"], Total-S[i,"N"], TotalDE[[j]], W[i])
-
 		S <- S[,-ncol(S)]
 
 	} else {
@@ -212,9 +211,9 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 }
 
 topGO <- function(results, ontology = c("BP", "CC", "MF"), sort = NULL, number = 20L, truncate.term=NULL)
-#  Extract top GO terms from goana output 
-#  Gordon Smyth and Yifang Hu
-#  Created 20 June 2014. Last modified 22 April 2015.
+#	Extract top GO terms from goana output 
+#	Gordon Smyth and Yifang Hu
+#	Created 20 June 2014. Last modified 22 April 2015.
 {
 #	Check results
 	if(!is.data.frame(results)) stop("results should be a data.frame.")
