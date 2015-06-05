@@ -33,8 +33,12 @@ This page gives an overview of the LIMMA functions for gene set testing and path
 \item{ \code{\link{barcodeplot}} }{
 	Enrichment plot of a gene set.}
 
-\item{ \code{\link{goana}} and  \code{\link{topGO}}}{
-	Gene ontology analysis of gene lists using Entrez Gene IDs.
+\item{ \code{\link{goana}} and \code{\link{topGO}}}{
+	Gene ontology over-representation analysis of gene lists using Entrez Gene IDs.
+	\code{goana} can work directly on a fitted model object or on one or more lists of genes.}
+
+\item{ \code{\link{kegga}} and \code{\link{topKEGG}}}{
+	KEGG pathway over-representation analysis of gene lists using Entrez Gene IDs.
 	\code{goana} can work directly on a fitted model object or on one or more lists of genes.}
 }
 }

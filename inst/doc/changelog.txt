@@ -1,3 +1,8 @@
+ 5 June 2015: limma 3.24.7
+
+- The dimnames<- method for EListRaw objects now sets rownames for
+  the background matrix Eb as well as for the foreground matrix E.
+
  3 June 2015: limma 3.24.6
 
 - new function kegga() to conduct KEGG pathway over-representation
