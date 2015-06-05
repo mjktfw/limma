@@ -142,7 +142,7 @@ dimnames.MArrayLM <- function(x) dimnames(x$coefficients)
 #  Gordon Smyth
 #  17 Dec 2005. Last modified 23 March 2009.
 {
-	exprmatrices <- c("R","G","Rb","Gb","M","A","E","weights")
+	exprmatrices <- c("R","G","Rb","Gb","M","A","E","Eb","weights")
 	for (a in exprmatrices) if(!is.null(x[[a]])) dimnames(x[[a]]) <- value
 	for(a in names(x$other)) dimnames(x$other[[a]]) <- value
 	if(!is.null(x$targets)) row.names(x$targets) <- value[[2]]

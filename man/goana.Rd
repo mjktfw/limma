@@ -12,14 +12,12 @@ Test for over-representation of gene ontology (GO) terms or KEGG pathways in one
 }
 
 \usage{
-\method{goana}{MArrayLM}(de, coef = ncol(de), geneid = rownames(de), FDR = 0.05, 
-      trend = FALSE, \dots)
-\method{goana}{default}(de, universe = NULL, species = "Hs", prior.prob = NULL,
-      covariate=NULL, plot=FALSE, \dots)
-\method{kegga}{MArrayLM}(de, coef = ncol(de), geneid = rownames(de), FDR = 0.05, 
-      trend = FALSE, \dots)
-\method{kegga}{default}(de, universe = NULL, species = "Hs", prior.prob = NULL,
-      covariate=NULL, plot=FALSE, \dots)
+\method{goana}{MArrayLM}(de, coef = ncol(de), geneid = rownames(de), FDR = 0.05, trend = FALSE, \dots)
+\method{goana}{default}(de, universe = NULL, species = "Hs", prior.prob = NULL, covariate=NULL,
+      plot=FALSE, \dots)
+\method{kegga}{MArrayLM}(de, coef = ncol(de), geneid = rownames(de), FDR = 0.05, trend = FALSE, \dots)
+\method{kegga}{default}(de, universe = NULL, species = "Hs", prior.prob = NULL, covariate=NULL,
+      plot=FALSE, \dots)
 }
 
 \arguments{
@@ -68,7 +66,7 @@ While \code{tricubeMovingAverage} does not enforce monotonicity, it has the adva
 }
 
 \value{
-The default method produces a data frame with a row for each GO term and the following columns:
+The \code{goana} default method produces a data frame with a row for each GO term and the following columns:
   \item{Term}{GO term.}
   \item{Ont}{ontology that the GO term belongs to.  Possible values are \code{"BP"}, \code{"CC"} and \code{"MF"}.}
   \item{N}{number of genes in the GO term.}
@@ -77,7 +75,7 @@ The default method produces a data frame with a row for each GO term and the fol
 The last two column names above assume one gene set with the name \code{DE}.
 In general, there will be a pair of such columns for each gene set and the name of the set will appear in place of \code{"DE"}.
 
-The \code{MArrayLM} method produces a data frame with a row for each GO term and the following columns:
+The \code{goana} method for \code{MArrayLM} objects produces a data frame with a row for each GO term and the following columns:
   \item{Term}{GO term.}
   \item{Ont}{ontology that the GO term belongs to.  Possible values are \code{"BP"}, \code{"CC"} and \code{"MF"}.}
   \item{N}{number of genes in the GO term.}
@@ -87,6 +85,8 @@ The \code{MArrayLM} method produces a data frame with a row for each GO term and
   \item{P.Down}{p-value for over-representation of GO term in down-regulated genes.}
 
 The row names of the data frame give the GO term IDs.
+
+The output from \code{kegga} is the same except that row names become KEGG pathway IDs, \code{Term} becomes \code{Path} and there is no \code{Ont} column.
 }
 
 \references{
@@ -97,12 +97,12 @@ The row names of the data frame give the GO term IDs.
 }
 
 \seealso{
-\code{\link{topGO}}
+\code{\link{topGO}}, \code{\link{topKEGG}}
 
 The goseq package provides an alternative implementation of methods from Young et al (2010).
-The goseq version will work with a variety of gene identifiers, not only Entrez Gene as here, and includes a database of gene length information for various species.
+Unlike the limma functions documented here, goseq will work with a variety of gene identifiers and includes a database of gene length information for various species.
 
-The gostats package also does GO analyses with some different options.
+The gostats package also does GO analyses without adjustment for bias but with some other options.
 
 See \link{10.GeneSetTests} for a description of other functions used for gene set testing.
 }

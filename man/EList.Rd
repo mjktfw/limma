@@ -26,6 +26,7 @@ These classes contains no slots (other than \code{.Data}), but objects should co
 \section{Optional Components}{
 Optional components include:
 \describe{
+  \item{\code{Eb}}{numeric matrix containing unlogged background expression values, of same dimensions as \code{E}. For an \code{EListRaw} object only.}
   \item{\code{weights}}{numeric matrix of same dimensions as \code{E} containing relative spot quality weights.  Elements should be non-negative.}
   \item{\code{other}}{list containing other matrices, all of the same dimensions as \code{E}.}
   \item{\code{genes}}{data.frame containing probe information. Should have one row for each probe. May have any number of columns.}
