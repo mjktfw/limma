@@ -1,4 +1,4 @@
- 7 June 2015: limma 3.26.8
+ 7 June 2015: limma 3.25.8
 
 - Improved power for the romer() function.  The empirical Bayes
   shrinkage of the residuals, removed on 4 April, has been
