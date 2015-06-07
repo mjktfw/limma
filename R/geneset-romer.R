@@ -1,10 +1,10 @@
-##  ROMER.R
+##	ROMER.R
 romer <- function(y,...) UseMethod("romer")
 
-romer.default <- function(y,index,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation=NULL,set.statistic="mean",nrot=9999,...)
-#  rotation mean-rank version of GSEA (gene set enrichment analysis) for linear models
-#  Gordon Smyth and Yifang Hu
-#  27 March 2009.  Last modified 31 March 2015.
+romer.default <- function(y,index,design,contrast=ncol(design),array.weights=NULL,block=NULL,correlation=NULL,set.statistic="mean",nrot=9999,shrink.resid=TRUE,...)
+#	rotation mean-rank version of GSEA (gene set enrichment analysis) for linear models
+#	Gordon Smyth and Yifang Hu
+#	27 March 2009.	Last modified 7 June 2015.
 {
 #	Issue warning if extra arguments found
 	dots <- names(list(...))
@@ -80,6 +80,40 @@ romer.default <- function(y,index,design,contrast=ncol(design),array.weights=NUL
 	YY <- colSums(Y^2)
 	B <- Y[1,]
 	modt <- signc*B/sd.post
+
+##	EMP BAYES SHRINK FIRST EFFECT TO REMOVE SYSTEMATIC COMPONENT
+	if(shrink.resid) {
+
+#	Estimate hyperparameter p0 (proportion of DE genes)
+	p.value <- 2*pt(abs(modt),df=d0+d,lower.tail=FALSE)
+	proportion <- 1-propTrueNull(p.value) # proportion of DE probes
+
+#	Estimate hyperparameter v0 (var.prior, variance of true logFC)
+ 	stdev.unscaled <- rep_len(1/abs(qr$qr[qr$rank,qr$rank]),ngenes)
+ 	var.unscaled <- stdev.unscaled^2
+	df.total <- rep_len(d,ngenes) + sv$df.prior
+	stdev.coef.lim <- c(0.1, 4)
+	var.prior.lim <- stdev.coef.lim^2/sv$var.prior
+	var.prior <- tmixture.vector(modt, stdev.unscaled, df.total, proportion, var.prior.lim)
+	if (any(is.na(var.prior))) {
+		var.prior[is.na(var.prior)] <- 1/sv$var.prior
+		warning("Estimation of var.prior failed - set to default value")
+	}
+
+#	Estimate posterior probability of DE
+	r <- (var.unscaled + var.prior)/var.unscaled
+	if (sv$df.prior > 10^6)
+		kernel <- modt^2 * (1 - 1/r)/2
+	else
+		kernel <- (1 + df.total)/2 * log((modt^2 + df.total)/(modt^2/r + df.total))
+	lods <- log(proportion/(1 - proportion)) - log(r)/2 + kernel
+	ProbDE <- exp(lods)/(1+exp(lods))
+
+#	Shrink contrast to be like a residual
+	Y[1,] <- Y[1,]*sqrt(var.unscaled/(var.unscaled+var.prior*ProbDE))
+
+	}
+##	END SHRINK
 
 	set.statistic <- match.arg(set.statistic,c("mean","floormean","mean50"))
 
@@ -241,9 +275,9 @@ romer.default <- function(y,index,design,contrast=ncol(design),array.weights=NUL
 
 
 topRomer <- function(x,n=10,alternative="up")
-#  Extract top gene sets results from romer output
-#  Gordon Smyth and Yifang Hu.
-#  Created 22 Mar 2010.  Last modified 30 March 2015.
+#	Extract top gene sets results from romer output
+#	Gordon Smyth and Yifang Hu.
+#	Created 22 Mar 2010.	Last modified 30 March 2015.
 {
 	n <- min(n,nrow(x))
 	alternative <- match.arg(tolower(alternative),c("up","down","mixed"))

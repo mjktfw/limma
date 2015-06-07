@@ -1,3 +1,9 @@
+ 7 June 2015: limma 3.24.8
+
+- Improved power for the romer() function.  The empirical Bayes
+  shrinkage of the residuals, removed on 4 April, has been
+  re-instated in a corrected form.
+
  5 June 2015: limma 3.24.7
 
 - The dimnames<- method for EListRaw objects now sets rownames for
@@ -31,7 +37,7 @@
 - arguments hi.pch, hi.col and hi.cex of plotWithHighlights() renamed
   to hl.pch, hl.col and hl.cex.  ('hl' is short for 'highlight'.)
 
-- fix bug in auROC() introduced in 3.24.2.
+- fix bug in auROC() introduced in 3.25.2.
 
 25 April 2015: limma 3.24.2
 
@@ -102,6 +108,10 @@
 
 - camera(), roast(), mroast() and romer() now give a warning if
   any arguments found in ... are not used.
+
+- In the romer() function, the empirical Bayes shrinkage of the
+  residuals, introduced 5 October 2009, has been removed.  The
+  results will revert to being somewhat more conservative.
 
 - speed improvement for romer() when the "mean" or "floormean" set
   statistics are used.
@@ -1655,8 +1665,10 @@
 15 July 2010: limma 3.5.13
 
 - marray no longer a suggested package
+
 - read.ilmn() now uses readGenericHeader() to skip over
   header information in BeadStudio files.
+
 - read.ilmn() no longer issues warning if control probe
   files are not provided.
 
@@ -1676,13 +1688,14 @@
 
 3 June 2010: limma 3.5.9
 
-- new argument 'set.statistic' for romer() to control the
-  sensitivity of the tests to sets with only a subset of genes
-  differentially expressed.  The old function romer2() and the
-  old argument 'floor' are now retired.
 - romer() now longer outputs p-values for the "either"
   alternative hypothesis.  P-values are output for "Up", "Down"
   or "Mixed".
+
+- romer() and romer2() consolidated into one function romer(). There
+  is now a new argument 'set.statistic' to choose the set summary
+  statistic, and the old argument 'floor' is removed as no longer
+  needed.
 
 2 June 2010: limma 3.5.8
 
@@ -1899,11 +1912,15 @@
 - New function genas() which tests for associations between
   contrasts in a linear model.
 
-- New options and improved power for the romer() function.
-  There are now two versions, romer() and romer2(), which use
-  different test statistics.  Both new versions should give
-  better statistical power than the old version.  The new
-  romer() is also computationally quicker.
+- New options and improved power for the romer() function.  Empirical
+  Bayes shrinkage of the residuals is now used to improve statistical
+  power.  There are also two new options for the set summary
+  statistic.  The original mean50 statistic is now provided in a new
+  function romer2().  The new romer() function now uses an ordinary
+  mean set statistics by default, and a floor-mean set statistic as
+  an option.  Both romer() and romer2() give better statistical power
+  than than the previous version.  The new romer() is also
+  computationally quicker.
 
 - new functions read.ilmn() and read.ilmn.targets() for reading in
   Illumina Whole Genome Expression BeadChip data.
@@ -3260,27 +3277,36 @@ This version was the first posted to CRAN as well as to Bioconductor
 28 June 2004: limma 1.7.1
 
 - cex=16,pch=0.2 now default in plotMA()
-- cex=16,pch=0.1 changed to cex=16,pch=0.2 throughout User's Guide
+
 - calls in normalizeRobustSpline() to rlm() now explicitly set prior weights
 
 28 June 2004: limma 1.7.0
 
-	All the linear modelling functions now pass the covariance matrix
-	Of the estimated coefficients.	This improves support for models
-	with covariance structures: random effects models for technical
-	replicates, mixed models for log-intensity analysis of two color
-	data, duplicate spots etc.  Lots of updates to help files.  pdf of
-	User's Guide updated.  Reading of GPR headers now supported.
+- All the linear modelling functions now pass the covariance matrix
+  Of the estimated coefficients.	This improves support for models
+  with covariance structures: random effects models for technical
+  replicates, mixed models for log-intensity analysis of two color
+  data, duplicate spots etc.  Lots of updates to help files.  pdf of
+  User's Guide updated.  Reading of GPR headers now supported.
 
 - pdf version of User's Guide updated
+
 - estrogen case study re-done for User's Guide
+
 - many .Rd files revised
+
 - instances of missing() changed to is.null() is modelMatrix()
+
 - lm.series(), rlm.series(), gls.series() and lmscFit() now save cov matrix of coefficients
+
 - contrasts.fit() and classifyTestF() now use cov matrix of coefficients in data object
+
 - changed many external links in .Rd files to reflect movement of functions from base to stats and graphics in R 1.9.0
+
 - readGPRHeader() no longer assumes any known fields
+
 - lmFit() now accepts PLMset objects
+
 - changelog.txt moved to /inst/doc
 
 21 June 2004: limma 1.6.14
