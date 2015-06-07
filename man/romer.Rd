@@ -7,8 +7,8 @@
 Gene set enrichment analysis for linear models using rotation tests (ROtation testing using MEan Ranks).
 }
 \usage{
-\S3method{romer}{default}(y, index, design, contrast=ncol(design), array.weights=NULL,
-      block=NULL, correlation, set.statistic="mean", nrot=9999, \dots)
+\S3method{romer}{default}(y, index, design, contrast = ncol(design), array.weights = NULL, block = NULL,
+      correlation, set.statistic = "mean", nrot = 9999, shrink.resid = TRUE, \dots)
 }
 \arguments{
   \item{y}{numeric matrix giving log-expression values.}
@@ -20,6 +20,7 @@ Gene set enrichment analysis for linear models using rotation tests (ROtation te
   \item{correlation}{correlation between blocks.}
   \item{set.statistic}{statistic used to summarize the gene ranks for each set. Possible values are \code{"mean"}, \code{"floormean"} or \code{"mean50"}.}
   \item{nrot}{number of rotations used to estimate the p-values.}
+  \item{shrink.resid}{logical, should the residuals be shrunk to remove systematics effects before rotation.}
   \item{\dots}{other arguments not currently used.}
 }
 \value{
@@ -47,9 +48,10 @@ In this case, the test will be significant if the set contains mostly large test
 The first two alternatives are appropriate if you have a prior expection that all the genes in the set will react in the same direction.
 The "mixed" alternative is appropriate if you know only that the genes are involved in the relevant pathways, without knowing the direction of effect for each gene.
 
-Note that \code{romer} estimates p-values by simulation, specifically by random rotations of the orthogonalized residuals.
+Note that \code{romer} estimates p-values by simulation, specifically by random rotations of the orthogonalized residuals (called effects in R).
 This means that the p-values will vary slightly from run to run.
 To get more precise p-values, increase the number of rotations \code{nrot}.
+By default, the orthogonalized residual corresponding to the contrast being tested is shrunk have the same expected squared size as a null residual.
 
 The argument \code{set.statistic} controls the way that t-statistics are summarized to form a summary test statistic for each set.
 In all cases, genes are ranked by moderated t-statistic.

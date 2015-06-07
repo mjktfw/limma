@@ -1,3 +1,9 @@
+ 7 June 2015: limma 3.26.8
+
+- Improved power for the romer() function.  The empirical Bayes
+  shrinkage of the residuals, removed on 4 April, has been
+  re-instated in a corrected form.
+
  5 June 2015: limma 3.25.7
 
 - The dimnames<- method for EListRaw objects now sets rownames for
@@ -103,6 +109,10 @@
 
 - camera(), roast(), mroast() and romer() now give a warning if
   any arguments found in ... are not used.
+
+- In the romer() function, the empirical Bayes shrinkage of the
+  residuals, introduced 5 October 2009, has been removed.  The
+  results will revert to being somewhat more conservative.
 
 - speed improvement for romer() when the "mean" or "floormean" set
   statistics are used.
@@ -1656,8 +1666,10 @@
 15 July 2010: limma 3.5.13
 
 - marray no longer a suggested package
+
 - read.ilmn() now uses readGenericHeader() to skip over
   header information in BeadStudio files.
+
 - read.ilmn() no longer issues warning if control probe
   files are not provided.
 
@@ -1677,13 +1689,14 @@
 
 3 June 2010: limma 3.5.9
 
-- new argument 'set.statistic' for romer() to control the
-  sensitivity of the tests to sets with only a subset of genes
-  differentially expressed.  The old function romer2() and the
-  old argument 'floor' are now retired.
 - romer() now longer outputs p-values for the "either"
   alternative hypothesis.  P-values are output for "Up", "Down"
   or "Mixed".
+
+- romer() and romer2() consolidated into one function romer(). There
+  is now a new argument 'set.statistic' to choose the set summary
+  statistic, and the old argument 'floor' is removed as no longer
+  needed.
 
 2 June 2010: limma 3.5.8
 
@@ -1900,11 +1913,15 @@
 - New function genas() which tests for associations between
   contrasts in a linear model.
 
-- New options and improved power for the romer() function.
-  There are now two versions, romer() and romer2(), which use
-  different test statistics.  Both new versions should give
-  better statistical power than the old version.  The new
-  romer() is also computationally quicker.
+- New options and improved power for the romer() function.  Empirical
+  Bayes shrinkage of the residuals is now used to improve statistical
+  power.  There are also two new options for the set summary
+  statistic.  The original mean50 statistic is now provided in a new
+  function romer2().  The new romer() function now uses an ordinary
+  mean set statistics by default, and a floor-mean set statistic as
+  an option.  Both romer() and romer2() give better statistical power
+  than than the previous version.  The new romer() is also
+  computationally quicker.
 
 - new functions read.ilmn() and read.ilmn.targets() for reading in
   Illumina Whole Genome Expression BeadChip data.
