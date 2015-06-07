@@ -3278,27 +3278,36 @@ This version was the first posted to CRAN as well as to Bioconductor
 28 June 2004: limma 1.7.1
 
 - cex=16,pch=0.2 now default in plotMA()
-- cex=16,pch=0.1 changed to cex=16,pch=0.2 throughout User's Guide
+
 - calls in normalizeRobustSpline() to rlm() now explicitly set prior weights
 
 28 June 2004: limma 1.7.0
 
-	All the linear modelling functions now pass the covariance matrix
-	Of the estimated coefficients.	This improves support for models
-	with covariance structures: random effects models for technical
-	replicates, mixed models for log-intensity analysis of two color
-	data, duplicate spots etc.  Lots of updates to help files.  pdf of
-	User's Guide updated.  Reading of GPR headers now supported.
+- All the linear modelling functions now pass the covariance matrix
+  Of the estimated coefficients.	This improves support for models
+  with covariance structures: random effects models for technical
+  replicates, mixed models for log-intensity analysis of two color
+  data, duplicate spots etc.  Lots of updates to help files.  pdf of
+  User's Guide updated.  Reading of GPR headers now supported.
 
 - pdf version of User's Guide updated
+
 - estrogen case study re-done for User's Guide
+
 - many .Rd files revised
+
 - instances of missing() changed to is.null() is modelMatrix()
+
 - lm.series(), rlm.series(), gls.series() and lmscFit() now save cov matrix of coefficients
+
 - contrasts.fit() and classifyTestF() now use cov matrix of coefficients in data object
+
 - changed many external links in .Rd files to reflect movement of functions from base to stats and graphics in R 1.9.0
+
 - readGPRHeader() no longer assumes any known fields
+
 - lmFit() now accepts PLMset objects
+
 - changelog.txt moved to /inst/doc
 
 21 June 2004: limma 1.6.14
