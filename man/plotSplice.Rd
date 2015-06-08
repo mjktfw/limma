@@ -25,9 +25,10 @@ The significantly spliced individual exons are highlighted as red dots. The size
 \value{A plot is created on the current graphics device.}
 \author{Gordon Smyth and Yifang Hu}
 \seealso{
-\code{\link{diffSplice}}
+\code{\link{diffSplice}}, \code{\link{topSplice}}
 
-An overview of diagnostic functions available in LIMMA is given in \link{09.Diagnostics}.
+A summary of functions available in LIMMA for RNA-seq analysis is given in \link{11.RNAseq}.
 }
 \examples{# See diffSplice}
+\keyword{hplot}
 \keyword{rna-seq}

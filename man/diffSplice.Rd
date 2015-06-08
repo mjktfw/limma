@@ -38,7 +38,9 @@ The minimum adjusted p-value is then used for each gene.
 This function can be used on data from an exon microarray or can be used in conjunction with voom for exon-level RNA-seq counts.
 }
 \seealso{
-\code{\link{voom}}
+\code{\link{topSplice}}, \code{\link{plotSplice}}
+
+A summary of functions available in LIMMA for RNA-seq analysis is given in \link{11.RNAseq}.
 }
 \author{Gordon Smyth and Charity Law}
 

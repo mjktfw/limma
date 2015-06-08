@@ -49,11 +49,6 @@ An \code{\link[limma:EList]{EList}} object with the following components:
 \author{Charity Law and Gordon Smyth}
 
 \references{
-Law, CW (2013).
-\emph{Precision weights for gene expression analysis}.
-PhD Thesis. University of Melbourne, Australia.
-\url{http://repository.unimelb.edu.au/10187/17598}
-
 Law, CW, Chen, Y, Shi, W, Smyth, GK (2014).
 Voom: precision weights unlock linear model analysis tools for RNA-seq read counts.
 \emph{Genome Biology} 15, R29.
@@ -61,9 +56,11 @@ Voom: precision weights unlock linear model analysis tools for RNA-seq read coun
 }
 
 \seealso{
-A \code{voom} case study is given in the User's Guide.
+\code{\link{voomWithQualityWeights}}
 
-\code{\link{vooma}} is a similar function but for microarrays instead of RNA-seq.
+A summary of functions for RNA-seq analysis is given in \link{11.RNAseq}.
+
+\code{\link{vooma}} is similar to \code{voom} but for microarrays instead of RNA-seq.
 }
 
 \keyword{rna-seq}

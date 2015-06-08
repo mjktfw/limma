@@ -42,3 +42,21 @@ This page gives an overview of the LIMMA functions for gene set testing and path
 	\code{goana} can work directly on a fitted model object or on one or more lists of genes.}
 }
 }
+
+\author{Gordon Smyth}
+
+\seealso{
+\link{01.Introduction},
+\link{02.Classes},
+\link{03.ReadingData},
+\link{04.Background},
+\link{05.Normalization},
+\link{06.LinearModels},
+\link{07.SingleChannel},
+\link{08.Tests},
+\link{09.Diagnostics},
+\link{10.GeneSetTests},
+\link{11.RNAseq}
+}
+
+\keyword{documentation}

@@ -100,7 +100,7 @@ topTreat(fit2,coef=2)
 volcanoplot(fit,coef=2,highlight=2)
 
 # Mean-difference plot
-plotMD(fit,coef=2)
+plotMD(fit,column=2)
 
 # Q-Q plot of moderated t-statistics
 qqt(fit$t[,2],df=fit$df.residual+fit$df.prior)

@@ -14,4 +14,19 @@ The function \code{\link{targetsA2C}} converts two-color format target data fram
 }
 
 \author{Gordon Smyth}
+
+\seealso{
+\link{01.Introduction},
+\link{02.Classes},
+\link{03.ReadingData},
+\link{04.Background},
+\link{05.Normalization},
+\link{06.LinearModels},
+\link{07.SingleChannel},
+\link{08.Tests},
+\link{09.Diagnostics},
+\link{10.GeneSetTests},
+\link{11.RNAseq}
+}
+
 \keyword{documentation}

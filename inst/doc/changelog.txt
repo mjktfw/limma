@@ -1,8 +1,15 @@
+ 8 June 2015: limma 3.24.9
+
+- plotMD() can now accept arguments 'array' or 'coef' as appropriate
+  as synonyms for 'column'.  This may help users transitioning from
+  plotMA ot plotMD.
+
  7 June 2015: limma 3.24.8
 
 - Improved power for the romer() function.  The empirical Bayes
   shrinkage of the residuals, removed on 4 April, has been
-  re-instated in a corrected form.
+  re-instated in a corrected form.  It can optionally be turned off
+  using the 'shrink.resid' argument.
 
  5 June 2015: limma 3.24.7
 

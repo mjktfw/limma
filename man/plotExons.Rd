@@ -30,7 +30,7 @@ The size of the dots are weighted by its significance.
 \seealso{
 \code{\link{lmFit}}, \code{\link{eBayes}}, \code{\link{plotSplice}}
 
-An overview of diagnostic functions available in LIMMA is given in \link{09.Diagnostics}.
+A summary of functions available in LIMMA for RNA-seq analysis is given in \link{11.RNAseq}.
 }
 \examples{
 

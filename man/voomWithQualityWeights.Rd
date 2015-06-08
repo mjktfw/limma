@@ -47,6 +47,11 @@ If \code{replace.weights=TRUE}, then an \code{\link[limma:EList]{EList}} object 
 \author{Matthew Ritchie and Cynthia Liu}
 
 \references{
+Law, C. W., Chen, Y., Shi, W., Smyth, G. K. (2014).
+Voom: precision weights unlock linear model analysis tools for RNA-seq read counts.
+\emph{Genome Biology} 15, R29.
+\url{http://genomebiology.com/2014/15/2/R29}
+
 Liu, R., Holik, A. Z., Su, S., Jansz, N., Chen, K., Leong, H. S., Blewitt, M. E., Asselin-Labat, M.-L., Smyth, G. K., Ritchie, M. E. (2015).
 Why weight? Combining voom with estimates of sample quality improves power in RNA-seq analyses.
 \emph{Nucleic Acids Research} 43.
@@ -56,18 +61,12 @@ Ritchie, M. E., Diyagama, D., Neilson, van Laar, R., J., Dobrovic, A., Holloway,
 Empirical array quality weights in the analysis of microarray data.
 \emph{BMC Bioinformatics} 7, 261.
 \url{http://www.biomedcentral.com/1471-2105/7/261}
-
-Law, C. W., Chen, Y., Shi, W., Smyth, G. K. (2014).
-Voom: precision weights unlock linear model analysis tools for RNA-seq read counts.
-\emph{Genome Biology} 15, R29.
-\url{http://genomebiology.com/2014/15/2/R29}
 }
 
 \seealso{
 \code{\link{voom}}, \code{\link{arrayWeights}}
 
-An overview of linear model functions in limma is given by \link{06.LinearModels}.
-A \code{voomWithQualityWeights} case study is given in the User's Guide.
+A summary of functions for RNA-seq analysis is given in \link{11.RNAseq}.
 }
 
 \keyword{regression}
