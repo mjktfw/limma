@@ -50,7 +50,7 @@ An EList object with the following components:
  }
 
 \seealso{
-\code{\link{voom}}
+\code{\link{voom}}, \code{\link{arrayWeights}}
 }
 
 \author{Charity Law and Gordon Smyth}

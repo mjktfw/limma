@@ -2,20 +2,22 @@
 
 plotMD <- function(object,...) UseMethod("plotMD")
 
-plotMD.RGList <- function(object, column=1, xlab="A", ylab="M", main=colnames(object)[column], status=object$genes$Status, zero.weights=FALSE, ...)
+plotMD.RGList <- function(object, column=1, array=NULL, xlab="A", ylab="M", main=colnames(object)[column], status=object$genes$Status, zero.weights=FALSE, ...)
 #	Mean-difference plot with color coding for controls
 #	Created by Gordon Smyth 7 April 2003 and James Wettenhall 27 June 2003.
-#	Last modified 13 May 2015.
+#	Last modified 7 June 2015.
 {
+	if(!is.null(array)) column <- array
 	object <- MA.RG(object[,column])
 	plotMD.MAList(object=object,column=1,xlab=xlab,ylab=ylab,main=main,status=status,zero.weights=zero.weights,...)
 }
 
-plotMD.MAList <- function(object, column=1, xlab="A", ylab="M", main=colnames(object)[column], status=object$genes$Status, zero.weights=FALSE, ...)
+plotMD.MAList <- function(object, column=1, array=NULL, xlab="A", ylab="M", main=colnames(object)[column], status=object$genes$Status, zero.weights=FALSE, ...)
 #	Mean-difference plot with color coding for controls
 #	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.
-#	Last modified 14 April 2015.
+#	Last modified 7 June 2015.
 {
+	if(!is.null(array)) column <- array
 	A <- as.matrix(object$A)[,column]
 	M <- as.matrix(object$M)[,column]
 	if(!zero.weights && !is.null(object$weights)) {
@@ -25,11 +27,12 @@ plotMD.MAList <- function(object, column=1, xlab="A", ylab="M", main=colnames(ob
 	plotWithHighlights(x=A,y=M,xlab=xlab,ylab=ylab,main=main,status=status,...)
 }
 
-plotMD.MArrayLM <- function(object, column=ncol(object), xlab="Average log-expression", ylab="log-fold-change", main=colnames(object)[column], status=object$genes$Status, zero.weights=FALSE, ...)
+plotMD.MArrayLM <- function(object, column=ncol(object), coef=NULL, xlab="Average log-expression", ylab="log-fold-change", main=colnames(object)[column], status=object$genes$Status, zero.weights=FALSE, ...)
 #	Mean-difference plot with color coding for controls
 #	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.
-#	Last modified 14 April 2015.
+#	Last modified 7 June 2015.
 {
+	if(!is.null(coef)) column <- coef
 	if(is.null(object$Amean)) stop("Amean component is absent.")
 	logFC <- as.matrix(object$coef)[,column]
 	if(!zero.weights && !is.null(object$weights)) {
@@ -39,22 +42,24 @@ plotMD.MArrayLM <- function(object, column=ncol(object), xlab="Average log-expre
 	plotWithHighlights(x=object$Amean,y=logFC,xlab=xlab,ylab=ylab,main=main,status=status,...)
 }
 
-plotMD.EListRaw <- function(object, column=1, xlab="Average log-expression", ylab="Expression log-ratio (this sample vs others)", main=colnames(object)[column], status=object$genes$Status, zero.weights=FALSE, ...)
+plotMD.EListRaw <- function(object, column=1, array=NULL, xlab="Average log-expression", ylab="Expression log-ratio (this sample vs others)", main=colnames(object)[column], status=object$genes$Status, zero.weights=FALSE, ...)
 #	Mean-difference plot with color coding for controls
 #	Gordon Smyth
-#	Created 22 Oct 2014. Last modified 14 April 2015.
+#	Created 22 Oct 2014. Last modified 7 June 2015.
 {
+	if(!is.null(array)) column <- array
 	if(!is.null(object$Eb)) object$E <- object$E-object$Eb
 	object$E <- log2(object$E)
 	object <- new("EList",unclass(object))
 	plotMD(object, column=column, xlab=xlab, ylab=ylab, main=main, status=status, zero.weights=zero.weights, ...)
 }
 
-plotMD.EList <- function(object, column=1, xlab="Average log-expression", ylab="Expression log-ratio (this sample vs others)", main=colnames(object)[column], status=object$genes$Status, zero.weights=FALSE, ...)
+plotMD.EList <- function(object, column=1, array=NULL, xlab="Average log-expression", ylab="Expression log-ratio (this sample vs others)", main=colnames(object)[column], status=object$genes$Status, zero.weights=FALSE, ...)
 #	Mean-difference plot with color coding for controls
 #	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.
 #	Last modified 14 April 2015.
 {
+	if(!is.null(array)) column <- array
 	E <- as.matrix(object$E)
 	if(ncol(E) < 2L) stop("Need at least two columns")
 

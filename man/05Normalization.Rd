@@ -38,4 +38,19 @@ Smyth, G. K., and Speed, T. P. (2003). Normalization of cDNA microarray data.
 \emph{Methods} 31, 265-273.
 \url{http://www.statsci.org/smyth/pubs/normalize.pdf}
 }
+
+\seealso{
+\link{01.Introduction},
+\link{02.Classes},
+\link{03.ReadingData},
+\link{04.Background},
+\link{05.Normalization},
+\link{06.LinearModels},
+\link{07.SingleChannel},
+\link{08.Tests},
+\link{09.Diagnostics},
+\link{10.GeneSetTests},
+\link{11.RNAseq}
+}
+
 \keyword{documentation}

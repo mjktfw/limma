@@ -41,7 +41,9 @@ The exon-level t-tests are not recommended for formal error rate control.
 
 \author{Gordon Smyth}
 \seealso{
-An overview of diagnostic functions available in LIMMA is given in \link{09.Diagnostics}.
+\code{\link{diffSplice}}, \code{\link{plotSplice}}
+
+A summary of functions available in LIMMA for RNA-seq analysis is given in \link{11.RNAseq}.
 }
 \examples{# See diffSplice}
 

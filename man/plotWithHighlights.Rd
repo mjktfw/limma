@@ -90,7 +90,7 @@ plotWithHighlights(x, y, status=status)
 }
 
 \seealso{
-\code{\link{plotMD}}
+\code{\link{plotMD}}, \code{\link{plotMA}}, \code{\link{mdplot}}
 
 An overview of diagnostic plots available in LIMMA is given in \link{09.Diagnostics}.
 }

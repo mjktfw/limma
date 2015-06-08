@@ -46,7 +46,7 @@ x1 <- runif(100)
 x2 <- (x1 + rnorm(100,sd=0.01))^1.2
 oldpar <- par(mfrow=c(1,2))
 plot(x1,x2)
-mdplot(cbind(x1,x2),pch.bg=1,cex.bg=1)
+mdplot(cbind(x1,x2),bg.pch=1,bg.cex=1)
 par(oldpar)
 }
 

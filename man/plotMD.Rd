@@ -16,17 +16,17 @@ Creates a mean-difference plot (aka MA plot) with color coding for highlighted p
 \method{plotMD}{default}(object, column = 1, xlab = "Average log-expression",
        ylab = "Expression log-ratio (this sample vs others)",
        main = colnames(object)[column], status=NULL, \dots)
-\method{plotMD}{EList}(object, column = 1, xlab = "Average log-expression",
+\method{plotMD}{EList}(object, column = 1, array = NULL, xlab = "Average log-expression",
        ylab = "Expression log-ratio (this sample vs others)",
        main = colnames(object)[column], status=object$genes$Status,
        zero.weights = FALSE, \dots)
-\method{plotMD}{RGList}(object, column = 1, xlab = "A", ylab = "M",
+\method{plotMD}{RGList}(object, column = 1, array = NULL, xlab = "A", ylab = "M",
        main = colnames(object)[column], status=object$genes$Status,
        zero.weights = FALSE, \dots)
-\method{plotMD}{MAList}(object, column = 1, xlab = "A", ylab = "M",
+\method{plotMD}{MAList}(object, column = 1, array = NULL, xlab = "A", ylab = "M",
        main = colnames(object)[column], status=object$genes$Status,
        zero.weights = FALSE, \dots)
-\method{plotMD}{MArrayLM}(object, column = ncol(object), xlab = "Average log-expression",
+\method{plotMD}{MArrayLM}(object, column = ncol(object), coef = NULL, xlab = "Average log-expression",
        ylab = "log-fold-change", main = colnames(object)[column],
        status=object$genes$Status, zero.weights = FALSE, \dots)
 }
@@ -35,6 +35,8 @@ Creates a mean-difference plot (aka MA plot) with color coding for highlighted p
   \item{object}{an \code{RGList}, \code{MAList}, \code{EList}, \code{ExpressionSet} or \code{MArrayLM} object.
   Alternatively a numeric \code{matrix}.}
   \item{column}{integer, column of \code{object} to be plotted.}
+  \item{array}{alternative to \code{column} for microarray data objects. If specified, then \code{column} is ignored.}
+  \item{coef}{alternative to \code{column} for fitted model objects. If specified, then \code{column} is ignored.}
   \item{xlab}{character string, label for x-axis}
   \item{ylab}{character string, label for y-axis}
   \item{main}{character string, title for plot}
