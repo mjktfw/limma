@@ -355,7 +355,7 @@ mroast <- function(y,...) UseMethod("mroast")
 mroast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,approx.zscore=TRUE,adjust.method="BH",midp=TRUE,sort="directional",...)
 #  Rotation gene set testing with multiple sets
 #  Gordon Smyth and Di Wu
-#  Created 28 Jan 2010. Last revised 18 Feb 2014.
+#  Created 28 Jan 2010. Last revised 23 June 2015.
 {
 #	Extract components from y
 	y <- getEAWP(y)
@@ -366,6 +366,7 @@ mroast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.st
 	if(is.null(index)) index <- rep(TRUE,ngenes)
 	if(!is.list(index)) index <- list(set = index)
 	nsets <- length(index)
+	if(nsets==0) stop("index is empty")
 	if(is.null(names(index))) names(index) <- paste("set",1:nsets,sep="")
 
 #	Check design matrix

@@ -1,3 +1,11 @@
+23 June 2015: limma 3.25.10
+
+- camera(), fry(), mroast() and romer() now give a more informative
+  error message when the index list is empty.
+
+- camera() no longer gives NA results when a gene has a residual
+  variance exactly zero.
+
  8 June 2015: limma 3.25.9
 
 - plotMD() can now accept arguments 'array' or 'coef' as appropriate
