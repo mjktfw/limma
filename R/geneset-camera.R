@@ -24,7 +24,7 @@ camera <- function(y,...) UseMethod("camera")
 camera.default <- function(y,index,design=NULL,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,trend.var=FALSE,sort=TRUE,...)
 #	Competitive gene set test allowing for correlation between genes
 #	Gordon Smyth and Di Wu
-#	Created 2007.  Last modified 31 March 2015
+#	Created 2007.  Last modified 23 June 2015
 {
 #	Issue warning if extra arguments found
 	dots <- names(list(...))
@@ -37,6 +37,8 @@ camera.default <- function(y,index,design=NULL,contrast=ncol(design),weights=NUL
 
 #	Check index
 	if(!is.list(index)) index <- list(set1=index)
+	nsets <- length(index)
+	if(nsets==0) stop("index is empty")
 
 #	Check design
 	if(is.null(design)) design <- y$design
@@ -116,7 +118,7 @@ camera.default <- function(y,index,design=NULL,contrast=ncol(design),weights=NUL
 #	Standardized residuals
 	U <- effects[-(1:p),,drop=FALSE]
 	sigma2 <- colMeans(U^2)
-	U <- t(U) / sqrt(sigma2)
+	U <- t(U) / sqrt(pmax(sigma2,1e-8))
 
 #	Moderated t
 	if(trend.var) A <- rowMeans(y) else A <- NULL
@@ -129,7 +131,6 @@ camera.default <- function(y,index,design=NULL,contrast=ncol(design),weights=NUL
 	meanStat <- mean(Stat)
 	varStat <- var(Stat)
 
-	nsets <- length(index)
 	tab <- matrix(0,nsets,5)
 	rownames(tab) <- names(index)
 	colnames(tab) <- c("NGenes","Correlation","Down","Up","TwoSided")
