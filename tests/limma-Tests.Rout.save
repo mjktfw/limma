@@ -1,5 +1,5 @@
 
-R version 3.2.0 beta (2015-04-02 r68137) -- "Full of Ingredients"
+R version 3.2.0 (2015-04-16) -- "Full of Ingredients"
 Copyright (C) 2015 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
@@ -1022,6 +1022,9 @@ alpha-beta  0.6666667 3.333333e-01 -3.333333e-01
 mu+alpha    0.3333333 3.333333e-01  5.551115e-17
 mu+beta    -0.3333333 5.551115e-17  3.333333e-01
 
+$rank
+[1] 3
+
 $Amean
 [1]  0.2034961  0.1954604 -0.2863347  0.1188659  0.1784593
 
@@ -1376,4 +1379,4 @@ GO:0070062 0.055161144
 > 
 > proc.time()
    user  system elapsed 
-   3.13    0.24    4.36 
+   3.08    0.17    4.02 
