@@ -1,7 +1,7 @@
-read.idat <- function(idatfiles, bgxfile, dateinfo=FALSE)
+read.idat <- function(idatfiles, bgxfile, dateinfo=FALSE, tolerance=0)
 # Read idat data from gene expression BeadChips
 # Matt Ritchie
-# Created 30 September 2013. Last modified 14 January 2015.
+# Created 30 September 2013. Modified on 14 January 2015 and 26 June 2015.
 {
   if(!requireNamespace("illuminaio",quietly=TRUE)) stop("illuminaio package required but is not available")
   cat("Reading manifest file", bgxfile, "... ")
@@ -27,11 +27,12 @@ read.idat <- function(idatfiles, bgxfile, dateinfo=FALSE)
     tmp <- illuminaio::readIDAT(idatfiles[i])
     cat("Done\n")
     ind <- match(elist$genes[,"Array_Address_Id"], tmp$Quants[,'IllumicodeBinData'])
-    if(sum(is.na(ind))>0)
-      stop("Can't match ids in manifest with those in idat file", idatfiles[i], "- please check that you have the right files\n")
-    elist$E[,i] <- round(tmp$Quants[ind,'MeanBinData'],1) # intensity data
-    elist$other$STDEV[,i] <- tmp$Quants[ind,'DevBinData'] # Bead STDEV
-    elist$other$NumBeads[,i] <- tmp$Quants[ind,'NumGoodBeadsBinData'] # NumBeads
+    if(sum(is.na(ind))>tolerance)
+      stop("Can't match all ids in manifest with those in idat file ", idatfiles[i], "\n", sum(is.na(ind)), 
+            " missing - please check that you have the right files, or consider setting \'tolerance\'=", sum(is.na(ind)))
+    elist$E[!is.na(ind),i] <- round(tmp$Quants[ind[!is.na(ind)],'MeanBinData'],1) # intensity data
+    elist$other$STDEV[!is.na(ind),i] <- tmp$Quants[ind[!is.na(ind)],'DevBinData'] # Bead STDEV
+    elist$other$NumBeads[!is.na(ind),i] <- tmp$Quants[ind[!is.na(ind)],'NumGoodBeadsBinData'] # NumBeads
     if(dateinfo) {
       elist$targets[i,"DecodeInfo"] = paste(tmp$RunInfo[1,], sep="", collapse=" ")
       elist$targets[i,"ScanInfo"] = paste(tmp$RunInfo[2,], sep="", collapse=" ")
