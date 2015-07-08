@@ -10,7 +10,7 @@ getEAWP(object)
 }
 \arguments{
   \item{object}{a microarray data object.
-  An object of class \code{list}, \code{MAList}, \code{EList}, \code{marrayNorm}, \code{PLMset}, \code{vsn}, or any class inheriting from \code{ExpressionSet}, or any object that can be coerced to a numeric matrix.}
+  An object of class \code{MAList}, \code{EList}, \code{marrayNorm}, \code{PLMset}, \code{vsn}, or any class inheriting from \code{ExpressionSet}, or any object that can be coerced to a numeric matrix.}
 }
 \details{
 In the case of two-color objects, the \code{Amean} is computed from the matrix of A-values.

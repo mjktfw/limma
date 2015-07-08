@@ -1,3 +1,12 @@
+ 7 July 2015: limma 3.25.13
+
+- New 'tolerance' argument for read.idat() to allow manifest and idat
+  to differ by a certain number of probes
+
+- A minor change for when lmFit() is run on a single gene: a simple
+  vector data 'object' is now coerced to a matrix with one row
+  instead of one column  
+
 26 June 2015: limma 3.25.12
 
 - lmFit() and friends now always produce an output component 'rank'

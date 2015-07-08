@@ -17,7 +17,7 @@ plotWithHighlights(x, y, status = NULL, values = NULL,
   \item{y}{numeric vector.}
 
   \item{status}{character vector giving the control status of each point, of same length as \code{x} and \code{y}.
-  If \code{NULL}, then all points are plotted in the default color, symbol and size.}
+  If \code{NULL}, then all points are plotted in the background color, symbol and size.}
 
   \item{values}{character vector giving values of \code{status} to be highlighted on the plot.
   Defaults to unique values of \code{status} in decreasing order of frequency, with the most frequent value set as the background value.

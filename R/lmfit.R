@@ -3,7 +3,7 @@
 lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation,weights=NULL,method="ls",...)
 #	Fit genewise linear models
 #	Gordon Smyth
-#	30 June 2003.  Last modified 28 July 2013.
+#	30 June 2003.  Last modified 7 July 2015.
 {
 #	Extract components from y
 	y <- getEAWP(object)
@@ -15,6 +15,7 @@ lmFit <- function(object,design=NULL,ndups=1,spacing=1,block=NULL,correlation,we
 	else {
 		design <- as.matrix(design)
 		if(mode(design) != "numeric") stop("design must be a numeric matrix")
+		if(nrow(design) != ncol(y$exprs)) stop("row dimension of design doesn't match column dimension of data object")
 	}
 	ne <- nonEstimable(design)
 	if(!is.null(ne)) cat("Coefficients not estimable:",paste(ne,collapse=" "),"\n")
@@ -390,7 +391,7 @@ getEAWP <- function(object)
 #	Given any microarray data object, extract basic information needed
 #	for linear modelling.
 #	Gordon Smyth
-#	9 March 2008. Last modified 19 Sep 2014.
+#	9 March 2008. Last modified 7 July 2015.
 {
 	y <- list()
 	
@@ -431,9 +432,10 @@ getEAWP <- function(object)
 		if(length(object@maA)) y$Amean <- rowMeans(object@maA,na.rm=TRUE)
 	} else {
 #		Default method for matrices, data.frames, vsn objects etc.
-		y$exprs <- as.matrix(object)
-#		If exprs are positive, assume they are log-intensities rather than log-ratios
-#		if(all(y$exprs>=0,na.rm=TRUE)) y$Amean <- rowMeans(y$exprs,na.rm=TRUE)
+		if(is.vector(object))
+			y$exprs <- matrix(object,nrow=1)
+		else
+			y$exprs <- as.matrix(object)
 		y$Amean <- rowMeans(y$exprs,na.rm=TRUE)
 	}}}}
 

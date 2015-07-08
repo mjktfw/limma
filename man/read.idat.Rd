@@ -6,13 +6,14 @@
 \description{Read Illumina BeadArray data from IDAT and manifest (.bgx) files for gene expression platforms.}
 
 \usage{
-read.idat(idatfiles, bgxfile, dateinfo=FALSE)
+read.idat(idatfiles, bgxfile, dateinfo=FALSE, tolerance=0)
 }
 
 \arguments{
   \item{idatfiles}{character vector specifying idat files to be read in.}
   \item{bgxfile}{character string specifying bead manifest file (.bgx) to be read in.}
   \item{dateinfo}{logical. Should date and software version info be read in?}
+  \item{tolerance}{numeric. The number of probe ID discrepancies allowed between the manifest and a given idat file.} 
 }
 
 \details{

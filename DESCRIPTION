@@ -1,6 +1,6 @@
 Package: limma
-Version: 3.25.12
-Date: 2015-06-26
+Version: 3.25.13
+Date: 2015-07-07
 Title: Linear Models for Microarray Data
 Description: Data analysis, linear models and differential expression for microarray data.
 Author: Gordon Smyth [cre,aut], Matthew Ritchie [ctb], Jeremy Silver [ctb], James Wettenhall [ctb], Natalie Thorne [ctb], Davis McCarthy [ctb], Di Wu [ctb], Yifang Hu [ctb], Wei Shi [ctb], Belinda Phipson [ctb], Alicia Oshlack [ctb], Carolyn de Graaf [ctb], Mette Langaas [ctb], Egil Ferkingstad [ctb], Marcus Davy [ctb], Francois Pepin [ctb], Dongseok Choi [ctb], Aaron Lun [ctb]

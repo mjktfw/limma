@@ -30,11 +30,11 @@ plotMD.MAList <- function(object, column=1, array=NULL, xlab="A", ylab="M", main
 plotMD.MArrayLM <- function(object, column=ncol(object), coef=NULL, xlab="Average log-expression", ylab="log-fold-change", main=colnames(object)[column], status=object$genes$Status, zero.weights=FALSE, ...)
 #	Mean-difference plot with color coding for controls
 #	Gordon Smyth 7 April 2003, James Wettenhall 27 June 2003.
-#	Last modified 7 June 2015.
+#	Last modified 24 June 2015.
 {
 	if(!is.null(coef)) column <- coef
 	if(is.null(object$Amean)) stop("Amean component is absent.")
-	logFC <- as.matrix(object$coef)[,column]
+	logFC <- as.matrix(object$coefficients)[,column]
 	if(!zero.weights && !is.null(object$weights)) {
 		w <- as.matrix(object$weights)[,column]
 		logFC[ is.na(w) | (w <= 0) ] <- NA
