@@ -16,7 +16,7 @@ roast <- function(y,...) UseMethod("roast")
 roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.statistic="mean",gene.weights=NULL,array.weights=NULL,weights=NULL,block=NULL,correlation,var.prior=NULL,df.prior=NULL,trend.var=FALSE,nrot=999,approx.zscore=TRUE,...)
 # Rotation gene set testing for linear models
 # Gordon Smyth and Di Wu
-# Created 24 Apr 2008.  Last modified 8 April 2015.
+# Created 24 Apr 2008.  Last modified 16 July 2015.
 {
 #	Issue warning if extra arguments found
 	dots <- names(list(...))
@@ -97,7 +97,9 @@ roast.default <- function(y,index=NULL,design=NULL,contrast=ncol(design),set.sta
 		diag(cormatrix) <- 1
 		R <- chol(cormatrix)
 		y <- t(backsolve(R, t(y), transpose = TRUE))
+		dn <- dimnames(design)
 		design <- backsolve(R, design, transpose = TRUE)
+		dimnames(design) <- dn
  	}
 
 #	Check contrast

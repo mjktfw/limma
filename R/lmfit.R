@@ -103,7 +103,7 @@ lm.series <- function(M,design=NULL,ndups=1,spacing=1,weights=NULL)
 
 #	Check whether QR-decomposition is constant for all genes
 #	If so, fit all genes in one sweep
-	NoProbeWts <- !any(is.na(M)) && (is.null(weights) || !is.null(attr(weights,"arrayweights")))
+	NoProbeWts <- all(is.finite(M)) && (is.null(weights) || !is.null(attr(weights,"arrayweights")))
 	if(NoProbeWts) {
 		if(is.null(weights))
 			fit <- lm.fit(design, t(M))
@@ -263,7 +263,7 @@ gls.series <- function(M,design=NULL,ndups=2,spacing=1,block=NULL,correlation=NU
 	ngenes <- nrow(M)
 	stdev.unscaled <- matrix(NA,ngenes,nbeta,dimnames=list(rownames(M),coef.names))
 
-	NoProbeWts <- !any(is.na(M)) && (is.null(weights) || !is.null(attr(weights,"arrayweights")))
+	NoProbeWts <- all(is.finite(M)) && (is.null(weights) || !is.null(attr(weights,"arrayweights")))
 	if(NoProbeWts) {
 		V <- cormatrix
 		if(!is.null(weights)) {

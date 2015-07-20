@@ -8,7 +8,8 @@ Test whether a set of genes is highly ranked relative to other genes in terms of
 }
 \usage{
 \S3method{camera}{default}(y, index, design, contrast=ncol(design), weights=NULL,
-       use.ranks=FALSE, allow.neg.cor=TRUE, trend.var=FALSE, sort=TRUE, \dots)
+       use.ranks=FALSE, allow.neg.cor=TRUE, inter.gene.cor=NULL, trend.var=FALSE,
+       sort=TRUE, \dots)
 interGeneCorrelation(y, design)
 }
 \arguments{
@@ -22,6 +23,7 @@ interGeneCorrelation(y, design)
   \item{weights}{can be a numeric matrix of individual weights, of same size as \code{y}, or a numeric vector of array weights with length equal to \code{ncol(y)}, or a numeric vector of gene weights with length equal to \code{nrow(y)}.}
   \item{use.ranks}{do a rank-based test (\code{TRUE}) or a parametric test (\code{FALSE})?}
   \item{allow.neg.cor}{should reduced variance inflation factors be allowed for negative correlations?}
+  \item{inter.gene.cor}{numeric, optional preset value for the inter gene correlation within tested sets.  If not \code{NULL}, then this value will over-ride estimation of the inter gene correlations.}
   \item{trend.var}{logical, should an empirical Bayes trend be estimated?  See \code{\link{eBayes}} for details.}
   \item{sort}{logical, should the results be sorted by p-value?}
   \item{\dots}{other arguments are not currently used}
@@ -41,7 +43,9 @@ This allows users to focus on differential expression for any coefficient or con
 \code{camera} estimates p-values after adjusting the variance of test statistics by an estimated variance inflation factor.
 The inflation factor depends on estimated genewise correlation and the number of genes in the gene set.
 
-\code{interGeneCorrelation} estimates the mean pair-wise correlation between a set of genes.
+By default, \code{camera} uses \code{interGeneCorrelation} to estimate the mean pair-wise correlation within each set of genes.
+\code{camera} can be used with a small preset correlation value, say \code{inter.gene.cor=0.05}.
+This produces a less conservative test.
 }
 
 \value{

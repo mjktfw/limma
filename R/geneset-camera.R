@@ -21,10 +21,10 @@ interGeneCorrelation <- function(y, design)
 
 camera <- function(y,...) UseMethod("camera")
 
-camera.default <- function(y,index,design=NULL,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,trend.var=FALSE,sort=TRUE,...)
+camera.default <- function(y,index,design=NULL,contrast=ncol(design),weights=NULL,use.ranks=FALSE,allow.neg.cor=TRUE,inter.gene.cor=NULL,trend.var=FALSE,sort=TRUE,...)
 #	Competitive gene set test allowing for correlation between genes
 #	Gordon Smyth and Di Wu
-#	Created 2007.  Last modified 23 June 2015
+#	Created 2007.  Last modified 20 July 2015
 {
 #	Issue warning if extra arguments found
 	dots <- names(list(...))
@@ -51,13 +51,23 @@ camera.default <- function(y,index,design=NULL,contrast=ncol(design),weights=NUL
 	if(nrow(design) != n) stop("row dimension of design matrix must match column dimension of data")
 	ne <- nonEstimable(design)
 	if(!is.null(ne)) cat("Coefficients not estimable:",paste(ne,collapse=" "),"\n")
-
 	p <- ncol(design)
 	df.residual <- n-p
-	df.camera <- min(df.residual,G-2)
 
 #	Check weights
 	if(is.null(weights)) weights <- y$weights
+
+#	Check inter.gene.cor
+	fixed.cor <- !is.null(inter.gene.cor)
+
+#	Set for camera tests
+	if(fixed.cor)
+		if(use.ranks)
+			df.camera <- Inf
+		else
+			df.camera <- G-2
+	else
+		df.camera <- min(df.residual,G-2)
 
 #	Reduce to numeric expression matrix
 	y <- y$exprs
@@ -124,8 +134,12 @@ camera.default <- function(y,index,design=NULL,contrast=ncol(design),weights=NUL
 	if(trend.var) A <- rowMeans(y) else A <- NULL
 	sv <- squeezeVar(sigma2,df=df.residual,covariate=A)
 	modt <- unscaledt / sqrt(sv$var.post)
-	df.total <- min(df.residual+sv$df.prior, G*df.residual)
-	Stat <- zscoreT(modt, df=df.total)
+	if(use.ranks)
+		Stat <- modt
+	else {
+		df.total <- min(df.residual+sv$df.prior, G*df.residual)
+		Stat <- zscoreT(modt, df=df.total, approx=TRUE)
+	}
 
 #	Global statistics
 	meanStat <- mean(Stat)
@@ -139,13 +153,18 @@ camera.default <- function(y,index,design=NULL,contrast=ncol(design),weights=NUL
 		StatInSet <- Stat[iset]
 		m <- length(StatInSet)
 		m2 <- G-m
-		if(m>1) {
-			Uset <- U[iset,,drop=FALSE]
-			vif <- m * mean(colMeans(Uset)^2)
-			correlation <- (vif-1)/(m-1)
+		if(fixed.cor) {
+			correlation <- inter.gene.cor
+			vif <- 1+(m-1)*correlation
 		} else {
-			vif <- 1
-			correlation <- NA
+			if(m>1) {
+				Uset <- U[iset,,drop=FALSE]
+				vif <- m * mean(colMeans(Uset)^2)
+				correlation <- (vif-1)/(m-1)
+			} else {
+				vif <- 1
+				correlation <- NA
+			}
 		}
 
 		tab[i,1] <- m

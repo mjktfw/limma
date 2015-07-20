@@ -1,3 +1,21 @@
+20 July 2015: limma 3.25.14
+
+- camera() has a new argument inter.gene.cor.  This allows a preset
+  inter gene correlation to be set for each test test, resulting in
+  potentially less conservative tests.
+
+- All data classes (EListRaw, EList, RGList, MAList, MArrayLM) now 
+  require two arguments for subsetting.  This restores the behavior
+  in limma version 3.19.10 and earlier.  In limma 3.19.11 through
+  3.25.13, subsetting by one argument y[i] was equivalent to y[i,].
+  This will now give an error message.
+
+- The contrast argument of roast() can now optionally be a character
+  string giving the name of a column of the design matrix.
+
+- lmFit() now treats infinite expression values as NA.  In the past,
+  this was done somewhat inconsistently.
+
  7 July 2015: limma 3.25.13
 
 - New 'tolerance' argument for read.idat() to allow manifest and idat
