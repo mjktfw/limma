@@ -200,7 +200,7 @@ goana.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 
 #	Assemble output
 	g <- strsplit2(rownames(S),split="\\.")
-	TERM <- AnnotationDbi::select(GO.db::GO.db,keys=g[,1],columns="TERM")
+	TERM <- suppressMessages(AnnotationDbi::select(GO.db::GO.db,keys=g[,1],columns="TERM"))
 	Results <- data.frame(Term = TERM[[2]], Ont = g[,2], S, P, stringsAsFactors=FALSE)
 	rownames(Results) <- g[,1]
 

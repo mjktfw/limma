@@ -7,7 +7,7 @@
 
 \description{
 A matrix-based class for storing the results of simultanous tests.
-\code{TestResults} objects are normally created by \code{\link{classifyTestsF}}, \code{\link{classifyTestsT}} or \code{\link{classifyTestsP}}.
+\code{TestResults} objects are normally created by \code{\link{decideTests}}, \code{\link{classifyTestsF}}, \code{\link{classifyTestsT}} or \code{\link{classifyTestsP}}.
 }
 
 \usage{
@@ -20,6 +20,9 @@ A matrix-based class for storing the results of simultanous tests.
 }
 
 \section{Slots/List Components}{
+A \code{TestResults} object is essentially a numeric matrix with elements equal to \code{0}, \code{1} or \code{-1}.
+Zero represents acceptance of the null hypothesis, \code{1} indicates rejection in favor of the right tail alternative and \code{-1} indicates rejection in favor of the left tail alternative.
+
 \code{TestResults} objects can be created by \code{new("TestResults",results)} where \code{results} is a matrix.
 Objects of this class contain no slots (other than \code{.Data}), although the attributes \code{dim} and \code{dimnames} may be treated as slots.
 }

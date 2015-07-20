@@ -12,7 +12,7 @@ Briefly summarize microarray data objects.
 \method{summary}{RGList}(object, \dots)
 }
 \arguments{
-  \item{object}{an object of class \code{RGList}, \code{MAList} or \code{MArrayLM}}
+  \item{object}{an object of class \code{RGList}, \code{MAList}, \code{EListRaw}, \code{EList} or \code{MArrayLM}}
   \item{\dots}{other arguments are not used}
 }
 \details{

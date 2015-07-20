@@ -33,7 +33,7 @@ Rotation gene set testing for linear models.
   \item{index}{index vector specifying which rows (probes) of \code{y} are in the test set.  This can be a vector of indices, or a logical vector of the same length as \code{statistics}, or any vector such as \code{y[index,]} contains the values for the gene set to be tested.
   For \code{mroast}, \code{index} is a list of index vectors. The list can be made using \link{ids2indices}.}
   \item{design}{design matrix}
-  \item{contrast}{contrast for which the test is required. Can be an integer specifying a column of \code{design}, or else a contrast vector of length equal to the number of columns of \code{design}.}
+  \item{contrast}{contrast for which the test is required. Can be an integer specifying a column of \code{design}, or the name of a column of \code{design}, or a numeric contrast vector of length equal to the number of columns of \code{design}.}
   \item{set.statistic}{summary set statistic. Possibilities are \code{"mean"},\code{"floormean"},\code{"mean50"} or \code{"msq"}.}
   \item{gene.weights}{optional numeric vector of weights for genes in the set. Can be positive or negative.  For \code{mroast} this vector must have length equal to \code{nrow(y)}.  For \code{roast}, can be of length \code{nrow(y)} or of length equal to the number of genes in the test set.} 
   \item{array.weights}{optional numeric vector of array weights.}

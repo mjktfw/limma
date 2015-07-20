@@ -39,7 +39,7 @@ This page gives an overview of the LIMMA functions for gene set testing and path
 
 \item{ \code{\link{kegga}} and \code{\link{topKEGG}}}{
 	KEGG pathway over-representation analysis of gene lists using Entrez Gene IDs.
-	\code{goana} can work directly on a fitted model object or on one or more lists of genes.}
+	\code{kegga} can work directly on a fitted model object or on one or more lists of genes.}
 }
 }
 

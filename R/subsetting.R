@@ -41,8 +41,10 @@ assign("[.RGList",
 function(object, i, j)
 #  Subsetting for RGList objects
 #  Gordon Smyth
-#  29 June 2003.  Last modified 11 Dec 2013.
+#  29 June 2003.  Last modified 20 July 2015.
 {
+	if(nargs() != 3) stop("Two subscripts required",call.=FALSE)
+
 #	Recognized components
 	IJ <- c("R","G","Rb","Gb","weights")
 	IX <- c("genes")
@@ -60,8 +62,10 @@ assign("[.MAList",
 function(object, i, j) 
 #  Subsetting for MAList objects
 #  Gordon Smyth
-#  29 June 2003.  Last modified 22 Dec 2005.
+#  29 June 2003.  Last modified 20 July 2015.
 {
+	if(nargs() != 3) stop("Two subscripts required",call.=FALSE)
+
 #	Recognized components
 	IJ <- c("M","A","weights")
 	IX <- c("genes")
@@ -81,8 +85,10 @@ assign("[.EList",
 function(object, i, j)
 #  Subsetting for EList objects
 #  Gordon Smyth
-#  23 February 2009.  Last modified 11 Dec 2013.
+#  23 February 2009.  Last modified 20 July 2015.
 {
+	if(nargs() != 3) stop("Two subscripts required",call.=FALSE)
+
 #	Recognized components
 	IJ <- c("E","Eb","weights")
 	IX <- c("genes")
@@ -102,8 +108,10 @@ assign("[.MArrayLM",
 function(object, i, j)
 #  Subsetting for MArrayLM objects
 #  Gordon Smyth
-#  26 April 2005. Last modified 14 May 2014.
+#  26 April 2005. Last modified 20 July 2015.
 {
+	if(nargs() != 3) stop("Two subscripts required",call.=FALSE)
+
 #	Recognized components
 	IJ <- c("coefficients","stdev.unscaled","t","p.value","lods","weights")
 	IX <- "genes"
