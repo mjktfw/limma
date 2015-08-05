@@ -77,7 +77,7 @@ kegga.MArrayLM <- function(de, coef = ncol(de), geneid = rownames(de), FDR = 0.0
 kegga.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL, covariate=NULL, plot=FALSE, ...)
 #	KEGG (Kyoto Encyclopedia of Genes and Genomes) pathway analysis of DE genes
 #	Gordon Smyth and Yifang Hu
-#	Created 18 May 2015.  Modified 3 June 2015.
+#	Created 18 May 2015.  Modified 4 August 2015.
 {
 #	Ensure de is a list
 	if(!is.list(de)) de <- list(DE = de)
@@ -216,7 +216,7 @@ kegga.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 	pathname <- KEGGREST::keggList("pathway")
 	names(pathname) <- gsub("map", organism, names(pathname))
 	m <- match(g, names(pathname))
-	Results <- data.frame(Path = pathname[m], S, P, stringsAsFactors=FALSE)
+	Results <- data.frame(Pathway = pathname[m], S, P, stringsAsFactors=FALSE)
 	rownames(Results) <- g
 
 #	Name p-value columns
@@ -225,10 +225,10 @@ kegga.default <- function(de, universe = NULL, species = "Hs", prior.prob = NULL
 	Results
 }
 
-topKEGG <- function(results, sort = NULL, number = 20L, truncate.term=NULL)
+topKEGG <- function(results, sort = NULL, number = 20L, truncate.path=NULL)
 #	Extract top KEGG pathways from kegga output 
 #	Gordon Smyth and Yifang Hu
-#	Created 15 May 2015.
+#	Created 15 May 2015. Modified 4 August 2015.
 {
 #	Check results
 	if(!is.data.frame(results)) stop("results should be a data.frame.")
@@ -263,14 +263,14 @@ topKEGG <- function(results, sort = NULL, number = 20L, truncate.term=NULL)
 	}
 	tab <- results[o[1L:number],,drop=FALSE]
 
-#	Truncate Term column for readability
-	if(!is.null(truncate.term)) {
-		truncate.term <- as.integer(truncate.term[1])
-		truncate.term <- max(truncate.term,5L)
-		truncate.term <- min(truncate.term,1000L)
-		tm2 <- truncate.term-3L
-		i <- (nchar(tab$Term) > tm2)
-		tab$Term[i] <- paste0(substring(tab$Term[i],1L,tm2),"...")
+#	Truncate Pathway column for readability
+	if(!is.null(truncate.path)) {
+		truncate.path <- as.integer(truncate.path[1])
+		truncate.path <- max(truncate.path,5L)
+		truncate.path <- min(truncate.path,1000L)
+		tm2 <- truncate.path-3L
+		i <- (nchar(tab$Pathway) > tm2)
+		tab$Pathway[i] <- paste0(substring(tab$Pathway[i],1L,tm2),"...")
 	}
 
 	tab

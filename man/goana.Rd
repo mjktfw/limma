@@ -86,7 +86,7 @@ The \code{goana} method for \code{MArrayLM} objects produces a data frame with a
 
 The row names of the data frame give the GO term IDs.
 
-The output from \code{kegga} is the same except that row names become KEGG pathway IDs, \code{Term} becomes \code{Path} and there is no \code{Ont} column.
+The output from \code{kegga} is the same except that row names become KEGG pathway IDs, \code{Term} becomes \code{Pathway} and there is no \code{Ont} column.
 }
 
 \references{
